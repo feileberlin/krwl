@@ -36,6 +36,7 @@ class EventEditor:
             print("  (s) Skip to next")
             print("  (q) Quit review")
             print("-" * 60)
+            self._print_review_footer()
             
             choice = input("\nYour choice: ").strip().lower()
             
@@ -58,6 +59,13 @@ class EventEditor:
                 
         # Save updated pending events
         save_pending_events(self.base_path, pending_data)
+    
+    def _print_review_footer(self):
+        """Print footer with editorial tooltips"""
+        print()
+        print("─" * 60)
+        print("💡 Editorial Tip: Approved events publish to website | Edit to fix details | Reject removes from queue")
+        print("─" * 60)
         
     def _display_event(self, event):
         """Display event details"""
