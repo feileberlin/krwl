@@ -38,6 +38,23 @@ class EventManagerTUI:
         print(f"  {self.config['app']['name']}")
         print("=" * 60)
         print()
+    
+    def print_footer(self, context="main"):
+        """Print footer with contextual tooltips for admin/editorial users"""
+        tooltips = {
+            "main": "💡 Admin Tip: Use CLI mode for automation (python3 main.py --help) | View docs: option 6",
+            "scrape": "💡 Editorial Tip: Configure sources in config.json | Scraped events go to pending queue for review",
+            "review": "💡 Editorial Tip: (a)pprove publishes to site | (e)dit before approval | (r)eject removes permanently",
+            "published": "💡 Admin Tip: Published events appear on the map | Filtered by geolocation (<5km) & time (till sunrise)",
+            "generate": "💡 Admin Tip: Static files → static/ dir | Deploy to GitHub Pages | Include .nojekyll file",
+            "settings": "💡 Admin Tip: Load examples for testing | Backups created with .backup extension | Config: config.json",
+            "docs": "💡 Documentation Tip: Search with keywords | Navigate with n/p/q | Full docs in README.txt"
+        }
+        
+        print()
+        print("─" * 60)
+        print(tooltips.get(context, tooltips["main"]))
+        print("─" * 60)
         
     def show_menu(self):
         """Display main menu"""
@@ -54,6 +71,7 @@ class EventManagerTUI:
         print("6. View Documentation")
         print("7. Exit")
         print("-" * 60)
+        self.print_footer("main")
         
     def scrape_events(self):
         """Scrape events from configured sources"""
@@ -66,6 +84,7 @@ class EventManagerTUI:
         new_events = scraper.scrape_all_sources()
         
         print(f"\nScraped {len(new_events)} new events")
+        self.print_footer("scrape")
         input("\nPress Enter to continue...")
         
     def review_pending_events(self):
@@ -93,7 +112,8 @@ class EventManagerTUI:
                 print(f"   Location: {event['location']['name']}")
                 print(f"   Date: {event['start_time']}")
                 print(f"   Status: {event['status']}")
-                
+        
+        self.print_footer("published")
         input("\nPress Enter to continue...")
         
     def generate_site(self):
@@ -108,6 +128,7 @@ class EventManagerTUI:
         
         print("\nStatic site generated successfully!")
         print(f"Files saved to: {self.base_path / 'static'}")
+        self.print_footer("generate")
         input("\nPress Enter to continue...")
         
     def settings(self):
@@ -121,6 +142,7 @@ class EventManagerTUI:
         print("3. Clear All Data")
         print("4. Back to Main Menu")
         print("-" * 60)
+        self.print_footer("settings")
         
         choice = input("\nEnter your choice (1-4): ").strip()
         
@@ -252,6 +274,7 @@ class EventManagerTUI:
             print("4. Quick Start Guide")
             print("5. Back to Main Menu")
             print("-" * 60)
+            self.print_footer("docs")
             
             choice = input("\nEnter your choice (1-5): ").strip()
             
