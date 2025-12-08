@@ -1,0 +1,47 @@
+name: Deploy to GitHub Pages (Actions)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prepare publish directory
+        run: |
+          set -euo pipefail
+          rm -rf publish
+          mkdir -p publish
+          if [ -d static ]; then
+            # copy all files from static into publish root (including hidden)
+            cp -a static/. publish/ || true
+          fi
+          # ensure CNAME is included (so custom domain stays configured)
+          if [ -f CNAME ]; then
+            cp CNAME publish/CNAME
+          fi
+          # prevent Jekyll processing
+          touch publish/.nojekyll
+          echo "Publish directory contents:"
+          ls -la publish
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: publish
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v1
