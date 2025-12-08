@@ -7,6 +7,7 @@ and ensuring adherence to KISS (Keep It Simple, Stupid) principles.
 
 import os
 import re
+import sys
 from pathlib import Path
 from collections import defaultdict
 
@@ -409,3 +410,48 @@ class KISSChecker:
             print("\n❌ Action needed: Simplify complex code for better maintainability.")
         
         return 0 if summary['total_violations'] == 0 else 1
+
+
+def main():
+    """Main entry point for KISS compliance checker"""
+    import argparse
+    
+    parser = argparse.ArgumentParser(
+        description="Check KRWL HOF codebase for KISS compliance"
+    )
+    parser.add_argument(
+        "--verbose", "-v",
+        action="store_true",
+        help="Show detailed output during checking"
+    )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Output results in JSON format"
+    )
+    parser.add_argument(
+        "--repo-root",
+        type=str,
+        default=None,
+        help="Repository root directory (default: current directory)"
+    )
+    
+    args = parser.parse_args()
+    
+    checker = KISSChecker(
+        repo_root=args.repo_root,
+        verbose=args.verbose
+    )
+    results = checker.check_all()
+    
+    if args.json:
+        import json
+        print("\n" + json.dumps(results, indent=2))
+        sys.exit(0 if results['summary']['total_violations'] == 0 else 1)
+    else:
+        exit_code = checker.print_report()
+        sys.exit(exit_code)
+
+
+if __name__ == "__main__":
+    main()

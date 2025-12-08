@@ -135,10 +135,18 @@ class EventsApp {
     
     initMap() {
         const center = this.config.map.default_center;
-        this.map = L.map('map').setView([center.lat, center.lon], this.config.map.default_zoom);
         
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        // Initialize map with minimal UI - no zoom controls, no attribution box
+        this.map = L.map('map', {
+            zoomControl: false,        // Remove zoom +/- buttons
+            attributionControl: false  // Remove attribution box
+        }).setView([center.lat, center.lon], this.config.map.default_zoom);
+        
+        // Use dark/night mode tile layer with minimal details
+        // CartoDB Dark Matter: Clean, minimal, night mode style
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            maxZoom: 19,
+            subdomains: 'abcd'
         }).addTo(this.map);
     }
     
