@@ -1,0 +1,156 @@
+name: Verify Features
+
+on:
+  push:
+    branches:
+      - main
+      - preview
+  pull_request:
+    branches:
+      - main
+      - preview
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    name: Verify Feature Registry
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      
+      - name: Run feature verification
+        id: verify
+        run: |
+          echo "Running feature verification..."
+          python3 verify_features.py --verbose > verification_output.txt 2>&1 || true
+          
+          # Capture exit code separately
+          python3 verify_features.py --json > verification_results.json
+          VERIFY_EXIT_CODE=$?
+          
+          # Display the verbose output
+          cat verification_output.txt
+          
+          echo "exit_code=$VERIFY_EXIT_CODE" >> $GITHUB_OUTPUT
+          
+          # Set summary for GitHub Actions
+          if [ $VERIFY_EXIT_CODE -eq 0 ]; then
+            echo "status=✓ All features verified successfully!" >> $GITHUB_OUTPUT
+            echo "::notice::Feature verification passed - all features are present"
+          else
+            echo "status=✗ Some features failed verification" >> $GITHUB_OUTPUT
+            echo "::error::Feature verification failed - some features are missing"
+          fi
+      
+      - name: Upload verification results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: feature-verification-results
+          path: |
+            verification_output.txt
+            verification_results.json
+      
+      - name: Comment on PR (if applicable)
+        if: github.event_name == 'pull_request' && steps.verify.outputs.exit_code != '0'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            
+            // Read verification results
+            const results = JSON.parse(fs.readFileSync('verification_results.json', 'utf8'));
+            
+            // Build comment body
+            let commentBody = '## ⚠️ Feature Verification Failed\n\n';
+            commentBody += `**Total Features:** ${results.total}\n`;
+            commentBody += `**Passed:** ${results.passed}\n`;
+            commentBody += `**Failed:** ${results.failed}\n\n`;
+            
+            if (results.failed > 0) {
+              commentBody += '### Failed Features:\n\n';
+              for (const feature of results.features) {
+                if (feature.status === 'failed') {
+                  commentBody += `#### ❌ ${feature.name} (\`${feature.id}\`)\n\n`;
+                  for (const check of feature.checks) {
+                    if (!check.passed) {
+                      commentBody += `- **${check.type}**: FAILED\n`;
+                      
+                      if (check.missing_files && check.missing_files.length > 0) {
+                        commentBody += '  - Missing files:\n';
+                        for (const file of check.missing_files) {
+                          commentBody += `    - \`${file}\`\n`;
+                        }
+                      }
+                      
+                      if (check.missing_patterns && check.missing_patterns.length > 0) {
+                        commentBody += '  - Missing code patterns:\n';
+                        for (const pattern of check.missing_patterns) {
+                          commentBody += `    - ${pattern.description} in \`${pattern.file}\`\n`;
+                          commentBody += `      - Reason: ${pattern.reason}\n`;
+                        }
+                      }
+                      
+                      if (check.missing_keys && check.missing_keys.length > 0) {
+                        commentBody += '  - Missing config keys:\n';
+                        for (const key of check.missing_keys) {
+                          commentBody += `    - \`${key}\`\n`;
+                        }
+                      }
+                    }
+                  }
+                  commentBody += '\n';
+                }
+              }
+            }
+            
+            commentBody += '\n---\n';
+            commentBody += '*This verification ensures all documented features in `features.json` are present in the codebase.*\n';
+            commentBody += '*Please restore the missing features or update the feature registry if they were intentionally removed.*';
+            
+            // Post comment
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: commentBody
+            });
+      
+      - name: Create job summary
+        if: always()
+        run: |
+          echo "## Feature Verification Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.verify.outputs.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f verification_results.json ]; then
+            echo "### Details" >> $GITHUB_STEP_SUMMARY
+            python3 -c "
+import json
+with open('verification_results.json', 'r') as f:
+    results = json.load(f)
+    print(f\"- **Total Features**: {results['total']}\")
+    print(f\"- **Passed**: {results['passed']}\")
+    print(f\"- **Failed**: {results['failed']}\")
+" >> $GITHUB_STEP_SUMMARY
+          fi
+      
+      - name: Fail if verification failed
+        if: steps.verify.outputs.exit_code != '0'
+        run: |
+          echo "Feature verification failed!"
+          exit 1

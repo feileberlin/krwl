@@ -1,0 +1,518 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "KRWL HOF Feature Registry - Documents all implemented features and how to test them",
+  "version": "1.0.0",
+  "features": [
+    {
+      "id": "event-scraping",
+      "name": "Event Scraping",
+      "description": "Scrape events from RSS feeds, APIs, and HTML pages",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/modules/scraper.py"
+      ],
+      "config_keys": [
+        "scraping.sources",
+        "scraping.interval_minutes"
+      ],
+      "test_method": "check_files_exist"
+    },
+    {
+      "id": "editor-workflow",
+      "name": "Editor Workflow",
+      "description": "Review, edit, approve, or reject events before publishing",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/modules/editor.py"
+      ],
+      "config_keys": [
+        "editor.require_approval",
+        "editor.auto_publish"
+      ],
+      "test_method": "check_files_exist"
+    },
+    {
+      "id": "python-tui",
+      "name": "Python TUI (Text User Interface)",
+      "description": "Interactive terminal interface for managing events with menu navigation",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/main.py"
+      ],
+      "code_patterns": [
+        {
+          "file": "src/main.py",
+          "pattern": "class EventManagerTUI|def show_menu|input.*Enter your choice",
+          "description": "TUI class and menu system"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "cli-commands",
+      "name": "CLI Commands",
+      "description": "Command-line interface for automation and scripting",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/main.py"
+      ],
+      "code_patterns": [
+        {
+          "file": "src/main.py",
+          "pattern": "argparse|ArgumentParser|def cli_",
+          "description": "CLI argument parsing and command functions"
+        },
+        {
+          "file": "src/main.py",
+          "pattern": "def print_help",
+          "description": "CLI help documentation"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "interactive-map",
+      "name": "Interactive Map",
+      "description": "Fullscreen map interface with Leaflet.js showing events",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "static/index.html",
+        "static/js/app.js"
+      ],
+      "code_patterns": [
+        {
+          "file": "static/js/app.js",
+          "pattern": "L.map\\('map'\\)",
+          "description": "Leaflet map initialization"
+        },
+        {
+          "file": "static/index.html",
+          "pattern": "<div id=\"map\">",
+          "description": "Map container element"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "geolocation-filtering",
+      "name": "Geolocation Filtering",
+      "description": "Shows only events near the user's location",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "static/js/app.js"
+      ],
+      "config_keys": [
+        "filtering.max_distance_km"
+      ],
+      "code_patterns": [
+        {
+          "file": "static/js/app.js",
+          "pattern": "navigator.geolocation.getCurrentPosition",
+          "description": "Geolocation API usage"
+        },
+        {
+          "file": "static/js/app.js",
+          "pattern": "calculateDistance",
+          "description": "Distance calculation function"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "sunrise-filtering",
+      "name": "Sunrise Filtering",
+      "description": "Displays events only until the next sunrise",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "static/js/app.js"
+      ],
+      "config_keys": [
+        "filtering.show_until"
+      ],
+      "code_patterns": [
+        {
+          "file": "static/js/app.js",
+          "pattern": "getNextSunrise|sunrise",
+          "description": "Sunrise calculation or filtering"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "static-site-generation",
+      "name": "Static Site Generation",
+      "description": "Generates static files for GitHub Pages deployment",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/modules/generator.py"
+      ],
+      "test_method": "check_files_exist"
+    },
+    {
+      "id": "debug-mode",
+      "name": "Debug Mode",
+      "description": "Development config with console logging for troubleshooting",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "static/js/app.js",
+        "config.dev.json"
+      ],
+      "config_keys": [
+        "debug"
+      ],
+      "code_patterns": [
+        {
+          "file": "static/js/app.js",
+          "pattern": "this.log|\\[KRWL Debug\\]",
+          "description": "Debug logging implementation"
+        },
+        {
+          "file": "config.dev.json",
+          "pattern": "\"debug\":\\s*true",
+          "description": "Debug mode enabled in dev config"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "production-optimization",
+      "name": "Production Optimization",
+      "description": "Production config optimized for maximum speed with caching",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "static/js/app.js",
+        "config.prod.json"
+      ],
+      "config_keys": [
+        "performance.cache_enabled",
+        "performance.prefetch_events"
+      ],
+      "code_patterns": [
+        {
+          "file": "config.prod.json",
+          "pattern": "\"cache_enabled\":\\s*true",
+          "description": "Caching enabled in prod config"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "preview-deployment",
+      "name": "Preview Deployment",
+      "description": "Deploy testing/preview version with debug mode",
+      "category": "deployment",
+      "implemented": true,
+      "files": [
+        ".github/workflows/deploy-preview.yml"
+      ],
+      "test_method": "check_files_exist"
+    },
+    {
+      "id": "production-deployment",
+      "name": "Production Deployment",
+      "description": "Deploy production version to main branch",
+      "category": "deployment",
+      "implemented": true,
+      "files": [
+        ".github/workflows/deploy-pages.yml"
+      ],
+      "test_method": "check_files_exist"
+    },
+    {
+      "id": "promotion-workflow",
+      "name": "Promotion Workflow",
+      "description": "Promote preview to production via PR",
+      "category": "deployment",
+      "implemented": true,
+      "files": [
+        ".github/workflows/promote-preview.yml"
+      ],
+      "test_method": "check_files_exist"
+    },
+    {
+      "id": "demo-events",
+      "name": "Demo Events Generation",
+      "description": "Generate demo events with current timestamps for testing",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "generate_demo_events.py"
+      ],
+      "test_method": "check_files_exist"
+    },
+    {
+      "id": "multi-data-sources",
+      "name": "Multiple Data Sources",
+      "description": "Support for real, demo, or combined event data sources",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "static/js/app.js"
+      ],
+      "config_keys": [
+        "data.source",
+        "data.sources"
+      ],
+      "code_patterns": [
+        {
+          "file": "static/js/app.js",
+          "pattern": "loadEvents.*source|data.source",
+          "description": "Data source selection logic"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "custom-domain-support",
+      "name": "Custom Domain Support",
+      "description": "Support for custom domains via CNAME",
+      "category": "deployment",
+      "implemented": true,
+      "files": [
+        "CNAME",
+        ".github/workflows/deploy-pages.yml"
+      ],
+      "test_method": "check_files_exist"
+    },
+    {
+      "id": "event-filters",
+      "name": "Event Filters",
+      "description": "Filter events by category, time, and distance",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "static/js/app.js",
+        "static/index.html"
+      ],
+      "code_patterns": [
+        {
+          "file": "static/js/app.js",
+          "pattern": "filterEvents|applyFilters",
+          "description": "Event filtering logic"
+        },
+        {
+          "file": "static/index.html",
+          "pattern": "id=\".*-filter\"",
+          "description": "Filter UI elements"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "event-archiving",
+      "name": "Event Archiving",
+      "description": "Automatically archive past events to keep published list current",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/modules/utils.py",
+        "src/main.py"
+      ],
+      "code_patterns": [
+        {
+          "file": "src/modules/utils.py",
+          "pattern": "def archive_old_events|archived_events.json",
+          "description": "Event archiving functionality"
+        },
+        {
+          "file": "src/main.py",
+          "pattern": "cli_archive_old_events|archive.*command",
+          "description": "CLI command for archiving"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "backup-system",
+      "name": "Data Backup System",
+      "description": "Automatic backups when clearing data with .backup extension",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/main.py"
+      ],
+      "code_patterns": [
+        {
+          "file": "src/main.py",
+          "pattern": "\\.backup|shutil.copy.*backup",
+          "description": "Backup file creation"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "custom-location",
+      "name": "Custom Location Override",
+      "description": "Allow users to set custom location instead of using geolocation",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "static/js/app.js",
+        "static/index.html"
+      ],
+      "code_patterns": [
+        {
+          "file": "static/js/app.js",
+          "pattern": "useCustomLocation|custom-location|customLat|customLon",
+          "description": "Custom location functionality"
+        },
+        {
+          "file": "static/index.html",
+          "pattern": "custom-location|use-custom-location",
+          "description": "Custom location UI elements"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "documentation-viewer",
+      "name": "Built-in Documentation Viewer",
+      "description": "TUI-based documentation viewer with search and navigation",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/main.py"
+      ],
+      "code_patterns": [
+        {
+          "file": "src/main.py",
+          "pattern": "def view_documentation|_search_docs|_show_toc",
+          "description": "Documentation viewer functions"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "example-data-loader",
+      "name": "Example Data Loader",
+      "description": "Load example/sample data for development and testing",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/main.py"
+      ],
+      "code_patterns": [
+        {
+          "file": "src/main.py",
+          "pattern": "def load_example_data|cli_load_examples|events_example",
+          "description": "Example data loading functionality"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "data-management",
+      "name": "Data Management Tools",
+      "description": "CLI and TUI tools to clear, list, and manage event data",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/main.py"
+      ],
+      "code_patterns": [
+        {
+          "file": "src/main.py",
+          "pattern": "def clear_all_data|cli_clear_data|cli_list",
+          "description": "Data management commands"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "event-cards",
+      "name": "Event Card UI",
+      "description": "Card-based UI for displaying event details in the sidebar",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "static/js/app.js",
+        "static/css/style.css",
+        "static/index.html"
+      ],
+      "code_patterns": [
+        {
+          "file": "static/js/app.js",
+          "pattern": "event-card|renderEvents|event-list",
+          "description": "Event card rendering"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "map-markers",
+      "name": "Map Markers",
+      "description": "Interactive markers on the map for events and user location",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "static/js/app.js"
+      ],
+      "code_patterns": [
+        {
+          "file": "static/js/app.js",
+          "pattern": "L\\.marker|this\\.markers|addEventMarkers",
+          "description": "Leaflet marker management"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "distance-calculation",
+      "name": "Distance Calculation",
+      "description": "Haversine formula distance calculation between coordinates",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/modules/utils.py",
+        "static/js/app.js"
+      ],
+      "code_patterns": [
+        {
+          "file": "src/modules/utils.py",
+          "pattern": "def calculate_distance|Haversine",
+          "description": "Distance calculation in Python"
+        },
+        {
+          "file": "static/js/app.js",
+          "pattern": "calculateDistance",
+          "description": "Distance calculation in JavaScript"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "responsive-design",
+      "name": "Responsive Design",
+      "description": "Mobile-responsive layout with CSS media queries",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "static/css/style.css",
+        "static/index.html"
+      ],
+      "code_patterns": [
+        {
+          "file": "static/css/style.css",
+          "pattern": "@media.*max-width|viewport",
+          "description": "Responsive CSS media queries"
+        },
+        {
+          "file": "static/index.html",
+          "pattern": "viewport.*width=device-width",
+          "description": "Viewport meta tag"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    }
+  ]
+}

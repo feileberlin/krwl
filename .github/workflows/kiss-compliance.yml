@@ -1,0 +1,178 @@
+name: KISS Compliance Check
+
+on:
+  push:
+    branches:
+      - preview
+      - main
+  pull_request:
+    branches:
+      - preview
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  kiss-check:
+    runs-on: ubuntu-latest
+    name: Check KISS Compliance
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      
+      - name: Make script executable
+        run: chmod +x check_kiss.py
+      
+      - name: Run KISS compliance check
+        id: kiss_check
+        run: |
+          echo "Running KISS compliance check..."
+          python3 check_kiss.py --verbose > kiss_report.txt 2>&1 || true
+          
+          # Capture exit code separately
+          python3 check_kiss.py --json > kiss_results.json
+          KISS_EXIT_CODE=$?
+          
+          # Display the verbose output
+          cat kiss_report.txt
+          
+          echo "exit_code=$KISS_EXIT_CODE" >> $GITHUB_OUTPUT
+          
+          # Set summary for GitHub Actions
+          if [ $KISS_EXIT_CODE -eq 0 ]; then
+            echo "status=✅ KISS compliance: PASSED" >> $GITHUB_OUTPUT
+            echo "::notice::KISS compliance check passed - codebase follows simplicity principles"
+          else
+            echo "status=⚠️ KISS compliance: VIOLATIONS FOUND" >> $GITHUB_OUTPUT
+            echo "::warning::KISS compliance check found violations - consider simplifying complex code"
+          fi
+      
+      - name: Upload KISS report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: kiss-compliance-report
+          path: |
+            kiss_report.txt
+            kiss_results.json
+      
+      - name: Comment on PR (if violations found)
+        if: github.event_name == 'pull_request' && steps.kiss_check.outputs.exit_code != '0'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            
+            // Read KISS results
+            const results = JSON.parse(fs.readFileSync('kiss_results.json', 'utf8'));
+            
+            // Build comment body
+            let commentBody = '## ⚠️ KISS Compliance Check\n\n';
+            commentBody += `**Overall Score:** ${results.overall_score.toUpperCase()}\n`;
+            commentBody += `**Files Checked:** ${results.total_files_checked}\n`;
+            commentBody += `**Violations:** ${results.summary.total_violations}\n`;
+            commentBody += `**Warnings:** ${results.summary.total_warnings}\n\n`;
+            
+            if (results.violations.length > 0) {
+              commentBody += '### ❌ Violations (Must Fix)\n\n';
+              for (const violation of results.violations.slice(0, 10)) {
+                commentBody += `- **${violation.type}** in \`${violation.file}\`\n`;
+                commentBody += `  - ${violation.message}\n\n`;
+              }
+              if (results.violations.length > 10) {
+                commentBody += `\n_... and ${results.violations.length - 10} more violations_\n\n`;
+              }
+            }
+            
+            if (results.warnings.length > 0) {
+              commentBody += '### ⚠️ Warnings (Consider Fixing)\n\n';
+              for (const warning of results.warnings.slice(0, 5)) {
+                commentBody += `- **${warning.type}** in \`${warning.file}\`\n`;
+                commentBody += `  - ${warning.message}\n\n`;
+              }
+              if (results.warnings.length > 5) {
+                commentBody += `\n_... and ${results.warnings.length - 5} more warnings_\n\n`;
+              }
+            }
+            
+            commentBody += '\n### 💡 KISS Principles\n\n';
+            commentBody += 'Keep It Simple, Stupid:\n';
+            commentBody += '- Break large files into smaller modules\n';
+            commentBody += '- Split complex functions into smaller ones\n';
+            commentBody += '- Reduce dependencies where possible\n';
+            commentBody += '- Flatten deeply nested code\n';
+            commentBody += '- Keep each component focused on one thing\n\n';
+            
+            commentBody += '---\n';
+            commentBody += '*Run `python3 check_kiss.py` locally to see the full report.*\n';
+            
+            // Post comment
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: commentBody
+            });
+      
+      - name: Create job summary
+        if: always()
+        run: |
+          echo "## KISS Compliance Check Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.kiss_check.outputs.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f kiss_results.json ]; then
+            echo "### Summary" >> $GITHUB_STEP_SUMMARY
+            python3 -c "
+import json
+with open('kiss_results.json', 'r') as f:
+    results = json.load(f)
+    print(f\"- **Score**: {results['overall_score']}\")
+    print(f\"- **Files Checked**: {results['total_files_checked']}\")
+    print(f\"- **Violations**: {results['summary']['total_violations']}\")
+    print(f\"- **Warnings**: {results['summary']['total_warnings']}\")
+" >> $GITHUB_STEP_SUMMARY
+            
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### KISS Principles" >> $GITHUB_STEP_SUMMARY
+            echo "✅ Simple: Easy to understand" >> $GITHUB_STEP_SUMMARY
+            echo "✅ Small: Files < 500 lines, functions < 50 lines" >> $GITHUB_STEP_SUMMARY
+            echo "✅ Focused: Each component does one thing" >> $GITHUB_STEP_SUMMARY
+            echo "✅ Flat: Minimal nesting (< 4 levels)" >> $GITHUB_STEP_SUMMARY
+            echo "✅ Independent: Minimal dependencies" >> $GITHUB_STEP_SUMMARY
+          fi
+      
+      - name: Post merge notification
+        if: github.event_name == 'push' && github.ref == 'refs/heads/preview'
+        run: |
+          echo "🎉 PR merged to preview branch"
+          echo "📊 KISS compliance check completed"
+          echo "📁 Report uploaded as artifact"
+          
+          if [ "${{ steps.kiss_check.outputs.exit_code }}" -eq "0" ]; then
+            echo "✅ No KISS violations - codebase remains simple!"
+          else
+            echo "⚠️  KISS violations detected - review the report"
+            echo "💡 Consider refactoring before promoting to main"
+          fi
+      
+      - name: Warn on complexity increase
+        if: steps.kiss_check.outputs.exit_code != '0'
+        run: |
+          echo "::warning::KISS compliance violations found. The codebase is becoming more complex."
+          echo "::warning::Review the uploaded report and consider simplifying before promoting to production."
+          
+          # Don't fail the build, just warn
+          exit 0

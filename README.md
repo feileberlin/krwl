@@ -368,6 +368,50 @@ This project is open source and available under the MIT License.
 
 Contributions are welcome! Please feel free to submit issues or pull requests.
 
+## Feature Registry and Testing
+
+This project includes an automated feature registry and testing system to ensure all documented features remain present after code changes.
+
+### Feature Registry
+
+All features are documented in `features.json` with:
+- Feature descriptions and categories
+- File locations implementing each feature
+- Code patterns to verify feature presence
+- Configuration keys used by features
+
+### Automated Testing
+
+A GitHub Actions workflow automatically verifies features on every push and PR:
+
+```bash
+# Run feature verification locally
+python3 verify_features.py
+
+# See detailed output
+python3 verify_features.py --verbose
+
+# Get JSON results
+python3 verify_features.py --json
+```
+
+**Benefits:**
+- ✅ Prevents accidental feature removal during refactoring
+- ✅ Documents all implemented features in one place
+- ✅ Automatically fails CI if features are missing
+- ✅ Provides detailed reports on feature status
+
+See [.github/FEATURE_REGISTRY.md](.github/FEATURE_REGISTRY.md) for complete documentation.
+
+### Preview Deployment with Custom Domains
+
+Preview deployments work seamlessly with both GitHub Pages URLs and custom domains:
+
+- **GitHub Pages**: `https://feileberlin.github.io/krwl-hof/preview/`
+- **Custom Domain**: `https://krwl.in/preview/` (automatically detected from CNAME)
+
+The deployment workflow dynamically adapts based on your domain configuration.
+
 ## Roadmap
 
 - [ ] RSS feed scraping implementation
