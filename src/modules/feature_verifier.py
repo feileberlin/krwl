@@ -4,12 +4,19 @@ KRWL HOF Feature Verification Module
 
 This module verifies that all documented features in features.json are still
 present in the codebase. Designed for use in CI/CD and local development.
+
+Supports three execution modes:
+- CLI Mode: Non-interactive, scriptable (default)
+- TUI Mode: Interactive menu-driven interface (--tui)
+- Daemon Mode: Continuous monitoring with file watching (--daemon)
 """
 
 import json
 import os
 import re
 import sys
+import time
+import signal
 from pathlib import Path
 
 
@@ -262,8 +269,185 @@ class FeatureVerifier:
             return 1
 
 
+def run_tui(verifier):
+    """Run interactive TUI mode for feature verification"""
+    def clear_screen():
+        os.system('cls' if os.name == 'nt' else 'clear')
+    
+    def print_header():
+        print("=" * 70)
+        print("  KRWL HOF Feature Verifier - Interactive Mode")
+        print("=" * 70)
+        print()
+    
+    def print_footer(context="main"):
+        """Print contextual help tooltips"""
+        tooltips = {
+            "main": "💡 Tip: Feature registry tracks 27 features | Use CLI mode for CI/CD automation",
+            "verify": "💡 Tip: Verification checks file existence, code patterns, and config keys | Exit code 0 = all pass",
+            "category": "💡 Tip: Categories: TUI, CLI, frontend, backend, deployment, testing, documentation",
+            "missing": "💡 Tip: Missing features may indicate refactoring broke functionality | Check recent commits",
+            "export": "💡 Tip: JSON exports can be parsed by CI/CD tools | Use for automated reports",
+        }
+        print()
+        print("─" * 70)
+        print(tooltips.get(context, tooltips["main"]))
+        print("─" * 70)
+    
+    while True:
+        clear_screen()
+        print_header()
+        print("Options:")
+        print("-" * 70)
+        print("1. Verify All Features")
+        print("2. Verify Specific Feature Category")
+        print("3. View Feature Registry")
+        print("4. Check for Missing Features")
+        print("5. Export Results to JSON")
+        print("6. Exit")
+        print("-" * 70)
+        print_footer("main")
+        print()
+        
+        choice = input("Select an option (1-6): ").strip()
+        
+        if choice == '1':
+            clear_screen()
+            print_header()
+            print("Verifying all features...\n")
+            results = verifier.verify_all()
+            verifier.print_summary(results)
+            print_footer("verify")
+            input("\nPress Enter to continue...")
+        
+        elif choice == '2':
+            clear_screen()
+            print_header()
+            features_data = verifier.load_features()
+            categories = list(features_data.get("features", {}).keys())
+            
+            print("Available categories:")
+            for i, cat in enumerate(categories, 1):
+                print(f"{i}. {cat}")
+            print_footer("category")
+            print()
+            
+            try:
+                cat_choice = int(input(f"Select category (1-{len(categories)}): ").strip())
+                if 1 <= cat_choice <= len(categories):
+                    category = categories[cat_choice - 1]
+                    print(f"\nVerifying {category} features...\n")
+                    results = verifier.verify_all()
+                    # Filter results for selected category
+                    filtered = {
+                        k: v for k, v in results.items()
+                        if k in ['total', 'passed', 'failed', 'features']
+                    }
+                    if 'features' in filtered:
+                        filtered['features'] = [
+                            f for f in filtered['features']
+                            if f.get('category') == category
+                        ]
+                    verifier.print_summary(filtered)
+                else:
+                    print("Invalid selection")
+            except (ValueError, IndexError):
+                print("Invalid input")
+            input("\nPress Enter to continue...")
+        
+        elif choice == '3':
+            clear_screen()
+            print_header()
+            features_data = verifier.load_features()
+            print("Feature Registry:")
+            print("-" * 70)
+            for category, feats in features_data.get("features", {}).items():
+                print(f"\n{category.upper()} ({len(feats)} features):")
+                for feat in feats:
+                    print(f"  • {feat.get('name', 'Unknown')}")
+            print_footer("main")
+            input("\nPress Enter to continue...")
+        
+        elif choice == '4':
+            clear_screen()
+            print_header()
+            print("Checking for missing features...\n")
+            results = verifier.verify_all()
+            if results['failed'] > 0:
+                print(f"Found {results['failed']} missing or broken features:\n")
+                for feat in results['features']:
+                    if feat['status'] == 'failed':
+                        print(f"❌ {feat['name']}")
+                        if feat.get('reason'):
+                            print(f"   Reason: {feat['reason']}")
+            else:
+                print("✅ All features are present and working!")
+            print_footer("missing")
+            input("\nPress Enter to continue...")
+        
+        elif choice == '5':
+            clear_screen()
+            print_header()
+            results = verifier.verify_all()
+            filename = f"feature_verification_{int(time.time())}.json"
+            with open(filename, 'w') as f:
+                json.dump(results, f, indent=2)
+            print(f"✅ Results exported to: {filename}")
+            print_footer("export")
+            input("\nPress Enter to continue...")
+        
+        elif choice == '6':
+            print("\nExiting...")
+            break
+        
+        else:
+            print("Invalid option")
+            time.sleep(1)
+
+
+def run_daemon(verifier, interval=300, watch=False):
+    """Run in daemon mode with continuous monitoring"""
+    print(f"Starting Feature Verifier Daemon (interval: {interval}s, watch: {watch})")
+    print("Press Ctrl+C to stop")
+    
+    # Handle shutdown signals
+    def signal_handler(sig, frame):
+        print("\nShutting down daemon...")
+        sys.exit(0)
+    
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+    
+    last_check = 0
+    iteration = 0
+    
+    while True:
+        current_time = time.time()
+        
+        # Check if it's time to run
+        if current_time - last_check >= interval:
+            iteration += 1
+            timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+            print(f"\n[{timestamp}] Running verification check #{iteration}")
+            
+            results = verifier.verify_all()
+            
+            if results['failed'] > 0:
+                print(f"⚠️  WARNING: {results['failed']} features failed verification")
+                for feat in results['features']:
+                    if feat['status'] == 'failed':
+                        print(f"  ❌ {feat['name']}: {feat.get('reason', 'Unknown')}")
+            else:
+                print(f"✅ All {results['passed']} features verified successfully")
+            
+            last_check = current_time
+        
+        # Sleep for 1 second before checking again
+        time.sleep(1)
+
+
 def main():
-    """Main entry point"""
+    """Main entry point supporting CLI, TUI, and Daemon modes"""
     import argparse
     
     parser = argparse.ArgumentParser(
@@ -285,21 +469,58 @@ def main():
         default=None,
         help="Repository root directory (default: current directory)"
     )
+    parser.add_argument(
+        "--tui",
+        action="store_true",
+        help="Launch interactive TUI mode"
+    )
+    parser.add_argument(
+        "--daemon",
+        action="store_true",
+        help="Run in daemon mode (continuous monitoring)"
+    )
+    parser.add_argument(
+        "--interval",
+        type=int,
+        default=300,
+        help="Check interval in seconds for daemon mode (default: 300)"
+    )
+    parser.add_argument(
+        "--watch",
+        action="store_true",
+        help="Watch file system for changes (daemon mode only)"
+    )
     
     args = parser.parse_args()
     
+    # Initialize verifier
     verifier = FeatureVerifier(
         repo_root=args.repo_root,
         verbose=args.verbose
     )
-    results = verifier.verify_all()
     
-    if args.json:
-        print("\n" + json.dumps(results, indent=2))
-        sys.exit(0 if results['failed'] == 0 else 1)
+    # Launch appropriate mode
+    if args.tui:
+        # Interactive TUI mode
+        run_tui(verifier)
+        sys.exit(0)
+    
+    elif args.daemon:
+        # Daemon mode
+        run_daemon(verifier, interval=args.interval, watch=args.watch)
+        sys.exit(0)
+    
     else:
-        exit_code = verifier.print_summary(results)
-        sys.exit(exit_code)
+        # Standard CLI mode
+        results = verifier.verify_all()
+        
+        if args.json:
+            print("\n" + json.dumps(results, indent=2))
+            sys.exit(0 if results['failed'] == 0 else 1)
+        else:
+            exit_code = verifier.print_summary(results)
+            sys.exit(exit_code)
+
 
 
 if __name__ == "__main__":
