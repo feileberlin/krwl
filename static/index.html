@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRWL HOF - Community Events</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>KRWL HOF Community Events</h1>
+            <div id="status">
+                <span id="location-status">Getting location...</span>
+                <span id="event-count">0 events nearby</span>
+            </div>
+        </header>
+        
+        <div id="map"></div>
+        
+        <div id="event-list">
+            <h2>Upcoming Events (Until Sunrise)</h2>
+            <div id="events-container">
+                <p>Loading events...</p>
+            </div>
+        </div>
+        
+        <div id="event-detail" class="hidden">
+            <div class="detail-content">
+                <button id="close-detail">&times;</button>
+                <h2 id="detail-title"></h2>
+                <p id="detail-description"></p>
+                <div id="detail-info">
+                    <p><strong>Location:</strong> <span id="detail-location"></span></p>
+                    <p><strong>Time:</strong> <span id="detail-time"></span></p>
+                    <p><strong>Distance:</strong> <span id="detail-distance"></span></p>
+                </div>
+                <a id="detail-link" href="#" target="_blank">More Info</a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

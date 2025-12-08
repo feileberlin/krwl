@@ -1,0 +1,37 @@
+{
+  "pending_events": [
+    {
+      "id": "pending_1",
+      "title": "Street Food Market",
+      "description": "Weekly street food market with vendors from around the world. Try cuisines from 15+ countries. Live music entertainment.",
+      "location": {
+        "name": "Market Square",
+        "lat": 52.5195,
+        "lon": 13.4055
+      },
+      "start_time": "2025-12-09T12:00:00",
+      "end_time": "2025-12-09T20:00:00",
+      "url": "https://example.com/food-market",
+      "source": "rss",
+      "scraped_at": "2025-12-08T10:00:00",
+      "status": "pending"
+    },
+    {
+      "id": "pending_2",
+      "title": "Bike Repair Workshop",
+      "description": "Learn basic bike maintenance and repair. Bring your bike if it needs fixing. Tools and parts available for purchase.",
+      "location": {
+        "name": "Community Workshop",
+        "lat": 52.5185,
+        "lon": 13.4065
+      },
+      "start_time": "2025-12-09T10:00:00",
+      "end_time": "2025-12-09T13:00:00",
+      "url": "https://example.com/bike-repair",
+      "source": "api",
+      "scraped_at": "2025-12-08T10:30:00",
+      "status": "pending"
+    }
+  ],
+  "last_scraped": "2025-12-08T10:30:00"
+}

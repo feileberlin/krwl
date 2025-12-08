@@ -1,0 +1,85 @@
+{
+  "events": [
+    {
+      "id": "example_1",
+      "title": "Community Garden Meetup",
+      "description": "Join us for our weekly community garden meetup. We'll be planting winter vegetables and discussing plans for the spring season. All skill levels welcome!",
+      "location": {
+        "name": "HOF Community Garden",
+        "lat": 52.5200,
+        "lon": 13.4050
+      },
+      "start_time": "2025-12-08T18:00:00",
+      "end_time": "2025-12-08T20:00:00",
+      "url": "https://example.com/garden-meetup",
+      "source": "manual",
+      "status": "published",
+      "published_at": "2025-12-08T12:00:00"
+    },
+    {
+      "id": "example_2",
+      "title": "Open Mic Night at Berlin Cafe",
+      "description": "Monthly open mic night featuring local musicians, poets, and performers. Sign up starts at 7 PM, performances begin at 8 PM. Free entry, donations appreciated.",
+      "location": {
+        "name": "Berlin Cafe & Bar",
+        "lat": 52.5190,
+        "lon": 13.4030
+      },
+      "start_time": "2025-12-08T19:00:00",
+      "end_time": "2025-12-08T23:00:00",
+      "url": "https://example.com/open-mic",
+      "source": "manual",
+      "status": "published",
+      "published_at": "2025-12-08T12:00:00"
+    },
+    {
+      "id": "example_3",
+      "title": "Neighborhood Book Club",
+      "description": "This month we're discussing 'The Midnight Library' by Matt Haig. Coffee and snacks provided. New members always welcome!",
+      "location": {
+        "name": "Community Library",
+        "lat": 52.5210,
+        "lon": 13.4070
+      },
+      "start_time": "2025-12-09T17:30:00",
+      "end_time": "2025-12-09T19:00:00",
+      "url": "https://example.com/book-club",
+      "source": "manual",
+      "status": "published",
+      "published_at": "2025-12-08T12:00:00"
+    },
+    {
+      "id": "example_4",
+      "title": "Morning Yoga in the Park",
+      "description": "Start your day with a free outdoor yoga session suitable for all levels. Bring your own mat and water. Weather permitting.",
+      "location": {
+        "name": "HOF Central Park",
+        "lat": 52.5180,
+        "lon": 13.4080
+      },
+      "start_time": "2025-12-09T07:00:00",
+      "end_time": "2025-12-09T08:00:00",
+      "url": "https://example.com/morning-yoga",
+      "source": "manual",
+      "status": "published",
+      "published_at": "2025-12-08T12:00:00"
+    },
+    {
+      "id": "example_5",
+      "title": "Tech Skills Workshop: Web Development Basics",
+      "description": "Learn HTML, CSS, and JavaScript basics in this beginner-friendly workshop. Laptops will be provided if you don't have one. Limited spots available.",
+      "location": {
+        "name": "HOF Tech Hub",
+        "lat": 52.5220,
+        "lon": 13.4040
+      },
+      "start_time": "2025-12-09T14:00:00",
+      "end_time": "2025-12-09T17:00:00",
+      "url": "https://example.com/tech-workshop",
+      "source": "manual",
+      "status": "published",
+      "published_at": "2025-12-08T12:00:00"
+    }
+  ],
+  "last_updated": "2025-12-08T12:00:00"
+}

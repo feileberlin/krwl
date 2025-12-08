@@ -1,0 +1,34 @@
+{
+  "app": {
+    "name": "KRWL HOF Community Events",
+    "description": "Community events scraper and viewer with geolocation filtering"
+  },
+  "scraping": {
+    "sources": [
+      {
+        "name": "example_source",
+        "url": "https://example.com/events",
+        "type": "rss",
+        "enabled": false
+      }
+    ],
+    "interval_minutes": 60
+  },
+  "filtering": {
+    "max_distance_km": 5.0,
+    "show_until": "next_sunrise"
+  },
+  "map": {
+    "default_center": {
+      "lat": 52.52,
+      "lon": 13.405
+    },
+    "default_zoom": 13,
+    "tile_provider": "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    "attribution": "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
+  },
+  "editor": {
+    "require_approval": true,
+    "auto_publish": false
+  }
+}

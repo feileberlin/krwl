@@ -1,0 +1,11 @@
+# KRWL HOF Community Events Manager
+# Python dependencies for the event management system
+
+# No external dependencies required for basic functionality
+# The system uses only Python standard library
+
+# Optional dependencies for enhanced scraping capabilities:
+# requests>=2.31.0  # For HTTP requests
+# beautifulsoup4>=4.12.0  # For HTML parsing
+# feedparser>=6.0.10  # For RSS feed parsing
+# astral>=3.2  # For accurate sunrise/sunset calculations
