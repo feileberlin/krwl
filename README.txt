@@ -1874,3 +1874,378 @@ https://github.com/feileberlin/krwl-hof
 
 Last updated: 2025-12-08
 Version: 1.0.0
+
+
+================================================================================
+16. DEPLOYMENT WORKFLOWS (GitHub Actions)
+================================================================================
+
+16.1 OVERVIEW
+-------------
+The project uses a safe two-step deployment workflow:
+- MAIN BRANCH = Production (fast, optimized, real data only)
+- PREVIEW BRANCH = Testing environment (debug mode, demo+real data)
+
+Benefits:
+✓ Test changes safely before production
+✓ Debug mode in preview with console logging  
+✓ Demo events with current timestamps for testing
+✓ Maximum performance in production
+✓ Easy rollback if issues found
+
+
+16.2 CONFIGURATION FILES
+------------------------
+
+Production Config (config.prod.json):
+- Debug mode: OFF
+- Performance: Maximum speed, caching enabled
+- Data source: Real events only
+- Used by: main branch
+- Domain: Custom domain via CNAME
+
+Development Config (config.dev.json):
+- Debug mode: ON (console logging enabled)
+- Performance: Caching disabled for testing
+- Data source: Both real and demo events
+- Used by: preview branch
+- Domain: GitHub Pages /preview/ path (no CNAME)
+
+Data Source Options (Development Mode Only):
+1. "source": "real" - Load only real scraped events
+2. "source": "demo" - Load only demo events with current timestamps
+3. "source": "both" - Load both real and demo events (default for dev)
+
+
+16.3 WORKFLOWS
+--------------
+
+A. Production Deploy (deploy-pages.yml)
+   Triggers: Push to main, manual dispatch
+   
+   What it does:
+   - Copies static/ → publish/
+   - Uses config.prod.json (optimized, no debug)
+   - Includes CNAME for custom domain
+   - Deploys to GitHub Pages root
+   
+   Result: Fast production site at custom domain
+
+B. Preview Deploy (deploy-preview.yml)
+   Triggers: Push to preview, manual dispatch
+   
+   What it does:
+   - Copies static/ → publish/preview/
+   - Generates fresh demo events from real templates
+   - Uses config.dev.json (debug enabled, real+demo data)
+   - NO CNAME (avoids domain conflict)
+   - Injects <base href="/preview/"> tag
+   - Deploys to GitHub Pages /preview/ path
+   
+   Result: Debug-enabled preview at yourdomain.com/preview/
+
+C. Promote Preview (promote-preview.yml)
+   Triggers: Manual dispatch only
+   
+   What it does:
+   - Creates PR from preview → main
+   - Optional auto-merge (fails gracefully with branch protection)
+   
+   Usage: Actions → Promote Preview to Production → Run workflow
+
+
+16.4 DEVELOPER WORKFLOW
+-----------------------
+
+1. Make changes on feature branch
+2. Submit PR to preview branch
+3. Merge to preview → auto-deploys to /preview/
+4. Test thoroughly at /preview/ (debug mode enabled)
+5. Run "Promote Preview" workflow → creates PR to main
+6. Review and merge PR to main
+7. Production deploys automatically
+
+
+16.5 DEBUG MODE FEATURES
+------------------------
+
+When debug mode is enabled (preview/dev config):
+
+Browser Console Shows:
+- [KRWL Debug] Config loaded: {...}
+- [KRWL Debug] Data source mode: both
+- [KRWL Debug] Loaded X real events
+- [KRWL Debug] Loaded Y demo events
+- [KRWL Debug] Filtering events: {...}
+- [KRWL Debug] Event "Title" filtered out: reason
+- [KRWL Debug] Filtered to X events
+
+Browser Title:
+- Shows "[DEBUG MODE]" indicator
+- Demo events marked with [DEMO] prefix
+
+To Enable Debug Mode:
+1. Set "debug": true in config file
+2. Or use config.dev.json
+3. Check console for [KRWL Debug] messages
+
+
+16.6 DEMO EVENTS
+----------------
+
+Demo events are automatically generated from real event templates with
+current timestamps, making them perfect for testing time-based features.
+
+Generation:
+  python3 generate_demo_events.py > static/events.demo.json
+
+Features:
+- Uses real events as templates (preserves structure)
+- Fresh timestamps relative to current time
+- Marked with [DEMO] prefix in titles
+- Includes sunrise edge cases for testing:
+  * Events ending 5 min before sunrise
+  * Events ending exactly at sunrise
+  * Events ending after sunrise (should filter)
+  * Events crossing sunrise boundary
+  * All-night events ending at sunrise
+  * Events far away (distance testing)
+
+Auto-cleanup:
+- Old demo files removed automatically
+- Regenerated on each preview deploy
+- Always fresh and useful for testing
+
+
+16.7 LOCAL TESTING
+------------------
+
+Test with Debug Mode and Demo Data:
+
+# Generate fresh demo events
+python3 generate_demo_events.py > static/events.demo.json
+
+# Use development config
+cp config.dev.json static/config.json
+
+# Serve locally
+python3 -m http.server 8000
+# or
+npx serve static
+
+# Access at http://localhost:8000
+# Check console for [KRWL Debug] messages
+# Look for [DEMO] prefix in event titles
+
+Test with Production Config:
+
+# Use production config
+cp config.prod.json static/config.json
+
+# Serve locally
+python3 -m http.server 8000
+
+# Check: No debug logs (fast mode)
+
+
+16.8 PROMOTE PREVIEW WORKFLOW
+------------------------------
+
+How to Promote Changes to Production:
+
+1. Navigate to GitHub Actions tab
+2. Select "Promote Preview to Production"
+3. Click "Run workflow"
+4. Choose auto-merge option:
+   - false (default): Creates PR for manual review
+   - true: Attempts to merge automatically
+5. Click "Run workflow"
+6. Wait for completion (~30 seconds)
+7. Review the created PR
+8. Merge when ready → production deploys
+
+Auto-merge Behavior:
+- With branch protection: Creates PR, merge manually
+- Without branch protection: Merges automatically
+- Fails gracefully if blocked
+
+When to Use Auto-merge:
+✓ Solo developer with full control
+✓ Hotfix needed immediately
+✓ No branch protection enabled
+✓ Preview fully tested
+
+When to Use Manual Review:
+✓ Team collaboration required
+✓ Branch protection enabled
+✓ Following standard release process
+✓ Want double-check before production
+
+
+16.9 FIRST TIME SETUP
+---------------------
+
+1. Disable old workflows (if any):
+   mv .github/workflows/old-deploy.yml .github/workflows/old-deploy.yml.disabled
+
+2. Create preview branch:
+   git checkout -b preview
+   git push -u origin preview
+
+3. Configure GitHub Pages:
+   - Repository Settings → Pages
+   - Source: GitHub Actions
+   - Custom domain: (if applicable)
+
+4. Set branch protection (recommended):
+   - Protect main branch
+   - Require PR reviews
+   - Prevent direct pushes
+
+
+16.10 TROUBLESHOOTING
+---------------------
+
+Preview site shows 404:
+- Check workflow logs: Actions → Deploy Preview
+- Verify publish/preview/index.html exists in logs
+- Base tag should be <base href="/preview/">
+
+Production site missing config:
+- Check config.prod.json exists in repo root
+- Verify workflow copies it in deploy-pages.yml logs
+
+Assets not loading in preview:
+- Base tag might be missing
+- Check view-source: of /preview/ page
+- Should see: <base href="/preview/">
+
+Debug mode not working:
+- Check which config is loaded: Network tab → config.json
+- Verify "debug": true in config
+- Check console for [KRWL Debug] messages
+
+Demo events not showing:
+- Check events.demo.json exists in publish/preview/
+- Verify config.json has "source": "demo" or "source": "both"
+- Generate fresh demo: python3 generate_demo_events.py > static/events.demo.json
+- Demo events have [DEMO] prefix in titles
+
+Old timestamps in demo events:
+- Demo events regenerated on each preview deploy
+- For local testing: run python3 generate_demo_events.py > static/events.demo.json
+- Old demo files auto-cleaned during generation
+
+Production site too slow:
+- Production uses config.prod.json (optimized for speed)
+- Caching enabled, no debug logging
+- If still slow, check:
+  * Network tab for large assets
+  * events.json file size
+  * Browser console for errors (should be none)
+
+
+16.11 SECURITY NOTES
+--------------------
+
+Never commit secrets to repository:
+✗ API keys
+✗ Tokens  
+✗ Credentials
+✗ Passwords
+
+Use repository secrets instead:
+✓ GitHub Actions secrets
+✓ Environment variables
+✓ Secure credential storage
+
+Safe in repo:
+✓ Public config files
+✓ Sample data
+✓ Static assets
+✓ Demo event generator
+
+
+16.12 WORKFLOW DIAGRAM
+----------------------
+
+feature-branch
+     ↓
+   preview (test with debug + demo data)
+     ↓
+   [Test at /preview/ path]
+     ↓
+   [Run Promote workflow]
+     ↓
+   PR: preview → main
+     ↓
+   [Review and merge]
+     ↓
+   main (production: fast + real data only)
+     ↓
+   [Production site live]
+
+
+16.13 TIPS AND BEST PRACTICES
+------------------------------
+
+✓ Keep preview clean: Only merge tested features
+✓ Test thoroughly: Preview has debug mode for a reason
+✓ Production deploys: Only via promotion workflow
+✓ Emergency fixes: Can merge directly to main if needed
+✓ Check performance: Production should be noticeably faster
+✓ Use demo events: Perfect for testing time-based features
+✓ Monitor logs: Check workflow logs for issues
+✓ Branch protection: Recommended for team workflows
+
+
+16.14 PERFORMANCE OPTIMIZATIONS
+--------------------------------
+
+Production Mode (config.prod.json):
+- Debug logging: OFF (no console overhead)
+- Caching: ENABLED (faster repeat visits)
+- Prefetching: ENABLED (anticipate user needs)
+- Data source: Real only (no demo data overhead)
+- Result: Maximum speed, optimal user experience
+
+Development Mode (config.dev.json):
+- Debug logging: ON (troubleshooting)
+- Caching: DISABLED (see fresh changes)
+- Prefetching: DISABLED (predictable testing)
+- Data source: Both (real + demo for testing)
+- Result: Full visibility, easy debugging
+
+
+16.15 RELATED FILES
+-------------------
+
+Workflow Files:
+- .github/workflows/deploy-pages.yml (production)
+- .github/workflows/deploy-preview.yml (preview)
+- .github/workflows/promote-preview.yml (promotion)
+
+Configuration Files:
+- config.prod.json (production config)
+- config.dev.json (development config)
+
+Scripts:
+- generate_demo_events.py (demo event generator)
+
+Documentation:
+- .github/DEPLOYMENT.md (detailed deployment guide)
+- .github/PROMOTE_WORKFLOW.md (promote workflow guide)
+- README.md (project overview)
+- README.txt (this file - complete documentation)
+
+
+================================================================================
+END OF DEPLOYMENT WORKFLOWS DOCUMENTATION
+================================================================================
+
+For more details, see:
+- .github/DEPLOYMENT.md - Full deployment guide
+- .github/PROMOTE_WORKFLOW.md - Promote workflow details
+- https://github.com/feileberlin/krwl-hof
+
+Last updated: 2025-12-08

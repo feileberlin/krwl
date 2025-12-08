@@ -6,8 +6,15 @@ class EventsApp {
         this.events = [];
         this.markers = [];
         this.config = null;
+        this.debug = false;
         
         this.init();
+    }
+    
+    log(...args) {
+        if (this.debug) {
+            console.log('[KRWL Debug]', ...args);
+        }
     }
     
     async init() {
@@ -31,10 +38,16 @@ class EventsApp {
         try {
             const response = await fetch('config.json');
             this.config = await response.json();
+            this.debug = this.config.debug || false;
+            this.log('Config loaded:', this.config);
+            if (this.debug) {
+                document.title += ' [DEBUG MODE]';
+            }
         } catch (error) {
             console.error('Error loading config:', error);
             // Use defaults
             this.config = {
+                debug: false,
                 map: {
                     default_center: { lat: 52.52, lon: 13.405 },
                     default_zoom: 13
@@ -101,9 +114,53 @@ class EventsApp {
     
     async loadEvents() {
         try {
-            const response = await fetch('events.json');
-            const data = await response.json();
-            this.events = data.events || [];
+            this.log('Loading events from config data source');
+            const dataConfig = this.config.data || { source: 'real' };
+            const source = dataConfig.source || 'real';
+            
+            this.log(`Data source mode: ${source}`);
+            
+            let allEvents = [];
+            
+            if (source === 'real') {
+                // Load only real events
+                const response = await fetch('events.json');
+                const data = await response.json();
+                allEvents = data.events || [];
+                this.log(`Loaded ${allEvents.length} real events`);
+            } else if (source === 'demo') {
+                // Load only demo events
+                const response = await fetch('events.demo.json');
+                const data = await response.json();
+                allEvents = data.events || [];
+                this.log(`Loaded ${allEvents.length} demo events`);
+            } else if (source === 'both') {
+                // Load and combine both real and demo events
+                try {
+                    const realResponse = await fetch('events.json');
+                    const realData = await realResponse.json();
+                    const realEvents = realData.events || [];
+                    this.log(`Loaded ${realEvents.length} real events`);
+                    allEvents = allEvents.concat(realEvents);
+                } catch (e) {
+                    this.log('Could not load real events:', e);
+                }
+                
+                try {
+                    const demoResponse = await fetch('events.demo.json');
+                    const demoData = await demoResponse.json();
+                    const demoEvents = demoData.events || [];
+                    this.log(`Loaded ${demoEvents.length} demo events`);
+                    allEvents = allEvents.concat(demoEvents);
+                } catch (e) {
+                    this.log('Could not load demo events:', e);
+                }
+                
+                this.log(`Combined total: ${allEvents.length} events`);
+            }
+            
+            this.events = allEvents;
+            this.log(`Total events loaded: ${this.events.length}`);
         } catch (error) {
             console.error('Error loading events:', error);
             this.events = [];
@@ -138,10 +195,18 @@ class EventsApp {
         const nextSunrise = this.getNextSunrise();
         const maxDistance = this.config.filtering.max_distance_km;
         
-        return this.events.filter(event => {
+        this.log('Filtering events:', {
+            totalEvents: this.events.length,
+            nextSunrise: nextSunrise,
+            maxDistance: maxDistance,
+            userLocation: this.userLocation
+        });
+        
+        const filtered = this.events.filter(event => {
             // Filter by time (until next sunrise)
             const eventTime = new Date(event.start_time);
             if (eventTime > nextSunrise) {
+                this.log(`Event "${event.title}" filtered out: after sunrise`);
                 return false;
             }
             
@@ -156,12 +221,16 @@ class EventsApp {
                 event.distance = distance;
                 
                 if (distance > maxDistance) {
+                    this.log(`Event "${event.title}" filtered out: ${distance.toFixed(1)}km > ${maxDistance}km`);
                     return false;
                 }
             }
             
             return true;
         });
+        
+        this.log(`Filtered to ${filtered.length} events`);
+        return filtered;
     }
     
     displayEvents() {

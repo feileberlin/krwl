@@ -1,0 +1,73 @@
+name: Deploy Preview to GitHub Pages
+
+on:
+  push:
+    branches:
+      - preview
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prepare preview publish directory
+        run: |
+          set -euo pipefail
+          rm -rf publish
+          mkdir -p publish/preview
+          
+          if [ -d static ]; then
+            # Copy everything from static into publish/preview
+            cp -a static/. publish/preview/
+            echo "✓ Static files copied to preview/"
+          fi
+          
+          # Generate fresh demo events with current timestamps
+          if [ -f generate_demo_events.py ]; then
+            python3 generate_demo_events.py > publish/preview/events.demo.json 2>&1
+            echo "✓ Generated fresh demo events with current timestamps"
+          fi
+          
+          # Use development config (debugging enabled, caching disabled)
+          if [ -f config.dev.json ]; then
+            cp config.dev.json publish/preview/config.json
+            echo "✓ Using development config (debug mode enabled, demo+real data)"
+          elif [ -f config.sample.json ]; then
+            cp config.sample.json publish/preview/config.json
+            echo "✓ Using sample config"
+          fi
+          
+          # DO NOT copy CNAME for preview (prevents custom domain conflict)
+          rm -f publish/preview/CNAME
+          
+          # Prevent Jekyll processing
+          touch publish/preview/.nojekyll
+          
+          # Inject base tag for preview path if not present
+          if [ -f publish/preview/index.html ]; then
+            if ! grep -q '<base' publish/preview/index.html; then
+              sed -i '/<head>/a\    <base href="/preview/">' publish/preview/index.html
+              echo "✓ Base tag injected for /preview/ path"
+            fi
+          fi
+          
+          echo "Preview publish directory contents:"
+          ls -la publish/preview
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: publish
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4

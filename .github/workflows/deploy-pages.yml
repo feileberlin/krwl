@@ -29,13 +29,19 @@ jobs:
             # copy everything from static into publish root (preserve attributes)
             cp -a static/. publish/ || true
           fi
+          # Use production config (optimized for speed, no debugging)
+          if [ -f config.prod.json ]; then
+            cp config.prod.json publish/config.json
+            echo "✓ Using production config (optimized for maximum speed)"
+          fi
           # include CNAME so custom domain stays configured
           if [ -f CNAME ]; then
             cp CNAME publish/CNAME
+            echo "✓ CNAME configured for custom domain"
           fi
           # prevent Jekyll processing
           touch publish/.nojekyll
-          echo "Publish directory contents:"
+          echo "Production publish directory contents:"
           ls -la publish
 
       - name: Upload Pages artifact

@@ -13,6 +13,8 @@ A community events scraper and viewer with geolocation filtering. This system al
 - 🐍 **Python TUI**: Single modular Python terminal interface
 - 🌐 **Static Site**: Generates static files for GitHub Pages deployment
 - 🚀 **No Jekyll**: Includes `.nojekyll` for direct GitHub Pages hosting
+- 🐛 **Debug Mode**: Development config with console logging for troubleshooting
+- ⚡ **Performance**: Production config optimized for maximum speed
 
 ## Project Structure
 
@@ -79,32 +81,76 @@ The TUI provides the following options:
 
 ### 4. Deploy to GitHub Pages
 
-After generating the static site:
+This project uses a **two-step deployment workflow** for safe releases:
 
-1. The static files are in the `static/` directory
-2. Configure GitHub Pages to serve from the repository root or `static/` folder
-3. Access your site at `https://yourusername.github.io/krwl-hof/static/`
+#### Quick Deploy Guide
 
-Or copy static files to root:
+1. **Make changes** and push to `preview` branch → auto-deploys to `/preview/` with debug mode
+2. **Test thoroughly** at `yourdomain.com/preview/` (debug logs in console)
+3. **Run "Promote Preview" workflow** → creates PR from `preview` to `main`
+4. **Merge PR** → deploys to production with maximum performance
 
-```bash
-cp static/index.html .
-cp static/events.json .
-cp static/config.json .
-cp -r static/css .
-cp -r static/js .
-```
+#### Configuration Files
 
-Then configure GitHub Pages to serve from root.
+- **`config.prod.json`**: Production (fast, no debugging, caching enabled)
+- **`config.dev.json`**: Preview/Development (debug logs, caching disabled)
+
+#### Full Documentation
+
+See [.github/DEPLOYMENT.md](.github/DEPLOYMENT.md) for complete deployment guide including:
+- Workflow details
+- Debug mode features
+- Local testing
+- Troubleshooting
+- Security notes
 
 ## Configuration
 
-Edit `config/config.json` to customize:
+The system uses different configs for different environments:
+
+### Development/Preview (`config.dev.json`)
+
+```json
+{
+  "app": {
+    "name": "KRWL HOF Community Events [PREVIEW]"
+  },
+  "debug": true,
+  "performance": {
+    "cache_enabled": false,
+    "prefetch_events": false
+  }
+}
+```
+
+### Production (`config.prod.json`)
 
 ```json
 {
   "app": {
     "name": "KRWL HOF Community Events"
+  },
+  "debug": false,
+  "performance": {
+    "cache_enabled": true,
+    "prefetch_events": true
+  }
+}
+```
+
+### Base Config Structure
+
+Edit config files to customize:
+
+```json
+{
+  "app": {
+    "name": "KRWL HOF Community Events"
+  },
+  "debug": false,
+  "performance": {
+    "cache_enabled": true,
+    "prefetch_events": true
   },
   "scraping": {
     "sources": [
@@ -248,6 +294,35 @@ The codebase is modular and expandable:
 - Follow the single responsibility principle
 - Maintain backward compatibility with data formats
 
+## Debug Mode
+
+### Enabling Debug Mode
+
+Set `"debug": true` in config file (automatically enabled in `config.dev.json`):
+
+```json
+{
+  "debug": true
+}
+```
+
+### Debug Features
+
+When debug mode is enabled:
+- **Browser title** shows `[DEBUG MODE]`
+- **Console logs** prefixed with `[KRWL Debug]` show:
+  - Config loading
+  - Event loading and count
+  - Filter operations and reasons
+  - Distance calculations
+- **Performance** optimizations disabled for testing
+
+### Viewing Debug Logs
+
+1. Open browser console (F12)
+2. Look for `[KRWL Debug]` messages
+3. Filter by "KRWL" to see only app logs
+
 ## Troubleshooting
 
 ### Location not working
@@ -256,13 +331,34 @@ The browser needs HTTPS or localhost to access geolocation. When deploying to Gi
 
 ### No events showing
 
-1. Check if events exist in `data/events.json`
-2. Verify events are within the time filter (before next sunrise)
-3. Check if events are within distance filter (if location is enabled)
+1. **Enable debug mode** to see filtering reasons
+2. Check if events exist in `data/events.json`
+3. Verify events are within the time filter (before next sunrise)
+4. Check if events are within distance filter (if location is enabled)
+5. Review console logs for `[KRWL Debug]` filter messages
 
 ### Static site not updating
 
 Run "Generate Static Site" from the TUI menu after making any changes to events or configuration.
+
+### Preview site debugging
+
+1. Visit `/preview/` path on your GitHub Pages site
+2. Check that title shows `[PREVIEW]`
+3. Open console - debug logs should appear
+4. See [.github/DEPLOYMENT.md](.github/DEPLOYMENT.md) for more help
+
+### Production site too slow
+
+Production uses `config.prod.json` which is optimized for speed:
+- Caching enabled
+- No debug logging
+- Prefetching enabled
+
+If it's still slow, check:
+1. Network tab for large assets
+2. Events.json file size
+3. Browser console for errors (should be none)
 
 ## License
 
