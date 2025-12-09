@@ -827,16 +827,8 @@ class EventsApp {
             const categoryText = option.dataset.originalText;
             const categoryCount = categoryCounts[categoryValue] || 0;
             
-            // Format the option text with count
-            let displayText = '';
-            if (categoryValue === 'all') {
-                // For "all" category, just show the original text with count in parentheses
-                displayText = `${categoryText} (${categoryCount})`;
-            } else {
-                // For other categories, show "category (count)"
-                displayText = `${categoryText} (${categoryCount})`;
-            }
-            
+            // Format the option text with count: "category (count)"
+            const displayText = `${categoryText} (${categoryCount})`;
             option.textContent = displayText;
         }
         
