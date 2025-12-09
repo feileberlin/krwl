@@ -1075,3 +1075,59 @@ body {
         padding: 1rem;
     }
 }
+
+/* === IMPRINT LOCATION POPUP === */
+
+/**
+ * Special styling for the imprint/project location popup
+ * Distinguishes it from regular event popups
+ */
+.imprint-popup-container .leaflet-popup-content-wrapper {
+    background: rgba(0, 100, 0, 0.95);
+    border: 2px solid #00ff00;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+}
+
+.imprint-popup-container .leaflet-popup-tip {
+    background: rgba(0, 100, 0, 0.95);
+    border: 1px solid #00ff00;
+}
+
+.imprint-popup h3 {
+    color: #00ff00;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0 0 0.5rem 0;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+}
+
+.imprint-popup p {
+    color: #00ff00;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9rem;
+    margin: 0.3rem 0;
+    line-height: 1.4;
+}
+
+.imprint-popup strong {
+    color: #00ff00;
+    text-shadow: 0 0 8px rgba(0, 255, 0, 0.6);
+}
+
+/* Add pulsing animation to imprint marker */
+@keyframes pulse-imprint {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.1);
+    }
+}
+
+.leaflet-marker-icon.imprint-marker {
+    animation: pulse-imprint 2s ease-in-out infinite;
+}
+

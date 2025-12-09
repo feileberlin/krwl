@@ -34,6 +34,9 @@ class EventsApp {
         // Array of Leaflet marker objects currently displayed on map
         this.markers = [];
         
+        // Special marker for imprint/project location
+        this.imprintMarker = null;
+        
         // Configuration object loaded from config.json
         this.config = null;
         
@@ -127,58 +130,6 @@ class EventsApp {
                 imprintText.style.display = 'none';
             }
             // Handle logo load error - fallback to text
-            siteLogo.onerror = () => {
-                siteLogo.style.display = 'none';
-                if (imprintText) {
-                    imprintText.style.display = 'inline';
-                }
-            };
-        }
-    }
-        
-        // Initialize UI from config
-        this.initUI();
-        
-        // Initialize map
-        this.initMap();
-        
-        // Get user location
-        this.getUserLocation();
-        
-        // Load events
-        await this.loadEvents();
-        
-        // Setup event listeners
-        this.setupEventListeners();
-    }
-    
-    initUI() {
-        // Set page title from config
-        if (this.config.app && this.config.app.name) {
-            document.title = this.config.app.name + (this.debug ? ' [DEBUG MODE]' : '');
-        }
-        
-        // Set logo and imprint link from config
-        const ui = this.config.ui || {};
-        const imprintLink = document.getElementById('imprint-link');
-        const siteLogo = document.getElementById('site-logo');
-        const imprintText = document.getElementById('imprint-text');
-        
-        if (imprintLink && ui.imprint_url) {
-            imprintLink.href = ui.imprint_url;
-        }
-        
-        if (imprintText && ui.imprint_text) {
-            imprintText.textContent = ui.imprint_text;
-        }
-        
-        if (siteLogo && ui.logo) {
-            siteLogo.src = ui.logo;
-            siteLogo.style.display = 'block';
-            if (imprintText) {
-                imprintText.style.display = 'none';
-            }
-            // Handle logo load error
             siteLogo.onerror = () => {
                 siteLogo.style.display = 'none';
                 if (imprintText) {
@@ -707,7 +658,6 @@ class EventsApp {
         // Announce to screen readers
         this.announceToScreenReader(`${filteredEvents.length} events displayed on map. Use arrow keys to navigate between events.`);
     }
-    }
     
     announceToScreenReader(message) {
         // Create or update ARIA live region for screen reader announcements
@@ -1149,6 +1099,68 @@ class EventsApp {
                 document.getElementById('event-detail').classList.add('hidden');
             }
         });
+        
+        // Imprint link handler - show project location on map if configured
+        const imprintLink = document.getElementById('imprint-link');
+        if (imprintLink && this.config.ui && this.config.ui.imprint_location) {
+            imprintLink.addEventListener('click', (e) => {
+                // Only handle if URL is '#' (indicating map marker mode)
+                if (this.config.ui.imprint_url === '#') {
+                    e.preventDefault();
+                    this.showImprintLocation();
+                }
+            });
+        }
+    }
+    
+    /**
+     * Show the project/imprint location on the map with a marker
+     * Creates a special marker at the project location based on WHOIS/config
+     */
+    showImprintLocation() {
+        const imprintLoc = this.config.ui.imprint_location;
+        if (!imprintLoc) return;
+        
+        // Pan to imprint location
+        this.map.setView([imprintLoc.lat, imprintLoc.lon], 16);
+        
+        // Create custom icon for imprint location
+        const iconUrl = imprintLoc.marker || 'markers/marker-city-center.svg';
+        const imprintIcon = L.icon({
+            iconUrl: iconUrl,
+            iconSize: [32, 48],
+            iconAnchor: [16, 48],
+            popupAnchor: [0, -48]
+        });
+        
+        // Remove any existing imprint marker
+        if (this.imprintMarker) {
+            this.map.removeLayer(this.imprintMarker);
+        }
+        
+        // Create marker
+        this.imprintMarker = L.marker([imprintLoc.lat, imprintLoc.lon], {
+            icon: imprintIcon,
+            zIndexOffset: 1000  // Keep on top
+        }).addTo(this.map);
+        
+        // Create popup content
+        const popupContent = `
+            <div class="imprint-popup">
+                <h3>${imprintLoc.name}</h3>
+                ${imprintLoc.description ? `<p>${imprintLoc.description}</p>` : ''}
+                <p><strong>Location:</strong> ${imprintLoc.lat.toFixed(4)}, ${imprintLoc.lon.toFixed(4)}</p>
+            </div>
+        `;
+        
+        // Bind and open popup
+        this.imprintMarker.bindPopup(popupContent, {
+            maxWidth: 300,
+            className: 'imprint-popup-container'
+        }).openPopup();
+        
+        // Announce to screen reader
+        this.announceToScreenReader(`Showing project location: ${imprintLoc.name}`);
     }
     
     navigateToNextMarker() {

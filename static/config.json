@@ -7,8 +7,16 @@
   },
   "ui": {
     "logo": "logo.svg",
-    "imprint_url": "imprint.html",
+    "imprint_url": "#",
+    "imprint_url_comment": "Set to '#' to show project location on map, or 'imprint.html' for separate page",
     "imprint_text": "Imprint",
+    "imprint_location": {
+      "name": "KRWL HOF Project Location",
+      "lat": 50.3167,
+      "lon": 11.9167,
+      "marker": "marker-city-center.svg",
+      "description": "Project address based on krwl.in domain registration"
+    },
     "theme_color": "#4CAF50",
     "background_color": "#1a1a1a"
   },
