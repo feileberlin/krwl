@@ -137,7 +137,19 @@
     "default_zoom": 13,
     "tile_provider": "https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png",
     "tile_provider_comment": "CartoDB Dark No Labels - Minimal map showing only major roads and features, no city labels or points of interest. Keeps focus on event markers.",
-    "attribution": "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
+    "attribution": "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
+    "predefined_locations": [
+      {
+        "name": "Hof City Center",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      {
+        "name": "Freiheitshalle",
+        "lat": 50.3175,
+        "lon": 11.9165
+      }
+    ]
   },
   "editor": {
     "require_approval": true,

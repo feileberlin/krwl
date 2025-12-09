@@ -38,7 +38,12 @@
       "11.25": "45 minuten maximalentfernung mit öffentlichen verkehrsmitteln"
     },
     "locations": {
-      "geolocation": "von deinem aktuellen standort"
+      "geolocation": "von deinem aktuellen standort",
+      "prefix": "von"
+    },
+    "predefined_locations": {
+      "Hof City Center": "Hofer Stadtzentrum",
+      "Freiheitshalle": "Freiheitshalle"
     }
   },
   "burger_menu": {

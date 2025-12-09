@@ -467,10 +467,20 @@ class EventsApp {
     populateLocationSelector() {
         const locationSelector = document.getElementById('location-selector');
         if (this.config.map?.predefined_locations) {
-            this.config.map.predefined_locations.forEach(loc => {
+            // Limit to maximum 2 predefined locations
+            const locationsToAdd = this.config.map.predefined_locations.slice(0, 2);
+            
+            locationsToAdd.forEach(loc => {
                 const option = document.createElement('option');
-                option.value = JSON.stringify({ lat: loc.lat, lon: loc.lon });
-                option.textContent = `from ${loc.name}`;
+                option.value = JSON.stringify({ lat: loc.lat, lon: loc.lon, name: loc.name });
+                
+                // Use translation if available, otherwise use config name
+                const t = window.i18n ? window.i18n.t.bind(window.i18n) : (key) => key;
+                const prefix = t('filters.locations.prefix');
+                const locationName = t(`filters.predefined_locations.${loc.name}`) || loc.name;
+                
+                option.textContent = `${prefix} ${locationName}`;
+                option.dataset.locationKey = loc.name; // Store for translation updates
                 locationSelector.appendChild(option);
             });
         }
@@ -920,6 +930,17 @@ class EventsApp {
             // Update the geolocation option
             if (locationSelector.options[0]) {
                 locationSelector.options[0].textContent = t('filters.locations.geolocation');
+            }
+            
+            // Update predefined location options
+            const prefix = t('filters.locations.prefix');
+            for (let i = 1; i < locationSelector.options.length; i++) {
+                const option = locationSelector.options[i];
+                const locationKey = option.dataset.locationKey;
+                if (locationKey) {
+                    const locationName = t(`filters.predefined_locations.${locationKey}`) || locationKey;
+                    option.textContent = `${prefix} ${locationName}`;
+                }
             }
         }
         
