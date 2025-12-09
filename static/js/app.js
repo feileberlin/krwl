@@ -80,6 +80,12 @@ class EventsApp {
         // Load configuration from config.json
         await this.loadConfig();
         
+        // Initialize i18n system with config
+        if (window.i18n) {
+            await window.i18n.init(this.config);
+            this.log('i18n initialized with locale:', window.i18n.getLocale());
+        }
+        
         // Initialize UI elements from config (logo, title, etc.)
         this.initUI();
         
@@ -721,19 +727,25 @@ class EventsApp {
         const tomorrow = new Date(now);
         tomorrow.setDate(tomorrow.getDate() + 1);
         
-        const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        // Get locale for formatting
+        const locale = window.i18n ? window.i18n.getLocale() : 'en';
+        const localeString = locale === 'en' ? 'en-US' : `${locale}-${locale.toUpperCase()}`;
         
-        // Check if today
+        const timeStr = date.toLocaleTimeString(localeString, { hour: '2-digit', minute: '2-digit' });
+        
+        // Check if today - use i18n translation
         if (date.toDateString() === now.toDateString()) {
-            return `Today ${timeStr}`;
+            const todayText = window.i18n ? window.i18n.t('time.today') : 'Today';
+            return `${todayText} ${timeStr}`;
         }
-        // Check if tomorrow
+        // Check if tomorrow - use i18n translation
         else if (date.toDateString() === tomorrow.toDateString()) {
-            return `Tomorrow ${timeStr}`;
+            const tomorrowText = window.i18n ? window.i18n.t('time.tomorrow') : 'Tomorrow';
+            return `${tomorrowText} ${timeStr}`;
         }
-        // Otherwise show date
+        // Otherwise show date with locale-aware formatting
         else {
-            return date.toLocaleString([], { 
+            return date.toLocaleString(localeString, { 
                 month: 'short', 
                 day: 'numeric', 
                 hour: '2-digit', 
@@ -1121,6 +1133,33 @@ class EventsApp {
                 }
             });
         }
+        
+        // Language selector - switch language and re-render content
+        const languageSelect = document.getElementById('language-select');
+        if (languageSelect) {
+            // Set initial value based on current i18n locale
+            if (window.i18n) {
+                languageSelect.value = window.i18n.getLocale();
+            }
+            
+            languageSelect.addEventListener('change', async (e) => {
+                const newLocale = e.target.value;
+                this.log('Language changed to:', newLocale);
+                
+                if (window.i18n) {
+                    await window.i18n.switchLanguage(newLocale);
+                    // Re-display events to update time formatting (Today/Tomorrow)
+                    this.displayEvents();
+                }
+            });
+        }
+        
+        // Listen for languageChanged events from i18n system
+        window.addEventListener('languageChanged', (e) => {
+            this.log('Language changed event received:', e.detail.locale);
+            // Re-display events to update time formatting
+            this.displayEvents();
+        });
     }
     
     /**

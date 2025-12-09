@@ -90,6 +90,10 @@
     "time_label": "Time:",
     "distance_label": "Distance:"
   },
+  "time": {
+    "today": "Today",
+    "tomorrow": "Tomorrow"
+  },
   "messages": {
     "geolocation": {
       "denied": "Geolocation permission denied",

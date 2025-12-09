@@ -90,6 +90,10 @@
     "time_label": "Zeit:",
     "distance_label": "Entfernung:"
   },
+  "time": {
+    "today": "Heute",
+    "tomorrow": "Morgen"
+  },
   "messages": {
     "geolocation": {
       "denied": "Standortzugriff verweigert",

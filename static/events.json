@@ -4,6 +4,7 @@
       "id": "example_1",
       "title": "Early Morning Farmers Market",
       "description": "Fresh local produce, baked goods, and handcrafted items. Get the best selection by arriving early!",
+      "category": "festivals",
       "location": {
         "name": "Ludwigstra\u00dfe Hof",
         "lat": 50.3175,
@@ -20,6 +21,7 @@
       "id": "example_2",
       "title": "Community Garden Meetup",
       "description": "Join us for our weekly community garden meetup. We'll be planting winter vegetables and discussing plans for the spring season. All skill levels welcome!",
+      "category": "pub-games",
       "location": {
         "name": "Theresienstein Park",
         "lat": 50.32,
@@ -36,6 +38,7 @@
       "id": "example_3",
       "title": "Open Mic Night at Galeriehaus",
       "description": "Monthly open mic night featuring local musicians, poets, and performers. Sign up starts at 7 PM, performances begin at 8 PM. Free entry, donations appreciated.",
+      "category": "on-stage",
       "location": {
         "name": "Galeriehaus Hof",
         "lat": 50.3167,
@@ -52,6 +55,7 @@
       "id": "example_4",
       "title": "Late Night Jazz Session",
       "description": "Experience smooth jazz in an intimate setting. Local and visiting musicians perform until the early hours.",
+      "category": "on-stage",
       "location": {
         "name": "Brauerei Meinel",
         "lat": 50.319,
@@ -68,6 +72,7 @@
       "id": "example_5",
       "title": "Neighborhood Book Club",
       "description": "This month we're discussing 'The Midnight Library' by Matt Haig. Coffee and snacks provided. New members always welcome!",
+      "category": "pub-games",
       "location": {
         "name": "Stadtbibliothek Hof",
         "lat": 50.315,
@@ -84,6 +89,7 @@
       "id": "example_6",
       "title": "Morning Yoga in the Park",
       "description": "Start your day with a free outdoor yoga session suitable for all levels. Bring your own mat and water. Weather permitting.",
+      "category": "festivals",
       "location": {
         "name": "B\u00fcrgerpark Theresienstein",
         "lat": 50.321,
@@ -100,6 +106,7 @@
       "id": "example_7",
       "title": "Sunrise Running Group",
       "description": "Join fellow runners for a refreshing morning run through the city. All paces welcome. Meet before sunrise!",
+      "category": "festivals",
       "location": {
         "name": "Freiheitshalle Hof",
         "lat": 50.3155,
@@ -116,6 +123,7 @@
       "id": "example_8",
       "title": "Tech Skills Workshop: Web Development Basics",
       "description": "Learn HTML, CSS, and JavaScript basics in this beginner-friendly workshop. Laptops will be provided if you don't have one. Limited spots available.",
+      "category": "pub-games",
       "location": {
         "name": "VHS Hofer Land",
         "lat": 50.318,
@@ -132,6 +140,7 @@
       "id": "example_9",
       "title": "Midnight Movie Marathon",
       "description": "Classic horror films shown back-to-back. Starts at midnight, runs until dawn. Popcorn and drinks available.",
+      "category": "on-stage",
       "location": {
         "name": "DiePelle Theater",
         "lat": 50.3165,
@@ -148,6 +157,7 @@
       "id": "example_10",
       "title": "Afternoon Tea & Art Discussion",
       "description": "Relax with afternoon tea while discussing contemporary art. This week featuring local artist exhibitions.",
+      "category": "pub-games",
       "location": {
         "name": "Kunstkaufhaus Hof",
         "lat": 50.316,
@@ -164,6 +174,7 @@
       "id": "example_11",
       "title": "Pre-Dawn Meditation Session",
       "description": "Guided meditation session in peaceful surroundings. Experience tranquility before the city wakes up.",
+      "category": "festivals",
       "location": {
         "name": "Theresienstein Park",
         "lat": 50.3205,
@@ -180,6 +191,7 @@
       "id": "example_12",
       "title": "Evening Punk Rock Show",
       "description": "Local punk bands and special guests. Doors open at 8 PM, first band at 9 PM. All ages welcome.",
+      "category": "on-stage",
       "location": {
         "name": "Kunstkaufhaus Hof",
         "lat": 50.316,
