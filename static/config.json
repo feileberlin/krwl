@@ -3,6 +3,11 @@
     "name": "KRWL HOF Community Events",
     "description": "Community events scraper and viewer with geolocation filtering"
   },
+  "ui": {
+    "logo": "",
+    "imprint_url": "imprint.html",
+    "imprint_text": "Imprint"
+  },
   "scraping": {
     "sources": [
       {

@@ -29,6 +29,9 @@ class EventsApp {
         // Load configuration
         await this.loadConfig();
         
+        // Initialize UI from config
+        this.initUI();
+        
         // Initialize map
         this.initMap();
         
@@ -42,15 +45,48 @@ class EventsApp {
         this.setupEventListeners();
     }
     
+    initUI() {
+        // Set page title from config
+        if (this.config.app && this.config.app.name) {
+            document.title = this.config.app.name + (this.debug ? ' [DEBUG MODE]' : '');
+        }
+        
+        // Set logo and imprint link from config
+        const ui = this.config.ui || {};
+        const imprintLink = document.getElementById('imprint-link');
+        const siteLogo = document.getElementById('site-logo');
+        const imprintText = document.getElementById('imprint-text');
+        
+        if (imprintLink && ui.imprint_url) {
+            imprintLink.href = ui.imprint_url;
+        }
+        
+        if (imprintText && ui.imprint_text) {
+            imprintText.textContent = ui.imprint_text;
+        }
+        
+        if (siteLogo && ui.logo) {
+            siteLogo.src = ui.logo;
+            siteLogo.style.display = 'block';
+            if (imprintText) {
+                imprintText.style.display = 'none';
+            }
+            // Handle logo load error
+            siteLogo.onerror = () => {
+                siteLogo.style.display = 'none';
+                if (imprintText) {
+                    imprintText.style.display = 'inline';
+                }
+            };
+        }
+    }
+    
     async loadConfig() {
         try {
             const response = await fetch('config.json');
             this.config = await response.json();
             this.debug = this.config.debug || false;
             this.log('Config loaded:', this.config);
-            if (this.debug) {
-                document.title += ' [DEBUG MODE]';
-            }
             
             // Fetch next full moon date based on map center location
             await this.fetchNextFullMoon();
@@ -59,9 +95,18 @@ class EventsApp {
             // Use defaults
             this.config = {
                 debug: false,
+                app: {
+                    name: 'KRWL HOF Community Events'
+                },
+                ui: {
+                    logo: '',
+                    imprint_url: 'imprint.html',
+                    imprint_text: 'Imprint'
+                },
                 map: {
-                    default_center: { lat: 52.52, lon: 13.405 },
-                    default_zoom: 13
+                    default_center: { lat: 50.3167, lon: 11.9167 },
+                    default_zoom: 13,
+                    tile_provider: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
                 },
                 filtering: {
                     max_distance_km: 5.0,
@@ -142,10 +187,13 @@ class EventsApp {
             attributionControl: false  // Remove attribution box
         }).setView([center.lat, center.lon], this.config.map.default_zoom);
         
-        // Use dark/night mode tile layer with minimal details
-        // CartoDB Dark Matter: Clean, minimal, night mode style
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        // Use tile provider from config (defaults to CartoDB Dark Matter)
+        const tileProvider = this.config.map.tile_provider || 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+        const attribution = this.config.map.attribution || '';
+        
+        L.tileLayer(tileProvider, {
             maxZoom: 19,
+            attribution: attribution,
             subdomains: 'abcd'
         }).addTo(this.map);
     }
