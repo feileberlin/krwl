@@ -1,200 +1,187 @@
 # KRWL HOF Community Events
 
-A community events scraper and viewer with geolocation filtering. This system allows you to scrape community events, review and publish them through a Python TUI, and display them on an interactive fullscreen map showing only events until the next sunrise that are nearby to the user's location.
+> Community events scraper and viewer with geolocation filtering
 
-## Features
+[![PWA Ready](https://img.shields.io/badge/PWA-Ready-success)](https://web.dev/progressive-web-apps/)
+[![Accessibility](https://img.shields.io/badge/A11y-Compliant-blue)](https://www.w3.org/WAI/WCAG21/quickref/)
+[![Mobile First](https://img.shields.io/badge/Mobile-First-orange)](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps)
 
-- 🔍 **Event Scraping**: Scrape events from RSS feeds, APIs, and HTML pages
-- ✅ **Editor Workflow**: Review, edit, approve, or reject events before publishing
-- 🗺️ **Interactive Map**: Fullscreen map interface with Leaflet.js
-- 📍 **Geolocation Filtering**: Shows only events near the user's location
-- 🌅 **Sunrise Filtering**: Displays events only until the next sunrise
-- 📝 **JSON-based**: Plain JSON for configuration and data storage
-- 🐍 **Python TUI**: Single modular Python terminal interface
-- 🌐 **Static Site**: Generates static files for GitHub Pages deployment
-- 🚀 **No Jekyll**: Includes `.nojekyll` for direct GitHub Pages hosting
-- 🐛 **Debug Mode**: Development config with console logging for troubleshooting
-- ⚡ **Performance**: Production config optimized for maximum speed
+## 🎯 Overview
 
-## Project Structure
+A **fullscreen, mobile-first** interactive map application for discovering community events near you. All events are displayed as markers directly on the map with no separate navigation—just filters and markers.
+
+### ✨ Key Features
+
+#### 🗺️ Map Features
+- ✅ Event time tooltips
+- ✅ Rich event popups
+- ✅ Geolocation filtering
+
+#### 🎨 UI/UX Features
+- ✅ Responsive design
+- ✅ Mobile viewport support
+
+#### 📱 PWA Features
+- ✅ PWA manifest
+- ✅ Installable as app
+- ✅ Offline support
+
+#### ♿ Accessibility Features
+- ✅ ARIA navigation landmarks
+- ✅ Skip to content link
+- ✅ ARIA labels
+
+## 🏗️ Architecture
+
 
 ```
-krwl-hof/
-├── .nojekyll              # GitHub Pages configuration
-├── config/
-│   └── config.json        # Application configuration
-├── data/
-│   ├── events.json        # Published events
-│   └── pending_events.json # Events awaiting review
-├── src/
-│   ├── main.py           # Python TUI entry point
-│   └── modules/
-│       ├── __init__.py
-│       ├── scraper.py    # Event scraping module
-│       ├── editor.py     # Event editing/approval module
-│       ├── generator.py  # Static site generator
-│       └── utils.py      # Utility functions
-└── static/               # Generated static site files
-    ├── index.html
-    ├── events.json
-    ├── config.json
-    ├── css/
-    │   └── style.css
-    └── js/
-        └── app.js
+┌─────────────────────────────────────────────────────────────┐
+│                    KRWL HOF Architecture                     │
+└─────────────────────────────────────────────────────────────┘
+
+                    ┌──────────────┐
+                    │  index.html  │  ← Entry Point
+                    └──────┬───────┘
+                           │
+            ┌──────────────┼──────────────┐
+            │              │              │
+    ┌───────▼──────┐ ┌────▼─────┐ ┌─────▼──────┐
+    │   app.js     │ │ style.css│ │ Leaflet.js │
+    │  (Business   │ │  (UI/UX) │ │  (Maps)    │
+    │   Logic)     │ └──────────┘ └────────────┘
+    └───────┬──────┘
+            │
+    ┌───────┼──────────────┐
+    │       │              │
+┌───▼──┐ ┌──▼───────┐ ┌───▼──────────┐
+│config│ │events.json│ │manifest.json │
+│.json │ │  (Data)   │ │    (PWA)     │
+└──────┘ └───────────┘ └──────────────┘
+
+Data Flow:
+1. config.json → Configures app behavior, UI, map
+2. events.json → Fetched and filtered by location/time
+3. app.js → Renders markers with tooltips on Leaflet map
+4. User interaction → Updates filters → Refreshes map
 ```
 
-## Quick Start
 
-### 1. Set Up the Environment
+## 🎨 User Interface Design
 
-```bash
-# Clone the repository
-git clone https://github.com/feileberlin/krwl-hof.git
-cd krwl-hof
+### Design Philosophy
+- **Fullscreen Map**: No traditional headers/footers—everything overlays the map
+- **Filter Sentence**: Natural language filters integrated at the top
+- **Map-First**: Events shown as markers with tooltips, no separate list
+- **Mobile-First**: Responsive design optimized for mobile devices first
+- **Pure Leaflet.js**: Uses standard Leaflet conventions (markers, tooltips, popups)
 
-# (Optional) Create virtual environment
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# Install optional dependencies if needed
-# pip install -r requirements.txt
+```
+User Journey:
+                                
+    ┌─────────────┐
+    │   Landing   │
+    │   (Map)     │
+    └──────┬──────┘
+           │
+           │ sees filter sentence at top
+           │ sees events as markers with time labels
+           │
+    ┌──────▼──────────────────────────┐
+    │ Filter Controls (Top of Map)    │
+    │ • Event count & category        │
+    │ • Time range                    │
+    │ • Distance                      │
+    │ • Location                      │
+    └──────┬──────────────────────────┘
+           │
+           │ click filter → map updates
+           │
+    ┌──────▼──────────────────────────┐
+    │ Map Interaction                 │
+    │ • Hover marker → see time       │
+    │ • Click marker → see popup      │
+    │   - Event title                 │
+    │   - Time, location, distance    │
+    │   - Description                 │
+    │   - Link to more info           │
+    └─────────────────────────────────┘
 ```
 
-### 2. Run the Python TUI
 
-```bash
-cd src
-python3 main.py
-```
+## 📱 Progressive Web App (PWA)
 
-### 3. Using the TUI
+The application is installable as a native app on any platform:
 
-The TUI provides the following options:
+### Installation
+1. **Desktop (Chrome/Edge)**: Click the install icon in the address bar
+2. **Mobile (Android)**: Tap "Add to Home Screen" in browser menu
+3. **Mobile (iOS)**: Tap Share → "Add to Home Screen"
 
-1. **Scrape New Events**: Fetch events from configured sources
-2. **Review Pending Events**: Approve/reject/edit scraped events
-3. **View Published Events**: See all approved events
-4. **Generate Static Site**: Create static files for deployment
-5. **Settings**: View current configuration
-6. **Exit**: Close the application
+### PWA Assets
+- ✅ `manifest.json` - PWA configuration
+- ✅ Multiple icon sizes (192x192, 512x512)
+- ✅ Maskable icons for Android adaptive icons
+- ✅ Favicon and Apple Touch Icons
+- ✅ Theme colors and splash screen
 
-### 4. Deploy to GitHub Pages
+See [PWA_README.md](static/PWA_README.md) for detailed PWA documentation.
 
-This project uses a **two-step deployment workflow** for safe releases:
+## ⚙️ Configuration
 
-#### Quick Deploy Guide
-
-1. **Make changes** and push to `preview` branch → auto-deploys to `/preview/` with debug mode
-2. **Test thoroughly** at `yourdomain.com/preview/` (debug logs in console)
-3. **Run "Promote Preview" workflow** → creates PR from `preview` to `main`
-4. **Merge PR** → deploys to production with maximum performance
-
-#### Configuration Files
-
-- **`config.prod.json`**: Production (fast, no debugging, caching enabled)
-- **`config.dev.json`**: Preview/Development (debug logs, caching disabled)
-
-#### Full Documentation
-
-See [.github/DEPLOYMENT.md](.github/DEPLOYMENT.md) for complete deployment guide including:
-- Workflow details
-- Debug mode features
-- Local testing
-- Troubleshooting
-- Security notes
-
-## Configuration
-
-The system uses different configs for different environments:
-
-### Development/Preview (`config.dev.json`)
+All fork-specific customizations are in `static/config.json`:
 
 ```json
 {
   "app": {
-    "name": "KRWL HOF Community Events [PREVIEW]"
+    "name": "Your App Name",
+    "description": "Your description"
   },
-  "debug": true,
-  "performance": {
-    "cache_enabled": false,
-    "prefetch_events": false
-  }
-}
-```
-
-### Production (`config.prod.json`)
-
-```json
-{
-  "app": {
-    "name": "KRWL HOF Community Events"
-  },
-  "debug": false,
-  "performance": {
-    "cache_enabled": true,
-    "prefetch_events": true
-  }
-}
-```
-
-### Base Config Structure
-
-Edit config files to customize:
-
-```json
-{
-  "app": {
-    "name": "KRWL HOF Community Events"
-  },
-  "debug": false,
-  "performance": {
-    "cache_enabled": true,
-    "prefetch_events": true
-  },
-  "scraping": {
-    "sources": [
-      {
-        "name": "example_source",
-        "url": "https://example.com/events",
-        "type": "rss",
-        "enabled": false
-      }
-    ]
-  },
-  "filtering": {
-    "max_distance_km": 5.0,
-    "show_until": "next_sunrise"
+  "ui": {
+    "logo": "logo.svg",
+    "imprint_url": "imprint.html",
+    "imprint_text": "Imprint",
+    "theme_color": "#4CAF50",
+    "background_color": "#1a1a1a"
   },
   "map": {
-    "default_center": {
-      "lat": 52.52,
-      "lon": 13.405
-    },
-    "default_zoom": 13
+    "default_center": { "lat": 50.3167, "lon": 11.9167 },
+    "default_zoom": 13,
+    "tile_provider": "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+    "predefined_locations": [
+      { "name": "Location Name", "lat": 50.0, "lon": 11.0 }
+    ]
   }
 }
 ```
 
-## Event Data Format
+### Customizable Elements
+- **App name and description**: `config.app.*`
+- **Logo and branding**: `config.ui.logo`, `config.ui.theme_color`
+- **Map tiles**: `config.map.tile_provider` (OpenStreetMap, CartoDB, etc.)
+- **Default location**: `config.map.default_center`
+- **Predefined locations**: `config.map.predefined_locations[]`
 
-Events are stored in JSON with the following structure:
+## 🎯 Event Data Format
+
+Events are loaded from `static/events.json`:
 
 ```json
 {
   "events": [
     {
-      "id": "unique_id",
-      "title": "Event Title",
+      "id": "event_1",
+      "title": "Event Name",
       "description": "Event description",
       "location": {
         "name": "Venue Name",
-        "lat": 52.52,
-        "lon": 13.405
+        "lat": 50.3175,
+        "lon": 11.9165
       },
-      "start_time": "2024-01-01T18:00:00",
-      "end_time": "2024-01-01T22:00:00",
+      "start_time": "2025-12-09T19:00:00",
+      "end_time": "2025-12-09T23:00:00",
       "url": "https://example.com/event",
+      "category": "on-stage",
       "source": "manual",
       "status": "published"
     }
@@ -202,230 +189,164 @@ Events are stored in JSON with the following structure:
 }
 ```
 
-## Features in Detail
+## 🚀 Quick Start
 
-### Geolocation Filtering
+### Development
 
-The web interface automatically:
-1. Requests the user's location
-2. Calculates distance to each event
-3. Filters events beyond the configured `max_distance_km`
-4. Displays remaining distance for each event
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/feileberlin/krwl-hof.git
+   cd krwl-hof
+   ```
 
-### Sunrise Filtering
+2. **Serve the static files**
+   ```bash
+   cd static
+   python3 -m http.server 8000
+   ```
 
-Events are filtered to show only those occurring before the next sunrise:
-- If current time is before 6 AM, shows events until 6 AM today
-- If current time is after 6 AM, shows events until 6 AM tomorrow
-- Can be enhanced with proper solar calculation libraries
+3. **Open in browser**
+   ```
+   http://localhost:8000
+   ```
 
-### Editor Workflow
+### Production Deployment
 
-The TUI provides a complete workflow for event curation:
-1. **Scrape**: Events are collected and added to pending queue
-2. **Review**: Editor reviews each event individually
-3. **Actions**: Approve (publish), Edit (modify), Reject (delete), or Skip
-4. **Publish**: Approved events are moved to published list
+The `static/` directory contains all files needed for deployment:
 
-### Static Site Generation
+- **GitHub Pages**: Already configured (see `.nojekyll`)
+- **Netlify/Vercel**: Point to `static/` directory
+- **Any static host**: Upload `static/` contents
 
-The generator creates:
-- **index.html**: Full-featured single-page application
-- **style.css**: Modern, responsive dark theme
-- **app.js**: Vanilla JavaScript with no framework dependencies
-- **Data files**: Copies of events.json and config.json
+## ♿ Accessibility
 
-### Map Interface
+This application follows WCAG 2.1 Level AA guidelines:
 
-Features:
-- Fullscreen Leaflet.js map
-- User location marker (blue)
-- Event markers (green)
-- Click markers or event cards to view details
-- Responsive design for mobile devices
-- Dark theme with modern styling
+- ✅ Semantic HTML5 (main, nav, footer, etc.)
+- ✅ ARIA landmarks and labels
+- ✅ Skip to content link for keyboard navigation
+- ✅ Focus indicators for all interactive elements
+- ✅ Screen reader announcements for dynamic updates
+- ✅ Keyboard navigation support
+- ✅ Sufficient color contrast
+- ✅ Descriptive alt text for images
 
-## Extending the System
+### Screen Reader Support
+The application provides context to screen reader users:
+- Explains the fullscreen map interface on page load
+- Announces filter changes and event counts
+- Provides ARIA labels for all controls
+- Uses semantic HTML for proper navigation
 
-### Adding New Scraping Sources
+## 🧪 Testing
 
-1. Edit `config/config.json` and add a new source:
-
-```json
-{
-  "name": "my_source",
-  "url": "https://example.com/events.rss",
-  "type": "rss",
-  "enabled": true
-}
-```
-
-2. Implement scraping logic in `src/modules/scraper.py`
-
-### Customizing the Interface
-
-- **HTML**: Edit template in `src/modules/generator.py` → `_generate_html()`
-- **CSS**: Edit styles in `src/modules/generator.py` → `_generate_css()`
-- **JavaScript**: Edit app logic in `src/modules/generator.py` → `_generate_js()`
-
-### Adding New TUI Features
-
-Add new menu options in `src/main.py` by:
-1. Adding menu item in `show_menu()`
-2. Creating handler method
-3. Adding case in `run()` method
-
-## Development
-
-### Code Structure
-
-The codebase is modular and expandable:
-
-- **main.py**: Entry point and TUI orchestration
-- **scraper.py**: Event scraping from various sources
-- **editor.py**: Event review and approval workflow
-- **generator.py**: Static site generation
-- **utils.py**: Shared utility functions
-
-### Best Practices
-
-- Use JSON for all data storage
-- Keep modules independent and reusable
-- Follow the single responsibility principle
-- Maintain backward compatibility with data formats
-
-## Debug Mode
-
-### Enabling Debug Mode
-
-Set `"debug": true` in config file (automatically enabled in `config.dev.json`):
-
-```json
-{
-  "debug": true
-}
-```
-
-### Debug Features
-
-When debug mode is enabled:
-- **Browser title** shows `[DEBUG MODE]`
-- **Console logs** prefixed with `[KRWL Debug]` show:
-  - Config loading
-  - Event loading and count
-  - Filter operations and reasons
-  - Distance calculations
-- **Performance** optimizations disabled for testing
-
-### Viewing Debug Logs
-
-1. Open browser console (F12)
-2. Look for `[KRWL Debug]` messages
-3. Filter by "KRWL" to see only app logs
-
-## Troubleshooting
-
-### Location not working
-
-The browser needs HTTPS or localhost to access geolocation. When deploying to GitHub Pages, this is handled automatically.
-
-### No events showing
-
-1. **Enable debug mode** to see filtering reasons
-2. Check if events exist in `data/events.json`
-3. Verify events are within the time filter (before next sunrise)
-4. Check if events are within distance filter (if location is enabled)
-5. Review console logs for `[KRWL Debug]` filter messages
-
-### Static site not updating
-
-Run "Generate Static Site" from the TUI menu after making any changes to events or configuration.
-
-### Preview site debugging
-
-1. Visit `/preview/` path on your GitHub Pages site
-2. Check that title shows `[PREVIEW]`
-3. Open console - debug logs should appear
-4. See [.github/DEPLOYMENT.md](.github/DEPLOYMENT.md) for more help
-
-### Production site too slow
-
-Production uses `config.prod.json` which is optimized for speed:
-- Caching enabled
-- No debug logging
-- Prefetching enabled
-
-If it's still slow, check:
-1. Network tab for large assets
-2. Events.json file size
-3. Browser console for errors (should be none)
-
-## License
-
-This project is open source and available under the MIT License.
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit issues or pull requests.
-
-## Feature Registry and Testing
-
-This project includes an automated feature registry and testing system to ensure all documented features remain present after code changes.
-
-### Feature Registry
-
-All features are documented in `features.json` with:
-- Feature descriptions and categories
-- File locations implementing each feature
-- Code patterns to verify feature presence
-- Configuration keys used by features
-
-### Automated Testing
-
-A GitHub Actions workflow automatically verifies features on every push and PR:
-
+### Running Documentation Tests
 ```bash
-# Run feature verification locally
-python3 verify_features.py
-
-# See detailed output
-python3 verify_features.py --verbose
-
-# Get JSON results
-python3 verify_features.py --json
+python3 docs/build_docs.py --validate
 ```
 
-**Benefits:**
-- ✅ Prevents accidental feature removal during refactoring
-- ✅ Documents all implemented features in one place
-- ✅ Automatically fails CI if features are missing
-- ✅ Provides detailed reports on feature status
+This validates:
+- All required files exist
+- Config has all required sections
+- Documentation matches code features
+- All links in docs are valid
 
-See [.github/FEATURE_REGISTRY.md](.github/FEATURE_REGISTRY.md) for complete documentation.
+### Manual Testing Checklist
+- [ ] Map loads and displays correctly
+- [ ] Filters update event markers
+- [ ] Markers show time tooltips on hover
+- [ ] Popups show full event details on click
+- [ ] Responsive design works on mobile
+- [ ] PWA installs correctly
+- [ ] Keyboard navigation works
+- [ ] Screen reader announces updates
 
-### Preview Deployment with Custom Domains
+## 📝 Project Structure
 
-Preview deployments work seamlessly with both GitHub Pages URLs and custom domains:
+```
+krwl-hof/
+├── .github/
+│   └── workflows/          # CI/CD workflows
+├── static/                 # All static files for deployment
+│   ├── index.html         # Main HTML entry point
+│   ├── manifest.json      # PWA manifest
+│   ├── config.json        # App configuration
+│   ├── events.json        # Event data
+│   ├── css/
+│   │   └── style.css      # All styles
+│   ├── js/
+│   │   └── app.js         # Application logic
+│   ├── favicon.svg        # Browser favicon
+│   ├── logo.svg           # App logo
+│   ├── icon-*.svg         # PWA icons
+│   └── PWA_README.md      # PWA documentation
+├── src/                    # Python backend (scraping/editing)
+│   └── modules/
+├── data/                   # Event data storage
+├── docs/                   # Documentation
+│   └── build_docs.py      # Documentation builder
+└── README.md              # This file
+```
 
-- **GitHub Pages**: `https://feileberlin.github.io/krwl-hof/preview/`
-- **Custom Domain**: `https://krwl.in/preview/` (automatically detected from CNAME)
+## 🔧 Development
 
-The deployment workflow dynamically adapts based on your domain configuration.
+### Adding New Features
 
-## Roadmap
+1. **Update code** in `static/` directory
+2. **Update config** if adding configurable options
+3. **Test locally** with a simple HTTP server
+4. **Run docs builder** to update README
+5. **Commit changes** including updated docs
 
-- [ ] RSS feed scraping implementation
-- [ ] API integration for event sources
-- [ ] HTML scraping with BeautifulSoup
-- [ ] Accurate sunrise/sunset calculation using astral
-- [ ] Database backend option
-- [ ] Web-based editor interface
-- [ ] Event categories and filtering
-- [ ] User favorites and notifications
-- [ ] Export to calendar formats (iCal, etc.)
+### Code Style
+- **HTML**: Semantic HTML5, ARIA labels
+- **CSS**: Mobile-first, BEM-like naming
+- **JavaScript**: ES6+, pure vanilla JS, JSDoc comments
+- **Config**: JSON with comments in docs
 
-## Credits
+## 📊 Browser Support
 
-- Map tiles from [OpenStreetMap](https://www.openstreetmap.org/)
-- Map library: [Leaflet.js](https://leafletjs.com/)
-- Built with vanilla JavaScript and Python
+| Browser | Desktop | Mobile |
+|---------|---------|--------|
+| Chrome  | ✅ Full | ✅ Full |
+| Firefox | ✅ Full | ✅ Full |
+| Safari  | ✅ Full | ⚠️ Limited PWA |
+| Edge    | ✅ Full | ✅ Full |
+| Samsung | - | ✅ Full |
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run documentation builder
+5. Submit a pull request
+
+### Documentation Requirements
+- All code changes must be documented
+- Run `python3 docs/build_docs.py` before committing
+- Update config.json for new configurable features
+- Add JSDoc comments for new functions
+
+## 📄 License
+
+See LICENSE file for details.
+
+## 🙏 Acknowledgments
+
+- **Leaflet.js** - Open-source map library
+- **CartoDB** - Dark map tiles
+- **OpenStreetMap** - Map data contributors
+
+## 📞 Support
+
+For issues and questions:
+- GitHub Issues: [github.com/feileberlin/krwl-hof/issues](https://github.com/feileberlin/krwl-hof/issues)
+- See imprint link in app for contact info
+
+---
+
+**Built with ❤️ for the KRWL HOF community**
+
+*Last updated: 2025-12-09 01:00:41*
+*Auto-generated by docs/build_docs.py*
