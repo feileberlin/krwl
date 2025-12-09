@@ -151,11 +151,7 @@ class EventsApp {
     }
     
     getUserLocation() {
-        const statusEl = document.getElementById('location-status');
-        
         if ('geolocation' in navigator) {
-            statusEl.textContent = 'Getting your location...';
-            
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     this.userLocation = {
@@ -170,18 +166,15 @@ class EventsApp {
                     L.marker([this.userLocation.lat, this.userLocation.lon], {
                         icon: L.divIcon({
                             className: 'user-marker',
-                            html: '<div style="background: #2196F3; border: 3px solid white; border-radius: 50%; width: 20px; height: 20px;"></div>'
+                            html: '<div class="user-marker-dot"></div>'
                         })
                     }).addTo(this.map).bindPopup('You are here');
-                    
-                    statusEl.textContent = '📍 Location found';
                     
                     // Update events display
                     this.displayEvents();
                 },
                 (error) => {
                     console.error('Location error:', error);
-                    statusEl.textContent = '⚠️ Location unavailable - using default location';
                     
                     // Use config default location as fallback
                     const defaultCenter = this.config.map.default_center;
@@ -199,8 +192,6 @@ class EventsApp {
                 }
             );
         } else {
-            statusEl.textContent = '⚠️ Geolocation not supported - using default location';
-            
             // Use config default location as fallback
             const defaultCenter = this.config.map.default_center;
             this.userLocation = {
@@ -471,29 +462,24 @@ class EventsApp {
     
     displayEvents() {
         const filteredEvents = this.filterEvents();
-        const container = document.getElementById('events-container');
         
         // Update count with descriptive sentence
         this.updateFilterDescription(filteredEvents.length);
-        
-        // Clear existing content
-        container.innerHTML = '';
         
         // Clear existing markers
         this.markers.forEach(marker => marker.remove());
         this.markers = [];
         
         if (filteredEvents.length === 0) {
-            container.innerHTML = '<p>No events match the current filters.</p>';
+            this.log('No events to display');
             return;
         }
         
         // Sort by distance
         filteredEvents.sort((a, b) => (a.distance || 0) - (b.distance || 0));
         
-        // Display events
+        // Display events as map markers only
         filteredEvents.forEach(event => {
-            this.displayEventCard(event, container);
             this.addEventMarker(event);
         });
         
@@ -532,48 +518,82 @@ class EventsApp {
         this.log('Filter count updated:', countText);
     }
     
-    displayEventCard(event, container) {
-        const card = document.createElement('div');
-        card.className = 'event-card';
+    formatTime(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const tomorrow = new Date(now);
+        tomorrow.setDate(tomorrow.getDate() + 1);
         
-        const title = document.createElement('h3');
-        title.textContent = event.title;
+        const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         
-        const location = document.createElement('p');
-        location.textContent = `📍 ${event.location.name}`;
-        
-        const time = document.createElement('p');
-        const eventDate = new Date(event.start_time);
-        time.textContent = `🕐 ${eventDate.toLocaleString()}`;
-        
-        card.appendChild(title);
-        card.appendChild(location);
-        card.appendChild(time);
-        
-        if (event.distance !== undefined) {
-            const distance = document.createElement('p');
-            distance.className = 'distance';
-            distance.textContent = `📏 ${event.distance.toFixed(1)} km away`;
-            card.appendChild(distance);
+        // Check if today
+        if (date.toDateString() === now.toDateString()) {
+            return `Today ${timeStr}`;
         }
-        
-        card.addEventListener('click', () => this.showEventDetail(event));
-        
-        container.appendChild(card);
+        // Check if tomorrow
+        else if (date.toDateString() === tomorrow.toDateString()) {
+            return `Tomorrow ${timeStr}`;
+        }
+        // Otherwise show date
+        else {
+            return date.toLocaleString([], { 
+                month: 'short', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+        }
     }
     
     addEventMarker(event) {
         if (!event.location) return;
         
+        const eventDate = new Date(event.start_time);
+        const previewTime = this.formatTime(event.start_time);
+        
+        // Create marker with preview label showing start time
         const marker = L.marker([event.location.lat, event.location.lon], {
             icon: L.divIcon({
                 className: 'event-marker',
-                html: '<div style="background: #4CAF50; border: 3px solid white; border-radius: 50%; width: 20px; height: 20px;"></div>'
+                html: `
+                    <div class="event-marker-container">
+                        <div class="event-marker-preview">${previewTime}</div>
+                        <div class="event-marker-dot"></div>
+                    </div>
+                `
             })
         }).addTo(this.map);
         
-        marker.bindPopup(`<strong>${event.title}</strong><br>${event.location.name}`);
-        marker.on('click', () => this.showEventDetail(event));
+        // Create rich popup with all event details
+        const popupContent = `
+            <div class="event-popup">
+                <h3>${event.title}</h3>
+                <div class="event-popup-info">
+                    <p><span class="icon">🕐</span> ${eventDate.toLocaleString([], { 
+                        weekday: 'short',
+                        month: 'short', 
+                        day: 'numeric',
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                    })}</p>
+                    <p><span class="icon">📍</span> ${event.location.name}</p>
+                    ${event.distance !== undefined ? 
+                        `<p><span class="icon">📏</span> ${event.distance.toFixed(1)} km away</p>` : 
+                        ''}
+                </div>
+                ${event.description ? 
+                    `<div class="event-popup-description">${event.description}</div>` : 
+                    ''}
+                ${event.url ? 
+                    `<a href="${event.url}" target="_blank" class="event-popup-link">More Info →</a>` : 
+                    ''}
+            </div>
+        `;
+        
+        marker.bindPopup(popupContent, {
+            maxWidth: 300,
+            className: 'event-popup-container'
+        });
         
         this.markers.push(marker);
     }
