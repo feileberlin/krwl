@@ -13,8 +13,10 @@ This test module:
 """
 
 import json
+import re
 import sys
 from datetime import datetime, timedelta
+from math import radians, sin, cos, sqrt, atan2
 from pathlib import Path
 from typing import List, Dict, Any, Tuple
 
@@ -238,7 +240,6 @@ class EventSchemaTester:
             else:
                 # Pattern validation
                 if "pattern" in field_schema:
-                    import re
                     if not re.match(field_schema["pattern"], value):
                         errors.append(f"Field '{full_field}' does not match required pattern")
                         self.add_recovery_hint(full_field, "invalid", event.get("id"))
@@ -580,8 +581,6 @@ class EventSchemaTester:
             "10 min bike (3.33 km)": 3.33,
             "1 hr transport (15 km)": 15.0
         }
-        
-        from math import radians, sin, cos, sqrt, atan2
         
         def haversine(lat1, lon1, lat2, lon2):
             R = 6371  # Earth radius in km
