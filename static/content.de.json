@@ -29,18 +29,13 @@
     },
     "time_ranges": {
       "sunrise": "bis sonnenaufgang",
-      "sunday": "bis sonntagabend",
-      "full-moon": "bis zum nächsten vollmond",
-      "6h": "6 stunden",
-      "12h": "12 stunden",
-      "24h": "24 stunden",
-      "48h": "48 stunden",
-      "all": "alle kommenden"
+      "sunday": "bis sonntag zur primetime",
+      "full-moon": "bis zum nächsten vollmond"
     },
     "distances": {
-      "1.25": "innerhalb 15 minuten zu fuß",
-      "2.5": "innerhalb 10 minuten mit dem fahrrad",
-      "20": "innerhalb 1 stunde mit öffentlichen verkehrsmitteln"
+      "1.25": "maximal 15 minuten zu fuß",
+      "3.33": "10 minuten maximalentfernung mit dem fahrrad",
+      "11.25": "45 minuten maximalentfernung mit öffentlichen verkehrsmitteln"
     },
     "locations": {
       "geolocation": "von deinem aktuellen standort"

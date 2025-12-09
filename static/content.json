@@ -29,18 +29,13 @@
     },
     "time_ranges": {
       "sunrise": "till sunrise",
-      "sunday": "till sunday night",
-      "full-moon": "till next full moon",
-      "6h": "6 hours",
-      "12h": "12 hours",
-      "24h": "24 hours",
-      "48h": "48 hours",
-      "all": "all upcoming"
+      "sunday": "till sunday's prime time",
+      "full-moon": "till next full moon"
     },
     "distances": {
-      "1.25": "within 15 minutes by foot",
-      "2.5": "within 10 minutes by bike",
-      "20": "within 1 hour by public transport"
+      "1.25": "not more than 15 minutes walk",
+      "3.33": "10 minutes max. distance by bike",
+      "11.25": "45 minutes max. distance by public transport"
     },
     "locations": {
       "geolocation": "from your current location"
