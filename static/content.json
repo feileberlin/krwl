@@ -136,7 +136,7 @@
       "distance_filter": "Filter by distance from location",
       "location_selector": "Select reference location",
       "imprint_link": "View imprint and legal information",
-      "map_main": "Interactive events map showing community events near your location",
+      "map_main": "Interactive map showing community events near your location",
       "close_detail": "Close event details",
       "event_dialog": "Event details"
     }

@@ -22,48 +22,8 @@
     <link rel="apple-touch-icon" href="icon-192.svg">
     
     <link rel="stylesheet" href="css/style.css">
-    <!-- Leaflet CSS - try local first, fallback to CDN -->
-    <link rel="stylesheet" href="lib/leaflet/leaflet.css" id="leaflet-css" />
-    
-    <script>
-        // Verify Leaflet CSS loaded, fallback to CDN if needed
-        (function() {
-            var link = document.getElementById('leaflet-css');
-            var fallback = false;
-            
-            link.onerror = function() {
-                if (!fallback) {
-                    fallback = true;
-                    var cdnLink = document.createElement('link');
-                    cdnLink.rel = 'stylesheet';
-                    cdnLink.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-                    document.head.appendChild(cdnLink);
-                }
-            };
-            
-            // Check after a short delay if CSS loaded
-            setTimeout(function() {
-                try {
-                    if (!link.sheet && !fallback) {
-                        fallback = true;
-                        var cdnLink = document.createElement('link');
-                        cdnLink.rel = 'stylesheet';
-                        cdnLink.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-                        document.head.appendChild(cdnLink);
-                    }
-                } catch(e) {
-                    // Access error likely means CSS didn't load
-                    if (!fallback) {
-                        fallback = true;
-                        var cdnLink = document.createElement('link');
-                        cdnLink.rel = 'stylesheet';
-                        cdnLink.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-                        document.head.appendChild(cdnLink);
-                    }
-                }
-            }, 100);
-        })();
-    </script>
+    <!-- Leaflet CSS - loaded from local files -->
+    <link rel="stylesheet" href="lib/leaflet/leaflet.css" />
 
 </head>
 <body>
@@ -249,25 +209,8 @@
         </div>
     </div>
     
-    <!-- Leaflet JS - load with robust fallback -->
-    <script>
-        // Try loading local Leaflet first, with automatic CDN fallback
-        (function() {
-            var script = document.createElement('script');
-            script.src = 'lib/leaflet/leaflet.js';
-            script.onerror = function() {
-                // Local file failed, load from CDN
-                var cdnScript = document.createElement('script');
-                cdnScript.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-                cdnScript.onerror = function() {
-                    console.error('Failed to load Leaflet from both local and CDN sources');
-                    alert('Map library failed to load. Please check your internet connection and reload the page.');
-                };
-                document.head.appendChild(cdnScript);
-            };
-            document.head.appendChild(script);
-        })();
-    </script>
+    <!-- Leaflet JS - loaded from local files -->
+    <script src="lib/leaflet/leaflet.js"></script>
     <script src="js/i18n.js"></script>
     <script src="js/app.js"></script>
 </body>
