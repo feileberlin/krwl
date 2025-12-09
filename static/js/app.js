@@ -1,33 +1,140 @@
-// KRWL HOF Community Events App
+/**
+ * KRWL HOF Community Events Application
+ * 
+ * A fullscreen, mobile-first interactive map application for discovering community events.
+ * Uses vanilla JavaScript with Leaflet.js for mapping.
+ * 
+ * Key Features:
+ * - Fullscreen map with no separate event list
+ * - Pure Leaflet.js conventions (standard markers, tooltips, popups)
+ * - Natural language filter sentence overlay
+ * - Full keyboard navigation and accessibility
+ * - PWA support with offline capability
+ * - All configuration from JSON files
+ * 
+ * @author KRWL HOF Community
+ * @version 1.0.0
+ */
+
 class EventsApp {
+    /**
+     * Initialize the EventsApp
+     * Sets up default configuration and starts the application
+     */
     constructor() {
+        // Leaflet map instance
         this.map = null;
+        
+        // User's current geolocation {lat, lon}
         this.userLocation = null;
+        
+        // Array of all event objects loaded from events.json
         this.events = [];
+        
+        // Array of Leaflet marker objects currently displayed on map
         this.markers = [];
+        
+        // Configuration object loaded from config.json
         this.config = null;
+        
+        // Debug mode flag (enables console logging)
         this.debug = false;
+        
+        // Current filter settings
         this.filters = {
-            maxDistance: 1.25,  // Default: 15 minutes by foot
-            timeFilter: 'sunrise',
-            category: 'all',
-            useCustomLocation: false,
-            customLat: null,
-            customLon: null
+            maxDistance: 1.25,        // Distance in km (15 min walk)
+            timeFilter: 'sunrise',     // Time range filter
+            category: 'all',           // Event category filter
+            useCustomLocation: false,  // Use predefined location instead of geolocation
+            customLat: null,           // Custom location latitude
+            customLon: null            // Custom location longitude
         };
         
+        // Current marker index for keyboard navigation
+        this.currentMarkerIndex = -1;
+        
+        // Start the application
         this.init();
     }
     
+    /**
+     * Debug logging function
+     * Only logs when debug mode is enabled
+     * @param {...any} args - Arguments to log
+     */
     log(...args) {
         if (this.debug) {
             console.log('[KRWL Debug]', ...args);
         }
     }
     
+    /**
+     * Initialize the application
+     * Loads config, sets up UI, initializes map, gets location, loads events
+     * @async
+     */
     async init() {
-        // Load configuration
+        // Load configuration from config.json
         await this.loadConfig();
+        
+        // Initialize UI elements from config (logo, title, etc.)
+        this.initUI();
+        
+        // Initialize Leaflet map with configured tile provider
+        this.initMap();
+        
+        // Get user's geolocation or use default location
+        this.getUserLocation();
+        
+        // Load event data from events.json
+        await this.loadEvents();
+        
+        // Setup all event listeners (filters, keyboard nav, etc.)
+        this.setupEventListeners();
+    }
+    
+    /**
+     * Initialize UI elements from configuration
+     * Sets page title, logo, imprint link based on config.json
+     */
+    initUI() {
+        // Set page title from config (append [DEBUG MODE] if debug enabled)
+        if (this.config.app && this.config.app.name) {
+            document.title = this.config.app.name + (this.debug ? ' [DEBUG MODE]' : '');
+        }
+        
+        // Set logo and imprint link from config
+        const ui = this.config.ui || {};
+        const imprintLink = document.getElementById('imprint-link');
+        const siteLogo = document.getElementById('site-logo');
+        const imprintText = document.getElementById('imprint-text');
+        
+        // Update imprint URL if configured
+        if (imprintLink && ui.imprint_url) {
+            imprintLink.href = ui.imprint_url;
+        }
+        
+        // Update imprint text if configured
+        if (imprintText && ui.imprint_text) {
+            imprintText.textContent = ui.imprint_text;
+        }
+        
+        // Load logo if configured
+        if (siteLogo && ui.logo) {
+            siteLogo.src = ui.logo;
+            siteLogo.style.display = 'block';
+            if (imprintText) {
+                imprintText.style.display = 'none';
+            }
+            // Handle logo load error - fallback to text
+            siteLogo.onerror = () => {
+                siteLogo.style.display = 'none';
+                if (imprintText) {
+                    imprintText.style.display = 'inline';
+                }
+            };
+        }
+    }
         
         // Initialize UI from config
         this.initUI();
@@ -81,18 +188,27 @@ class EventsApp {
         }
     }
     
+    /**
+     * Load application configuration from config.json
+     * Fetches app settings, UI preferences, map configuration
+     * Falls back to defaults if config file is missing
+     * @async
+     */
     async loadConfig() {
         try {
+            // Fetch configuration file
             const response = await fetch('config.json');
             this.config = await response.json();
+            
+            // Enable debug mode if configured
             this.debug = this.config.debug || false;
             this.log('Config loaded:', this.config);
             
-            // Fetch next full moon date based on map center location
+            // Fetch next full moon date for "till next full moon" filter
             await this.fetchNextFullMoon();
         } catch (error) {
+            // If config fails to load, use safe defaults
             console.error('Error loading config:', error);
-            // Use defaults
             this.config = {
                 debug: false,
                 app: {
@@ -116,28 +232,38 @@ class EventsApp {
         }
     }
     
+    /**
+     * Fetch next full moon date from astronomy API
+     * Uses wttr.in free API to get moon phase and illumination
+     * Calculates next full moon date based on current moon phase
+     * @async
+     */
     async fetchNextFullMoon() {
         try {
+            // Get coordinates from config for accurate moon phase
             const lat = this.config.map?.default_center?.lat || 50.3167;
             const lon = this.config.map?.default_center?.lon || 11.9167;
             
-            // Use astronomy API to get lunar phase data
-            // Using wttr.in which is free and doesn't require API key
+            // Using wttr.in weather API (includes astronomy data)
+            // format=j1 returns JSON with detailed astronomy information
             const url = `https://wttr.in/${lat},${lon}?format=j1`;
             
             const response = await fetch(url);
             if (response.ok) {
                 const data = await response.json();
+                
+                // Extract moon phase and illumination from astronomy data
                 if (data.weather && data.weather[0]?.astronomy) {
                     const astronomy = data.weather[0].astronomy[0];
-                    const moonPhase = astronomy.moon_phase || '';
-                    const moonIllumination = parseInt(astronomy.moon_illumination) || 50;
+                    const moonPhase = astronomy.moon_phase || '';           // e.g., "Waxing Gibbous"
+                    const moonIllumination = parseInt(astronomy.moon_illumination) || 50;  // 0-100%
                     
-                    // Calculate next full moon
+                    // Calculate next full moon based on current phase
                     this.nextFullMoonDate = this.calculateNextFullMoonFromData(moonPhase, moonIllumination);
                     this.log('Next full moon date:', this.nextFullMoonDate, 'Moon phase:', moonPhase, 'Illumination:', moonIllumination + '%');
                 }
             } else {
+                // API unavailable, will use approximation in filter
                 this.log('Weather API unavailable, using approximation');
                 this.nextFullMoonDate = null;
             }
@@ -178,26 +304,64 @@ class EventsApp {
         return fullMoonDate;
     }
     
+    /**
+     * Initialize Leaflet Map
+     * Creates a minimal, clean map interface with no UI controls
+     * - NO zoom controls (+/- buttons) for cleaner look
+     * - NO attribution box (moved to config if needed)
+     * - Uses tile provider from config.json
+     * - Centers on configured default location
+     * 
+     * Map Philosophy:
+     * - Fullscreen, immersive experience
+     * - No distractions from traditional map UI
+     * - All controls overlay on map (filter sentence, logo)
+     * - Events are the primary focus
+     */
     initMap() {
         const center = this.config.map.default_center;
         
-        // Initialize map with minimal UI - no zoom controls, no attribution box
+        // Initialize Leaflet map with MINIMAL UI
+        // zoomControl: false    → No +/- zoom buttons (cleaner interface)
+        // attributionControl: false → No "Leaflet | © OpenStreetMap" box
         this.map = L.map('map', {
             zoomControl: false,        // Remove zoom +/- buttons
-            attributionControl: false  // Remove attribution box
+            attributionControl: false  // Remove attribution box at bottom-right
         }).setView([center.lat, center.lon], this.config.map.default_zoom);
         
-        // Use tile provider from config (defaults to CartoDB Dark Matter)
+        // Load map tiles from configured provider
+        // Default: CartoDB Dark Matter (black background, minimal details)
+        // Can be changed in config.json to any tile provider
         const tileProvider = this.config.map.tile_provider || 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
         const attribution = this.config.map.attribution || '';
         
+        // Add tile layer to map
         L.tileLayer(tileProvider, {
-            maxZoom: 19,
-            attribution: attribution,
-            subdomains: 'abcd'
+            maxZoom: 19,           // Maximum zoom level
+            attribution: attribution,  // Attribution text (if any)
+            subdomains: 'abcd'     // Load balance across tile servers
         }).addTo(this.map);
+        
+        this.log('Map initialized:', {
+            center: center,
+            zoom: this.config.map.default_zoom,
+            tileProvider: tileProvider
+        });
     }
     
+    /**
+     * Get User's Geolocation
+     * Attempts to get user's current position using browser geolocation API
+     * Falls back to configured default location if:
+     * - User denies permission
+     * - Geolocation not available
+     * - Geolocation fails/times out
+     * 
+     * Once location is obtained:
+     * - Centers map on user location
+     * - Adds blue marker showing "You are here"
+     * - Triggers event display (filters by distance from this location)
+     */
     getUserLocation() {
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition(

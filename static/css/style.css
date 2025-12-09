@@ -1,10 +1,46 @@
+/**
+ * KRWL HOF Community Events - Styles
+ * 
+ * Terminal/Hacker style theme with green-on-black color scheme
+ * Mobile-first responsive design for fullscreen map interface
+ * 
+ * Color Palette:
+ * - Background: #000000 (pure black)
+ * - Primary Text: #00ff00 (bright green with glow effect)
+ * - Accents: rgba(0, 255, 0, 0.x) (semi-transparent green)
+ * 
+ * Typography:
+ * - Monospace fonts for terminal aesthetic (Courier New, Consolas, Monaco)
+ * - Text shadows for CRT glow effect
+ * - Increased font weights for readability
+ * 
+ * Architecture:
+ * - No separate headers/footers - all overlays on fullscreen map
+ * - Filter controls at top in natural language sentence
+ * - Logo/imprint link at bottom-right corner
+ * - Event markers directly on map with tooltips and popups
+ * 
+ * Accessibility:
+ * - Keyboard focus indicators on all interactive elements
+ * - Screen reader only content (.sr-only)
+ * - Skip to content link for keyboard navigation
+ * - WCAG AA compliant contrast ratios
+ */
+
+/* === GLOBAL RESETS === */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Screen reader only content */
+/* === ACCESSIBILITY UTILITIES === */
+
+/**
+ * Screen Reader Only
+ * Hides content visually but keeps it accessible to screen readers
+ * Used for: descriptive text, skip links, ARIA live regions
+ */
 .sr-only {
     position: absolute;
     width: 1px;
@@ -17,28 +53,42 @@
     border-width: 0;
 }
 
-/* Skip to main content link for keyboard navigation */
+/**
+ * Skip to Content Link
+ * Hidden by default, visible when focused via keyboard
+ * Allows keyboard users to bypass filters and jump to map
+ */
 .skip-link {
     position: absolute;
-    top: -40px;
+    top: -40px;  /* Hidden above viewport */
     left: 0;
-    background: #4CAF50;
-    color: white;
+    background: #00ff00;
+    color: #000000;
     padding: 8px 16px;
     text-decoration: none;
     z-index: 10000;
     font-weight: 600;
 }
 
+/* Show skip link when focused (Tab key) */
 .skip-link:focus {
-    top: 0;
+    top: 0;  /* Slide into view */
 }
 
+/* === BASE STYLES === */
+
+/**
+ * Body - Terminal Theme
+ * Pure black background with bright green text
+ * Monospace font for hacker/console aesthetic
+ * Text glow effect for CRT monitor look
+ */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: #1a1a1a;
-    color: #ffffff;
-    overflow: hidden;
+    font-family: 'Courier New', 'Consolas', 'Monaco', 'Lucida Console', monospace;
+    background: #000000;
+    color: #00ff00;
+    overflow: hidden;  /* Prevent scrolling - fullscreen map only */
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);  /* Green glow effect */
 }
 
 #app {
@@ -81,17 +131,24 @@ body {
     top: 0;
     left: 0;
     right: 0;
+    font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
     font-size: 0.85rem;
-    font-weight: 500;
-    color: #4CAF50;
+    font-weight: 600;
+    color: #00ff00;
     padding: 0.6rem;
-    background: rgba(30, 30, 30, 0.95);
+    background: rgba(0, 0, 0, 0.95);
     backdrop-filter: blur(10px);
     border-radius: 0 0 8px 8px;
-    border: 2px solid #4CAF50;
+    border: 2px solid #00ff00;
     border-top: none;
     line-height: 1.8;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 10px rgba(0, 255, 0, 0.1);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    align-items: center;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+}
     display: flex;
     flex-wrap: wrap;
     gap: 0.3rem;
