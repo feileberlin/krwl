@@ -10,6 +10,10 @@
       "plural": "{count} Veranstaltungen",
       "none": "Keine Veranstaltungen"
     },
+    "event_word": {
+      "singular": "veranstaltung",
+      "plural": "veranstaltungen"
+    },
     "categories": {
       "all": "veranstaltungen",
       "music": "musik",
@@ -19,6 +23,9 @@
       "festivals": "festivals",
       "workshops": "workshops & kurse",
       "community": "gemeinschaft & soziales"
+    },
+    "categories_singular": {
+      "festivals": "festival"
     },
     "time_ranges": {
       "sunrise": "bis sonnenaufgang",

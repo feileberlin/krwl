@@ -745,44 +745,59 @@ class EventsApp {
         
         // Now update the selected option with the count
         const selectedOption = categoryFilter.options[categoryFilter.selectedIndex];
+        const categoryValue = selectedOption.value;
         const categoryText = selectedOption.dataset.originalText;
         
         // Helper function to get singular or plural form
         const getCountText = (count) => {
-            if (window.i18n) {
-                // Use translation system with proper singular/plural
-                if (count === 0) {
-                    return window.i18n.t('filters.event_count.none');
-                } else if (count === 1) {
-                    return window.i18n.t('filters.event_count.singular', { count: count });
-                } else {
-                    return window.i18n.t('filters.event_count.plural', { count: count });
-                }
-            } else {
+            if (!window.i18n) {
                 // Fallback without i18n
                 if (count === 0) return 'No events';
                 return count === 1 ? `${count} event` : `${count} events`;
             }
+            
+            // Use translation system with proper singular/plural
+            if (count === 0) {
+                return window.i18n.t('filters.event_count.none');
+            } else if (count === 1) {
+                return window.i18n.t('filters.event_count.singular', { count: count });
+            } else {
+                return window.i18n.t('filters.event_count.plural', { count: count });
+            }
+        };
+        
+        // Helper to get event word (singular/plural)
+        const getEventWord = (count) => {
+            if (!window.i18n) {
+                return count === 1 ? 'event' : 'events';
+            }
+            return count === 1 ? 
+                window.i18n.t('filters.event_word.singular') : 
+                window.i18n.t('filters.event_word.plural');
         };
         
         // Build count text based on selected category
         let countText = '';
-        if (this.filters.category === 'all') {
+        if (categoryValue === 'all') {
             // For "all" category, just show count
             countText = getCountText(count);
         } else {
-            // For specific categories, show count with type
-            if (categoryText === 'events' || categoryText === 'veranstaltungen') {
+            // Get the base category text for comparison
+            const baseCategory = window.i18n ? window.i18n.t(`filters.categories.${categoryValue}`) : categoryText;
+            
+            // Check if this is the main "events" category by comparing with translated value
+            const allCategoryText = window.i18n ? window.i18n.t('filters.categories.all') : 'events';
+            
+            if (categoryText === allCategoryText) {
                 // Don't double-show "events" - just use the count text
                 countText = getCountText(count);
-            } else if (categoryText === 'festivals') {
-                // Festivals is already plural, handle singular case
-                countText = count === 1 ? `${count} festival` : `${count} ${categoryText}`;
+            } else if (categoryValue === 'festivals') {
+                // Festivals has special singular form
+                const singularForm = window.i18n ? window.i18n.t('filters.categories_singular.festivals') : 'festival';
+                countText = count === 1 ? `${count} ${singularForm}` : `${count} ${categoryText}`;
             } else {
                 // For other categories: "X category events" or "1 category event"
-                const eventWord = count === 1 ? 
-                    (window.i18n && window.i18n.getLocale() === 'de' ? 'veranstaltung' : 'event') :
-                    (window.i18n && window.i18n.getLocale() === 'de' ? 'veranstaltungen' : 'events');
+                const eventWord = getEventWord(count);
                 countText = `${count} ${categoryText} ${eventWord}`;
             }
         }
