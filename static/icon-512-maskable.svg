@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Full background for maskable (no rounded corners, safe area) -->
+  <rect width="512" height="512" fill="#4CAF50"/>
+  
+  <!-- Map pin icon (centered, scaled down for safe area) -->
+  <g transform="translate(256, 190)">
+    <path d="M0 0 C-42 0 -76 34 -76 76 C-76 126 0 200 0 200 C0 200 76 126 76 76 C76 34 42 0 0 0 Z" 
+          fill="#fff" opacity="0.95"/>
+    <circle cx="0" cy="76" r="24" fill="#4CAF50"/>
+  </g>
+  
+  <!-- Event marker dots -->
+  <circle cx="160" cy="340" r="16" fill="#fff" opacity="0.85"/>
+  <circle cx="256" cy="356" r="16" fill="#fff" opacity="0.85"/>
+  <circle cx="352" cy="340" r="16" fill="#fff" opacity="0.85"/>
+</svg>

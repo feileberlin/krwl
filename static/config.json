@@ -6,7 +6,9 @@
   "ui": {
     "logo": "logo.svg",
     "imprint_url": "imprint.html",
-    "imprint_text": "Imprint"
+    "imprint_text": "Imprint",
+    "theme_color": "#4CAF50",
+    "background_color": "#1a1a1a"
   },
   "scraping": {
     "sources": [
