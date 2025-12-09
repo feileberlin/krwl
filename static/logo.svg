@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="58" fill="#4CAF50" stroke="#fff" stroke-width="4"/>
+  
+  <!-- Map pin icon -->
+  <g transform="translate(60, 40)">
+    <path d="M0 0 C-8 0 -15 7 -15 15 C-15 25 0 40 0 40 C0 40 15 25 15 15 C15 7 8 0 0 0 Z" 
+          fill="#fff" opacity="0.9"/>
+    <circle cx="0" cy="15" r="5" fill="#4CAF50"/>
+  </g>
+  
+  <!-- Event marker dots -->
+  <circle cx="35" cy="75" r="4" fill="#fff" opacity="0.8"/>
+  <circle cx="60" cy="85" r="4" fill="#fff" opacity="0.8"/>
+  <circle cx="85" cy="75" r="4" fill="#fff" opacity="0.8"/>
+</svg>

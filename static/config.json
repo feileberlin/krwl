@@ -4,7 +4,7 @@
     "description": "Community events scraper and viewer with geolocation filtering"
   },
   "ui": {
-    "logo": "",
+    "logo": "logo.svg",
     "imprint_url": "imprint.html",
     "imprint_text": "Imprint"
   },
