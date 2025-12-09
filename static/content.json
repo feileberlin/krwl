@@ -168,5 +168,11 @@
     "description": "{event_description}",
     "location": "{venue_name}",
     "filename": "event-{event_id}.ics"
+  },
+  "map": {
+    "user_location_popup": "You are here",
+    "attribution": "Map data © OpenStreetMap contributors",
+    "zoom_in": "Zoom in",
+    "zoom_out": "Zoom out"
   }
 }

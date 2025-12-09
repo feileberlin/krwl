@@ -1,7 +1,9 @@
 {
   "app": {
     "name": "KRWL HOF Community Events",
-    "description": "Community events scraper and viewer with geolocation filtering"
+    "description": "Community events scraper and viewer with geolocation filtering",
+    "language": "en",
+    "language_comment": "Set to 'en' for English or 'de' for German. Loads content.json or content.de.json accordingly."
   },
   "ui": {
     "logo": "logo.svg",

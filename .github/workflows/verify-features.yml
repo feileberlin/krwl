@@ -76,6 +76,28 @@ jobs:
             exit 1
           fi
       
+      - name: Run translation tests
+        id: translation_test
+        run: |
+          echo "Running translation tests..."
+          python3 test_translations.py --verbose > translation_test_output.txt 2>&1
+          TRANSLATION_EXIT_CODE=$?
+          
+          # Display the output
+          cat translation_test_output.txt
+          
+          echo "exit_code=$TRANSLATION_EXIT_CODE" >> $GITHUB_OUTPUT
+          
+          # Set summary
+          if [ $TRANSLATION_EXIT_CODE -eq 0 ]; then
+            echo "status=✓ All translations complete!" >> $GITHUB_OUTPUT
+            echo "::notice::Translation tests passed"
+          else
+            echo "status=✗ Some translations incomplete" >> $GITHUB_OUTPUT
+            echo "::error::Translation tests failed"
+            exit 1
+          fi
+      
       - name: Upload verification results
         uses: actions/upload-artifact@v3
         if: always()
@@ -85,6 +107,7 @@ jobs:
             verification_output.txt
             verification_results.json
             scraper_test_output.txt
+            translation_test_output.txt
       
       - name: Comment on PR (if applicable)
         if: github.event_name == 'pull_request' && steps.verify.outputs.exit_code != '0'

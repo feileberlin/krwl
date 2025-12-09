@@ -341,6 +341,63 @@ body {
     display: none;
 }
 
+/* Language Switcher */
+.language-switcher {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 0.5rem 0.8rem;
+    background: rgba(30, 30, 30, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 0 8px 0 0;
+    border: 2px solid #4CAF50;
+    border-left: none;
+    border-bottom: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+#language-select {
+    background: transparent;
+    border: 1px solid #4CAF50;
+    color: #4CAF50;
+    font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
+    font-size: 0.75rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#language-select:hover {
+    background: rgba(76, 175, 80, 0.2);
+    color: #fff;
+    border-color: #fff;
+}
+
+#language-select:focus {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+#language-select option {
+    background: #1a1a1a;
+    color: #4CAF50;
+}
+
+/* Tablet and up */
+@media (min-width: 640px) {
+    .language-switcher {
+        padding: 0.6rem 1rem;
+        border-radius: 8px;
+        border: 2px solid #4CAF50;
+    }
+    
+    #language-select {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.6rem;
+    }
+}
+
 /* Event detail modal */
 #event-detail {
     position: fixed;

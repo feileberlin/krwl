@@ -221,6 +221,14 @@
                         <img id="site-logo" src="" alt="KRWL HOF Logo" style="display: none;">
                         <span id="imprint-text">Imprint</span>
                     </a>
+                    
+                    <!-- Language switcher -->
+                    <div id="language-switcher" class="language-switcher">
+                        <select id="language-select" aria-label="Select language">
+                            <option value="en">English</option>
+                            <option value="de">Deutsch</option>
+                        </select>
+                    </div>
                 </footer>
             </div>
         </main>
@@ -260,6 +268,7 @@
             document.head.appendChild(script);
         })();
     </script>
+    <script src="js/i18n.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
