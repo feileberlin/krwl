@@ -20,6 +20,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Download Leaflet library
+        run: |
+          ./download-libs.sh
+          echo "✓ Leaflet library downloaded"
+
       - name: Prepare preview publish directory
         run: |
           set -euo pipefail

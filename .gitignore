@@ -13,7 +13,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -41,3 +40,13 @@ Thumbs.db
 # Temporary files
 *.tmp
 .cache/
+
+# Deployment artifacts
+publish/
+
+# Old documentation (README.md is auto-generated)
+README.txt
+README.NEW.md
+IMPLEMENTATION_SUMMARY.md
+PR_SUMMARY.md
+KISS_IMPLEMENTATION.md

@@ -322,13 +322,20 @@ Events are loaded from `static/events.json`:
    cd krwl-hof
    ```
 
-2. **Serve the static files**
+2. **Download dependencies** (Leaflet map library)
+   ```bash
+   ./download-libs.sh
+   ```
+   
+   This downloads Leaflet.js locally for better performance and offline PWA support.
+
+3. **Serve the static files**
    ```bash
    cd static
    python3 -m http.server 8000
    ```
 
-3. **Open in browser**
+4. **Open in browser**
    ```
    http://localhost:8000
    ```
