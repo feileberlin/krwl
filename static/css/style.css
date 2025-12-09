@@ -14,6 +14,10 @@
  * - Text shadows for CRT glow effect
  * - Increased font weights for readability
  * 
+ * Animations:
+ * - Blinking cursor for terminal effect
+ * - Typewriter animation for event details
+ * 
  * Architecture:
  * - No separate headers/footers - all overlays on fullscreen map
  * - Filter controls at top in natural language sentence
@@ -26,6 +30,47 @@
  * - Skip to content link for keyboard navigation
  * - WCAG AA compliant contrast ratios
  */
+
+/* === KEYFRAME ANIMATIONS === */
+
+/**
+ * Blinking Cursor Animation
+ * Creates terminal-style blinking cursor effect
+ */
+@keyframes blink-cursor {
+    0%, 49% {
+        opacity: 1;
+    }
+    50%, 100% {
+        opacity: 0;
+    }
+}
+
+/**
+ * Typewriter Animation
+ * Reveals text character by character from left to right
+ */
+@keyframes typewriter {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+/**
+ * Text Glow Pulse
+ * Subtle pulsing glow effect for active elements
+ */
+@keyframes glow-pulse {
+    0%, 100% {
+        text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+    }
+    50% {
+        text-shadow: 0 0 10px rgba(0, 255, 0, 0.8), 0 0 15px rgba(0, 255, 0, 0.6);
+    }
+}
 
 /* === GLOBAL RESETS === */
 * {
@@ -445,16 +490,27 @@ body {
     background: #2d2d2d;
 }
 
+/* Enhanced popup styling with terminal theme */
 .event-popup {
     padding: 1rem;
+    font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
 }
 
 .event-popup h3 {
-    color: #4CAF50;
+    color: #00ff00;
     margin: 0 0 0.75rem 0;
     font-size: 1.1rem;
-    border-bottom: 2px solid rgba(76, 175, 80, 0.3);
+    border-bottom: 2px solid rgba(0, 255, 0, 0.5);
     padding-bottom: 0.5rem;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+    position: relative;
+}
+
+/* Blinking cursor after title */
+.event-popup h3::after {
+    content: '█';
+    animation: blink-cursor 1s step-end infinite;
+    margin-left: 0.2rem;
 }
 
 .event-popup-info {
@@ -462,43 +518,78 @@ body {
     line-height: 1.6;
 }
 
+/* Typewriter effect for info lines */
 .event-popup-info p {
     margin: 0.4rem 0;
     font-size: 0.9rem;
     display: flex;
     align-items: flex-start;
     gap: 0.5rem;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid rgba(0, 255, 0, 0);
+}
+
+/* Apply typewriter animation on popup open */
+.leaflet-popup-content-wrapper.typing .event-popup-info p {
+    animation: typewriter 0.5s steps(40) forwards;
+    animation-delay: calc(var(--line-index, 0) * 0.3s);
 }
 
 .event-popup-info .icon {
     min-width: 20px;
     text-align: center;
+    color: #00ff00;
 }
 
+/* Description with typewriter effect */
 .event-popup-description {
     margin: 0.75rem 0;
     padding: 0.75rem;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(0, 255, 0, 0.3);
     border-radius: 6px;
     font-size: 0.85rem;
     line-height: 1.5;
-    color: #ccc;
+    color: #00ff00;
+    text-shadow: 0 0 3px rgba(0, 255, 0, 0.5);
+    position: relative;
 }
 
+/* Blinking cursor at end of description */
+.event-popup-description::after {
+    content: '█';
+    animation: blink-cursor 1s step-end infinite;
+    margin-left: 0.2rem;
+    color: #00ff00;
+}
+
+/* Link styled as terminal command */
 .event-popup-link {
     display: inline-block;
-    background: #4CAF50;
-    color: white;
+    background: rgba(0, 255, 0, 0.1);
+    color: #00ff00;
     padding: 0.5rem 1rem;
+    border: 2px solid #00ff00;
     border-radius: 5px;
     text-decoration: none;
     font-size: 0.9rem;
     margin-top: 0.5rem;
-    transition: background 0.2s;
+    transition: all 0.2s;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+    font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
+}
+
+/* Command prefix */
+.event-popup-link::before {
+    content: '> ';
+    font-weight: bold;
 }
 
 .event-popup-link:hover {
-    background: #45a049;
+    background: rgba(0, 255, 0, 0.2);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
 }
 
 /* Scrollbar styling */
@@ -511,10 +602,236 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #4CAF50;
+    background: #00ff00;
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #45a049;
+    background: #00dd00;
+}
+
+/* === NO JAVASCRIPT FALLBACK STYLES === */
+
+/**
+ * Noscript Container
+ * Full page terminal-styled layout for no-JS browsers
+ * Shows static event list instead of interactive map
+ */
+.noscript-container {
+    min-height: 100vh;
+    background: #000000;
+    color: #00ff00;
+    font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.noscript-header {
+    border: 2px solid #00ff00;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    background: rgba(0, 255, 0, 0.05);
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+}
+
+.noscript-header h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+    animation: glow-pulse 2s infinite;
+}
+
+.noscript-header h1::before {
+    content: '> ';
+    color: #00ff00;
+}
+
+.noscript-header .warning {
+    color: #ffff00;
+    font-weight: bold;
+    margin: 1rem 0;
+    text-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
+    padding: 0.5rem;
+    border-left: 3px solid #ffff00;
+    background: rgba(255, 255, 0, 0.1);
+}
+
+.noscript-header .info {
+    color: #00ff00;
+    margin-top: 0.5rem;
+    opacity: 0.8;
+}
+
+.noscript-main {
+    background: rgba(0, 255, 0, 0.02);
+    border: 1px solid rgba(0, 255, 0, 0.3);
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.noscript-main h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 8px rgba(0, 255, 0, 0.6);
+    border-bottom: 2px solid rgba(0, 255, 0, 0.5);
+    padding-bottom: 0.5rem;
+}
+
+.noscript-main h2::before {
+    content: '>> ';
+    color: #00ff00;
+}
+
+/* Event List Styles */
+.event-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.event-item {
+    border: 1px solid rgba(0, 255, 0, 0.3);
+    border-left: 3px solid #00ff00;
+    border-radius: 4px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    background: rgba(0, 255, 0, 0.03);
+    transition: all 0.3s;
+}
+
+.event-item:hover {
+    background: rgba(0, 255, 0, 0.08);
+    border-left-width: 5px;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+    transform: translateX(5px);
+}
+
+.event-item h3 {
+    color: #00ff00;
+    font-size: 1.2rem;
+    margin-bottom: 0.75rem;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+}
+
+.event-item h3::after {
+    content: ' █';
+    animation: blink-cursor 1s step-end infinite;
+}
+
+.event-time,
+.event-location {
+    margin: 0.5rem 0;
+    font-size: 0.95rem;
+    opacity: 0.9;
+}
+
+.event-description {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-left: 2px solid rgba(0, 255, 0, 0.5);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.event-link {
+    margin-top: 1rem;
+}
+
+.event-link a {
+    color: #00ff00;
+    text-decoration: none;
+    border: 1px solid #00ff00;
+    padding: 0.5rem 1rem;
+    display: inline-block;
+    border-radius: 4px;
+    transition: all 0.2s;
+    background: rgba(0, 255, 0, 0.1);
+}
+
+.event-link a:hover {
+    background: rgba(0, 255, 0, 0.2);
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    transform: translateX(3px);
+}
+
+.event-link a::before {
+    content: '> ';
+    font-weight: bold;
+}
+
+/* Status Messages */
+.loading,
+.no-events,
+.error {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.1rem;
+}
+
+.loading {
+    color: #00ff00;
+    animation: glow-pulse 1.5s infinite;
+}
+
+.loading::after {
+    content: ' █';
+    animation: blink-cursor 0.5s step-end infinite;
+}
+
+.no-events {
+    color: #ffaa00;
+    text-shadow: 0 0 5px rgba(255, 170, 0, 0.5);
+}
+
+.error {
+    color: #ff0000;
+    text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+    border: 1px solid #ff0000;
+    background: rgba(255, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+/* Footer */
+.noscript-footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid rgba(0, 255, 0, 0.3);
+    opacity: 0.7;
+}
+
+.noscript-footer p {
+    margin: 0.5rem 0;
+}
+
+.noscript-footer a {
+    color: #00ff00;
+    text-decoration: underline;
+}
+
+.noscript-footer a:hover {
+    text-shadow: 0 0 8px rgba(0, 255, 0, 0.8);
+}
+
+/* Mobile responsiveness for noscript */
+@media (max-width: 640px) {
+    .noscript-container {
+        padding: 1rem;
+    }
+    
+    .noscript-header,
+    .noscript-main {
+        padding: 1rem;
+    }
+    
+    .noscript-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .event-item {
+        padding: 1rem;
+    }
 }

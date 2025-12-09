@@ -222,7 +222,7 @@ class EventsApp {
                 map: {
                     default_center: { lat: 50.3167, lon: 11.9167 },
                     default_zoom: 13,
-                    tile_provider: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+                    tile_provider: 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png'
                 },
                 filtering: {
                     max_distance_km: 5.0,
@@ -330,9 +330,13 @@ class EventsApp {
         }).setView([center.lat, center.lon], this.config.map.default_zoom);
         
         // Load map tiles from configured provider
-        // Default: CartoDB Dark Matter (black background, minimal details)
-        // Can be changed in config.json to any tile provider
-        const tileProvider = this.config.map.tile_provider || 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+        // Default: CartoDB Dark No Labels (minimal - only major roads, no POIs/labels)
+        // This keeps the focus on our event markers from JSON
+        // Alternative options in config:
+        //   - dark_nolabels: Minimal, no labels or POIs
+        //   - dark_all: More detail with labels
+        //   - light_nolabels: Light theme, minimal
+        const tileProvider = this.config.map.tile_provider || 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png';
         const attribution = this.config.map.attribution || '';
         
         // Add tile layer to map
@@ -345,7 +349,8 @@ class EventsApp {
         this.log('Map initialized:', {
             center: center,
             zoom: this.config.map.default_zoom,
-            tileProvider: tileProvider
+            tileProvider: tileProvider,
+            style: 'minimal (no labels/POIs - focus on event markers)'
         });
     }
     
@@ -819,27 +824,29 @@ class EventsApp {
         });
         
         // Create rich popup with all event details (pure Leaflet convention)
+        // Add line index for staggered typewriter animation
+        let lineIndex = 0;
         const popupContent = `
             <div class="event-popup">
                 <h3>${event.title}</h3>
                 <div class="event-popup-info">
-                    <p><span class="icon">🕐</span> ${eventDate.toLocaleString([], { 
+                    <p style="--line-index: ${lineIndex++};"><span class="icon">🕐</span> ${eventDate.toLocaleString([], { 
                         weekday: 'short',
                         month: 'short', 
                         day: 'numeric',
                         hour: '2-digit', 
                         minute: '2-digit' 
                     })}</p>
-                    <p><span class="icon">📍</span> ${event.location.name}</p>
+                    <p style="--line-index: ${lineIndex++};"><span class="icon">📍</span> ${event.location.name}</p>
                     ${event.distance !== undefined ? 
-                        `<p><span class="icon">📏</span> ${event.distance.toFixed(1)} km away</p>` : 
+                        `<p style="--line-index: ${lineIndex++};"><span class="icon">📏</span> ${event.distance.toFixed(1)} km away</p>` : 
                         ''}
                 </div>
                 ${event.description ? 
                     `<div class="event-popup-description">${event.description}</div>` : 
                     ''}
                 ${event.url ? 
-                    `<a href="${event.url}" target="_blank" rel="noopener noreferrer" class="event-popup-link">More Info →</a>` : 
+                    `<a href="${event.url}" target="_blank" rel="noopener noreferrer" class="event-popup-link">access data</a>` : 
                     ''}
             </div>
         `;
@@ -848,6 +855,22 @@ class EventsApp {
             maxWidth: 300,
             minWidth: 200,
             className: 'event-popup-container'
+        });
+        
+        // Add typewriter animation when popup opens
+        marker.on('popupopen', (e) => {
+            const popupWrapper = e.popup.getElement().querySelector('.leaflet-popup-content-wrapper');
+            if (popupWrapper) {
+                // Add typing class to trigger animation
+                setTimeout(() => {
+                    popupWrapper.classList.add('typing');
+                }, 10);
+                
+                // Remove typing class after animation completes
+                setTimeout(() => {
+                    popupWrapper.classList.remove('typing');
+                }, 2000);
+            }
         });
         
         // Store event data with marker for keyboard navigation

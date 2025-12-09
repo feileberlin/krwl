@@ -25,6 +25,77 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
+    <!-- No JavaScript Fallback -->
+    <noscript>
+        <div class="noscript-container">
+            <header class="noscript-header">
+                <h1>KRWL HOF Community Events</h1>
+                <p class="warning">⚠️ JavaScript is disabled. Showing static event list.</p>
+                <p class="info">Enable JavaScript for the interactive map experience with filters and geolocation.</p>
+            </header>
+            
+            <main class="noscript-main">
+                <h2>Upcoming Events</h2>
+                
+                <!-- This section would be populated by a server-side script -->
+                <!-- For static deployment, we'll use a JavaScript snippet to populate it -->
+                <div id="noscript-events">
+                    <p class="loading">Loading events...</p>
+                </div>
+                
+                <!-- Inline script to load events even without main JS -->
+                <script>
+                    // This minimal script runs even in noscript context for static sites
+                    fetch('events.json')
+                        .then(res => res.json())
+                        .then(data => {
+                            const container = document.getElementById('noscript-events');
+                            const now = new Date();
+                            const events = data.events
+                                .filter(e => new Date(e.start_time) > now)
+                                .sort((a, b) => new Date(a.start_time) - new Date(b.start_time))
+                                .slice(0, 50); // Show max 50 events
+                            
+                            if (events.length === 0) {
+                                container.innerHTML = '<p class="no-events">No upcoming events found.</p>';
+                                return;
+                            }
+                            
+                            let html = '<ul class="event-list">';
+                            events.forEach(event => {
+                                const date = new Date(event.start_time);
+                                html += `
+                                    <li class="event-item">
+                                        <h3>${event.title}</h3>
+                                        <p class="event-time">📅 ${date.toLocaleDateString()} at ${date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</p>
+                                        <p class="event-location">📍 ${event.location.name}</p>
+                                        ${event.description ? `<p class="event-description">${event.description}</p>` : ''}
+                                        ${event.url ? `<p class="event-link"><a href="${event.url}" target="_blank" rel="noopener">→ More Info</a></p>` : ''}
+                                    </li>
+                                `;
+                            });
+                            html += '</ul>';
+                            container.innerHTML = html;
+                        })
+                        .catch(err => {
+                            document.getElementById('noscript-events').innerHTML = 
+                                '<p class="error">Failed to load events. Please refresh the page.</p>';
+                        });
+                </script>
+            </main>
+            
+            <footer class="noscript-footer">
+                <p>For the best experience, please enable JavaScript to access the interactive map.</p>
+                <p><a href="imprint.html">Imprint</a></p>
+            </footer>
+        </div>
+        
+        <!-- Hide the main app when JavaScript is disabled -->
+        <style>
+            #app { display: none !important; }
+        </style>
+    </noscript>
+    
     <!-- Skip to main content for keyboard navigation -->
     <a href="#map" class="skip-link">Skip to map</a>
     
