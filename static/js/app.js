@@ -818,7 +818,52 @@ class EventsApp {
             option.textContent = `${categoryText} (${categoryCount})`;
         }
         
+        // Update category overview panel
+        this.updateCategoryOverview(categoryCounts);
+        
         this.log('Filter counts updated:', categoryCounts);
+    }
+    
+    /**
+     * Update the category overview panel with current counts
+     * @param {Object} categoryCounts - Map of category names to counts
+     */
+    updateCategoryOverview(categoryCounts) {
+        const overviewContainer = document.getElementById('category-counts');
+        if (!overviewContainer) return;
+        
+        // Clear existing content
+        overviewContainer.innerHTML = '';
+        
+        // Get category filter to access original labels
+        const categoryFilter = document.getElementById('category-filter');
+        
+        // Create overview items for each category (skip 'all')
+        for (let i = 0; i < categoryFilter.options.length; i++) {
+            const option = categoryFilter.options[i];
+            const categoryValue = option.value;
+            
+            // Skip 'all' category in overview
+            if (categoryValue === 'all') continue;
+            
+            const categoryText = option.dataset.originalText || option.textContent.replace(/\s*\(\d+\)/, '');
+            const count = categoryCounts[categoryValue] || 0;
+            
+            // Create category count element
+            const countEl = document.createElement('div');
+            countEl.className = 'category-count';
+            countEl.innerHTML = `<span class="label">${categoryText}:</span><span class="count">${count}</span>`;
+            
+            // Add click handler to filter by this category
+            countEl.style.cursor = 'pointer';
+            countEl.title = `Filter by ${categoryText}`;
+            countEl.addEventListener('click', () => {
+                categoryFilter.value = categoryValue;
+                categoryFilter.dispatchEvent(new Event('change'));
+            });
+            
+            overviewContainer.appendChild(countEl);
+        }
     }
     
     /**
