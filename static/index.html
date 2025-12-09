@@ -22,8 +22,12 @@
     <link rel="apple-touch-icon" href="icon-192.svg">
     
     <link rel="stylesheet" href="css/style.css">
-    <!-- Leaflet CSS - loaded from local files -->
-    <link rel="stylesheet" href="lib/leaflet/leaflet.css" />
+    <!-- Leaflet CSS - loaded from CDN with local fallback -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" 
+          crossorigin="" />
+    <link rel="stylesheet" href="lib/leaflet/leaflet.css" onerror="this.remove()" />
+
 
 </head>
 <body>
@@ -209,8 +213,11 @@
         </div>
     </div>
     
-    <!-- Leaflet JS - loaded from local files -->
-    <script src="lib/leaflet/leaflet.js"></script>
+    <!-- Leaflet JS - loaded from CDN with local fallback -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" 
+            crossorigin=""></script>
+    <script>window.L || document.write('<script src="lib/leaflet/leaflet.js"><\/script>')</script>
     <script src="js/i18n.js"></script>
     <script src="js/app.js"></script>
 </body>
