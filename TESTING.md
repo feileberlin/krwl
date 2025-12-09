@@ -34,6 +34,19 @@ Continuous validation of live production environment.
 - Runtime: ~3 seconds
 - Run: `python3 test_filters.py --verbose`
 
+**test_event_schema.py** - Event schema and filter stringency validation
+- ✅ JSON schema definition validation
+- ✅ Event example file validation against schema
+- ✅ Event data file validation against schema
+- ✅ Example vs schema consistency (coverage of optional fields)
+- ✅ Time filter stringency testing
+- ✅ Distance filter stringency testing
+- ✅ Category filter stringency testing
+- ✅ Recovery suggestions for schema violations
+- Runtime: ~2 seconds
+- Run: `python3 test_event_schema.py --verbose`
+- Show schema: `python3 test_event_schema.py --show-schema`
+
 **verify_features.py** - Feature registry validation
 - ✅ All declared features are implemented
 - ✅ Feature registry matches codebase
