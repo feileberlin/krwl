@@ -42,8 +42,8 @@
       "prefix": "from"
     },
     "predefined_locations": {
-      "Hof City Center": "Hof City Center",
-      "Freiheitshalle": "Freiheitshalle"
+      "location.no1": "Hof Hauptbahnhof",
+      "location.no2": "Hof Rathaus"
     }
   },
   "burger_menu": {

@@ -56,6 +56,9 @@ class EventsApp {
         // Current marker index for keyboard navigation
         this.currentMarkerIndex = -1;
         
+        // Regex pattern for removing count suffix from category text
+        this.countPattern = /\s*\(\d+\)/;
+        
         // Start the application
         this.init();
     }
@@ -803,83 +806,114 @@ class EventsApp {
     }
     
     updateFilterDescription(count) {
-        // Get the category filter element
         const categoryFilter = document.getElementById('category-filter');
+        const categoryCounts = this.calculateCategoryCounts();
         
-        // First, restore all options to their original text
+        // Update each option with its count in a single loop
         for (let i = 0; i < categoryFilter.options.length; i++) {
             const option = categoryFilter.options[i];
             // Store original text on first run
             if (!option.dataset.originalText) {
                 option.dataset.originalText = option.textContent;
             }
-            // Restore to original text
-            option.textContent = option.dataset.originalText;
+            const categoryText = option.dataset.originalText;
+            const categoryCount = categoryCounts[option.value] || 0;
+            option.textContent = `${categoryText} (${categoryCount})`;
         }
         
-        // Now update the selected option with the count
-        const selectedOption = categoryFilter.options[categoryFilter.selectedIndex];
-        const categoryValue = selectedOption.value;
-        const categoryText = selectedOption.dataset.originalText;
+        // Update category overview panel
+        this.updateCategoryOverview(categoryCounts);
         
-        // Helper function to get singular or plural form
-        const getCountText = (count) => {
-            if (!window.i18n) {
-                // Fallback without i18n
-                if (count === 0) return 'No events';
-                return count === 1 ? `${count} event` : `${count} events`;
+        this.log('Filter counts updated:', categoryCounts);
+    }
+    
+    /**
+     * Update the category overview panel with current counts
+     * @param {Object} categoryCounts - Map of category names to counts
+     */
+    updateCategoryOverview(categoryCounts) {
+        const overviewContainer = document.getElementById('category-counts');
+        if (!overviewContainer) return;
+        
+        // Clear existing content
+        overviewContainer.textContent = '';
+        
+        // Get category filter to access original labels
+        const categoryFilter = document.getElementById('category-filter');
+        
+        // Create overview items for each category (skip 'all')
+        for (let i = 0; i < categoryFilter.options.length; i++) {
+            const option = categoryFilter.options[i];
+            const categoryValue = option.value;
+            
+            // Skip 'all' category in overview
+            if (categoryValue === 'all') continue;
+            
+            // Use stored original text or fallback to stripping count from current text
+            // Fallback needed during first render before originalText is set
+            const categoryText = option.dataset.originalText || option.textContent.replace(this.countPattern, '');
+            const count = categoryCounts[categoryValue] || 0;
+            
+            // Create category count element safely using DOM methods
+            const countEl = document.createElement('div');
+            countEl.className = 'category-count';
+            
+            const labelSpan = document.createElement('span');
+            labelSpan.className = 'label';
+            labelSpan.textContent = `${categoryText}:`;
+            
+            const countSpan = document.createElement('span');
+            countSpan.className = 'count';
+            countSpan.textContent = String(count);
+            
+            countEl.appendChild(labelSpan);
+            countEl.appendChild(countSpan);
+            
+            // Add click handler to filter by this category
+            countEl.style.cursor = 'pointer';
+            countEl.title = `Filter by ${categoryText}`;
+            countEl.addEventListener('click', () => {
+                categoryFilter.value = categoryValue;
+                categoryFilter.dispatchEvent(new Event('change'));
+            });
+            
+            overviewContainer.appendChild(countEl);
+        }
+    }
+    
+    /**
+     * Calculate event counts for each category based on current filters (excluding category filter)
+     * @returns {Object} Map of category names to event counts
+     */
+    calculateCategoryCounts() {
+        const maxEventTime = this.getMaxEventTime();
+        const maxDistance = this.filters.maxDistance;
+        const categoryCounts = { all: 0 };
+        
+        // Determine reference location once
+        const refLoc = (this.filters.useCustomLocation && this.filters.customLat && this.filters.customLon)
+            ? { lat: this.filters.customLat, lon: this.filters.customLon }
+            : this.userLocation;
+        
+        // Count events that pass time and distance filters
+        for (const event of this.events) {
+            // Check time filter
+            if (new Date(event.start_time) > maxEventTime) continue;
+            
+            // Check distance filter
+            if (refLoc && event.location) {
+                const distance = this.calculateDistance(refLoc.lat, refLoc.lon, event.location.lat, event.location.lon);
+                if (distance > maxDistance) continue;
             }
             
-            // Use translation system with proper singular/plural
-            if (count === 0) {
-                return window.i18n.t('filters.event_count.none');
-            } else if (count === 1) {
-                return window.i18n.t('filters.event_count.singular', { count: count });
-            } else {
-                return window.i18n.t('filters.event_count.plural', { count: count });
-            }
-        };
-        
-        // Helper to get event word (singular/plural)
-        const getEventWord = (count) => {
-            if (!window.i18n) {
-                return count === 1 ? 'event' : 'events';
-            }
-            return count === 1 ? 
-                window.i18n.t('filters.event_word.singular') : 
-                window.i18n.t('filters.event_word.plural');
-        };
-        
-        // Build count text based on selected category
-        let countText = '';
-        if (categoryValue === 'all') {
-            // For "all" category, just show count
-            countText = getCountText(count);
-        } else {
-            // Get the base category text for comparison
-            const baseCategory = window.i18n ? window.i18n.t(`filters.categories.${categoryValue}`) : categoryText;
-            
-            // Check if this is the main "events" category by comparing with translated value
-            const allCategoryText = window.i18n ? window.i18n.t('filters.categories.all') : 'events';
-            
-            if (categoryText === allCategoryText) {
-                // Don't double-show "events" - just use the count text
-                countText = getCountText(count);
-            } else if (categoryValue === 'festivals') {
-                // Festivals has special singular form
-                const singularForm = window.i18n ? window.i18n.t('filters.categories_singular.festivals') : 'festival';
-                countText = count === 1 ? `${count} ${singularForm}` : `${count} ${categoryText}`;
-            } else {
-                // For other categories: "X category events" or "1 category event"
-                const eventWord = getEventWord(count);
-                countText = `${count} ${categoryText} ${eventWord}`;
+            // Count event
+            categoryCounts.all++;
+            if (event.category) {
+                categoryCounts[event.category] = (categoryCounts[event.category] || 0) + 1;
             }
         }
         
-        // Update the category filter to show the count
-        selectedOption.textContent = countText;
-        
-        this.log('Filter count updated:', countText);
+        return categoryCounts;
     }
     
     /**

@@ -140,14 +140,16 @@
     "attribution": "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
     "predefined_locations": [
       {
-        "name": "Hof City Center",
+        "name": "location.no1",
         "lat": 50.3167,
-        "lon": 11.9167
+        "lon": 11.9167,
+        "display_name": "Hof Hauptbahnhof"
       },
       {
-        "name": "Freiheitshalle",
+        "name": "location.no2",
         "lat": 50.3175,
-        "lon": 11.9165
+        "lon": 11.9165,
+        "display_name": "Hof Rathaus"
       }
     ]
   },
