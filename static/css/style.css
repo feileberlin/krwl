@@ -1,17 +1,22 @@
 /**
  * KRWL HOF Community Events - Styles
  * 
- * Clean, modern theme for fullscreen map interface
- * Mobile-first responsive design
+ * Terminal/Hacker style theme with green-on-black color scheme
+ * Mobile-first responsive design for fullscreen map interface
  * 
  * Color Palette:
- * - Background: Semi-transparent overlays on map
- * - Primary: #4CAF50 (green accent)
- * - Text: Standard readable colors
+ * - Background: #000000 (pure black)
+ * - Primary Text: #00ff00 (bright green with glow effect)
+ * - Accents: rgba(0, 255, 0, 0.x) (semi-transparent green)
  * 
  * Typography:
- * - System fonts for readability
- * - Clear, accessible text
+ * - Monospace fonts for terminal aesthetic (Courier New, Consolas, Monaco)
+ * - Text shadows for CRT glow effect
+ * - Increased font weights for readability
+ * 
+ * Animations:
+ * - Blinking cursor for terminal effect
+ * - Typewriter animation for event details
  * 
  * Architecture:
  * - No separate headers/footers - all overlays on fullscreen map
@@ -25,6 +30,47 @@
  * - Skip to content link for keyboard navigation
  * - WCAG AA compliant contrast ratios
  */
+
+/* === KEYFRAME ANIMATIONS === */
+
+/**
+ * Blinking Cursor Animation
+ * Creates terminal-style blinking cursor effect
+ */
+@keyframes blink-cursor {
+    0%, 49% {
+        opacity: 1;
+    }
+    50%, 100% {
+        opacity: 0;
+    }
+}
+
+/**
+ * Typewriter Animation
+ * Reveals text character by character from left to right
+ */
+@keyframes typewriter {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+/**
+ * Text Glow Pulse
+ * Subtle pulsing glow effect for active elements
+ */
+@keyframes glow-pulse {
+    0%, 100% {
+        text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+    }
+    50% {
+        text-shadow: 0 0 10px rgba(0, 255, 0, 0.8), 0 0 15px rgba(0, 255, 0, 0.6);
+    }
+}
 
 /* === GLOBAL RESETS === */
 * {
@@ -61,8 +107,8 @@
     position: absolute;
     top: -40px;  /* Hidden above viewport */
     left: 0;
-    background: #4CAF50;
-    color: #ffffff;
+    background: #00ff00;
+    color: #000000;
     padding: 8px 16px;
     text-decoration: none;
     z-index: 10000;
@@ -77,14 +123,17 @@
 /* === BASE STYLES === */
 
 /**
- * Body - Clean Theme
- * System fonts for readability
+ * Body - Terminal Theme
+ * Pure black background with bright green text
+ * Monospace font for hacker/console aesthetic
+ * Text glow effect for CRT monitor look
  */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background: #f5f5f5;
-    color: #333333;
+    font-family: 'Courier New', 'Consolas', 'Monaco', 'Lucida Console', monospace;
+    background: #000000;
+    color: #00ff00;
     overflow: hidden;  /* Prevent scrolling - fullscreen map only */
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);  /* Green glow effect */
 }
 
 #app {
@@ -127,26 +176,27 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    font-family: inherit;
+    font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
     /* Mobile-first: Slightly smaller font for better fit */
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: #333333;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #00ff00;
     /* Mobile-first: Adequate padding for touch targets */
     padding: 0.7rem 0.5rem;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(0, 0, 0, 0.95);
     backdrop-filter: blur(10px);
     border-radius: 0 0 8px 8px;
-    border: 1px solid #e0e0e0;
+    border: 2px solid #00ff00;
     border-top: none;
     line-height: 1.8;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 10px rgba(0, 255, 0, 0.1);
     display: flex;
     /* Mobile-first: No wrap to maintain one-line sentence format */
     flex-wrap: nowrap;
     /* Mobile-first: Minimal gap to keep sentence compact */
-    gap: 0.3rem;
+    gap: 0.2rem;
     align-items: center;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
     /* Mobile-first: Allow horizontal scrolling if needed to keep one line */
     overflow-x: auto;
 }
@@ -160,7 +210,6 @@ body {
         font-size: 0.95rem;
         padding: 0.8rem;
         border-radius: 8px;
-        border: 1px solid #e0e0e0;
         gap: 0.3rem;
         flex-wrap: wrap;
     }
@@ -173,12 +222,12 @@ body {
     left: 0;
     right: 0;
     padding: 0.5rem 0.6rem;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(5px);
-    border-bottom: 1px solid #e0e0e0;
-    font-family: inherit;
-    font-size: 0.8rem;
-    color: #666666;
+    border-bottom: 1px solid rgba(0, 255, 0, 0.3);
+    font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
+    font-size: 0.75rem;
+    color: #00ff00;
     z-index: 998;
 }
 
@@ -195,15 +244,15 @@ body {
     align-items: center;
     gap: 0.3rem;
     padding: 0.2rem 0.5rem;
-    background: rgba(76, 175, 80, 0.1);
-    border: 1px solid rgba(76, 175, 80, 0.3);
+    background: rgba(0, 255, 0, 0.1);
+    border: 1px solid rgba(0, 255, 0, 0.3);
     border-radius: 4px;
     transition: all 0.2s;
 }
 
 .category-count:hover {
-    background: rgba(76, 175, 80, 0.15);
-    border-color: rgba(76, 175, 80, 0.5);
+    background: rgba(0, 255, 0, 0.2);
+    border-color: rgba(0, 255, 0, 0.5);
 }
 
 .category-count .label {
@@ -212,7 +261,7 @@ body {
 
 .category-count .count {
     font-weight: bold;
-    color: #333333;
+    color: #4CAF50;
 }
 
 /* Tablet and up */
@@ -225,14 +274,14 @@ body {
     }
     
     #category-counts {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
     }
 }
 
 .filter-part {
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
+    gap: 0.2rem;
     /* Keep inline even on mobile for sentence format */
     flex-shrink: 0;
 }
@@ -241,10 +290,10 @@ body {
     appearance: none;
     background: transparent;
     border: none;
-    border-bottom: 2px solid #4CAF50;
-    color: #333333;
+    border-bottom: 2px dashed #4CAF50;
+    color: #4CAF50;
     /* Mobile-first: Readable font size */
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     font-weight: 500;
     font-family: inherit;
     /* Mobile-first: Better touch targets with adequate padding */
@@ -276,12 +325,14 @@ body {
 
 .inline-filter:hover {
     background-color: rgba(76, 175, 80, 0.1);
+    border-bottom-style: solid;
 }
 
 .inline-filter:focus {
     outline: 2px solid #4CAF50;
     outline-offset: 2px;
-    background-color: rgba(76, 175, 80, 0.15);
+    background-color: rgba(76, 175, 80, 0.2);
+    border-bottom-style: solid;
 }
 
 .inline-filter:focus-visible {
@@ -310,7 +361,7 @@ body {
     padding: 0.5rem 0.8rem;
     background: rgba(30, 30, 30, 0.95);
     backdrop-filter: blur(10px);
-    color: #333333;
+    color: #4CAF50;
     text-decoration: none;
     border-radius: 8px 0 0 0;
     border: 2px solid #4CAF50;
@@ -388,8 +439,8 @@ body {
 #language-select {
     background: transparent;
     border: 1px solid #4CAF50;
-    color: #333333;
-    font-family: inherit;
+    color: #4CAF50;
+    font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
     font-size: 0.75rem;
     padding: 0.3rem 0.5rem;
     border-radius: 4px;
@@ -410,7 +461,7 @@ body {
 
 #language-select option {
     background: #1a1a1a;
-    color: #333333;
+    color: #4CAF50;
 }
 
 /* Tablet and up */
@@ -448,7 +499,7 @@ body {
 
 .detail-content {
     background: #000000;
-    border: 2px solid #4CAF50;
+    border: 2px solid #00ff00;
     border-radius: 12px;
     padding: 1.5rem;
     max-width: 600px;
@@ -457,7 +508,7 @@ body {
     max-height: 90dvh;
     overflow-y: auto;
     position: relative;
-    color: #333333;
+    color: #00ff00;
     box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
 }
 
@@ -475,7 +526,7 @@ body {
     right: 1rem;
     background: none;
     border: none;
-    color: #333333;
+    color: #00ff00;
     font-size: 2rem;
     cursor: pointer;
     line-height: 1;
@@ -488,7 +539,7 @@ body {
 }
 
 #close-detail:hover {
-    color: #333333;
+    color: #4CAF50;
 }
 
 #close-detail:focus {
@@ -503,14 +554,15 @@ body {
 
 .detail-content h2 {
     margin-bottom: 1rem;
-    color: #333333;
+    color: #00ff00;
     padding-right: 2rem;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
 }
 
 .detail-content p {
     line-height: 1.6;
     margin-bottom: 1rem;
-    color: #333333;
+    color: #00ff00;
 }
 
 #detail-info {
@@ -523,12 +575,13 @@ body {
 #detail-link {
     display: inline-block;
     background: rgba(0, 255, 0, 0.1);
-    color: #333333;
+    color: #00ff00;
     padding: 0.75rem 1.5rem;
-    border: 2px solid #4CAF50;
+    border: 2px solid #00ff00;
     border-radius: 5px;
     text-decoration: none;
     transition: all 0.2s;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
 }
 
 #detail-link:hover {
@@ -539,17 +592,18 @@ body {
 /* Enhanced Leaflet tooltip styling (for permanent time preview) */
 .leaflet-tooltip.event-time-tooltip {
     background: rgba(0, 0, 0, 0.95);
-    color: #333333;
-    border: 1px solid #4CAF50;
+    color: #00ff00;
+    border: 1px solid #00ff00;
     border-radius: 4px;
     padding: 4px 8px;
     font-size: 11px;
     font-weight: 600;
     box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+    text-shadow: 0 0 3px rgba(0, 255, 0, 0.5);
 }
 
 .leaflet-tooltip.event-time-tooltip:before {
-    border-top-color: #4CAF50;
+    border-top-color: #00ff00;
 }
 
 /* Keyboard focus styles for markers */
@@ -567,8 +621,8 @@ body {
 /* Enhanced Leaflet popup styling */
 .leaflet-popup-content-wrapper {
     background: #000000;
-    color: #333333;
-    border: 2px solid #4CAF50;
+    color: #00ff00;
+    border: 2px solid #00ff00;
     border-radius: 8px;
     padding: 0;
     box-shadow: 0 0 20px rgba(0, 255, 0, 0.4);
@@ -578,18 +632,18 @@ body {
     margin: 0;
     min-width: 200px;
     max-width: 300px;
-    color: #333333;
+    color: #00ff00;
 }
 
 .leaflet-popup-tip {
     background: #000000;
-    border: 1px solid #4CAF50;
+    border: 1px solid #00ff00;
 }
 
 /* Enhanced popup styling with terminal theme */
 .event-popup {
     padding: 1rem;
-    font-family: inherit;
+    font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
     position: relative;
 }
 
@@ -620,7 +674,7 @@ body {
     display: block;
     width: 100%;
     height: 3px;
-    background: #4CAF50;
+    background: #00ff00;
     border-radius: 2px;
     transition: all 0.3s ease;
     box-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
@@ -653,7 +707,7 @@ body {
     top: 2.5rem;
     right: 0;
     background: #000000;
-    border: 2px solid #4CAF50;
+    border: 2px solid #00ff00;
     border-radius: 4px;
     padding: 0.5rem 0;
     min-width: 180px;
@@ -683,13 +737,13 @@ body {
     align-items: center;
     gap: 0.75rem;
     padding: 0.6rem 1rem;
-    color: #333333;
+    color: #00ff00;
     background: transparent;
     border: none;
     width: 100%;
     text-align: left;
     cursor: pointer;
-    font-family: inherit;
+    font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
     font-size: 0.85rem;
     text-decoration: none;
     transition: all 0.2s;
@@ -698,7 +752,7 @@ body {
 
 .menu-item:hover {
     background: rgba(0, 255, 0, 0.1);
-    border-left-color: #333333;
+    border-left-color: #00ff00;
     padding-left: 1.2rem;
 }
 
@@ -710,6 +764,7 @@ body {
 
 .menu-item .menu-text {
     flex: 1;
+    text-shadow: 0 0 3px rgba(0, 255, 0, 0.5);
 }
 
 /* Terminal command prefix */
@@ -721,9 +776,11 @@ body {
 /* Menu item active/bookmarked state */
 .menu-item.bookmarked {
     color: #ffff00;
+    text-shadow: 0 0 5px rgba(255, 255, 0, 0.7);
 }
 
 .menu-item.bookmarked .menu-icon {
+    animation: glow-pulse 2s infinite;
 }
 
 /* Info item (non-clickable) */
@@ -740,37 +797,41 @@ body {
 
 /* Visit counter */
 .visit-count {
-    color: #333333;
+    color: #00ff00;
     font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
 }
 
 /* Bookmarked marker highlight */
 .leaflet-marker-icon.bookmarked-marker {
     filter: drop-shadow(0 0 10px #ffff00) drop-shadow(0 0 20px #ffff00);
+    animation: glow-pulse 2s infinite;
 }
 
 /* === POPUP CONTENT STYLES === */
 
 
 .event-popup h3 {
-    color: #333333;
+    color: #00ff00;
     margin: 0 0 0.75rem 0;
     font-size: 1.1rem;
     border-bottom: 2px solid rgba(0, 255, 0, 0.5);
     padding-bottom: 0.5rem;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
     position: relative;
 }
 
 /* Blinking cursor after title */
 .event-popup h3::after {
     content: '█';
+    animation: blink-cursor 1s step-end infinite;
     margin-left: 0.2rem;
 }
 
 .event-popup-info {
     margin: 0.5rem 0;
     line-height: 1.6;
-    color: #333333;
+    color: #00ff00;
 }
 
 /* Typewriter effect for info lines */
@@ -783,18 +844,19 @@ body {
     overflow: hidden;
     white-space: nowrap;
     border-right: 2px solid rgba(0, 255, 0, 0);
-    color: #333333;
+    color: #00ff00;
 }
 
 /* Apply typewriter animation on popup open */
 .leaflet-popup-content-wrapper.typing .event-popup-info p {
+    animation: typewriter 0.5s steps(40) forwards;
     animation-delay: calc(var(--line-index, 0) * 0.3s);
 }
 
 .event-popup-info .icon {
     min-width: 20px;
     text-align: center;
-    color: #333333;
+    color: #00ff00;
 }
 
 /* Description with typewriter effect */
@@ -806,30 +868,33 @@ body {
     border-radius: 6px;
     font-size: 0.85rem;
     line-height: 1.5;
-    color: #333333;
+    color: #00ff00;
+    text-shadow: 0 0 3px rgba(0, 255, 0, 0.5);
     position: relative;
 }
 
 /* Blinking cursor at end of description */
 .event-popup-description::after {
     content: '█';
+    animation: blink-cursor 1s step-end infinite;
     margin-left: 0.2rem;
-    color: #333333;
+    color: #00ff00;
 }
 
 /* Link styled as terminal command */
 .event-popup-link {
     display: inline-block;
     background: rgba(0, 255, 0, 0.1);
-    color: #333333;
+    color: #00ff00;
     padding: 0.5rem 1rem;
-    border: 2px solid #4CAF50;
+    border: 2px solid #00ff00;
     border-radius: 5px;
     text-decoration: none;
     font-size: 0.9rem;
     margin-top: 0.5rem;
     transition: all 0.2s;
-    font-family: inherit;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+    font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
 }
 
 /* Command prefix */
@@ -841,6 +906,7 @@ body {
 .event-popup-link:hover {
     background: rgba(0, 255, 0, 0.2);
     box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
 }
 
 /* Scrollbar styling */
@@ -853,7 +919,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #4CAF50;
+    background: #00ff00;
     border-radius: 4px;
 }
 
@@ -871,15 +937,15 @@ body {
 .noscript-container {
     min-height: 100vh;
     background: #000000;
-    color: #333333;
-    font-family: inherit;
+    color: #00ff00;
+    font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
 }
 
 .noscript-header {
-    border: 2px solid #4CAF50;
+    border: 2px solid #00ff00;
     border-radius: 8px;
     padding: 2rem;
     margin-bottom: 2rem;
@@ -890,24 +956,27 @@ body {
 .noscript-header h1 {
     font-size: 2rem;
     margin-bottom: 1rem;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+    animation: glow-pulse 2s infinite;
 }
 
 .noscript-header h1::before {
     content: '> ';
-    color: #333333;
+    color: #00ff00;
 }
 
 .noscript-header .warning {
     color: #ffff00;
     font-weight: bold;
     margin: 1rem 0;
+    text-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
     padding: 0.5rem;
     border-left: 3px solid #ffff00;
     background: rgba(255, 255, 0, 0.1);
 }
 
 .noscript-header .info {
-    color: #333333;
+    color: #00ff00;
     margin-top: 0.5rem;
     opacity: 0.8;
 }
@@ -923,13 +992,14 @@ body {
 .noscript-main h2 {
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
+    text-shadow: 0 0 8px rgba(0, 255, 0, 0.6);
     border-bottom: 2px solid rgba(0, 255, 0, 0.5);
     padding-bottom: 0.5rem;
 }
 
 .noscript-main h2::before {
     content: '>> ';
-    color: #333333;
+    color: #00ff00;
 }
 
 /* Event List Styles */
@@ -941,7 +1011,7 @@ body {
 
 .event-item {
     border: 1px solid rgba(0, 255, 0, 0.3);
-    border-left: 3px solid #4CAF50;
+    border-left: 3px solid #00ff00;
     border-radius: 4px;
     padding: 1.5rem;
     margin-bottom: 1.5rem;
@@ -957,13 +1027,15 @@ body {
 }
 
 .event-item h3 {
-    color: #333333;
+    color: #00ff00;
     font-size: 1.2rem;
     margin-bottom: 0.75rem;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
 }
 
 .event-item h3::after {
     content: ' █';
+    animation: blink-cursor 1s step-end infinite;
 }
 
 .event-time,
@@ -993,12 +1065,12 @@ body {
 }
 
 .action-btn {
-    color: #333333;
+    color: #00ff00;
     background: rgba(0, 255, 0, 0.1);
-    border: 1px solid #4CAF50;
+    border: 1px solid #00ff00;
     padding: 0.4rem 0.8rem;
     font-size: 0.8rem;
-    font-family: inherit;
+    font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
     cursor: pointer;
     border-radius: 3px;
     text-decoration: none;
@@ -1006,6 +1078,7 @@ body {
     align-items: center;
     gap: 0.3rem;
     transition: all 0.2s;
+    text-shadow: 0 0 3px rgba(0, 255, 0, 0.5);
 }
 
 .action-btn:hover {
@@ -1035,19 +1108,23 @@ body {
 }
 
 .loading {
-    color: #333333;
+    color: #00ff00;
+    animation: glow-pulse 1.5s infinite;
 }
 
 .loading::after {
     content: ' █';
+    animation: blink-cursor 0.5s step-end infinite;
 }
 
 .no-events {
     color: #ffaa00;
+    text-shadow: 0 0 5px rgba(255, 170, 0, 0.5);
 }
 
 .error {
     color: #ff0000;
+    text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
     border: 1px solid #ff0000;
     background: rgba(255, 0, 0, 0.1);
     border-radius: 4px;
@@ -1066,11 +1143,12 @@ body {
 }
 
 .noscript-footer a {
-    color: #333333;
+    color: #00ff00;
     text-decoration: underline;
 }
 
 .noscript-footer a:hover {
+    text-shadow: 0 0 8px rgba(0, 255, 0, 0.8);
 }
 
 /* Mobile responsiveness for noscript */
@@ -1101,7 +1179,7 @@ body {
  */
 .imprint-popup-container .leaflet-popup-content-wrapper {
     background: rgba(0, 100, 0, 0.95);
-    border: 2px solid #4CAF50;
+    border: 2px solid #00ff00;
     box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
     max-height: 500px;
     overflow-y: auto;
@@ -1109,40 +1187,43 @@ body {
 
 .imprint-popup-container .leaflet-popup-tip {
     background: rgba(0, 100, 0, 0.95);
-    border: 1px solid #4CAF50;
+    border: 1px solid #00ff00;
 }
 
 .imprint-popup h3 {
-    color: #333333;
-    font-family: inherit;
+    color: #00ff00;
+    font-family: 'Courier New', Courier, monospace;
     font-size: 1.2rem;
     font-weight: bold;
     margin: 0 0 0.75rem 0;
     padding-bottom: 0.5rem;
     border-bottom: 1px solid rgba(0, 255, 0, 0.3);
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
 }
 
 .imprint-popup p {
-    color: #333333;
-    font-family: inherit;
+    color: #00ff00;
+    font-family: 'Courier New', Courier, monospace;
     font-size: 0.85rem;
     margin: 0.25rem 0;
     line-height: 1.4;
 }
 
 .imprint-popup strong {
-    color: #333333;
+    color: #00ff00;
+    text-shadow: 0 0 8px rgba(0, 255, 0, 0.6);
     font-weight: bold;
 }
 
 .imprint-popup a {
-    color: #333333;
+    color: #00ff00;
     text-decoration: underline;
     transition: all 0.2s;
 }
 
 .imprint-popup a:hover {
-    color: #333333;
+    text-shadow: 0 0 12px rgba(0, 255, 0, 0.9);
+    color: #00ff00;
 }
 
 .imprint-popup em {
@@ -1185,5 +1266,6 @@ body {
 }
 
 .leaflet-marker-icon.imprint-marker {
+    animation: pulse-imprint 2s ease-in-out infinite;
 }
 
