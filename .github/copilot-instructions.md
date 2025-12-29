@@ -14,7 +14,7 @@ KRWL HOF is a **mobile-first Progressive Web App (PWA)** for discovering communi
 
 ### Backend (Python)
 - **Core**: Python 3.x, modular design
-- **Dependencies**: requests, beautifulsoup4, lxml, feedparser (see `requirements.txt`)
+- **Dependencies**: requests>=2.31.0, beautifulsoup4>=4.12.0, lxml>=4.9.0, feedparser>=6.0.10 (see `requirements.txt`)
 - **Key Modules**:
   - `src/main.py` - TUI entry point
   - `src/modules/scraper.py` - Event scraping (RSS, HTML, API)
@@ -159,7 +159,7 @@ This project follows **strict KISS principles**. Always:
 All features must be documented in `features.json` with:
 - Unique ID
 - Name and description
-- Category (backend/frontend/infrastructure)
+- Category: `backend`, `frontend`, or `infrastructure`
 - Implementation files
 - Config keys (if applicable)
 - Test method
@@ -194,8 +194,10 @@ When adding features:
 1. **Feature branch** → PR to `preview` branch
 2. **Preview branch** → Auto-deploys to `/preview/` path (uses `config.dev.json`)
 3. **Test preview thoroughly**
-4. **Promote to main** → Run "Promote Preview" workflow
+4. **Promote to main** → Manually run "Promote Preview" workflow (creates PR to `main`)
 5. **Main branch** → Auto-deploys to production (uses `config.prod.json`)
+
+The "Promote Preview" workflow is **manually triggered** via GitHub Actions workflow_dispatch.
 
 See `.github/DEPLOYMENT.md` and `.github/PROMOTE_WORKFLOW.md` for details.
 
@@ -247,10 +249,11 @@ See `.github/DEPLOYMENT.md` and `.github/PROMOTE_WORKFLOW.md` for details.
 ## Common Tasks
 
 ### Add a new event source
-1. Edit `config.json` (or `config.prod.json`/`config.dev.json`)
-2. Add to `scraping.sources[]` array
-3. Specify `type` (rss, html, api) and `url`
-4. Test: `python3 src/main.py` → "Scrape Events"
+1. Edit `config.prod.json` (production) or `config.dev.json` (development) in root directory
+2. **Note**: `static/config.json` is auto-generated during deployment - DO NOT edit directly
+3. Add to `scraping.sources[]` array
+4. Specify `type` (rss, html, api) and `url`
+5. Test: `python3 src/main.py` → "Scrape Events"
 
 ### Add a new filter
 1. Edit `src/modules/generator.py` (filter logic in template)
