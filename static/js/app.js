@@ -154,12 +154,16 @@ class EventsApp {
                     // Center map on user location
                     this.map.setView([this.userLocation.lat, this.userLocation.lon], 13);
                     
-                    // Add user marker
+                    // Add user marker with custom geolocation icon
+                    const userIcon = L.icon({
+                        iconUrl: 'markers/marker-geolocation.svg',
+                        iconSize: [32, 48],
+                        iconAnchor: [16, 48],
+                        popupAnchor: [0, -48]
+                    });
+                    
                     L.marker([this.userLocation.lat, this.userLocation.lon], {
-                        icon: L.divIcon({
-                            className: 'user-marker',
-                            html: '<div style="background: #2196F3; border: 3px solid white; border-radius: 50%; width: 20px; height: 20px;"></div>'
-                        })
+                        icon: userIcon
                     }).addTo(this.map).bindPopup('You are here');
                     
                     statusEl.textContent = '📍 Location found';
@@ -522,33 +526,38 @@ class EventsApp {
         container.appendChild(card);
     }
     
-    getMarkerColorForCategory(category) {
-        // Return different colors for different event categories
-        const colorMap = {
-            'on-stage': '#FF6B6B',      // Red for performances
-            'pub-game': '#4ECDC4',      // Cyan for pub games
-            'festival': '#FFD93D',      // Yellow for festivals
-            'workshop': '#95E1D3',      // Light green for workshops
-            'market': '#F38181',        // Pink for markets
-            'sports': '#6C5CE7',        // Purple for sports
-            'community': '#FFA502',     // Orange for community
-            'other': '#4CAF50'          // Green for other/default
+    getMarkerIconForCategory(category) {
+        // Return SVG marker paths for different event categories
+        const iconMap = {
+            'on-stage': 'markers/marker-on-stage.svg',        // Diamond with microphone
+            'pub-game': 'markers/marker-pub-games.svg',       // Hexagon with beer mug
+            'festival': 'markers/marker-festivals.svg',       // Star with flag
+            'workshop': 'markers/marker-workshops.svg',       // Workshop icon
+            'market': 'markers/marker-shopping.svg',          // Shopping bag for markets
+            'sports': 'markers/marker-sports.svg',            // Sports icon
+            'community': 'markers/marker-community.svg',      // Community icon
+            'other': 'markers/marker-default.svg'             // Default teardrop pin
         };
         
-        return colorMap[category] || colorMap['other'];
+        return iconMap[category] || iconMap['other'];
     }
     
     addEventMarker(event) {
         if (!event.location) return;
         
-        // Get color based on event category
-        const markerColor = this.getMarkerColorForCategory(event.category);
+        // Get SVG icon path based on event category
+        const iconUrl = this.getMarkerIconForCategory(event.category);
+        
+        // Create custom SVG icon using Leaflet's L.icon
+        const customIcon = L.icon({
+            iconUrl: iconUrl,
+            iconSize: [32, 48],        // Size from marker design specs
+            iconAnchor: [16, 48],      // Anchor at bottom center
+            popupAnchor: [0, -48]      // Popup above marker
+        });
         
         const marker = L.marker([event.location.lat, event.location.lon], {
-            icon: L.divIcon({
-                className: 'event-marker',
-                html: `<div style="background: ${markerColor}; border: 3px solid white; border-radius: 50%; width: 20px; height: 20px;"></div>`
-            })
+            icon: customIcon
         }).addTo(this.map);
         
         marker.bindPopup(`<strong>${event.title}</strong><br>${event.location.name}`);

@@ -424,13 +424,15 @@ header h1 {
     background: #2d2d2d;
 }
 
-/* Custom marker */
-.event-marker {
-    background: #4CAF50;
-    border: 3px solid white;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
+/* Terminal-style SVG marker glow effect */
+.leaflet-marker-icon {
+    filter: drop-shadow(0 0 2px #00ff00);
+    transition: filter 0.2s ease;
+}
+
+.leaflet-marker-icon:hover {
+    filter: drop-shadow(0 0 4px #00ff00) 
+            drop-shadow(0 0 8px #00ff00);
 }
 
 /* Scrollbar styling */
