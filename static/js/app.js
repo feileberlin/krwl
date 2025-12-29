@@ -478,6 +478,8 @@ class EventsApp {
         let categoryText = '';
         if (this.filters.category !== 'all') {
             categoryText = ` in ${this.filters.category}`;
+        } else {
+            categoryText = ' in all categories';
         }
         
         // Construct the full sentence
