@@ -64,6 +64,8 @@ These links work:
 
 The wiki is automatically synced when changes are merged to `main`. You don't need to do anything!
 
+**First-time setup?** If you're the repository owner and the Wiki needs to be initialized, see **[Wiki Setup Guide](WIKI_SETUP.md)** for the one-time setup step.
+
 Want to manually sync? We have a script for that:
 
 ```bash

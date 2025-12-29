@@ -97,6 +97,8 @@ No special setup needed. Click links and read!
 ### Automatically Synced to Wiki
 When changes are merged to `main`, documentation is automatically synced to the [GitHub Wiki](https://github.com/feileberlin/krwl-hof/wiki). You can read it either way - same content, your choice.
 
+**First-time setup needed?** If you're the repository owner and the Wiki is empty, see **[Wiki Setup Guide](WIKI_SETUP.md)** for the one-time initialization step.
+
 ## 🔗 Links
 
 - **Repository**: https://github.com/feileberlin/krwl-hof

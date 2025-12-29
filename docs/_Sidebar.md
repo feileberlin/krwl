@@ -5,6 +5,7 @@
 ## Getting Started
 - [[Home]]
 - [[SETUP]]
+- [[WIKI_SETUP]] ⚙️
 - [[TESTING|../TESTING]]
 
 ## Core Docs
