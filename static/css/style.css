@@ -505,7 +505,6 @@ body {
     margin-bottom: 1rem;
     color: #333333;
     padding-right: 2rem;
-    text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
 }
 
 .detail-content p {
@@ -530,7 +529,6 @@ body {
     border-radius: 5px;
     text-decoration: none;
     transition: all 0.2s;
-    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
 }
 
 #detail-link:hover {
@@ -548,7 +546,6 @@ body {
     font-size: 11px;
     font-weight: 600;
     box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
-    text-shadow: 0 0 3px rgba(0, 255, 0, 0.5);
 }
 
 .leaflet-tooltip.event-time-tooltip:before {
@@ -713,7 +710,6 @@ body {
 
 .menu-item .menu-text {
     flex: 1;
-    text-shadow: 0 0 3px rgba(0, 255, 0, 0.5);
 }
 
 /* Terminal command prefix */
@@ -725,11 +721,9 @@ body {
 /* Menu item active/bookmarked state */
 .menu-item.bookmarked {
     color: #ffff00;
-    text-shadow: 0 0 5px rgba(255, 255, 0, 0.7);
 }
 
 .menu-item.bookmarked .menu-icon {
-    animation: glow-pulse 2s infinite;
 }
 
 /* Info item (non-clickable) */
@@ -748,13 +742,11 @@ body {
 .visit-count {
     color: #333333;
     font-weight: bold;
-    text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
 }
 
 /* Bookmarked marker highlight */
 .leaflet-marker-icon.bookmarked-marker {
     filter: drop-shadow(0 0 10px #ffff00) drop-shadow(0 0 20px #ffff00);
-    animation: glow-pulse 2s infinite;
 }
 
 /* === POPUP CONTENT STYLES === */
@@ -766,7 +758,6 @@ body {
     font-size: 1.1rem;
     border-bottom: 2px solid rgba(0, 255, 0, 0.5);
     padding-bottom: 0.5rem;
-    text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
     position: relative;
 }
 
@@ -816,7 +807,6 @@ body {
     font-size: 0.85rem;
     line-height: 1.5;
     color: #333333;
-    text-shadow: 0 0 3px rgba(0, 255, 0, 0.5);
     position: relative;
 }
 
@@ -839,7 +829,6 @@ body {
     font-size: 0.9rem;
     margin-top: 0.5rem;
     transition: all 0.2s;
-    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
     font-family: inherit;
 }
 
@@ -852,7 +841,6 @@ body {
 .event-popup-link:hover {
     background: rgba(0, 255, 0, 0.2);
     box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
-    text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
 }
 
 /* Scrollbar styling */
@@ -902,8 +890,6 @@ body {
 .noscript-header h1 {
     font-size: 2rem;
     margin-bottom: 1rem;
-    text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
-    animation: glow-pulse 2s infinite;
 }
 
 .noscript-header h1::before {
@@ -915,7 +901,6 @@ body {
     color: #ffff00;
     font-weight: bold;
     margin: 1rem 0;
-    text-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
     padding: 0.5rem;
     border-left: 3px solid #ffff00;
     background: rgba(255, 255, 0, 0.1);
@@ -938,7 +923,6 @@ body {
 .noscript-main h2 {
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
-    text-shadow: 0 0 8px rgba(0, 255, 0, 0.6);
     border-bottom: 2px solid rgba(0, 255, 0, 0.5);
     padding-bottom: 0.5rem;
 }
@@ -976,7 +960,6 @@ body {
     color: #333333;
     font-size: 1.2rem;
     margin-bottom: 0.75rem;
-    text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
 }
 
 .event-item h3::after {
@@ -1023,7 +1006,6 @@ body {
     align-items: center;
     gap: 0.3rem;
     transition: all 0.2s;
-    text-shadow: 0 0 3px rgba(0, 255, 0, 0.5);
 }
 
 .action-btn:hover {
@@ -1054,7 +1036,6 @@ body {
 
 .loading {
     color: #333333;
-    animation: glow-pulse 1.5s infinite;
 }
 
 .loading::after {
@@ -1063,12 +1044,10 @@ body {
 
 .no-events {
     color: #ffaa00;
-    text-shadow: 0 0 5px rgba(255, 170, 0, 0.5);
 }
 
 .error {
     color: #ff0000;
-    text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
     border: 1px solid #ff0000;
     background: rgba(255, 0, 0, 0.1);
     border-radius: 4px;
@@ -1092,7 +1071,6 @@ body {
 }
 
 .noscript-footer a:hover {
-    text-shadow: 0 0 8px rgba(0, 255, 0, 0.8);
 }
 
 /* Mobile responsiveness for noscript */
@@ -1142,7 +1120,6 @@ body {
     margin: 0 0 0.75rem 0;
     padding-bottom: 0.5rem;
     border-bottom: 1px solid rgba(0, 255, 0, 0.3);
-    text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
 }
 
 .imprint-popup p {
@@ -1155,7 +1132,6 @@ body {
 
 .imprint-popup strong {
     color: #333333;
-    text-shadow: 0 0 8px rgba(0, 255, 0, 0.6);
     font-weight: bold;
 }
 
@@ -1166,7 +1142,6 @@ body {
 }
 
 .imprint-popup a:hover {
-    text-shadow: 0 0 12px rgba(0, 255, 0, 0.9);
     color: #333333;
 }
 
