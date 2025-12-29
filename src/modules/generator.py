@@ -1554,6 +1554,8 @@ class EventsApp {
             const wasHidden = categoryDropdown.classList.contains('hidden');
             hideAllDropdowns();
             if (wasHidden) {
+                // Sync dropdown with current filter state
+                categoryFilter.value = this.filters.category;
                 categoryDropdown.classList.remove('hidden');
                 categoryTextEl.classList.add('active');
             }
@@ -1565,6 +1567,8 @@ class EventsApp {
             const wasHidden = timeDropdown.classList.contains('hidden');
             hideAllDropdowns();
             if (wasHidden) {
+                // Sync dropdown with current filter state
+                timeFilter.value = this.filters.timeFilter;
                 timeDropdown.classList.remove('hidden');
                 timeTextEl.classList.add('active');
             }
@@ -1576,6 +1580,9 @@ class EventsApp {
             const wasHidden = distanceDropdown.classList.contains('hidden');
             hideAllDropdowns();
             if (wasHidden) {
+                // Sync dropdown with current filter state
+                distanceFilter.value = this.filters.maxDistance;
+                distanceValue.textContent = `${this.filters.maxDistance} km`;
                 distanceDropdown.classList.remove('hidden');
                 distanceTextEl.classList.add('active');
             }
@@ -1587,6 +1594,15 @@ class EventsApp {
             const wasHidden = locationDropdown.classList.contains('hidden');
             hideAllDropdowns();
             if (wasHidden) {
+                // Sync dropdown with current filter state
+                useCustomLocation.checked = this.filters.useCustomLocation;
+                if (this.filters.useCustomLocation && this.filters.customLat && this.filters.customLon) {
+                    customLocationInputs.classList.remove('hidden');
+                    document.getElementById('custom-lat').value = this.filters.customLat;
+                    document.getElementById('custom-lon').value = this.filters.customLon;
+                } else {
+                    customLocationInputs.classList.add('hidden');
+                }
                 locationDropdown.classList.remove('hidden');
                 locationTextEl.classList.add('active');
             }
