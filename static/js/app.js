@@ -38,8 +38,12 @@ class EventsApp {
         // Display environment watermark if configured
         this.displayEnvironmentWatermark();
         
-        // Initialize map
-        this.initMap();
+        // Initialize map (wrapped in try-catch to handle missing Leaflet)
+        try {
+            this.initMap();
+        } catch (error) {
+            console.warn('Map initialization failed:', error.message);
+        }
         
         // Get user location
         this.getUserLocation();
@@ -47,7 +51,7 @@ class EventsApp {
         // Load events
         await this.loadEvents();
         
-        // Setup event listeners
+        // Setup event listeners (always run, even if map fails)
         this.setupEventListeners();
     }
     
@@ -438,69 +442,81 @@ class EventsApp {
     }
     
     updateFilterDescription(count) {
-        const countEl = document.getElementById('event-count');
+        // Update individual parts of the filter sentence
+        const eventCountText = document.getElementById('event-count-text');
+        const categoryText = document.getElementById('category-text');
+        const timeText = document.getElementById('time-text');
+        const distanceText = document.getElementById('distance-text');
+        const locationText = document.getElementById('location-text');
         
-        // Build descriptive sentence
-        const eventText = `${count} event${count !== 1 ? 's' : ''}`;
-        
-        // Time description
-        let timeText = '';
-        switch (this.filters.timeFilter) {
-            case 'sunrise':
-                timeText = 'till sunrise';
-                break;
-            case '6h':
-                timeText = 'in the next 6 hours';
-                break;
-            case '12h':
-                timeText = 'in the next 12 hours';
-                break;
-            case '24h':
-                timeText = 'in the next 24 hours';
-                break;
-            case '48h':
-                timeText = 'in the next 48 hours';
-                break;
-            case 'all':
-                timeText = 'upcoming';
-                break;
-        }
-        
-        // Distance description (approximate travel time)
-        const distance = this.filters.maxDistance;
-        let distanceText = '';
-        if (distance <= 1) {
-            distanceText = 'within walking distance';
-        } else if (distance <= 5) {
-            const minutes = Math.round(distance * 3); // ~3 min per km walking
-            distanceText = `within ${minutes} minutes walk`;
-        } else if (distance <= 15) {
-            const minutes = Math.round(distance * 4); // ~4 min per km by bike
-            distanceText = `within ${minutes} minutes by bike`;
-        } else {
-            distanceText = `within ${distance} km`;
-        }
-        
-        // Location description
-        let locationText = 'from your location';
-        if (this.filters.useCustomLocation && this.filters.customLat && this.filters.customLon) {
-            locationText = 'from custom location';
-        } else if (!this.userLocation) {
-            locationText = 'from default location';
+        // Event count
+        if (eventCountText) {
+            eventCountText.textContent = `${count} event${count !== 1 ? 's' : ''}`;
         }
         
         // Category description
-        let categoryText = '';
-        if (this.filters.category !== 'all') {
-            categoryText = ` in ${this.filters.category}`;
-        } else {
-            categoryText = ' in all categories';
+        if (categoryText) {
+            if (this.filters.category !== 'all') {
+                categoryText.textContent = `in ${this.filters.category}`;
+            } else {
+                categoryText.textContent = 'in all categories';
+            }
         }
         
-        // Construct the full sentence
-        const description = `${eventText}${categoryText} ${timeText} ${distanceText} ${locationText}`;
+        // Time description
+        if (timeText) {
+            let timeDescription = '';
+            switch (this.filters.timeFilter) {
+                case 'sunrise':
+                    timeDescription = 'till sunrise';
+                    break;
+                case '6h':
+                    timeDescription = 'in the next 6 hours';
+                    break;
+                case '12h':
+                    timeDescription = 'in the next 12 hours';
+                    break;
+                case '24h':
+                    timeDescription = 'in the next 24 hours';
+                    break;
+                case '48h':
+                    timeDescription = 'in the next 48 hours';
+                    break;
+                case 'all':
+                    timeDescription = 'upcoming';
+                    break;
+            }
+            timeText.textContent = timeDescription;
+        }
         
-        countEl.textContent = description;
+        // Distance description (approximate travel time)
+        if (distanceText) {
+            const distance = this.filters.maxDistance;
+            let distanceDescription = '';
+            if (distance <= 1) {
+                distanceDescription = 'within walking distance';
+            } else if (distance <= 5) {
+                const minutes = Math.round(distance * 3); // ~3 min per km walking
+                distanceDescription = `within ${minutes} minutes walk`;
+            } else if (distance <= 15) {
+                const minutes = Math.round(distance * 4); // ~4 min per km by bike
+                distanceDescription = `within ${minutes} minutes by bike`;
+            } else {
+                distanceDescription = `within ${distance} km`;
+            }
+            distanceText.textContent = distanceDescription;
+        }
+        
+        // Location description
+        if (locationText) {
+            let locDescription = 'from your location';
+            if (this.filters.useCustomLocation && this.filters.customLat && this.filters.customLon) {
+                locDescription = 'from custom location';
+            } else if (!this.userLocation) {
+                locDescription = 'from default location';
+            }
+            locationText.textContent = locDescription;
+        }
     }
     
     displayEventCard(event, container) {
@@ -606,6 +622,96 @@ class EventsApp {
     }
     
     setupEventListeners() {
+        // Interactive filter sentence parts
+        const categoryTextEl = document.getElementById('category-text');
+        const timeTextEl = document.getElementById('time-text');
+        const distanceTextEl = document.getElementById('distance-text');
+        const locationTextEl = document.getElementById('location-text');
+        
+        const categoryDropdown = document.getElementById('category-dropdown');
+        const timeDropdown = document.getElementById('time-dropdown');
+        const distanceDropdown = document.getElementById('distance-dropdown');
+        const locationDropdown = document.getElementById('location-dropdown');
+        
+        // Helper to hide all dropdowns
+        const hideAllDropdowns = () => {
+            categoryDropdown.classList.add('hidden');
+            timeDropdown.classList.add('hidden');
+            distanceDropdown.classList.add('hidden');
+            locationDropdown.classList.add('hidden');
+            
+            categoryTextEl.classList.remove('active');
+            timeTextEl.classList.remove('active');
+            distanceTextEl.classList.remove('active');
+            locationTextEl.classList.remove('active');
+        };
+        
+        // Helper to position dropdown near the clicked element
+        const positionDropdown = (dropdown, targetEl) => {
+            const rect = targetEl.getBoundingClientRect();
+            const filterSentence = document.getElementById('filter-sentence');
+            const sentenceRect = filterSentence.getBoundingClientRect();
+            
+            // Position below the sentence
+            dropdown.style.top = (sentenceRect.bottom - sentenceRect.top + 10) + 'px';
+            dropdown.style.left = '0px';
+        };
+        
+        // Category filter click
+        categoryTextEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const wasHidden = categoryDropdown.classList.contains('hidden');
+            hideAllDropdowns();
+            if (wasHidden) {
+                categoryDropdown.classList.remove('hidden');
+                categoryTextEl.classList.add('active');
+                positionDropdown(categoryDropdown, categoryTextEl);
+            }
+        });
+        
+        // Time filter click
+        timeTextEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const wasHidden = timeDropdown.classList.contains('hidden');
+            hideAllDropdowns();
+            if (wasHidden) {
+                timeDropdown.classList.remove('hidden');
+                timeTextEl.classList.add('active');
+                positionDropdown(timeDropdown, timeTextEl);
+            }
+        });
+        
+        // Distance filter click
+        distanceTextEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const wasHidden = distanceDropdown.classList.contains('hidden');
+            hideAllDropdowns();
+            if (wasHidden) {
+                distanceDropdown.classList.remove('hidden');
+                distanceTextEl.classList.add('active');
+                positionDropdown(distanceDropdown, distanceTextEl);
+            }
+        });
+        
+        // Location filter click
+        locationTextEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const wasHidden = locationDropdown.classList.contains('hidden');
+            hideAllDropdowns();
+            if (wasHidden) {
+                locationDropdown.classList.remove('hidden');
+                locationTextEl.classList.add('active');
+                positionDropdown(locationDropdown, locationTextEl);
+            }
+        });
+        
+        // Click outside to close dropdowns
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#filter-sentence') && !e.target.closest('.filter-dropdown')) {
+                hideAllDropdowns();
+            }
+        });
+        
         // Distance filter
         const distanceFilter = document.getElementById('distance-filter');
         const distanceValue = document.getElementById('distance-value');
@@ -621,6 +727,7 @@ class EventsApp {
         timeFilter.addEventListener('change', (e) => {
             this.filters.timeFilter = e.target.value;
             this.displayEvents();
+            hideAllDropdowns();
         });
         
         // Category filter
@@ -628,6 +735,7 @@ class EventsApp {
         categoryFilter.addEventListener('change', (e) => {
             this.filters.category = e.target.value;
             this.displayEvents();
+            hideAllDropdowns();
         });
         
         // Custom location checkbox
@@ -647,6 +755,7 @@ class EventsApp {
                 this.filters.customLat = null;
                 this.filters.customLon = null;
                 this.displayEvents();
+                hideAllDropdowns();
             }
         });
         
@@ -665,14 +774,16 @@ class EventsApp {
                 this.map.setView([lat, lon], 13);
                 
                 this.displayEvents();
+                hideAllDropdowns();
             } else {
                 alert('Please enter valid latitude (-90 to 90) and longitude (-180 to 180) values.');
             }
         });
         
         // Reset filters button
-        const resetFilters = document.getElementById('reset-filters');
-        resetFilters.addEventListener('click', () => {
+        const resetFilters = document.getElementById('reset-filters-btn');
+        resetFilters.addEventListener('click', (e) => {
+            e.stopPropagation();
             // Reset all filters to defaults
             this.filters.maxDistance = 5;
             this.filters.timeFilter = 'sunrise';
@@ -695,6 +806,7 @@ class EventsApp {
             }
             
             this.displayEvents();
+            hideAllDropdowns();
         });
         
         // Event detail close listeners
