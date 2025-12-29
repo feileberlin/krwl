@@ -14,6 +14,7 @@ from .utils import (
 from .scraper import EventScraper
 from .editor import EventEditor
 from .generator import StaticSiteGenerator
+from .scheduler import ScheduleConfig
 
 __all__ = [
     'load_config',
@@ -27,5 +28,6 @@ __all__ = [
     'filter_events_by_time',
     'EventScraper',
     'EventEditor',
-    'StaticSiteGenerator'
+    'StaticSiteGenerator',
+    'ScheduleConfig'
 ]

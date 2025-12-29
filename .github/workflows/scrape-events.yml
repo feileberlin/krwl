@@ -46,18 +46,7 @@ jobs:
       - name: Log schedule configuration
         run: |
           echo "📅 Reading schedule configuration from config..."
-          python3 -c "
-          import json
-          with open('config.prod.json', 'r') as f:
-              config = json.load(f)
-              schedule = config.get('scraping', {}).get('schedule', {})
-              timezone = schedule.get('timezone', 'UTC')
-              times = schedule.get('times', [])
-              print(f'Configured timezone: {timezone}')
-              print(f'Configured times: {times}')
-              print(f'Current UTC time: $(date -u +\"%Y-%m-%d %H:%M:%S UTC\")')
-              print(f'Current local time in {timezone}: $(TZ={timezone} date +\"%Y-%m-%d %H:%M:%S %Z\")')
-          "
+          python3 src/modules/scheduler.py config.prod.json
 
       - name: Run event scraper
         run: |
