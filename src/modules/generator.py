@@ -116,7 +116,42 @@ class StaticSiteGenerator:
     
     def _get_html_content(self):
         """Get HTML content from template"""
-        return '''<!DOCTYPE html>
+        # Load events for noscript fallback
+        events_data = load_events(self.base_path)
+        events = events_data.get('events', []) if isinstance(events_data, dict) else []
+        
+        # Generate noscript event cards
+        noscript_events_html = ""
+        if events and len(events) > 0:
+            for event in events[:20]:  # Limit to 20 events for performance
+                # Format date
+                try:
+                    from datetime import datetime
+                    event_date = datetime.fromisoformat(event['start_time'].replace('Z', '+00:00'))
+                    formatted_date = event_date.strftime('%A, %B %d, %Y at %I:%M %p')
+                except:
+                    formatted_date = event.get('start_time', 'Date TBA')
+                
+                location_name = event.get('location', {}).get('name', 'Location TBA')
+                category = event.get('category', 'other')
+                
+                noscript_events_html += f'''
+                    <div class="noscript-event-card">
+                        <h3>{event.get('title', 'Untitled Event')}</h3>
+                        <p><strong>📅 When:</strong> {formatted_date}</p>
+                        <p><strong>📍 Where:</strong> {location_name}</p>
+                        <p><strong>🏷️ Category:</strong> {category}</p>
+                        {f'<p>{event.get("description", "")}</p>' if event.get('description') else ''}
+                        {f'<p><a href="{event.get("url", "#")}" target="_blank" rel="noopener">More information →</a></p>' if event.get('url') else ''}
+                    </div>'''
+        else:
+            noscript_events_html = '''
+                    <div class="noscript-no-events">
+                        <p>No events currently scheduled.</p>
+                        <p style="font-size: 0.9rem; margin-top: 1rem;">Events will appear here when they are added by organizers.</p>
+                    </div>'''
+        
+        return f'''<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -131,6 +166,90 @@ class StaticSiteGenerator:
     <!-- To modify: Edit templates in src/modules/generator.py, then run: python3 src/main.py generate -->
     
     <div id="app">
+        <noscript>
+            <style>
+                #noscript-fallback {{
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 2rem;
+                    background: #1a1a1a;
+                    color: #fff;
+                }}
+                #noscript-fallback header {{
+                    text-align: center;
+                    margin-bottom: 2rem;
+                }}
+                #noscript-fallback h1 {{
+                    color: #FF69B4;
+                    margin-bottom: 0.5rem;
+                }}
+                .noscript-filter-sentence {{
+                    padding: 1rem;
+                    background: rgba(30, 30, 30, 0.95);
+                    border: 2px solid #FF69B4;
+                    border-radius: 8px;
+                    margin-bottom: 2rem;
+                    color: #FF69B4;
+                    line-height: 1.6;
+                }}
+                .noscript-events-list {{
+                    display: grid;
+                    gap: 1.5rem;
+                }}
+                .noscript-event-card {{
+                    background: rgba(30, 30, 30, 0.95);
+                    border: 1px solid #555;
+                    border-radius: 8px;
+                    padding: 1.5rem;
+                    transition: border-color 0.2s;
+                }}
+                .noscript-event-card:hover {{
+                    border-color: #FF69B4;
+                }}
+                .noscript-event-card h3 {{
+                    color: #FF69B4;
+                    margin-bottom: 0.5rem;
+                }}
+                .noscript-event-card p {{
+                    margin: 0.5rem 0;
+                    color: #ccc;
+                }}
+                .noscript-event-card strong {{
+                    color: #fff;
+                }}
+                .noscript-event-card a {{
+                    color: #FF69B4;
+                    text-decoration: none;
+                }}
+                .noscript-event-card a:hover {{
+                    text-decoration: underline;
+                }}
+                .noscript-no-events {{
+                    text-align: center;
+                    padding: 3rem;
+                    color: #aaa;
+                }}
+            </style>
+            <div id="noscript-fallback">
+                <header>
+                    <h1>KRWL HOF Community Events</h1>
+                    <p style="color: #aaa;">This is a static version. Enable JavaScript for the interactive map and filters.</p>
+                </header>
+                
+                <div class="noscript-filter-sentence">
+                    All upcoming community events in all categories
+                </div>
+                
+                <div class="noscript-events-list">
+                    {noscript_events_html}
+                </div>
+                
+                <footer style="text-align: center; margin-top: 3rem; padding: 2rem; border-top: 1px solid #555;">
+                    <p style="color: #aaa; font-size: 0.9rem;">For the best experience with interactive filters and maps, please enable JavaScript.</p>
+                </footer>
+            </div>
+        </noscript>
+        
         <header>
             <h1>KRWL HOF Community Events</h1>
             <div id="status">
@@ -140,7 +259,59 @@ class StaticSiteGenerator:
         
         <div id="map">
             <div id="map-overlay">
-                <div id="event-count">0 events</div>
+                <!-- Interactive filter sentence -->
+                <div id="filter-sentence">
+                    <span id="event-count-text">0 events</span>
+                    
+                    <span id="category-text" class="filter-part" title="Click to change category">
+                        in all categories
+                        <div id="category-dropdown" class="filter-dropdown hidden">
+                            <select id="category-filter">
+                                <option value="all">All Categories</option>
+                            </select>
+                        </div>
+                    </span>
+                    
+                    <span id="time-text" class="filter-part" title="Click to change time range">
+                        till sunrise
+                        <div id="time-dropdown" class="filter-dropdown hidden">
+                            <select id="time-filter">
+                                <option value="sunrise">Next Sunrise (6 AM)</option>
+                                <option value="6h">Next 6 hours</option>
+                                <option value="12h">Next 12 hours</option>
+                                <option value="24h">Next 24 hours</option>
+                                <option value="48h">Next 48 hours</option>
+                                <option value="all">All upcoming events</option>
+                            </select>
+                        </div>
+                    </span>
+                    
+                    <span id="distance-text" class="filter-part" title="Click to change distance">
+                        within 15 minutes walk
+                        <div id="distance-dropdown" class="filter-dropdown hidden">
+                            <input type="range" id="distance-filter" min="1" max="50" value="5" step="0.5">
+                            <span id="distance-value">5 km</span>
+                        </div>
+                    </span>
+                    
+                    <span id="location-text" class="filter-part" title="Click to change location">
+                        from your location
+                        <div id="location-dropdown" class="filter-dropdown hidden">
+                            <label>
+                                <input type="checkbox" id="use-custom-location">
+                                Use custom location
+                            </label>
+                            <div id="custom-location-inputs" class="hidden">
+                                <input type="number" id="custom-lat" placeholder="Latitude" step="0.0001">
+                                <input type="number" id="custom-lon" placeholder="Longitude" step="0.0001">
+                                <button id="apply-custom-location">Apply</button>
+                            </div>
+                        </div>
+                    </span>
+                    
+                    <button id="reset-filters-btn" class="reset-icon" title="Reset all filters">⟲</button>
+                </div>
+                
                 <!-- Environment watermark (bottom-left) -->
                 <div id="env-watermark" class="hidden"></div>
                 <!-- Logo: Inline SVG megaphone (gray stroke, transitions to pink on hover) -->
@@ -157,50 +328,6 @@ class StaticSiteGenerator:
         </div>
         
         <div id="event-list">
-            <div id="filters-section">
-                <h3>Filters</h3>
-                
-                <div class="filter-group">
-                    <label for="category-filter">Event Type:</label>
-                    <select id="category-filter">
-                        <option value="all">All Categories</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label for="time-filter">Event Max Start Time:</label>
-                    <select id="time-filter">
-                        <option value="sunrise">Next Sunrise (6 AM)</option>
-                        <option value="6h">Next 6 hours</option>
-                        <option value="12h">Next 12 hours</option>
-                        <option value="24h">Next 24 hours</option>
-                        <option value="48h">Next 48 hours</option>
-                        <option value="all">All upcoming events</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label for="distance-filter">Event Distance (km):</label>
-                    <input type="range" id="distance-filter" min="1" max="50" value="5" step="0.5">
-                    <span id="distance-value">5 km</span>
-                </div>
-                
-                <div class="filter-group location-override">
-                    <label for="use-custom-location">
-                        <input type="checkbox" id="use-custom-location">
-                        Use custom location
-                    </label>
-                    <div id="custom-location-inputs" class="hidden">
-                        <input type="number" id="custom-lat" placeholder="Latitude" step="0.0001">
-                        <input type="number" id="custom-lon" placeholder="Longitude" step="0.0001">
-                        <button id="apply-custom-location">Apply</button>
-                    </div>
-                </div>
-                
-                <button id="reset-filters">Reset All Filters</button>
-            </div>
-            
-            <h2>Events</h2>
             <div id="events-container">
                 <p>Loading events...</p>
             </div>
@@ -326,11 +453,13 @@ header h1 {
     pointer-events: auto;
 }
 
-#event-count {
+/* Interactive filter sentence */
+#filter-sentence {
     position: absolute;
     top: 0;
     left: 0;
-    max-width: 320px;
+    right: auto;
+    max-width: calc(100vw - 80px); /* Mobile first: adapt to screen width */
     font-size: 0.95rem;
     font-weight: 500;
     color: #FF69B4;
@@ -339,10 +468,113 @@ header h1 {
     backdrop-filter: blur(10px);
     border-radius: 8px;
     border: 2px solid #FF69B4;
-    line-height: 1.4;
+    line-height: 1.6;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
                 0 0 10px rgba(255, 105, 180, 0.3);
     text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    align-items: center;
+    word-break: break-word;
+}
+
+#filter-sentence .filter-part {
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 3px;
+    transition: all 0.2s;
+    position: relative;
+}
+
+#filter-sentence .filter-part:hover {
+    color: #ffffff;
+    text-shadow: 0 0 15px rgba(255, 105, 180, 0.8);
+    text-decoration-style: solid;
+}
+
+#filter-sentence .filter-part.active {
+    color: #ffffff;
+    background: rgba(255, 105, 180, 0.2);
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
+}
+
+#reset-filters-btn {
+    background: none;
+    border: none;
+    color: #FF69B4;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0 0.3rem;
+    margin-left: 0.3rem;
+    transition: all 0.2s;
+}
+
+#reset-filters-btn:hover {
+    color: #ffffff;
+    transform: rotate(-90deg);
+}
+
+/* Filter dropdowns */
+.filter-dropdown {
+    position: absolute;
+    top: calc(100% + 5px); /* Position just below the parent span */
+    left: 0;
+    background: rgba(30, 30, 30, 0.98);
+    backdrop-filter: blur(10px);
+    border: 2px solid #FF69B4;
+    border-radius: 8px;
+    padding: 0.8rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
+                0 0 10px rgba(255, 105, 180, 0.3);
+    z-index: 2000;
+    min-width: 200px;
+    white-space: normal;
+}
+
+.filter-dropdown.hidden {
+    display: none;
+}
+
+.filter-dropdown select,
+.filter-dropdown input[type="range"],
+.filter-dropdown input[type="number"],
+.filter-dropdown button {
+    width: 100%;
+    margin: 0.3rem 0;
+    padding: 0.5rem;
+    background: #2a2a2a;
+    color: #ffffff;
+    border: 1px solid #555;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.filter-dropdown select:focus,
+.filter-dropdown input:focus,
+.filter-dropdown button:focus {
+    outline: none;
+    border-color: #FF69B4;
+}
+
+.filter-dropdown label {
+    display: block;
+    color: #ccc;
+    margin: 0.5rem 0;
+    font-size: 0.85rem;
+}
+
+.filter-dropdown input[type="checkbox"] {
+    width: auto;
+    margin-right: 0.5rem;
+}
+
+#distance-value {
+    color: #FF69B4;
+    font-weight: 600;
+    margin-left: 0.5rem;
 }
 
 #imprint-link {
@@ -436,112 +668,6 @@ header h1 {
     z-index: 999;
 }
 
-#event-list h2 {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-    color: #FF69B4;
-    text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
-}
-
-#filters-section {
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 105, 180, 0.3);
-}
-
-#filters-section h3 {
-    font-size: 1rem;
-    margin-bottom: 1rem;
-    color: #FF69B4;
-}
-
-.filter-group {
-    margin-bottom: 1rem;
-}
-
-.filter-group label {
-    display: block;
-    font-size: 0.85rem;
-    color: #ccc;
-    margin-bottom: 0.3rem;
-    font-weight: 500;
-}
-
-.filter-group input[type="range"] {
-    width: 65%;
-    margin-right: 0.5rem;
-    vertical-align: middle;
-}
-
-.filter-group select {
-    width: 100%;
-    padding: 0.5rem;
-    background: rgba(45, 45, 45, 0.9);
-    color: #fff;
-    border: 1px solid #555;
-    border-radius: 5px;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: border-color 0.2s;
-}
-
-.filter-group select:hover,
-.filter-group select:focus {
-    background: rgba(55, 55, 55, 0.9);
-    border-color: #FF69B4;
-    outline: none;
-}
-
-.filter-group input[type="number"] {
-    width: calc(50% - 0.25rem);
-    padding: 0.5rem;
-    background: rgba(45, 45, 45, 0.9);
-    color: #fff;
-    border: 1px solid #555;
-    border-radius: 5px;
-    font-size: 0.85rem;
-    margin-bottom: 0.5rem;
-    transition: border-color 0.2s;
-}
-
-.filter-group input[type="number"]:focus {
-    border-color: #FF69B4;
-    outline: none;
-}
-
-.filter-group input[type="number"]:first-of-type {
-    margin-right: 0.5rem;
-}
-
-#custom-location-inputs {
-    margin-top: 0.5rem;
-}
-
-#custom-location-inputs.hidden {
-    display: none;
-}
-
-#apply-custom-location {
-    width: 100%;
-    padding: 0.5rem;
-    background: #FF69B4;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    transition: all 0.2s;
-    box-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
-}
-
-#apply-custom-location:hover {
-    background: #ff4da6;
-    box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
-}
-
-#reset-filters {
-    width: 100%;
-    padding: 0.5rem;
     background: rgba(100, 100, 100, 0.2);
     color: #aaa;
     border: 1px solid #555;
@@ -733,9 +859,9 @@ header h1 {
 }
 
 @media (max-width: 768px) {
-    #filters-overlay {
-        width: calc(100% - 20px);
-        max-width: 280px;
+    #filter-sentence {
+        max-width: calc(100vw - 40px); /* More space on mobile */
+        font-size: 0.85rem;
     }
     
     #event-list {
@@ -751,12 +877,16 @@ header h1 {
 }
 
 @media (max-width: 480px) {
-    #filters-overlay {
-        top: 5px;
-        left: 5px;
-        width: calc(100% - 10px);
-        max-width: none;
-        padding: 0.8rem;
+    #filter-sentence {
+        max-width: calc(100vw - 30px);
+        font-size: 0.8rem;
+        padding: 0.6rem;
+        gap: 0.2rem;
+    }
+    
+    .filter-dropdown {
+        max-width: calc(100vw - 40px);
+        font-size: 0.85rem;
     }
 }
 '''
@@ -810,8 +940,12 @@ class EventsApp {
         // Display environment watermark if configured
         this.displayEnvironmentWatermark();
         
-        // Initialize map
-        this.initMap();
+        // Initialize map (wrapped in try-catch to handle missing Leaflet)
+        try {
+            this.initMap();
+        } catch (error) {
+            console.warn('Map initialization failed:', error.message);
+        }
         
         // Get user location
         this.getUserLocation();
@@ -819,7 +953,7 @@ class EventsApp {
         // Load events
         await this.loadEvents();
         
-        // Setup event listeners
+        // Setup event listeners (always run, even if map fails)
         this.setupEventListeners();
     }
     
@@ -1210,69 +1344,81 @@ class EventsApp {
     }
     
     updateFilterDescription(count) {
-        const countEl = document.getElementById('event-count');
+        // Update individual parts of the filter sentence
+        const eventCountText = document.getElementById('event-count-text');
+        const categoryText = document.getElementById('category-text');
+        const timeText = document.getElementById('time-text');
+        const distanceText = document.getElementById('distance-text');
+        const locationText = document.getElementById('location-text');
         
-        // Build descriptive sentence
-        const eventText = `${count} event${count !== 1 ? 's' : ''}`;
-        
-        // Time description
-        let timeText = '';
-        switch (this.filters.timeFilter) {
-            case 'sunrise':
-                timeText = 'till sunrise';
-                break;
-            case '6h':
-                timeText = 'in the next 6 hours';
-                break;
-            case '12h':
-                timeText = 'in the next 12 hours';
-                break;
-            case '24h':
-                timeText = 'in the next 24 hours';
-                break;
-            case '48h':
-                timeText = 'in the next 48 hours';
-                break;
-            case 'all':
-                timeText = 'upcoming';
-                break;
-        }
-        
-        // Distance description (approximate travel time)
-        const distance = this.filters.maxDistance;
-        let distanceText = '';
-        if (distance <= 1) {
-            distanceText = 'within walking distance';
-        } else if (distance <= 5) {
-            const minutes = Math.round(distance * 3); // ~3 min per km walking
-            distanceText = `within ${minutes} minutes walk`;
-        } else if (distance <= 15) {
-            const minutes = Math.round(distance * 4); // ~4 min per km by bike
-            distanceText = `within ${minutes} minutes by bike`;
-        } else {
-            distanceText = `within ${distance} km`;
-        }
-        
-        // Location description
-        let locationText = 'from your location';
-        if (this.filters.useCustomLocation && this.filters.customLat && this.filters.customLon) {
-            locationText = 'from custom location';
-        } else if (!this.userLocation) {
-            locationText = 'from default location';
+        // Event count
+        if (eventCountText) {
+            eventCountText.textContent = `${count} event${count !== 1 ? 's' : ''}`;
         }
         
         // Category description
-        let categoryText = '';
-        if (this.filters.category !== 'all') {
-            categoryText = ` in ${this.filters.category}`;
-        } else {
-            categoryText = ' in all categories';
+        if (categoryText) {
+            if (this.filters.category !== 'all') {
+                categoryText.textContent = `in ${this.filters.category}`;
+            } else {
+                categoryText.textContent = 'in all categories';
+            }
         }
         
-        // Construct the full sentence
-        const description = `${eventText}${categoryText} ${timeText} ${distanceText} ${locationText}`;
+        // Time description
+        if (timeText) {
+            let timeDescription = '';
+            switch (this.filters.timeFilter) {
+                case 'sunrise':
+                    timeDescription = 'till sunrise';
+                    break;
+                case '6h':
+                    timeDescription = 'in the next 6 hours';
+                    break;
+                case '12h':
+                    timeDescription = 'in the next 12 hours';
+                    break;
+                case '24h':
+                    timeDescription = 'in the next 24 hours';
+                    break;
+                case '48h':
+                    timeDescription = 'in the next 48 hours';
+                    break;
+                case 'all':
+                    timeDescription = 'upcoming';
+                    break;
+            }
+            timeText.textContent = timeDescription;
+        }
         
-        countEl.textContent = description;
+        // Distance description (approximate travel time)
+        if (distanceText) {
+            const distance = this.filters.maxDistance;
+            let distanceDescription = '';
+            if (distance <= 1) {
+                distanceDescription = 'within walking distance';
+            } else if (distance <= 5) {
+                const minutes = Math.round(distance * 3); // ~3 min per km walking
+                distanceDescription = `within ${minutes} minutes walk`;
+            } else if (distance <= 15) {
+                const minutes = Math.round(distance * 4); // ~4 min per km by bike
+                distanceDescription = `within ${minutes} minutes by bike`;
+            } else {
+                distanceDescription = `within ${distance} km`;
+            }
+            distanceText.textContent = distanceDescription;
+        }
+        
+        // Location description
+        if (locationText) {
+            let locDescription = 'from your location';
+            if (this.filters.useCustomLocation && this.filters.customLat && this.filters.customLon) {
+                locDescription = 'from custom location';
+            } else if (!this.userLocation) {
+                locDescription = 'from default location';
+            }
+            locationText.textContent = locDescription;
+        }
     }
     
     displayEventCard(event, container) {
@@ -1378,6 +1524,97 @@ class EventsApp {
     }
     
     setupEventListeners() {
+        // Interactive filter sentence parts
+        const categoryTextEl = document.getElementById('category-text');
+        const timeTextEl = document.getElementById('time-text');
+        const distanceTextEl = document.getElementById('distance-text');
+        const locationTextEl = document.getElementById('location-text');
+        
+        const categoryDropdown = document.getElementById('category-dropdown');
+        const timeDropdown = document.getElementById('time-dropdown');
+        const distanceDropdown = document.getElementById('distance-dropdown');
+        const locationDropdown = document.getElementById('location-dropdown');
+        
+        // Helper to hide all dropdowns
+        const hideAllDropdowns = () => {
+            categoryDropdown.classList.add('hidden');
+            timeDropdown.classList.add('hidden');
+            distanceDropdown.classList.add('hidden');
+            locationDropdown.classList.add('hidden');
+            
+            categoryTextEl.classList.remove('active');
+            timeTextEl.classList.remove('active');
+            distanceTextEl.classList.remove('active');
+            locationTextEl.classList.remove('active');
+        };
+        
+        // Category filter click
+        categoryTextEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const wasHidden = categoryDropdown.classList.contains('hidden');
+            hideAllDropdowns();
+            if (wasHidden) {
+                // Sync dropdown with current filter state
+                categoryFilter.value = this.filters.category;
+                categoryDropdown.classList.remove('hidden');
+                categoryTextEl.classList.add('active');
+            }
+        });
+        
+        // Time filter click
+        timeTextEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const wasHidden = timeDropdown.classList.contains('hidden');
+            hideAllDropdowns();
+            if (wasHidden) {
+                // Sync dropdown with current filter state
+                timeFilter.value = this.filters.timeFilter;
+                timeDropdown.classList.remove('hidden');
+                timeTextEl.classList.add('active');
+            }
+        });
+        
+        // Distance filter click
+        distanceTextEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const wasHidden = distanceDropdown.classList.contains('hidden');
+            hideAllDropdowns();
+            if (wasHidden) {
+                // Sync dropdown with current filter state
+                distanceFilter.value = this.filters.maxDistance;
+                distanceValue.textContent = `${this.filters.maxDistance} km`;
+                distanceDropdown.classList.remove('hidden');
+                distanceTextEl.classList.add('active');
+            }
+        });
+        
+        // Location filter click
+        locationTextEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const wasHidden = locationDropdown.classList.contains('hidden');
+            hideAllDropdowns();
+            if (wasHidden) {
+                // Sync dropdown with current filter state
+                useCustomLocation.checked = this.filters.useCustomLocation;
+                if (this.filters.useCustomLocation && this.filters.customLat && this.filters.customLon) {
+                    customLocationInputs.classList.remove('hidden');
+                    document.getElementById('custom-lat').value = this.filters.customLat;
+                    document.getElementById('custom-lon').value = this.filters.customLon;
+                } else {
+                    customLocationInputs.classList.add('hidden');
+                }
+                locationDropdown.classList.remove('hidden');
+                locationTextEl.classList.add('active');
+            }
+        });
+        
+        // Click outside to close dropdowns
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#filter-sentence') && !e.target.closest('.filter-dropdown')) {
+                hideAllDropdowns();
+            }
+        });
+        
         // Distance filter
         const distanceFilter = document.getElementById('distance-filter');
         const distanceValue = document.getElementById('distance-value');
@@ -1393,6 +1630,7 @@ class EventsApp {
         timeFilter.addEventListener('change', (e) => {
             this.filters.timeFilter = e.target.value;
             this.displayEvents();
+            hideAllDropdowns();
         });
         
         // Category filter
@@ -1400,6 +1638,7 @@ class EventsApp {
         categoryFilter.addEventListener('change', (e) => {
             this.filters.category = e.target.value;
             this.displayEvents();
+            hideAllDropdowns();
         });
         
         // Custom location checkbox
@@ -1419,6 +1658,7 @@ class EventsApp {
                 this.filters.customLat = null;
                 this.filters.customLon = null;
                 this.displayEvents();
+                hideAllDropdowns();
             }
         });
         
@@ -1437,14 +1677,16 @@ class EventsApp {
                 this.map.setView([lat, lon], 13);
                 
                 this.displayEvents();
+                hideAllDropdowns();
             } else {
                 alert('Please enter valid latitude (-90 to 90) and longitude (-180 to 180) values.');
             }
         });
         
         // Reset filters button
-        const resetFilters = document.getElementById('reset-filters');
-        resetFilters.addEventListener('click', () => {
+        const resetFilters = document.getElementById('reset-filters-btn');
+        resetFilters.addEventListener('click', (e) => {
+            e.stopPropagation();
             // Reset all filters to defaults
             this.filters.maxDistance = 5;
             this.filters.timeFilter = 'sunrise';
@@ -1467,6 +1709,7 @@ class EventsApp {
             }
             
             this.displayEvents();
+            hideAllDropdowns();
         });
         
         // Event detail close listeners
