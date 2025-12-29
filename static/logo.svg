@@ -1,16 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
-  <!-- Background circle -->
-  <circle cx="60" cy="60" r="58" fill="#4CAF50" stroke="#fff" stroke-width="4"/>
-  
-  <!-- Map pin icon -->
-  <g transform="translate(60, 40)">
-    <path d="M0 0 C-8 0 -15 7 -15 15 C-15 25 0 40 0 40 C0 40 15 25 15 15 C15 7 8 0 0 0 Z" 
-          fill="#fff" opacity="0.9"/>
-    <circle cx="0" cy="15" r="5" fill="#4CAF50"/>
-  </g>
-  
-  <!-- Event marker dots -->
-  <circle cx="35" cy="75" r="4" fill="#fff" opacity="0.8"/>
-  <circle cx="60" cy="85" r="4" fill="#fff" opacity="0.8"/>
-  <circle cx="85" cy="75" r="4" fill="#fff" opacity="0.8"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" id="megaphone" width="20" height="20" viewBox="0 0 20 20"><path style="fill:none;stroke:#333333;stroke-width:1.2;" d="M 4.4314972,15.800857 H 3.8067096 c -0.6363658,-0.186163 -0.9003883,-4.4613 -0.018932,-5.452683 0.6058521,-0.0568 3.8055173,-0.0568 3.8055173,-0.0568 0,0 2.3666142,0.189329 7.4406381,-3.6161874 0,0 0.170397,0.018933 0.851983,4.5817664 0,0 1.41997,1.760762 -0.113599,3.710852 0,0 -0.265061,3.597257 -0.700518,4.52497 0,0 -4.165242,-3.426857 -8.8038085,-3.729785 l -0.037866,3.581814 c -0.071981,0.430932 -1.7149049,0.368812 -1.722897,-0.0047 z" /></svg>
