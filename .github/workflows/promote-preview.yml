@@ -11,6 +11,14 @@ on:
         options:
           - 'false'
           - 'true'
+      create_preview_if_missing:
+        description: '🔧 Create preview branch from main if it does not exist'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 permissions:
   contents: write
@@ -19,90 +27,297 @@ permissions:
   id-token: write
 
 jobs:
-  promote:
+  validate-and-promote:
     runs-on: ubuntu-latest
+    outputs:
+      pr_number: ${{ steps.promote.outputs.pr_number }}
+      pr_url: ${{ steps.promote.outputs.pr_url }}
+      action_taken: ${{ steps.promote.outputs.action_taken }}
     steps:
-      - name: Checkout repository
+      - name: 📥 Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Create or update promotion PR
-        uses: actions/github-script@v6
+      - name: 🔍 Validate branches and setup
+        id: validate
+        uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { owner, repo } = context.repo;
             const headBranch = 'preview';
             const baseBranch = 'main';
-            const title = 'Promote preview to production';
-            const body = `## 🚀 Promote Preview to Production
             
-            This PR promotes changes from the \`preview\` branch to \`main\` (production).
+            core.info('🔍 Validating repository setup...');
             
-            ### What happens when merged:
-            - Production site will be updated with preview changes
-            - Site will use \`config.prod.json\` (optimized for maximum speed, no debugging)
-            - Custom domain (CNAME) will be preserved
-            
-            ### Testing checklist:
-            - [ ] Preview site tested at /preview/ path
-            - [ ] All features working correctly
-            - [ ] No console errors in production mode
-            - [ ] Performance is acceptable
-            
-            ---
-            *Auto-merge requested: ${{ inputs.auto_merge }}*`;
-            
-            // Check if PR already exists
-            const { data: pulls } = await github.rest.pulls.list({
-              owner,
-              repo,
-              head: `${owner}:${headBranch}`,
-              base: baseBranch,
-              state: 'open'
-            });
-            
-            let pr;
-            if (pulls.length > 0) {
-              // Update existing PR
-              pr = pulls[0];
-              await github.rest.pulls.update({
-                owner,
-                repo,
-                pull_number: pr.number,
-                body
-              });
-              console.log(`Updated existing PR #${pr.number}`);
-            } else {
-              // Create new PR
-              const { data: newPr } = await github.rest.pulls.create({
-                owner,
-                repo,
-                title,
-                head: headBranch,
-                base: baseBranch,
-                body
-              });
-              pr = newPr;
-              console.log(`Created new PR #${pr.number}`);
+            // Check if main branch exists
+            try {
+              await github.rest.repos.getBranch({ owner, repo, branch: baseBranch });
+              core.info(`✓ Base branch '${baseBranch}' exists`);
+            } catch (error) {
+              core.setFailed(`❌ Base branch '${baseBranch}' does not exist: ${error.message}`);
+              return;
             }
             
-            // Try to auto-merge if requested
-            if ('${{ inputs.auto_merge }}' === 'true') {
-              try {
-                await github.rest.pulls.merge({
-                  owner,
-                  repo,
-                  pull_number: pr.number,
-                  merge_method: 'merge'
-                });
-                console.log(`✓ PR #${pr.number} auto-merged successfully`);
-              } catch (error) {
-                console.log(`⚠ Could not auto-merge PR #${pr.number}: ${error.message}`);
-                console.log('This is expected if branch protection rules are enabled.');
-                console.log('Please merge the PR manually.');
+            // Check if preview branch exists
+            let previewExists = true;
+            try {
+              await github.rest.repos.getBranch({ owner, repo, branch: headBranch });
+              core.info(`✓ Head branch '${headBranch}' exists`);
+            } catch (error) {
+              previewExists = false;
+              core.warning(`⚠️  Head branch '${headBranch}' does not exist`);
+            }
+            
+            // Create preview branch if it doesn't exist and user allows it
+            if (!previewExists) {
+              const shouldCreate = '${{ inputs.create_preview_if_missing }}' === 'true';
+              
+              if (shouldCreate) {
+                core.info(`🔧 Creating '${headBranch}' branch from '${baseBranch}'...`);
+                try {
+                  // Get main branch reference
+                  const { data: mainRef } = await github.rest.git.getRef({
+                    owner,
+                    repo,
+                    ref: `heads/${baseBranch}`
+                  });
+                  
+                  // Create preview branch from main
+                  await github.rest.git.createRef({
+                    owner,
+                    repo,
+                    ref: `refs/heads/${headBranch}`,
+                    sha: mainRef.object.sha
+                  });
+                  
+                  core.info(`✓ Created '${headBranch}' branch from '${baseBranch}'`);
+                  core.setOutput('preview_created', 'true');
+                  
+                  // Add workflow summary
+                  await core.summary
+                    .addHeading('✓ Preview Branch Created', 2)
+                    .addRaw(`The \`${headBranch}\` branch was created from \`${baseBranch}\`.`)
+                    .addBreak()
+                    .addRaw('📝 **Note**: Both branches are currently identical.')
+                    .addBreak()
+                    .addRaw('💡 **Next steps**: Make changes to the preview branch, test them, then run this workflow again.')
+                    .write();
+                  
+                  core.notice('Preview branch created successfully. No PR will be created since branches are identical.');
+                  core.setOutput('should_create_pr', 'false');
+                  return;
+                } catch (error) {
+                  core.setFailed(`❌ Failed to create preview branch: ${error.message}`);
+                  return;
+                }
+              } else {
+                core.setFailed(`❌ Preview branch '${headBranch}' does not exist. Set 'create_preview_if_missing' to true to create it automatically.`);
+                return;
               }
             }
             
-            console.log(`PR URL: ${pr.html_url}`);
+            // Compare branches
+            try {
+              const { data: comparison } = await github.rest.repos.compareCommitsWithBasehead({
+                owner,
+                repo,
+                basehead: `${baseBranch}...${headBranch}`
+              });
+              
+              if (comparison.ahead_by === 0 && comparison.behind_by === 0) {
+                core.warning('⚠️  Branches are identical - no changes to promote');
+                await core.summary
+                  .addHeading('⚠️ No Changes to Promote', 2)
+                  .addRaw(`The \`${headBranch}\` and \`${baseBranch}\` branches are identical.`)
+                  .addBreak()
+                  .addRaw('💡 **Next steps**: Make changes to the preview branch, test them, then run this workflow again.')
+                  .write();
+                core.setOutput('should_create_pr', 'false');
+                return;
+              } else if (comparison.behind_by > 0) {
+                core.warning(`⚠️  Preview branch is ${comparison.behind_by} commit(s) behind main`);
+                core.info('This is OK - the PR will merge main changes into preview when created');
+              }
+              
+              core.info(`📊 Comparison: ${comparison.ahead_by} ahead, ${comparison.behind_by} behind`);
+              core.setOutput('commits_ahead', comparison.ahead_by.toString());
+              core.setOutput('commits_behind', comparison.behind_by.toString());
+              core.setOutput('should_create_pr', 'true');
+              
+            } catch (error) {
+              core.setFailed(`❌ Failed to compare branches: ${error.message}`);
+              return;
+            }
+            
+            core.info('✓ Validation complete - ready to create PR');
+
+      - name: 🚀 Create or update promotion PR
+        id: promote
+        if: steps.validate.outputs.should_create_pr == 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const headBranch = 'preview';
+            const baseBranch = 'main';
+            const title = '🚀 Promote preview to production';
+            
+            const commitsAhead = '${{ steps.validate.outputs.commits_ahead }}' || 'unknown';
+            const commitsBehind = '${{ steps.validate.outputs.commits_behind }}' || '0';
+            
+            const body = `## 🚀 Promote Preview to Production
+            
+            This PR promotes changes from the \`${headBranch}\` branch to \`${baseBranch}\` (production).
+            
+            ### 📊 Changes Summary
+            - **Commits ahead of main**: ${commitsAhead}
+            - **Commits behind main**: ${commitsBehind}
+            
+            ### 🔄 What happens when merged:
+            - ✅ Production site will be updated with preview changes
+            - ✅ Site will use \`config.prod.json\` (optimized for maximum speed, no debugging)
+            - ✅ Custom domain (CNAME) will be preserved
+            - ✅ Auto-deploy to GitHub Pages via \`deploy-pages.yml\` workflow
+            
+            ### ✅ Testing checklist:
+            - [ ] Preview site tested at \`/preview/\` path
+            - [ ] All features working correctly
+            - [ ] No console errors in production mode
+            - [ ] Performance is acceptable
+            - [ ] Mobile experience tested
+            - [ ] Debug mode disabled in production
+            
+            ### 🔧 Deployment Configuration
+            - **Preview config**: \`config.dev.json\` (debug enabled, demo data)
+            - **Production config**: \`config.prod.json\` (optimized, real data only)
+            
+            ---
+            
+            *🤖 Auto-merge requested: ${{ inputs.auto_merge }}*
+            *⏰ Workflow run: [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})*`;
+            
+            let actionTaken = 'unknown';
+            
+            try {
+              // Check if PR already exists
+              core.info('🔍 Checking for existing PRs...');
+              const { data: pulls } = await github.rest.pulls.list({
+                owner,
+                repo,
+                head: `${owner}:${headBranch}`,
+                base: baseBranch,
+                state: 'open'
+              });
+              
+              let pr;
+              if (pulls.length > 0) {
+                // Update existing PR
+                pr = pulls[0];
+                core.info(`📝 Updating existing PR #${pr.number}`);
+                await github.rest.pulls.update({
+                  owner,
+                  repo,
+                  pull_number: pr.number,
+                  title,
+                  body
+                });
+                actionTaken = 'updated';
+                core.notice(`✓ Updated existing PR #${pr.number}: ${pr.html_url}`);
+              } else {
+                // Create new PR
+                core.info('📝 Creating new PR...');
+                try {
+                  const { data: newPr } = await github.rest.pulls.create({
+                    owner,
+                    repo,
+                    title,
+                    head: headBranch,
+                    base: baseBranch,
+                    body
+                  });
+                  pr = newPr;
+                  actionTaken = 'created';
+                  core.notice(`✓ Created new PR #${pr.number}: ${pr.html_url}`);
+                } catch (createError) {
+                  if (createError.message.includes('No commits between')) {
+                    core.warning('⚠️  No commits between branches - nothing to promote');
+                    actionTaken = 'skipped_no_changes';
+                    
+                    await core.summary
+                      .addHeading('⚠️ No Changes to Promote', 2)
+                      .addRaw('The branches are already in sync.')
+                      .write();
+                    
+                    return;
+                  }
+                  throw createError;
+                }
+              }
+              
+              // Set outputs
+              core.setOutput('pr_number', pr.number.toString());
+              core.setOutput('pr_url', pr.html_url);
+              core.setOutput('action_taken', actionTaken);
+              
+              // Try to auto-merge if requested
+              if ('${{ inputs.auto_merge }}' === 'true') {
+                core.info('🤖 Attempting auto-merge...');
+                try {
+                  await github.rest.pulls.merge({
+                    owner,
+                    repo,
+                    pull_number: pr.number,
+                    merge_method: 'merge'
+                  });
+                  core.notice(`✓ PR #${pr.number} auto-merged successfully!`);
+                  actionTaken = 'auto_merged';
+                  core.setOutput('action_taken', actionTaken);
+                  
+                  await core.summary
+                    .addHeading('✓ Auto-merge Successful', 2)
+                    .addRaw(`PR #${pr.number} was automatically merged to production.`)
+                    .addBreak()
+                    .addLink('View PR', pr.html_url)
+                    .write();
+                  
+                } catch (mergeError) {
+                  core.warning(`⚠️  Could not auto-merge PR #${pr.number}: ${mergeError.message}`);
+                  core.info('This is expected if branch protection rules are enabled.');
+                  core.info('Please merge the PR manually after review.');
+                  
+                  await core.summary
+                    .addHeading('⚠️ Auto-merge Blocked', 2)
+                    .addRaw(`PR #${pr.number} was created but could not be automatically merged.`)
+                    .addBreak()
+                    .addRaw(`**Reason**: ${mergeError.message}`)
+                    .addBreak()
+                    .addRaw('This is normal if branch protection is enabled. Please review and merge manually.')
+                    .addBreak()
+                    .addLink('Review and Merge PR', pr.html_url)
+                    .write();
+                }
+              } else {
+                // Manual merge requested
+                await core.summary
+                  .addHeading(`✓ PR ${actionTaken === 'created' ? 'Created' : 'Updated'}`, 2)
+                  .addRaw(`PR #${pr.number} is ready for review.`)
+                  .addBreak()
+                  .addRaw(`**Commits to merge**: ${commitsAhead}`)
+                  .addBreak()
+                  .addLink('Review and Merge PR', pr.html_url)
+                  .write();
+              }
+              
+            } catch (error) {
+              core.setFailed(`❌ Failed to create/update PR: ${error.message}`);
+              await core.summary
+                .addHeading('❌ Workflow Failed', 2)
+                .addRaw(`Error: ${error.message}`)
+                .addBreak()
+                .addRaw('Please check the workflow logs for details.')
+                .write();
+              throw error;
+            }
