@@ -58,8 +58,12 @@ class StaticSiteGenerator:
             <div id="map-overlay">
                 <div id="event-count">0 events</div>
                 <a href="imprint.html" id="imprint-link">
-                    <img id="site-logo" src="logo.png" alt="Site Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                    <span id="imprint-text" style="display: none;">Imprint</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" id="site-logo" width="20" height="20" viewBox="0 0 20 20" aria-label="Site Logo">
+                        <g transform="translate(1, 1.5)">
+                            <path style="fill:none;stroke:#ffffff;stroke-width:1.2;" 
+                                  d="M 4.43,15.8 H 3.81 c -0.64,-0.19 -0.9,-4.46 -0.02,-5.45 0.61,-0.06 3.81,-0.06 3.81,-0.06 0,0 2.37,0.19 7.44,-3.62 0,0 0.17,0.02 0.85,4.58 0,0 1.42,1.76 -0.11,3.71 0,0 -0.27,3.6 -0.7,4.52 0,0 -4.17,-3.43 -8.8,-3.73 l -0.04,3.58 c -0.07,0.43 -1.71,0.37 -1.72,0 z" />
+                        </g>
+                    </svg>
                 </a>
             </div>
         </div>
@@ -210,7 +214,7 @@ header h1 {
     top: 0;
     left: 0;
     max-width: 320px;
-    font-size: 0.95rem;
+    font-size: 0.75rem;
     font-weight: 500;
     color: #4CAF50;
     padding: 0.8rem;
@@ -220,6 +224,18 @@ header h1 {
     border: 2px solid #4CAF50;
     line-height: 1.4;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 640px) {
+    #event-count {
+        font-size: 0.95rem;
+        white-space: normal;
+        overflow-x: visible;
+    }
 }
 
 #imprint-link {
@@ -248,15 +264,9 @@ header h1 {
 }
 
 #site-logo {
-    max-height: 40px;
-    max-width: 120px;
-    height: auto;
-    width: auto;
+    width: 20px;
+    height: 20px;
     display: block;
-}
-
-#imprint-text {
-    display: none;
 }
 
 #event-list {
@@ -312,12 +322,19 @@ header h1 {
 .filter-group select {
     width: 100%;
     padding: 0.5rem;
+    min-height: 44px;
     background: rgba(45, 45, 45, 0.9);
     color: #fff;
     border: 1px solid #4CAF50;
     border-radius: 5px;
     font-size: 0.85rem;
     cursor: pointer;
+}
+
+@media (min-width: 640px) {
+    .filter-group select {
+        min-height: auto;
+    }
 }
 
 .filter-group select:hover {
@@ -350,6 +367,7 @@ header h1 {
 #apply-custom-location {
     width: 100%;
     padding: 0.5rem;
+    min-height: 44px;
     background: #4CAF50;
     color: white;
     border: none;
@@ -359,6 +377,12 @@ header h1 {
     transition: background 0.2s;
 }
 
+@media (min-width: 640px) {
+    #apply-custom-location {
+        min-height: auto;
+    }
+}
+
 #apply-custom-location:hover {
     background: #45a049;
 }
@@ -366,6 +390,7 @@ header h1 {
 #reset-filters {
     width: 100%;
     padding: 0.5rem;
+    min-height: 44px;
     background: rgba(255, 87, 34, 0.2);
     color: #FF5722;
     border: 1px solid #FF5722;
@@ -374,6 +399,12 @@ header h1 {
     font-size: 0.85rem;
     margin-top: 0.5rem;
     transition: background 0.2s;
+}
+
+@media (min-width: 640px) {
+    #reset-filters {
+        min-height: auto;
+    }
 }
 
 #reset-filters:hover {

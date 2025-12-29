@@ -67,7 +67,7 @@ header h1 {
     top: 0;
     left: 0;
     max-width: 320px;
-    font-size: 0.95rem;
+    font-size: 0.75rem;
     font-weight: 500;
     color: #4CAF50;
     padding: 0.8rem;
@@ -77,6 +77,18 @@ header h1 {
     border: 2px solid #4CAF50;
     line-height: 1.4;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 640px) {
+    #event-count {
+        font-size: 0.95rem;
+        white-space: normal;
+        overflow-x: visible;
+    }
 }
 
 #imprint-link {
@@ -105,15 +117,9 @@ header h1 {
 }
 
 #site-logo {
-    max-height: 40px;
-    max-width: 120px;
-    height: auto;
-    width: auto;
+    width: 20px;
+    height: 20px;
     display: block;
-}
-
-#imprint-text {
-    display: none;
 }
 
 #event-list {
@@ -169,12 +175,19 @@ header h1 {
 .filter-group select {
     width: 100%;
     padding: 0.5rem;
+    min-height: 44px;
     background: rgba(45, 45, 45, 0.9);
     color: #fff;
     border: 1px solid #4CAF50;
     border-radius: 5px;
     font-size: 0.85rem;
     cursor: pointer;
+}
+
+@media (min-width: 640px) {
+    .filter-group select {
+        min-height: auto;
+    }
 }
 
 .filter-group select:hover {
@@ -207,6 +220,7 @@ header h1 {
 #apply-custom-location {
     width: 100%;
     padding: 0.5rem;
+    min-height: 44px;
     background: #4CAF50;
     color: white;
     border: none;
@@ -216,6 +230,12 @@ header h1 {
     transition: background 0.2s;
 }
 
+@media (min-width: 640px) {
+    #apply-custom-location {
+        min-height: auto;
+    }
+}
+
 #apply-custom-location:hover {
     background: #45a049;
 }
@@ -223,6 +243,7 @@ header h1 {
 #reset-filters {
     width: 100%;
     padding: 0.5rem;
+    min-height: 44px;
     background: rgba(255, 87, 34, 0.2);
     color: #FF5722;
     border: 1px solid #FF5722;
@@ -231,6 +252,12 @@ header h1 {
     font-size: 0.85rem;
     margin-top: 0.5rem;
     transition: background 0.2s;
+}
+
+@media (min-width: 640px) {
+    #reset-filters {
+        min-height: auto;
+    }
 }
 
 #reset-filters:hover {
