@@ -646,17 +646,6 @@ class EventsApp {
             locationTextEl.classList.remove('active');
         };
         
-        // Helper to position dropdown near the clicked element
-        const positionDropdown = (dropdown, targetEl) => {
-            const rect = targetEl.getBoundingClientRect();
-            const filterSentence = document.getElementById('filter-sentence');
-            const sentenceRect = filterSentence.getBoundingClientRect();
-            
-            // Position below the sentence
-            dropdown.style.top = (sentenceRect.bottom - sentenceRect.top + 10) + 'px';
-            dropdown.style.left = '0px';
-        };
-        
         // Category filter click
         categoryTextEl.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -665,7 +654,6 @@ class EventsApp {
             if (wasHidden) {
                 categoryDropdown.classList.remove('hidden');
                 categoryTextEl.classList.add('active');
-                positionDropdown(categoryDropdown, categoryTextEl);
             }
         });
         
@@ -677,7 +665,6 @@ class EventsApp {
             if (wasHidden) {
                 timeDropdown.classList.remove('hidden');
                 timeTextEl.classList.add('active');
-                positionDropdown(timeDropdown, timeTextEl);
             }
         });
         
@@ -689,7 +676,6 @@ class EventsApp {
             if (wasHidden) {
                 distanceDropdown.classList.remove('hidden');
                 distanceTextEl.classList.add('active');
-                positionDropdown(distanceDropdown, distanceTextEl);
             }
         });
         
@@ -701,7 +687,6 @@ class EventsApp {
             if (wasHidden) {
                 locationDropdown.classList.remove('hidden');
                 locationTextEl.classList.add('active');
-                positionDropdown(locationDropdown, locationTextEl);
             }
         });
         

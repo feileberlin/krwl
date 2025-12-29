@@ -262,52 +262,54 @@ class StaticSiteGenerator:
                 <!-- Interactive filter sentence -->
                 <div id="filter-sentence">
                     <span id="event-count-text">0 events</span>
-                    <span id="category-text" class="filter-part" title="Click to change category">in all categories</span>
-                    <span id="time-text" class="filter-part" title="Click to change time range">till sunrise</span>
-                    <span id="distance-text" class="filter-part" title="Click to change distance">within 15 minutes walk</span>
-                    <span id="location-text" class="filter-part" title="Click to change location">from your location</span>
-                    <button id="reset-filters-btn" class="reset-icon" title="Reset all filters">⟲</button>
-                </div>
-                
-                <!-- Filter dropdowns (hidden by default) -->
-                <div id="filter-dropdowns" class="hidden">
-                    <!-- Category filter dropdown -->
-                    <div id="category-dropdown" class="filter-dropdown hidden">
-                        <select id="category-filter">
-                            <option value="all">All Categories</option>
-                        </select>
-                    </div>
                     
-                    <!-- Time filter dropdown -->
-                    <div id="time-dropdown" class="filter-dropdown hidden">
-                        <select id="time-filter">
-                            <option value="sunrise">Next Sunrise (6 AM)</option>
-                            <option value="6h">Next 6 hours</option>
-                            <option value="12h">Next 12 hours</option>
-                            <option value="24h">Next 24 hours</option>
-                            <option value="48h">Next 48 hours</option>
-                            <option value="all">All upcoming events</option>
-                        </select>
-                    </div>
-                    
-                    <!-- Distance filter dropdown -->
-                    <div id="distance-dropdown" class="filter-dropdown hidden">
-                        <input type="range" id="distance-filter" min="1" max="50" value="5" step="0.5">
-                        <span id="distance-value">5 km</span>
-                    </div>
-                    
-                    <!-- Location filter dropdown -->
-                    <div id="location-dropdown" class="filter-dropdown hidden">
-                        <label>
-                            <input type="checkbox" id="use-custom-location">
-                            Use custom location
-                        </label>
-                        <div id="custom-location-inputs" class="hidden">
-                            <input type="number" id="custom-lat" placeholder="Latitude" step="0.0001">
-                            <input type="number" id="custom-lon" placeholder="Longitude" step="0.0001">
-                            <button id="apply-custom-location">Apply</button>
+                    <span id="category-text" class="filter-part" title="Click to change category">
+                        in all categories
+                        <div id="category-dropdown" class="filter-dropdown hidden">
+                            <select id="category-filter">
+                                <option value="all">All Categories</option>
+                            </select>
                         </div>
-                    </div>
+                    </span>
+                    
+                    <span id="time-text" class="filter-part" title="Click to change time range">
+                        till sunrise
+                        <div id="time-dropdown" class="filter-dropdown hidden">
+                            <select id="time-filter">
+                                <option value="sunrise">Next Sunrise (6 AM)</option>
+                                <option value="6h">Next 6 hours</option>
+                                <option value="12h">Next 12 hours</option>
+                                <option value="24h">Next 24 hours</option>
+                                <option value="48h">Next 48 hours</option>
+                                <option value="all">All upcoming events</option>
+                            </select>
+                        </div>
+                    </span>
+                    
+                    <span id="distance-text" class="filter-part" title="Click to change distance">
+                        within 15 minutes walk
+                        <div id="distance-dropdown" class="filter-dropdown hidden">
+                            <input type="range" id="distance-filter" min="1" max="50" value="5" step="0.5">
+                            <span id="distance-value">5 km</span>
+                        </div>
+                    </span>
+                    
+                    <span id="location-text" class="filter-part" title="Click to change location">
+                        from your location
+                        <div id="location-dropdown" class="filter-dropdown hidden">
+                            <label>
+                                <input type="checkbox" id="use-custom-location">
+                                Use custom location
+                            </label>
+                            <div id="custom-location-inputs" class="hidden">
+                                <input type="number" id="custom-lat" placeholder="Latitude" step="0.0001">
+                                <input type="number" id="custom-lon" placeholder="Longitude" step="0.0001">
+                                <button id="apply-custom-location">Apply</button>
+                            </div>
+                        </div>
+                    </span>
+                    
+                    <button id="reset-filters-btn" class="reset-icon" title="Reset all filters">⟲</button>
                 </div>
                 
                 <!-- Environment watermark (bottom-left) -->
@@ -518,6 +520,8 @@ header h1 {
 /* Filter dropdowns */
 .filter-dropdown {
     position: absolute;
+    top: calc(100% + 5px); /* Position just below the parent span */
+    left: 0;
     background: rgba(30, 30, 30, 0.98);
     backdrop-filter: blur(10px);
     border: 2px solid #FF69B4;
@@ -527,6 +531,7 @@ header h1 {
                 0 0 10px rgba(255, 105, 180, 0.3);
     z-index: 2000;
     min-width: 200px;
+    white-space: normal;
 }
 
 .filter-dropdown.hidden {
@@ -1543,17 +1548,6 @@ class EventsApp {
             locationTextEl.classList.remove('active');
         };
         
-        // Helper to position dropdown near the clicked element
-        const positionDropdown = (dropdown, targetEl) => {
-            const rect = targetEl.getBoundingClientRect();
-            const filterSentence = document.getElementById('filter-sentence');
-            const sentenceRect = filterSentence.getBoundingClientRect();
-            
-            // Position below the sentence
-            dropdown.style.top = (sentenceRect.bottom - sentenceRect.top + 10) + 'px';
-            dropdown.style.left = '0px';
-        };
-        
         // Category filter click
         categoryTextEl.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -1562,7 +1556,6 @@ class EventsApp {
             if (wasHidden) {
                 categoryDropdown.classList.remove('hidden');
                 categoryTextEl.classList.add('active');
-                positionDropdown(categoryDropdown, categoryTextEl);
             }
         });
         
@@ -1574,7 +1567,6 @@ class EventsApp {
             if (wasHidden) {
                 timeDropdown.classList.remove('hidden');
                 timeTextEl.classList.add('active');
-                positionDropdown(timeDropdown, timeTextEl);
             }
         });
         
@@ -1586,7 +1578,6 @@ class EventsApp {
             if (wasHidden) {
                 distanceDropdown.classList.remove('hidden');
                 distanceTextEl.classList.add('active');
-                positionDropdown(distanceDropdown, distanceTextEl);
             }
         });
         
@@ -1598,7 +1589,6 @@ class EventsApp {
             if (wasHidden) {
                 locationDropdown.classList.remove('hidden');
                 locationTextEl.classList.add('active');
-                positionDropdown(locationDropdown, locationTextEl);
             }
         });
         
