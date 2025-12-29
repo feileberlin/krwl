@@ -1447,28 +1447,6 @@ class EventsApp {
                 }
             });
         }
-        
-        // Language selector - switch language and re-render content
-        const languageSelect = document.getElementById('language-select');
-        if (languageSelect) {
-            // Set initial value based on current i18n locale
-            if (window.i18n) {
-                languageSelect.value = window.i18n.getLocale();
-            }
-            
-            languageSelect.addEventListener('change', async (e) => {
-                const newLocale = e.target.value;
-                this.log('Language changed to:', newLocale);
-                
-                if (window.i18n) {
-                    await window.i18n.switchLanguage(newLocale);
-                    // Update all UI text with new translations
-                    this.updateUITranslations();
-                    // Re-display events to update time formatting (Today/Tomorrow) and popups
-                    this.displayEvents();
-                }
-            });
-        }
     }
     
     /**
