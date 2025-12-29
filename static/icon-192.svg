@@ -2,15 +2,9 @@
   <!-- Background -->
   <rect width="192" height="192" fill="#4CAF50" rx="24"/>
   
-  <!-- Map pin icon (centered, larger) -->
-  <g transform="translate(96, 60)">
-    <path d="M0 0 C-20 0 -36 16 -36 36 C-36 60 0 96 0 96 C0 96 36 60 36 36 C36 16 20 0 0 0 Z" 
-          fill="#fff" opacity="0.95"/>
-    <circle cx="0" cy="36" r="12" fill="#4CAF50"/>
+  <!-- Megaphone icon (centered, scaled for 192x192) -->
+  <g transform="translate(50, 60) scale(5.5)">
+    <path style="fill:none;stroke:#ffffff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;" 
+          d="M 4.43,15.8 H 3.81 c -0.64,-0.19 -0.9,-4.46 -0.02,-5.45 0.61,-0.06 3.81,-0.06 3.81,-0.06 0,0 2.37,0.19 7.44,-3.62 0,0 0.17,0.02 0.85,4.58 0,0 1.42,1.76 -0.11,3.71 0,0 -0.27,3.6 -0.7,4.52 0,0 -4.17,-3.43 -8.8,-3.73 l -0.04,3.58 c -0.07,0.43 -1.71,0.37 -1.72,0 z" />
   </g>
-  
-  <!-- Event marker dots -->
-  <circle cx="50" cy="140" r="8" fill="#fff" opacity="0.85"/>
-  <circle cx="96" cy="150" r="8" fill="#fff" opacity="0.85"/>
-  <circle cx="142" cy="140" r="8" fill="#fff" opacity="0.85"/>
 </svg>

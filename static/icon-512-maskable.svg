@@ -2,15 +2,9 @@
   <!-- Full background for maskable (no rounded corners, safe area) -->
   <rect width="512" height="512" fill="#4CAF50"/>
   
-  <!-- Map pin icon (centered, scaled down for safe area) -->
-  <g transform="translate(256, 190)">
-    <path d="M0 0 C-42 0 -76 34 -76 76 C-76 126 0 200 0 200 C0 200 76 126 76 76 C76 34 42 0 0 0 Z" 
-          fill="#fff" opacity="0.95"/>
-    <circle cx="0" cy="76" r="24" fill="#4CAF50"/>
+  <!-- Megaphone icon (centered, scaled for safe area) -->
+  <g transform="translate(140, 180) scale(13)">
+    <path style="fill:none;stroke:#ffffff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;" 
+          d="M 4.43,15.8 H 3.81 c -0.64,-0.19 -0.9,-4.46 -0.02,-5.45 0.61,-0.06 3.81,-0.06 3.81,-0.06 0,0 2.37,0.19 7.44,-3.62 0,0 0.17,0.02 0.85,4.58 0,0 1.42,1.76 -0.11,3.71 0,0 -0.27,3.6 -0.7,4.52 0,0 -4.17,-3.43 -8.8,-3.73 l -0.04,3.58 c -0.07,0.43 -1.71,0.37 -1.72,0 z" />
   </g>
-  
-  <!-- Event marker dots -->
-  <circle cx="160" cy="340" r="16" fill="#fff" opacity="0.85"/>
-  <circle cx="256" cy="356" r="16" fill="#fff" opacity="0.85"/>
-  <circle cx="352" cy="340" r="16" fill="#fff" opacity="0.85"/>
 </svg>
