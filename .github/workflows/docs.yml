@@ -40,7 +40,7 @@ jobs:
   validate-and-build-docs:
     runs-on: ubuntu-latest
     permissions:
-      contents: read   # For cloning/fetching repo content
+      contents: write  # For pushing documentation updates
       issues: write    # If creating or editing issues
       pull-requests: write # If modifying PRs
     
