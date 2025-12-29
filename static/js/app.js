@@ -127,10 +127,14 @@ class EventsApp {
     
     initMap() {
         const center = this.config.map.default_center;
-        this.map = L.map('map').setView([center.lat, center.lon], this.config.map.default_zoom);
+        // Disable zoom controls - use keyboard shortcuts (+ / -) or pinch zoom on mobile
+        this.map = L.map('map', {
+            zoomControl: false,
+            attributionControl: false
+        }).setView([center.lat, center.lon], this.config.map.default_zoom);
         
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        L.tileLayer(this.config.map.tile_provider, {
+            attribution: this.config.map.attribution
         }).addTo(this.map);
     }
     
@@ -150,12 +154,23 @@ class EventsApp {
                     // Center map on user location
                     this.map.setView([this.userLocation.lat, this.userLocation.lon], 13);
                     
-                    // Add user marker
+                    // Add user marker with custom geolocation icon
+                    // Support customization from config or use default
+                    const userMarkerConfig = this.config.map.user_location_marker || {};
+                    const userIconUrl = userMarkerConfig.icon || 'markers/marker-geolocation.svg';
+                    const userIconSize = userMarkerConfig.size || [32, 48];
+                    const userIconAnchor = userMarkerConfig.anchor || [userIconSize[0] / 2, userIconSize[1]];
+                    const userPopupAnchor = userMarkerConfig.popup_anchor || [0, -userIconSize[1]];
+                    
+                    const userIcon = L.icon({
+                        iconUrl: userIconUrl,
+                        iconSize: userIconSize,
+                        iconAnchor: userIconAnchor,
+                        popupAnchor: userPopupAnchor
+                    });
+                    
                     L.marker([this.userLocation.lat, this.userLocation.lon], {
-                        icon: L.divIcon({
-                            className: 'user-marker',
-                            html: '<div style="background: #2196F3; border: 3px solid white; border-radius: 50%; width: 20px; height: 20px;"></div>'
-                        })
+                        icon: userIcon
                     }).addTo(this.map).bindPopup('You are here');
                     
                     statusEl.textContent = '📍 Location found';
@@ -518,14 +533,43 @@ class EventsApp {
         container.appendChild(card);
     }
     
+    getMarkerIconForCategory(category) {
+        // Return SVG marker paths for different event categories
+        const iconMap = {
+            'on-stage': 'markers/marker-on-stage.svg',        // Diamond with microphone
+            'pub-game': 'markers/marker-pub-games.svg',       // Hexagon with beer mug
+            'festival': 'markers/marker-festivals.svg',       // Star with flag
+            'workshop': 'markers/marker-workshops.svg',       // Workshop icon
+            'market': 'markers/marker-shopping.svg',          // Shopping bag for markets
+            'sports': 'markers/marker-sports.svg',            // Sports icon
+            'community': 'markers/marker-community.svg',      // Community icon
+            'other': 'markers/marker-default.svg'             // Default teardrop pin
+        };
+        
+        return iconMap[category] || iconMap['other'];
+    }
+    
     addEventMarker(event) {
         if (!event.location) return;
         
+        // Check if event has custom marker icon, otherwise use category-based icon
+        const iconUrl = event.marker_icon || this.getMarkerIconForCategory(event.category);
+        
+        // Support custom marker size if specified in event data
+        const iconSize = event.marker_size || [32, 48];
+        const iconAnchor = event.marker_anchor || [iconSize[0] / 2, iconSize[1]];
+        const popupAnchor = event.marker_popup_anchor || [0, -iconSize[1]];
+        
+        // Create custom SVG icon using Leaflet's L.icon
+        const customIcon = L.icon({
+            iconUrl: iconUrl,
+            iconSize: iconSize,
+            iconAnchor: iconAnchor,
+            popupAnchor: popupAnchor
+        });
+        
         const marker = L.marker([event.location.lat, event.location.lon], {
-            icon: L.divIcon({
-                className: 'event-marker',
-                html: '<div style="background: #4CAF50; border: 3px solid white; border-radius: 50%; width: 20px; height: 20px;"></div>'
-            })
+            icon: customIcon
         }).addTo(this.map);
         
         marker.bindPopup(`<strong>${event.title}</strong><br>${event.location.name}`);

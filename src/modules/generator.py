@@ -143,12 +143,12 @@ class StaticSiteGenerator:
                 <div id="event-count">0 events</div>
                 <!-- Environment watermark (bottom-left) -->
                 <div id="env-watermark" class="hidden"></div>
-                <!-- Logo: Inline SVG megaphone (white stroke, no fill) -->
+                <!-- Logo: Inline SVG megaphone (gray stroke, transitions to pink on hover) -->
                 <!-- Source: Generated from src/modules/generator.py template -->
                 <a href="imprint.html" id="imprint-link">
                     <svg xmlns="http://www.w3.org/2000/svg" id="site-logo" width="20" height="20" viewBox="0 0 20 20">
                         <g transform="translate(1, 1.5)">
-                            <path style="fill:none;stroke:#ffffff;stroke-width:1.2;" 
+                            <path style="fill:none;stroke:#cccccc;stroke-width:1.2;" 
                                   d="M 4.43,15.8 H 3.81 c -0.64,-0.19 -0.9,-4.46 -0.02,-5.45 0.61,-0.06 3.81,-0.06 3.81,-0.06 0,0 2.37,0.19 7.44,-3.62 0,0 0.17,0.02 0.85,4.58 0,0 1.42,1.76 -0.11,3.71 0,0 -0.27,3.6 -0.7,4.52 0,0 -4.17,-3.43 -8.8,-3.73 l -0.04,3.58 c -0.07,0.43 -1.71,0.37 -1.72,0 z" />
                         </g>
                     </svg>
@@ -240,6 +240,17 @@ class StaticSiteGenerator:
 /* DO NOT EDIT: Manual changes will be overwritten on next build */
 /* To modify: Edit templates in src/modules/generator.py, then run: python3 src/main.py generate */
 
+/*
+MONOCHROME COLOR PALETTE:
+- Accent (Barbie Red): #FF69B4
+- Accent Glow: rgba(255, 105, 180, 0.3-0.5)
+- Backgrounds: #1a1a1a, #2d2d2d, #2a2a2a (dark grays)
+- Text Primary: #ffffff, #ccc (light grays)
+- Text Secondary: #aaa, #888 (medium grays)
+- Borders/Accents: All use #FF69B4 or gray shades
+- NO other colors used (no green, blue, yellow, etc.)
+*/
+
 * {
     margin: 0;
     padding: 0;
@@ -269,6 +280,8 @@ header {
 header h1 {
     font-size: 1.5rem;
     margin-bottom: 0.5rem;
+    color: #FF69B4;
+    text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
 }
 
 #status {
@@ -288,6 +301,15 @@ header h1 {
     flex: 1;
     position: relative;
     z-index: 1;
+}
+
+/* Set dark gray background for unloaded map tiles */
+.leaflet-container {
+    background: #2a2a2a;
+}
+
+.leaflet-tile-container {
+    background: #2a2a2a;
 }
 
 #map-overlay {
@@ -311,14 +333,16 @@ header h1 {
     max-width: 320px;
     font-size: 0.95rem;
     font-weight: 500;
-    color: #4CAF50;
+    color: #FF69B4;
     padding: 0.8rem;
     background: rgba(30, 30, 30, 0.95);
     backdrop-filter: blur(10px);
     border-radius: 8px;
-    border: 2px solid #4CAF50;
+    border: 2px solid #FF69B4;
     line-height: 1.4;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
+                0 0 10px rgba(255, 105, 180, 0.3);
+    text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
 }
 
 #imprint-link {
@@ -328,22 +352,23 @@ header h1 {
     padding: 0.6rem 1rem;
     background: rgba(30, 30, 30, 0.95);
     backdrop-filter: blur(10px);
-    color: #4CAF50;
+    color: #ccc;
     text-decoration: none;
     border-radius: 8px;
-    border: 2px solid #4CAF50;
+    border: 2px solid #555;
     font-size: 0.85rem;
     font-weight: 500;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    transition: background 0.2s, color 0.2s;
+    transition: all 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 #imprint-link:hover {
-    background: rgba(76, 175, 80, 0.2);
-    color: #fff;
+    background: rgba(255, 105, 180, 0.1);
+    border-color: #FF69B4;
+    color: #FF69B4;
 }
 
 #site-logo {
@@ -352,6 +377,15 @@ header h1 {
     height: auto;
     width: auto;
     display: block;
+}
+
+#site-logo path {
+    stroke: #ccc !important;
+    transition: stroke 0.2s;
+}
+
+#imprint-link:hover #site-logo path {
+    stroke: #FF69B4 !important;
 }
 
 #imprint-text {
@@ -378,24 +412,14 @@ header h1 {
     display: none;
 }
 
-#env-watermark.production {
-    border: 2px solid #4CAF50;
-    color: #4CAF50;
-}
-
-#env-watermark.preview {
-    border: 2px solid #FFC107;
-    color: #FFC107;
-}
-
-#env-watermark.testing {
-    border: 2px solid #2196F3;
-    color: #2196F3;
-}
-
+/* All environment markers use same monochrome style */
+#env-watermark.production,
+#env-watermark.preview,
+#env-watermark.testing,
 #env-watermark.development {
-    border: 2px solid #9C27B0;
-    color: #9C27B0;
+    border: 2px solid #FF69B4;
+    color: #FF69B4;
+    text-shadow: 0 0 5px rgba(255, 105, 180, 0.5);
 }
 
 #event-list {
@@ -415,19 +439,20 @@ header h1 {
 #event-list h2 {
     font-size: 1.2rem;
     margin-bottom: 1rem;
-    color: #fff;
+    color: #FF69B4;
+    text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
 }
 
 #filters-section {
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(76, 175, 80, 0.3);
+    border-bottom: 1px solid rgba(255, 105, 180, 0.3);
 }
 
 #filters-section h3 {
     font-size: 1rem;
     margin-bottom: 1rem;
-    color: #4CAF50;
+    color: #FF69B4;
 }
 
 .filter-group {
@@ -453,14 +478,18 @@ header h1 {
     padding: 0.5rem;
     background: rgba(45, 45, 45, 0.9);
     color: #fff;
-    border: 1px solid #4CAF50;
+    border: 1px solid #555;
     border-radius: 5px;
     font-size: 0.85rem;
     cursor: pointer;
+    transition: border-color 0.2s;
 }
 
-.filter-group select:hover {
+.filter-group select:hover,
+.filter-group select:focus {
     background: rgba(55, 55, 55, 0.9);
+    border-color: #FF69B4;
+    outline: none;
 }
 
 .filter-group input[type="number"] {
@@ -468,10 +497,16 @@ header h1 {
     padding: 0.5rem;
     background: rgba(45, 45, 45, 0.9);
     color: #fff;
-    border: 1px solid #4CAF50;
+    border: 1px solid #555;
     border-radius: 5px;
     font-size: 0.85rem;
     margin-bottom: 0.5rem;
+    transition: border-color 0.2s;
+}
+
+.filter-group input[type="number"]:focus {
+    border-color: #FF69B4;
+    outline: none;
 }
 
 .filter-group input[type="number"]:first-of-type {
@@ -489,38 +524,42 @@ header h1 {
 #apply-custom-location {
     width: 100%;
     padding: 0.5rem;
-    background: #4CAF50;
+    background: #FF69B4;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 0.85rem;
-    transition: background 0.2s;
+    transition: all 0.2s;
+    box-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
 }
 
 #apply-custom-location:hover {
-    background: #45a049;
+    background: #ff4da6;
+    box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
 }
 
 #reset-filters {
     width: 100%;
     padding: 0.5rem;
-    background: rgba(255, 87, 34, 0.2);
-    color: #FF5722;
-    border: 1px solid #FF5722;
+    background: rgba(100, 100, 100, 0.2);
+    color: #aaa;
+    border: 1px solid #555;
     border-radius: 5px;
     cursor: pointer;
     font-size: 0.85rem;
     margin-top: 0.5rem;
-    transition: background 0.2s;
+    transition: all 0.2s;
 }
 
 #reset-filters:hover {
-    background: rgba(255, 87, 34, 0.3);
+    background: rgba(100, 100, 100, 0.3);
+    border-color: #888;
+    color: #ccc;
 }
 
 #distance-value {
-    color: #4CAF50;
+    color: #FF69B4;
     font-weight: bold;
     font-size: 0.9rem;
 }
@@ -542,19 +581,20 @@ header h1 {
     padding: 1rem;
     margin-bottom: 1rem;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    border-left: 3px solid #4CAF50;
+    transition: all 0.2s;
+    border-left: 3px solid #FF69B4;
 }
 
 .event-card:hover {
     transform: translateX(-5px);
-    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 5px 15px rgba(255, 105, 180, 0.3);
+    background: rgba(55, 55, 55, 0.9);
 }
 
 .event-card h3 {
     font-size: 1rem;
     margin-bottom: 0.5rem;
-    color: #4CAF50;
+    color: #FF69B4;
 }
 
 .event-card p {
@@ -594,6 +634,8 @@ header h1 {
     max-height: 80vh;
     overflow-y: auto;
     position: relative;
+    border: 2px solid #FF69B4;
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
 }
 
 #close-detail {
@@ -602,24 +644,27 @@ header h1 {
     right: 1rem;
     background: none;
     border: none;
-    color: #fff;
+    color: #ccc;
     font-size: 2rem;
     cursor: pointer;
     line-height: 1;
+    transition: color 0.2s;
 }
 
 #close-detail:hover {
-    color: #4CAF50;
+    color: #FF69B4;
 }
 
 .detail-content h2 {
     margin-bottom: 1rem;
-    color: #4CAF50;
+    color: #FF69B4;
+    text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
 }
 
 .detail-content p {
     line-height: 1.6;
     margin-bottom: 1rem;
+    color: #ccc;
 }
 
 #detail-info {
@@ -627,42 +672,49 @@ header h1 {
     padding: 1rem;
     border-radius: 8px;
     margin: 1rem 0;
+    border: 1px solid rgba(255, 105, 180, 0.2);
 }
 
 #detail-link {
     display: inline-block;
-    background: #4CAF50;
+    background: #FF69B4;
     color: white;
     padding: 0.75rem 1.5rem;
     border-radius: 5px;
     text-decoration: none;
-    transition: background 0.2s;
+    transition: all 0.2s;
+    box-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
 }
 
 #detail-link:hover {
-    background: #45a049;
+    background: #ff4da6;
+    box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
 }
 
 /* Leaflet customization */
 .leaflet-popup-content-wrapper {
     background: #2d2d2d;
     color: white;
+    border: 2px solid #FF69B4;
 }
 
 .leaflet-popup-tip {
     background: #2d2d2d;
+    border-color: #FF69B4;
 }
 
-/* Custom marker */
-.event-marker {
-    background: #4CAF50;
-    border: 3px solid white;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
+/* Monochrome marker glow - barbie red instead of green */
+.leaflet-marker-icon {
+    filter: drop-shadow(0 0 2px #FF69B4);
+    transition: filter 0.2s ease;
 }
 
-/* Scrollbar styling */
+.leaflet-marker-icon:hover {
+    filter: drop-shadow(0 0 4px #FF69B4) 
+            drop-shadow(0 0 8px #FF69B4);
+}
+
+/* Scrollbar styling - monochrome */
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -672,12 +724,12 @@ header h1 {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #4CAF50;
+    background: #FF69B4;
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #45a049;
+    background: #ff4da6;
 }
 
 @media (max-width: 768px) {
@@ -847,10 +899,14 @@ class EventsApp {
     
     initMap() {
         const center = this.config.map.default_center;
-        this.map = L.map('map').setView([center.lat, center.lon], this.config.map.default_zoom);
+        // Disable zoom controls - use keyboard shortcuts (+ / -) or pinch zoom on mobile
+        this.map = L.map('map', {
+            zoomControl: false,
+            attributionControl: false
+        }).setView([center.lat, center.lon], this.config.map.default_zoom);
         
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        L.tileLayer(this.config.map.tile_provider, {
+            attribution: this.config.map.attribution
         }).addTo(this.map);
     }
     
@@ -870,12 +926,23 @@ class EventsApp {
                     // Center map on user location
                     this.map.setView([this.userLocation.lat, this.userLocation.lon], 13);
                     
-                    // Add user marker
+                    // Add user marker with custom geolocation icon
+                    // Support customization from config or use default
+                    const userMarkerConfig = this.config.map.user_location_marker || {};
+                    const userIconUrl = userMarkerConfig.icon || 'markers/marker-geolocation.svg';
+                    const userIconSize = userMarkerConfig.size || [32, 48];
+                    const userIconAnchor = userMarkerConfig.anchor || [userIconSize[0] / 2, userIconSize[1]];
+                    const userPopupAnchor = userMarkerConfig.popup_anchor || [0, -userIconSize[1]];
+                    
+                    const userIcon = L.icon({
+                        iconUrl: userIconUrl,
+                        iconSize: userIconSize,
+                        iconAnchor: userIconAnchor,
+                        popupAnchor: userPopupAnchor
+                    });
+                    
                     L.marker([this.userLocation.lat, this.userLocation.lon], {
-                        icon: L.divIcon({
-                            className: 'user-marker',
-                            html: '<div style="background: #2196F3; border: 3px solid white; border-radius: 50%; width: 20px; height: 20px;"></div>'
-                        })
+                        icon: userIcon
                     }).addTo(this.map).bindPopup('You are here');
                     
                     statusEl.textContent = '📍 Location found';
@@ -1238,14 +1305,43 @@ class EventsApp {
         container.appendChild(card);
     }
     
+    getMarkerIconForCategory(category) {
+        // Return SVG marker paths for different event categories
+        const iconMap = {
+            'on-stage': 'markers/marker-on-stage.svg',        // Diamond with microphone
+            'pub-game': 'markers/marker-pub-games.svg',       // Hexagon with beer mug
+            'festival': 'markers/marker-festivals.svg',       // Star with flag
+            'workshop': 'markers/marker-workshops.svg',       // Workshop icon
+            'market': 'markers/marker-shopping.svg',          // Shopping bag for markets
+            'sports': 'markers/marker-sports.svg',            // Sports icon
+            'community': 'markers/marker-community.svg',      // Community icon
+            'other': 'markers/marker-default.svg'             // Default teardrop pin
+        };
+        
+        return iconMap[category] || iconMap['other'];
+    }
+    
     addEventMarker(event) {
         if (!event.location) return;
         
+        // Check if event has custom marker icon, otherwise use category-based icon
+        const iconUrl = event.marker_icon || this.getMarkerIconForCategory(event.category);
+        
+        // Support custom marker size if specified in event data
+        const iconSize = event.marker_size || [32, 48];
+        const iconAnchor = event.marker_anchor || [iconSize[0] / 2, iconSize[1]];
+        const popupAnchor = event.marker_popup_anchor || [0, -iconSize[1]];
+        
+        // Create custom SVG icon using Leaflet's L.icon
+        const customIcon = L.icon({
+            iconUrl: iconUrl,
+            iconSize: iconSize,
+            iconAnchor: iconAnchor,
+            popupAnchor: popupAnchor
+        });
+        
         const marker = L.marker([event.location.lat, event.location.lon], {
-            icon: L.divIcon({
-                className: 'event-marker',
-                html: '<div style="background: #4CAF50; border: 3px solid white; border-radius: 50%; width: 20px; height: 20px;"></div>'
-            })
+            icon: customIcon
         }).addTo(this.map);
         
         marker.bindPopup(`<strong>${event.title}</strong><br>${event.location.name}`);

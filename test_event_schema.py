@@ -103,6 +103,37 @@ EVENT_SCHEMA = {
             "type": "string",
             "description": "When the event was published",
             "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}"
+        },
+        "marker_icon": {
+            "type": "string",
+            "description": "Optional custom marker icon path (e.g., 'markers/marker-custom.svg'). If not specified, uses category-based marker."
+        },
+        "marker_size": {
+            "type": "array",
+            "description": "Optional custom marker size [width, height] in pixels. Default: [32, 48]",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
+        },
+        "marker_anchor": {
+            "type": "array",
+            "description": "Optional custom marker anchor point [x, y]. Default: [width/2, height] (bottom center)",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
+        },
+        "marker_popup_anchor": {
+            "type": "array",
+            "description": "Optional custom popup anchor point [x, y]. Default: [0, -height]",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
         }
     }
 }
