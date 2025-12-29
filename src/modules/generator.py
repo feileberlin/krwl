@@ -227,7 +227,6 @@ header h1 {
     white-space: nowrap;
     overflow-x: auto;
     overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
 }
 
 @media (min-width: 640px) {
