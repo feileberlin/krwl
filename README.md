@@ -230,7 +230,10 @@ The `static/` directory contains all files needed for deployment:
 
 The repository includes automated event scraping that runs **twice daily**:
 
-- **Schedule**: 4:00 AM and 4:00 PM UTC (5-6 AM/PM CET depending on DST)
+- **Schedule**: Configurable per project in `config.json`
+  - **Timezone**: `scraping.schedule.timezone` (e.g., "Europe/Berlin")
+  - **Times**: `scraping.schedule.times` (e.g., ["04:00", "16:00"])
+  - Default: 4:00 AM and 4:00 PM in Europe/Berlin timezone
 - **Workflow**: `.github/workflows/scrape-events.yml`
 - **Process**:
   1. Scrapes events from configured sources in `config.json`
@@ -241,7 +244,18 @@ The repository includes automated event scraping that runs **twice daily**:
      - Deploys to GitHub Pages
 - **Manual trigger**: Can be triggered manually via GitHub Actions interface
 
-To configure scraping sources, edit the `scraping.sources` section in `config.json` or `config.prod.json`.
+**Configuration**: Edit `config.json` or `config.prod.json`:
+```json
+"scraping": {
+  "schedule": {
+    "timezone": "Europe/Berlin",
+    "times": ["04:00", "16:00"]
+  },
+  "sources": [...]
+}
+```
+
+**Note**: GitHub Actions cron schedules run in UTC. The workflow cron times are calculated based on the configured timezone. When changing timezone or times, you may need to adjust the cron schedule in the workflow file accordingly.
 
 ## ♿ Accessibility
 

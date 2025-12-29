@@ -2,9 +2,13 @@ name: Scrape Events (Twice Daily)
 
 on:
   schedule:
-    # Run twice daily at 4:00 AM and 4:00 PM UTC
-    - cron: '0 4 * * *'   # 4 AM UTC (5-6 AM CET depending on DST)
-    - cron: '0 16 * * *'  # 4 PM UTC (5-6 PM CET depending on DST)
+    # Run twice daily at 4:00 AM and 4:00 PM in Europe/Berlin timezone (CET/CEST)
+    # Note: GitHub Actions uses UTC. These times are calculated for Europe/Berlin:
+    # - 4 AM CET/CEST = 3 AM UTC (winter) or 2 AM UTC (summer)
+    # - 4 PM CET/CEST = 3 PM UTC (winter) or 2 PM UTC (summer)
+    # Using 3 AM and 3 PM UTC as a compromise (closer to winter time)
+    - cron: '0 3 * * *'   # ~4 AM CET (3 AM UTC)
+    - cron: '0 15 * * *'  # ~4 PM CET (3 PM UTC)
   workflow_dispatch:  # Allow manual triggering
 
 permissions:
@@ -38,6 +42,22 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Log schedule configuration
+        run: |
+          echo "📅 Reading schedule configuration from config..."
+          python3 -c "
+          import json
+          with open('config.prod.json', 'r') as f:
+              config = json.load(f)
+              schedule = config.get('scraping', {}).get('schedule', {})
+              timezone = schedule.get('timezone', 'UTC')
+              times = schedule.get('times', [])
+              print(f'Configured timezone: {timezone}')
+              print(f'Configured times: {times}')
+              print(f'Current UTC time: $(date -u +\"%Y-%m-%d %H:%M:%S UTC\")')
+              print(f'Current local time in {timezone}: $(TZ={timezone} date +\"%Y-%m-%d %H:%M:%S %Z\")')
+          "
 
       - name: Run event scraper
         run: |

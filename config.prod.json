@@ -12,6 +12,10 @@
     "source": "real"
   },
   "scraping": {
+    "schedule": {
+      "timezone": "Europe/Berlin",
+      "times": ["04:00", "16:00"]
+    },
     "sources": [
       {
         "name": "Wochenmarkt Hof",
