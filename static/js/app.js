@@ -127,7 +127,11 @@ class EventsApp {
     
     initMap() {
         const center = this.config.map.default_center;
-        this.map = L.map('map').setView([center.lat, center.lon], this.config.map.default_zoom);
+        // Disable zoom controls - use keyboard shortcuts (+ / -) or pinch zoom on mobile
+        this.map = L.map('map', {
+            zoomControl: false,
+            attributionControl: false
+        }).setView([center.lat, center.lon], this.config.map.default_zoom);
         
         L.tileLayer(this.config.map.tile_provider, {
             attribution: this.config.map.attribution
@@ -518,13 +522,32 @@ class EventsApp {
         container.appendChild(card);
     }
     
+    getMarkerColorForCategory(category) {
+        // Return different colors for different event categories
+        const colorMap = {
+            'on-stage': '#FF6B6B',      // Red for performances
+            'pub-game': '#4ECDC4',      // Cyan for pub games
+            'festival': '#FFD93D',      // Yellow for festivals
+            'workshop': '#95E1D3',      // Light green for workshops
+            'market': '#F38181',        // Pink for markets
+            'sports': '#6C5CE7',        // Purple for sports
+            'community': '#FFA502',     // Orange for community
+            'other': '#4CAF50'          // Green for other/default
+        };
+        
+        return colorMap[category] || colorMap['other'];
+    }
+    
     addEventMarker(event) {
         if (!event.location) return;
+        
+        // Get color based on event category
+        const markerColor = this.getMarkerColorForCategory(event.category);
         
         const marker = L.marker([event.location.lat, event.location.lon], {
             icon: L.divIcon({
                 className: 'event-marker',
-                html: '<div style="background: #4CAF50; border: 3px solid white; border-radius: 50%; width: 20px; height: 20px;"></div>'
+                html: `<div style="background: ${markerColor}; border: 3px solid white; border-radius: 50%; width: 20px; height: 20px;"></div>`
             })
         }).addTo(this.map);
         
