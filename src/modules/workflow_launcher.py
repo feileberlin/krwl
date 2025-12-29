@@ -173,11 +173,7 @@ class WorkflowLauncher:
             return False
     
     def check_gh_auth(self) -> Tuple[bool, str]:
-        """Check if GitHub CLI is authenticated (public method)"""
-        return self._check_gh_auth()
-    
-    def _check_gh_auth(self) -> Tuple[bool, str]:
-        """Check if GitHub CLI is authenticated (internal implementation)"""
+        """Check if GitHub CLI is authenticated"""
         if not self.gh_available:
             return False, "GitHub CLI (gh) is not installed"
         
@@ -276,7 +272,6 @@ class WorkflowLauncher:
             return False, "GitHub CLI (gh) not found. Please install it from https://cli.github.com/"
         except Exception as e:
             # Log full exception but return sanitized message
-            import sys
             print(f"DEBUG: Unexpected error: {type(e).__name__}: {str(e)}", file=sys.stderr)
             return False, "Error triggering workflow: An unexpected error occurred"
     
@@ -318,7 +313,6 @@ class WorkflowLauncher:
                 return False, []
                 
         except json.JSONDecodeError as e:
-            import sys
             print(f"DEBUG: Failed to parse workflow runs JSON: {e}", file=sys.stderr)
             return False, []
         except subprocess.TimeoutExpired:
@@ -326,7 +320,6 @@ class WorkflowLauncher:
         except subprocess.CalledProcessError:
             return False, []
         except Exception as e:
-            import sys
             print(f"DEBUG: Unexpected error fetching workflow runs: {type(e).__name__}", file=sys.stderr)
             return False, []
 
