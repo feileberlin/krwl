@@ -7,6 +7,9 @@ on:
     # - 4 AM CET/CEST = 3 AM UTC (winter) or 2 AM UTC (summer)
     # - 4 PM CET/CEST = 3 PM UTC (winter) or 2 PM UTC (summer)
     # Using 3 AM and 3 PM UTC as a compromise (closer to winter time)
+    #
+    # IMPORTANT: When changing timezone or times in config.json, update these cron
+    # expressions accordingly. See README for timezone conversion guidance.
     - cron: '0 3 * * *'   # ~4 AM CET (3 AM UTC)
     - cron: '0 15 * * *'  # ~4 PM CET (3 PM UTC)
   workflow_dispatch:  # Allow manual triggering

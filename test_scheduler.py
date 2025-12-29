@@ -3,6 +3,7 @@
 Tests for the scheduler module
 """
 
+import sys
 import unittest
 import json
 import tempfile
@@ -124,7 +125,7 @@ if __name__ == '__main__':
     
     if result.wasSuccessful():
         print("\n✓ All scheduler module tests passed!")
-        exit(0)
+        sys.exit(0)
     else:
         print("\n✗ Some scheduler module tests failed!")
-        exit(1)
+        sys.exit(1)

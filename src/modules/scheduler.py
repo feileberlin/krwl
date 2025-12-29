@@ -47,9 +47,12 @@ class ScheduleConfig:
         times = self.get_times()
         current_utc = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
         
+        # Ensure times are strings for safe joining
+        times_str = [str(t) for t in times]
+        
         print("📅 Schedule Configuration:")
         print(f"  Timezone: {tz}")
-        print(f"  Scheduled times: {', '.join(times)}")
+        print(f"  Scheduled times: {', '.join(times_str)}")
         print(f"  Current UTC time: {current_utc}")
         
         return {
