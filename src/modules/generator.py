@@ -742,9 +742,18 @@ class EventsApp {
         this.init();
     }
     
+    // Debug logging helper
+    log(message, ...args) {
+        if (this.config && this.config.debug) {
+            console.log('[KRWL Debug]', message, ...args);
+        }
+    }
+    
     async init() {
         // Load configuration
         await this.loadConfig();
+        
+        this.log('App initialized', 'Config:', this.config);
         
         // Display environment watermark if configured
         this.displayEnvironmentWatermark();
@@ -908,9 +917,41 @@ class EventsApp {
     
     async loadEvents() {
         try {
-            const response = await fetch('events.json');
-            const data = await response.json();
-            this.events = data.events || [];
+            this.log('Loading events...', 'Data source:', this.config.data?.source);
+            
+            // Determine which data source(s) to load
+            const dataSource = this.config.data?.source || 'real';
+            const dataSources = this.config.data?.sources || {};
+            
+            let allEvents = [];
+            
+            if (dataSource === 'both' && dataSources.both?.urls) {
+                // Load from multiple sources and combine
+                this.log('Loading from multiple sources:', dataSources.both.urls);
+                for (const url of dataSources.both.urls) {
+                    try {
+                        const response = await fetch(url);
+                        const data = await response.json();
+                        const events = data.events || [];
+                        allEvents = allEvents.concat(events);
+                        this.log(`Loaded ${events.length} events from ${url}`);
+                    } catch (err) {
+                        console.warn(`Failed to load events from ${url}:`, err);
+                    }
+                }
+            } else {
+                // Load from single source
+                const sourceConfig = dataSources[dataSource];
+                const url = sourceConfig?.url || 'events.json';
+                this.log('Loading from single source:', url);
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                allEvents = data.events || [];
+                this.log(`Loaded ${allEvents.length} events from ${url}`);
+            }
+            
+            this.events = allEvents;
             
             // Extract unique categories from events
             this.populateCategories();

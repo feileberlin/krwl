@@ -26,7 +26,7 @@ KRWL HOF is a **mobile-first Progressive Web App (PWA)** for discovering communi
 ### Frontend (JavaScript)
 - **Framework**: None (vanilla JS)
 - **Maps**: Leaflet.js
-- **PWA**: Service worker, manifest.json
+- **PWA**: Manifest.json for installability (service worker planned for future)
 - **i18n**: Custom implementation (`static/js/i18n.js`)
 - **Files**: 
   - `static/index.html` - Main app
@@ -311,11 +311,11 @@ See `.github/DEPLOYMENT.md` and `.github/PROMOTE_WORKFLOW.md` for details.
 
 ## Questions or Issues?
 
-- Check `TESTING.md` for comprehensive testing guide
+- Check `docs/TESTING.md` for comprehensive testing guide
 - Check `.github/DEPLOYMENT.md` for deployment details
-- Check `.github/FEATURE_REGISTRY.md` for feature registry documentation
+- Check `docs/FEATURE_REGISTRY.md` for feature registry documentation
 - Check `docs/SCRAPING.md` for event scraping guide
-- Check `static/LOCALIZATION.md` for i18n details
+- Check `docs/LOCALIZATION.md` for i18n details
 
 ## Remember
 

@@ -593,7 +593,7 @@
             "category": "infrastructure",
             "implemented": true,
             "files": [
-                ".github/DEV_ENVIRONMENT.md"
+                "docs/DEV_ENVIRONMENT.md"
             ],
             "test_method": "check_files_exist"
         },
