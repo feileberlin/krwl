@@ -223,6 +223,17 @@ class EventsApp {
         try {
             this.log('Loading events...', 'Data source:', this.config.data?.source);
             
+            // Check for inline events data first
+            if (window.__INLINE_EVENTS_DATA__) {
+                this.log('Using inline events data');
+                const data = window.__INLINE_EVENTS_DATA__;
+                this.events = data.events || [];
+                this.log(`Loaded ${this.events.length} events from inline data`);
+                this.populateCategories();
+                return;
+            }
+            
+            // Fallback to fetching events if no inline data
             // Determine which data source(s) to load
             const dataSource = this.config.data?.source || 'real';
             const dataSources = this.config.data?.sources || {};
