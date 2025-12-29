@@ -1,30 +1,44 @@
 {
+  // Display name for the development container
   "name": "KRWL HOF Development Container",
+  
+  // Base Docker image - uses Microsoft's official Python 3.11 devcontainer image
+  // This provides a pre-configured Python development environment
   "image": "mcr.microsoft.com/devcontainers/python:3.11",
   
+  // Additional features to install in the container
   "features": {
+    // Installs Git for version control
     "ghcr.io/devcontainers/features/git:1": {},
+    // Installs GitHub CLI (gh) for GitHub operations from terminal
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
   
+  // VS Code specific customizations
   "customizations": {
     "vscode": {
+      // Extensions that will be automatically installed in the container
       "extensions": [
-        "github.copilot",
-        "github.copilot-chat",
-        "ms-python.python",
-        "ms-python.vscode-pylance",
-        "ms-python.black-formatter",
-        "dbaeumer.vscode-eslint",
-        "redhat.vscode-yaml",
-        "mhutchie.git-graph",
-        "eamodio.gitlens",
-        "yzhang.markdown-all-in-one"
+        "github.copilot",                    // AI-powered code completion
+        "github.copilot-chat",               // AI chat assistant
+        "ms-python.python",                  // Core Python language support
+        "ms-python.vscode-pylance",          // Fast Python language server
+        "ms-python.black-formatter",         // Python code formatter (Black)
+        "dbaeumer.vscode-eslint",            // JavaScript/TypeScript linting
+        "redhat.vscode-yaml",                // YAML language support
+        "mhutchie.git-graph",                // Visual Git repository browser
+        "eamodio. gitlens",                   // Enhanced Git capabilities
+        "yzhang.markdown-all-in-one"         // Markdown editing tools
       ],
+      // VS Code settings specific to this container
       "settings": {
+        // Path to Python interpreter in the container
         "python.defaultInterpreterPath": "/usr/local/bin/python",
+        // Enable Python linting
         "python.linting.enabled": true,
+        // Use flake8 as the linting tool
         "python.linting.flake8Enabled": true,
+        // Enable GitHub Copilot for all file types
         "github.copilot.enable": {
           "*": true
         }
@@ -32,19 +46,27 @@
     }
   },
   
-  "postCreateCommand": "pip install -r requirements.txt && ./download-libs.sh",
+  // Commands to run after the container is created
+  // Installs Python dependencies and downloads required libraries
+  "postCreateCommand":  "pip install -r requirements.txt && ./download-libs.sh",
   
-  "forwardPorts": [8000],
-  "portsAttributes": {
+  // Ports to forward from the container to the host machine
+  "forwardPorts":  [8000],
+  
+  // Configure how forwarded ports behave
+  "portsAttributes":  {
     "8000": {
-      "label": "Local Dev Server",
-      "onAutoForward": "notify"
+      "label": "Local Dev Server",           // Friendly name for port 8000
+      "onAutoForward": "notify"              // Show notification when port is forwarded
     }
   },
   
+  // User to run as inside the container (non-root for security)
   "remoteUser": "vscode",
   
-  "mounts": [
+  // Mount local directories into the container
+  "mounts":  [
+    // Syncs local . vscode folder with container for consistent settings
     "source=${localWorkspaceFolder}/.vscode,target=/workspaces/${localWorkspaceFolderBasename}/.vscode,type=bind,consistency=cached"
   ]
 }
