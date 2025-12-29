@@ -1,4 +1,4 @@
-name: Verify Features
+name: ✅ Verify Feature Registry
 
 on:
   push:
@@ -10,6 +10,15 @@ on:
       - main
       - preview
   workflow_dispatch:
+    inputs:
+      verbose:
+        description: '📝 Verbose output (show all details)'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 permissions:
   contents: read

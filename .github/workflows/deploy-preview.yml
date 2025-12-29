@@ -1,10 +1,16 @@
-name: Deploy Preview to GitHub Pages
+name: 🔍 Deploy Preview Environment
 
 on:
   push:
     branches:
       - preview
   workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for manual preview deployment'
+        required: false
+        default: 'Manual preview deployment triggered'
+        type: string
 
 permissions:
   contents: write

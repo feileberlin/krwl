@@ -513,6 +513,30 @@
         }
       ],
       "test_method": "check_code_patterns"
+    },
+    {
+      "id": "workflow-launcher",
+      "name": "GitHub Actions Workflow Launcher",
+      "description": "Launch and manage GitHub Actions workflows from TUI and CLI using GitHub CLI",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/modules/workflow_launcher.py",
+        "src/main.py"
+      ],
+      "code_patterns": [
+        {
+          "file": "src/modules/workflow_launcher.py",
+          "pattern": "class WorkflowLauncher|def trigger_workflow|gh workflow run",
+          "description": "Workflow launcher class and GitHub CLI integration"
+        },
+        {
+          "file": "src/main.py",
+          "pattern": "def launch_workflows|def cli_workflow|workflow list",
+          "description": "TUI and CLI integration for workflow launching"
+        }
+      ],
+      "test_method": "check_code_patterns"
     }
   ]
 }

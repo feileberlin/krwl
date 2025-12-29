@@ -1,4 +1,4 @@
-name: Scrape Events (Twice Daily)
+name: 🔄 Scrape Events & Deploy
 
 on:
   schedule:
@@ -12,7 +12,16 @@ on:
     # expressions accordingly. See README for timezone conversion guidance.
     - cron: '0 3 * * *'   # ~4 AM CET (3 AM UTC)
     - cron: '0 15 * * *'  # ~4 PM CET (3 PM UTC)
-  workflow_dispatch:  # Allow manual triggering
+  workflow_dispatch:
+    inputs:
+      force_deploy:
+        description: '🚀 Force deployment even if no new events found'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
 
 permissions:
   contents: write

@@ -1,4 +1,4 @@
-name: Lint Code
+name: 🔍 Lint Code Quality
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
     inputs:
       fail_on_python_errors:
-        description: 'Block PR on Python critical errors'
+        description: '🐍 Block on Python critical errors'
         required: false
         default: 'true'
         type: choice
@@ -20,7 +20,7 @@ on:
           - 'true'
           - 'false'
       fail_on_js_errors:
-        description: 'Block PR on JavaScript errors'
+        description: '📜 Block on JavaScript errors'
         required: false
         default: 'false'
         type: choice
@@ -28,7 +28,7 @@ on:
           - 'true'
           - 'false'
       fail_on_json_errors:
-        description: 'Block PR on JSON validation errors'
+        description: '📋 Block on JSON validation errors'
         required: false
         default: 'true'
         type: choice
@@ -36,7 +36,7 @@ on:
           - 'true'
           - 'false'
       fail_on_style_issues:
-        description: 'Block PR on style/warning issues'
+        description: '✨ Block on style/warning issues'
         required: false
         default: 'false'
         type: choice

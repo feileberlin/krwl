@@ -1,13 +1,16 @@
-name: Promote Preview to Production
+name: 📦 Promote Preview to Production
 
 on:
   workflow_dispatch:
     inputs:
       auto_merge:
-        description: 'Auto-merge the PR (true/false)'
+        description: '✅ Auto-merge the PR (only works without branch protection)'
         required: false
         default: 'false'
-        type: string
+        type: choice
+        options:
+          - 'false'
+          - 'true'
 
 permissions:
   contents: write

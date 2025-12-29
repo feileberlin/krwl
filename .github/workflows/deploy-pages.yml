@@ -1,10 +1,16 @@
-name: Deploy to GitHub Pages (Actions)
+name: 🚀 Deploy to Production
 
 on:
   push:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for manual deployment'
+        required: false
+        default: 'Manual deployment triggered'
+        type: string
 
 permissions:
   contents: write

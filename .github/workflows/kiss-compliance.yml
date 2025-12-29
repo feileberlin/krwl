@@ -1,4 +1,4 @@
-name: KISS Compliance Check
+name: 💡 Check KISS Compliance
 
 on:
   push:
@@ -10,6 +10,15 @@ on:
       - preview
       - main
   workflow_dispatch:
+    inputs:
+      fail_on_violations:
+        description: '🚫 Block on KISS violations (normally warnings only)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
 
 # KISS Policy: We encourage simplicity but don't block merges
 # The goal is to guide developers towards better code, not prevent progress

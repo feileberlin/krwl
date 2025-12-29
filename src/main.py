@@ -17,6 +17,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from modules.scraper import EventScraper
 from modules.editor import EventEditor
 from modules.generator import StaticSiteGenerator
+from modules.workflow_launcher import WorkflowLauncher
 from modules.utils import load_config, load_events, save_events, load_pending_events, save_pending_events
 
 
@@ -67,9 +68,10 @@ class EventManagerTUI:
         print("2. Review Pending Events")
         print("3. View Published Events")
         print("4. Generate Static Site")
-        print("5. Settings")
-        print("6. View Documentation")
-        print("7. Exit")
+        print("5. Launch GitHub Workflows")
+        print("6. Settings")
+        print("7. View Documentation")
+        print("8. Exit")
         print("-" * 60)
         self.print_footer("main")
         
@@ -132,6 +134,138 @@ class EventManagerTUI:
         self.print_footer("generate")
         input("\nPress Enter to continue...")
         
+    def launch_workflows(self):
+        """Launch GitHub Actions workflows"""
+        launcher = WorkflowLauncher(self.base_path)
+        
+        while True:
+            self.clear_screen()
+            self.print_header()
+            print("GitHub Actions Workflows:")
+            print("-" * 60)
+            
+            # Check if GitHub CLI is available
+            if not launcher.gh_available:
+                print("\n⚠️  GitHub CLI (gh) is not installed or not in PATH.")
+                print("\nTo use this feature, install GitHub CLI:")
+                print("  https://cli.github.com/")
+                print("\nThen authenticate with: gh auth login")
+                input("\nPress Enter to return to main menu...")
+                return
+            
+            # Check authentication
+            auth_ok, auth_msg = launcher.check_gh_auth()
+            if not auth_ok:
+                print(f"\n⚠️  {auth_msg}")
+                print("\nTo authenticate, run: gh auth login")
+                input("\nPress Enter to return to main menu...")
+                return
+            
+            # List workflows
+            workflows = launcher.list_workflows()
+            
+            print("\nAvailable Workflows:\n")
+            for i, workflow in enumerate(workflows, 1):
+                print(f"{i}. {workflow['name']}")
+                print(f"   {workflow['description']}")
+                if workflow['has_inputs']:
+                    print(f"   ⚙️  Configurable inputs available")
+                print()
+            
+            print(f"{len(workflows) + 1}. Back to Main Menu")
+            print("-" * 60)
+            print("\n💡 Tip: Workflows will be triggered on the 'preview' branch by default")
+            
+            choice = input("\nSelect workflow to launch (1-{}): ".format(len(workflows) + 1)).strip()
+            
+            try:
+                choice_num = int(choice)
+                if choice_num == len(workflows) + 1:
+                    return
+                elif 1 <= choice_num <= len(workflows):
+                    selected_workflow = workflows[choice_num - 1]
+                    self._launch_specific_workflow(launcher, selected_workflow)
+                else:
+                    print("\nInvalid choice.")
+                    input("Press Enter to continue...")
+            except ValueError:
+                print("\nInvalid input. Please enter a number.")
+                input("Press Enter to continue...")
+    
+    def _launch_specific_workflow(self, launcher, workflow_info):
+        """Launch a specific workflow with input configuration"""
+        self.clear_screen()
+        self.print_header()
+        
+        workflow_id = workflow_info['id']
+        workflow_data = launcher.get_workflow_info(workflow_id)
+        
+        print(f"Launch Workflow: {workflow_info['name']}")
+        print("-" * 60)
+        print(f"\nDescription: {workflow_info['description']}")
+        print(f"Workflow file: .github/workflows/{workflow_info['file']}")
+        
+        # Get branch
+        print("\nSelect branch:")
+        print("1. preview (default)")
+        print("2. main")
+        print("3. Custom branch")
+        
+        branch_choice = input("\nBranch (1-3, default: 1): ").strip() or "1"
+        
+        if branch_choice == "1":
+            branch = "preview"
+        elif branch_choice == "2":
+            branch = "main"
+        elif branch_choice == "3":
+            branch = input("Enter branch name: ").strip()
+        else:
+            branch = "preview"
+        
+        # Collect inputs if workflow has any
+        inputs = {}
+        if workflow_data['inputs']:
+            print("\n" + "=" * 60)
+            print("Configure Workflow Inputs:")
+            print("=" * 60)
+            
+            for input_key, input_config in workflow_data['inputs'].items():
+                print(f"\n{input_config['description']}")
+                
+                if input_config.get('options'):
+                    print(f"Options: {', '.join(input_config['options'])}")
+                
+                default = input_config.get('default', '')
+                user_input = input(f"Value (default: {default}): ").strip()
+                
+                inputs[input_key] = user_input if user_input else default
+        
+        # Confirm launch
+        print("\n" + "=" * 60)
+        print("Confirm Launch:")
+        print("=" * 60)
+        print(f"Workflow: {workflow_info['name']}")
+        print(f"Branch: {branch}")
+        if inputs:
+            print(f"Inputs:")
+            for key, value in inputs.items():
+                print(f"  - {key}: {value}")
+        
+        confirm = input("\nLaunch workflow? (yes/no): ").strip().lower()
+        
+        if confirm in ['yes', 'y']:
+            print("\nTriggering workflow...")
+            success, message = launcher.trigger_workflow(workflow_id, branch, inputs)
+            print(f"\n{message}")
+            
+            if success:
+                print("\nℹ️  You can monitor the workflow run at:")
+                print(f"   https://github.com/feileberlin/krwl-hof/actions/workflows/{workflow_info['file']}")
+        else:
+            print("\nWorkflow launch cancelled.")
+        
+        input("\nPress Enter to continue...")
+    
     def settings(self):
         """Show settings and dev mode options"""
         self.clear_screen()
@@ -411,7 +545,7 @@ class EventManagerTUI:
         """Main application loop"""
         while self.running:
             self.show_menu()
-            choice = input("\nEnter your choice (1-7): ").strip()
+            choice = input("\nEnter your choice (1-8): ").strip()
             
             if choice == '1':
                 self.scrape_events()
@@ -422,10 +556,12 @@ class EventManagerTUI:
             elif choice == '4':
                 self.generate_site()
             elif choice == '5':
-                self.settings()
+                self.launch_workflows()
             elif choice == '6':
-                self.view_documentation()
+                self.settings()
             elif choice == '7':
+                self.view_documentation()
+            elif choice == '8':
                 self.running = False
                 print("\nGoodbye!")
             else:
@@ -458,6 +594,10 @@ COMMANDS:
     load-examples             Load example data for development
     clear-data                Clear all event data
     
+    workflow list             List available GitHub Actions workflows
+    workflow run WORKFLOW_ID  Trigger a workflow (requires gh CLI)
+    workflow status WORKFLOW  Show recent runs of a workflow
+    
 OPTIONS:
     -h, --help               Show this help message
     -v, --version            Show version information
@@ -475,6 +615,15 @@ EXAMPLES:
     
     # Generate static site
     python3 main.py generate
+    
+    # List available workflows
+    python3 main.py workflow list
+    
+    # Trigger a workflow
+    python3 main.py workflow run scrape-events --branch preview
+    
+    # Promote preview with auto-merge
+    python3 main.py workflow run promote-preview --input auto_merge=true
     
     # Load example data for testing
     python3 main.py load-examples
@@ -693,6 +842,118 @@ def cli_archive_old_events(base_path):
     return 0
 
 
+def cli_workflow(base_path, subcommand, args):
+    """CLI: Manage GitHub Actions workflows"""
+    launcher = WorkflowLauncher(base_path)
+    
+    if subcommand == 'list':
+        # List available workflows
+        workflows = launcher.list_workflows()
+        
+        print("\nAvailable GitHub Actions Workflows:")
+        print("-" * 80)
+        
+        for i, workflow in enumerate(workflows, 1):
+            print(f"\n{i}. {workflow['name']} (ID: {workflow['id']})")
+            print(f"   {workflow['description']}")
+            print(f"   File: .github/workflows/{workflow['file']}")
+            if workflow['has_inputs']:
+                print(f"   ⚙️  Configurable inputs available")
+        
+        print("-" * 80)
+        print("\nUsage: python3 main.py workflow run WORKFLOW_ID [--branch BRANCH] [--input key=value]")
+        return 0
+    
+    elif subcommand == 'run':
+        # Trigger a workflow
+        if not args:
+            print("Error: Missing workflow ID")
+            print("Usage: python3 main.py workflow run WORKFLOW_ID [--branch BRANCH] [--input key=value]")
+            print("\nRun 'python3 main.py workflow list' to see available workflows")
+            return 1
+        
+        workflow_id = args[0]
+        branch = 'preview'
+        inputs = {}
+        
+        # Parse additional arguments
+        i = 1
+        while i < len(args):
+            if args[i] == '--branch' and i + 1 < len(args):
+                branch = args[i + 1]
+                i += 2
+            elif args[i] == '--input' and i + 1 < len(args):
+                inp = args[i + 1]
+                if '=' in inp:
+                    key, value = inp.split('=', 1)
+                    inputs[key] = value
+                i += 2
+            else:
+                i += 1
+        
+        print(f"Triggering workflow '{workflow_id}' on branch '{branch}'...")
+        if inputs:
+            print(f"Inputs: {inputs}")
+        
+        success, message = launcher.trigger_workflow(workflow_id, branch, inputs)
+        print(message)
+        
+        if success:
+            workflow_info = launcher.get_workflow_info(workflow_id)
+            if workflow_info:
+                print(f"\n💡 Monitor workflow at:")
+                print(f"   https://github.com/feileberlin/krwl-hof/actions/workflows/{workflow_info['file']}")
+        
+        return 0 if success else 1
+    
+    elif subcommand == 'status':
+        # Show workflow status
+        if not args:
+            print("Error: Missing workflow ID")
+            print("Usage: python3 main.py workflow status WORKFLOW_ID")
+            return 1
+        
+        workflow_id = args[0]
+        limit = 5
+        
+        # Check for --limit argument
+        if '--limit' in args:
+            idx = args.index('--limit')
+            if idx + 1 < len(args):
+                try:
+                    limit = int(args[idx + 1])
+                except ValueError:
+                    pass
+        
+        print(f"Recent runs of workflow '{workflow_id}':")
+        success, runs = launcher.get_workflow_runs(workflow_id, limit)
+        
+        if success and runs:
+            print("-" * 80)
+            for run in runs:
+                status = run.get('status', 'unknown')
+                conclusion = run.get('conclusion', '-')
+                branch = run.get('headBranch', '-')
+                created = run.get('createdAt', '-')
+                run_id = run.get('databaseId', '-')
+                
+                status_icon = '✓' if conclusion == 'success' else '✗' if conclusion == 'failure' else '⋯'
+                print(f"{status_icon} Run #{run_id}: {status} / {conclusion}")
+                print(f"   Branch: {branch} | Created: {created}")
+            print("-" * 80)
+        elif success:
+            print("No recent runs found.")
+        else:
+            print("Failed to fetch workflow runs.")
+        
+        return 0
+    
+    else:
+        print(f"Error: Unknown workflow subcommand '{subcommand}'")
+        print("Available subcommands: list, run, status")
+        return 1
+
+
 def main():
     """Main entry point"""
     parser = argparse.ArgumentParser(
@@ -763,6 +1024,18 @@ def main():
         
         elif args.command == 'clear-data':
             return cli_clear_data(base_path)
+        
+        elif args.command == 'workflow':
+            # Workflow management commands
+            if not args.args:
+                print("Error: Missing workflow subcommand")
+                print("Usage: python3 main.py workflow [list|run|status] [OPTIONS]")
+                print("\nAvailable subcommands:")
+                print("  list          List available workflows")
+                print("  run WORKFLOW  Trigger a workflow")
+                print("  status WORKFLOW Show workflow run status")
+                return 1
+            return cli_workflow(base_path, args.args[0], args.args[1:])
         
         elif args.command == 'review':
             # Launch TUI in review mode

@@ -1,4 +1,4 @@
-name: Documentation Builder
+name: 📚 Build Documentation
 
 on:
   push:
@@ -7,6 +7,16 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      force_rebuild:
+        description: '🔄 Force rebuild even if no changes'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
 
 jobs:
   validate-and-build-docs:
