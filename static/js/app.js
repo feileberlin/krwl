@@ -10,6 +10,7 @@ class EventsApp {
         this.events = [];
         this.markers = [];
         this.config = null;
+        this.currentEdgeDetail = null;
         this.filters = {
             maxDistance: 5,
             timeFilter: 'sunrise',
@@ -586,7 +587,23 @@ class EventsApp {
             icon: customIcon
         }).addTo(this.map);
         
-        marker.bindPopup(`<strong>${event.title}</strong><br>${event.location.name}`);
+        // Show edge detail on hover
+        marker.on('mouseover', () => {
+            this.showEventDetailAtEdge(event, marker);
+        });
+        
+        // Hide edge detail when mouse leaves (with slight delay)
+        marker.on('mouseout', () => {
+            setTimeout(() => {
+                // Only hide if not hovering over the detail box
+                const edgeDetail = document.getElementById('current-edge-detail');
+                if (edgeDetail && !edgeDetail.matches(':hover')) {
+                    this.hideEventDetailAtEdge();
+                }
+            }, 200);
+        });
+        
+        // Click shows full modal
         marker.on('click', () => this.showEventDetail(event));
         
         this.markers.push(marker);
@@ -619,6 +636,216 @@ class EventsApp {
         detail.classList.remove('hidden');
     }
     
+    // Edge-positioned event details with SVG arrows
+    showEventDetailAtEdge(event, markerElement) {
+        // Remove any existing edge details
+        this.hideEventDetailAtEdge();
+        
+        if (!this.map || !markerElement) return;
+        
+        // Get marker position on screen
+        const markerLatLng = markerElement.getLatLng();
+        const markerPoint = this.map.latLngToContainerPoint(markerLatLng);
+        
+        // Create detail box
+        const detailBox = document.createElement('div');
+        detailBox.className = 'event-detail-edge';
+        detailBox.id = 'current-edge-detail';
+        
+        // Format event data
+        const eventDate = new Date(event.start_time);
+        const timeStr = eventDate.toLocaleString('en-US', { 
+            month: 'short', 
+            day: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit' 
+        });
+        
+        const distanceStr = event.distance !== undefined 
+            ? `${event.distance.toFixed(1)} km away` 
+            : '';
+        
+        detailBox.innerHTML = `
+            <h3>${event.title}</h3>
+            <p class="detail-time">🕐 ${timeStr}</p>
+            <p>📍 ${event.location.name}</p>
+            ${distanceStr ? `<p class="detail-distance">📏 ${distanceStr}</p>` : ''}
+        `;
+        
+        // Add to overlay
+        const mapOverlay = document.getElementById('map-overlay');
+        mapOverlay.appendChild(detailBox);
+        
+        // Determine best edge position
+        const position = this.calculateEdgePosition(markerPoint, detailBox);
+        
+        // Position the detail box
+        detailBox.style.top = position.top + 'px';
+        detailBox.style.left = position.left + 'px';
+        
+        // Draw SVG arrow
+        this.drawArrowToDetailBox(markerPoint, position, detailBox);
+        
+        // Store reference
+        this.currentEdgeDetail = {
+            box: detailBox,
+            event: event,
+            marker: markerElement
+        };
+        
+        // Click to show full detail modal
+        detailBox.addEventListener('click', () => this.showEventDetail(event));
+        
+        // Keep detail visible when hovering over it
+        detailBox.addEventListener('mouseenter', () => {
+            // Cancel any pending hide timeout
+            if (this.hideEdgeDetailTimeout) {
+                clearTimeout(this.hideEdgeDetailTimeout);
+                this.hideEdgeDetailTimeout = null;
+            }
+        });
+        
+        // Hide when mouse leaves the detail box
+        detailBox.addEventListener('mouseleave', () => {
+            this.hideEdgeDetailTimeout = setTimeout(() => {
+                this.hideEventDetailAtEdge();
+            }, 300);
+        });
+    }
+    
+    calculateEdgePosition(markerPoint, detailBox) {
+        const mapContainer = document.getElementById('map');
+        const mapRect = mapContainer.getBoundingClientRect();
+        const boxRect = detailBox.getBoundingClientRect();
+        
+        const margin = 20;
+        const boxWidth = 280;
+        const boxHeight = boxRect.height || 120;
+        
+        let top, left, edge;
+        
+        // Determine which edge is closest
+        const distToLeft = markerPoint.x;
+        const distToRight = mapRect.width - markerPoint.x;
+        const distToTop = markerPoint.y;
+        const distToBottom = mapRect.height - markerPoint.y;
+        
+        const minDist = Math.min(distToLeft, distToRight, distToTop, distToBottom);
+        
+        if (minDist === distToRight) {
+            // Position on right edge
+            left = mapRect.width - boxWidth - margin;
+            top = Math.max(margin, Math.min(markerPoint.y - boxHeight / 2, mapRect.height - boxHeight - margin));
+            edge = 'right';
+        } else if (minDist === distToLeft) {
+            // Position on left edge
+            left = margin;
+            top = Math.max(margin, Math.min(markerPoint.y - boxHeight / 2, mapRect.height - boxHeight - margin));
+            edge = 'left';
+        } else if (minDist === distToBottom) {
+            // Position on bottom edge
+            top = mapRect.height - boxHeight - margin;
+            left = Math.max(margin, Math.min(markerPoint.x - boxWidth / 2, mapRect.width - boxWidth - margin));
+            edge = 'bottom';
+        } else {
+            // Position on top edge
+            top = margin + 80; // Account for filter sentence at top
+            left = Math.max(margin, Math.min(markerPoint.x - boxWidth / 2, mapRect.width - boxWidth - margin));
+            edge = 'top';
+        }
+        
+        return { top, left, edge, markerPoint };
+    }
+    
+    drawArrowToDetailBox(markerPoint, position, detailBox) {
+        const arrowContainer = document.getElementById('event-arrows-container');
+        if (!arrowContainer) return;
+        
+        // Clear existing arrows
+        arrowContainer.innerHTML = '';
+        
+        // Create SVG
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.style.width = '100%';
+        svg.style.height = '100%';
+        svg.style.position = 'absolute';
+        svg.style.top = '0';
+        svg.style.left = '0';
+        svg.style.pointerEvents = 'none';
+        
+        // Calculate detail box center
+        const boxRect = detailBox.getBoundingClientRect();
+        const boxCenterX = boxRect.left + boxRect.width / 2;
+        const boxCenterY = boxRect.top + boxRect.height / 2;
+        
+        // Calculate connection points for smoother arrows
+        let boxX, boxY;
+        const dx = boxCenterX - markerPoint.x;
+        const dy = boxCenterY - markerPoint.y;
+        const angle = Math.atan2(dy, dx);
+        
+        // Find edge point on box
+        if (Math.abs(dx) > Math.abs(dy)) {
+            // Connect to left or right edge
+            boxX = dx > 0 ? boxRect.left : boxRect.right;
+            boxY = boxCenterY;
+        } else {
+            // Connect to top or bottom edge
+            boxX = boxCenterX;
+            boxY = dy > 0 ? boxRect.top : boxRect.bottom;
+        }
+        
+        // Create curved path
+        const midX = (markerPoint.x + boxX) / 2;
+        const midY = (markerPoint.y + boxY) / 2;
+        
+        // Create path with quadratic curve
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const pathData = `M ${markerPoint.x} ${markerPoint.y} Q ${midX} ${midY} ${boxX} ${boxY}`;
+        path.setAttribute('d', pathData);
+        path.setAttribute('stroke', '#FF69B4');
+        path.setAttribute('stroke-width', '2');
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke-dasharray', '5,5');
+        path.style.filter = 'drop-shadow(0 0 3px rgba(255, 105, 180, 0.5))';
+        
+        svg.appendChild(path);
+        
+        // Add arrowhead at box end
+        const arrowhead = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        const arrowSize = 8;
+        const arrowAngle = Math.atan2(boxY - midY, boxX - midX);
+        
+        const p1x = boxX + arrowSize * Math.cos(arrowAngle + Math.PI * 0.8);
+        const p1y = boxY + arrowSize * Math.sin(arrowAngle + Math.PI * 0.8);
+        const p2x = boxX;
+        const p2y = boxY;
+        const p3x = boxX + arrowSize * Math.cos(arrowAngle - Math.PI * 0.8);
+        const p3y = boxY + arrowSize * Math.sin(arrowAngle - Math.PI * 0.8);
+        
+        arrowhead.setAttribute('points', `${p1x},${p1y} ${p2x},${p2y} ${p3x},${p3y}`);
+        arrowhead.setAttribute('fill', '#FF69B4');
+        arrowhead.style.filter = 'drop-shadow(0 0 3px rgba(255, 105, 180, 0.5))';
+        
+        svg.appendChild(arrowhead);
+        arrowContainer.appendChild(svg);
+    }
+    
+    hideEventDetailAtEdge() {
+        if (this.currentEdgeDetail) {
+            if (this.currentEdgeDetail.box && this.currentEdgeDetail.box.parentElement) {
+                this.currentEdgeDetail.box.remove();
+            }
+            this.currentEdgeDetail = null;
+        }
+        
+        // Clear arrows
+        const arrowContainer = document.getElementById('event-arrows-container');
+        if (arrowContainer) {
+            arrowContainer.innerHTML = '';
+        }
+    }
+    
     setupEventListeners() {
         // Interactive filter sentence parts
         const categoryTextEl = document.getElementById('category-text');
@@ -626,97 +853,222 @@ class EventsApp {
         const distanceTextEl = document.getElementById('distance-text');
         const locationTextEl = document.getElementById('location-text');
         
-        const categoryDropdown = document.getElementById('category-dropdown');
-        const timeDropdown = document.getElementById('time-dropdown');
-        const distanceDropdown = document.getElementById('distance-dropdown');
-        const locationDropdown = document.getElementById('location-dropdown');
+        // Store references to active dropdowns
+        this.activeDropdown = null;
+        this.activeFilterEl = null;
         
         // Helper to hide all dropdowns
         const hideAllDropdowns = () => {
-            if (categoryDropdown) categoryDropdown.classList.add('hidden');
-            if (timeDropdown) timeDropdown.classList.add('hidden');
-            if (distanceDropdown) distanceDropdown.classList.add('hidden');
-            if (locationDropdown) locationDropdown.classList.add('hidden');
+            if (this.activeDropdown && this.activeDropdown.parentElement) {
+                this.activeDropdown.remove();
+                this.activeDropdown = null;
+            }
             
             if (categoryTextEl) categoryTextEl.classList.remove('active');
             if (timeTextEl) timeTextEl.classList.remove('active');
             if (distanceTextEl) distanceTextEl.classList.remove('active');
             if (locationTextEl) locationTextEl.classList.remove('active');
+            
+            this.activeFilterEl = null;
+        };
+        
+        // Helper to create and position dropdown
+        const createDropdown = (content, targetEl) => {
+            hideAllDropdowns();
+            
+            const dropdown = document.createElement('div');
+            dropdown.className = 'filter-dropdown';
+            dropdown.innerHTML = content;
+            
+            // Add to body for proper positioning
+            document.body.appendChild(dropdown);
+            
+            // Position below the target element
+            const rect = targetEl.getBoundingClientRect();
+            dropdown.style.position = 'fixed';
+            dropdown.style.top = (rect.bottom + 5) + 'px';
+            dropdown.style.left = rect.left + 'px';
+            
+            // Adjust if dropdown goes off screen
+            const dropdownRect = dropdown.getBoundingClientRect();
+            if (dropdownRect.right > window.innerWidth) {
+                dropdown.style.left = (window.innerWidth - dropdownRect.width - 10) + 'px';
+            }
+            if (dropdownRect.bottom > window.innerHeight) {
+                dropdown.style.top = (rect.top - dropdownRect.height - 5) + 'px';
+            }
+            
+            this.activeDropdown = dropdown;
+            this.activeFilterEl = targetEl;
+            targetEl.classList.add('active');
+            
+            return dropdown;
         };
         
         // Category filter click
-        if (categoryTextEl && categoryDropdown) {
+        if (categoryTextEl) {
             categoryTextEl.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const wasHidden = categoryDropdown.classList.contains('hidden');
-                hideAllDropdowns();
-                if (wasHidden) {
-                    // Sync dropdown with current filter state
-                    const categoryFilter = document.getElementById('category-filter');
-                    if (categoryFilter) categoryFilter.value = this.filters.category;
-                    categoryDropdown.classList.remove('hidden');
-                    categoryTextEl.classList.add('active');
+                
+                if (this.activeDropdown && this.activeFilterEl === categoryTextEl) {
+                    hideAllDropdowns();
+                    return;
                 }
+                
+                // Build category options from events
+                let optionsHTML = '<option value="all">All Categories</option>';
+                const categories = new Set();
+                this.events.forEach(event => {
+                    if (event.category) categories.add(event.category);
+                });
+                categories.forEach(cat => {
+                    const selected = cat === this.filters.category ? ' selected' : '';
+                    optionsHTML += `<option value="${cat}"${selected}>${cat}</option>`;
+                });
+                
+                const content = `<select id="category-filter">${optionsHTML}</select>`;
+                const dropdown = createDropdown(content, categoryTextEl);
+                
+                // Add event listener to select
+                const select = dropdown.querySelector('#category-filter');
+                select.value = this.filters.category;
+                select.addEventListener('change', (e) => {
+                    this.filters.category = e.target.value;
+                    this.displayEvents();
+                    hideAllDropdowns();
+                });
             });
         }
         
         // Time filter click
-        if (timeTextEl && timeDropdown) {
+        if (timeTextEl) {
             timeTextEl.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const wasHidden = timeDropdown.classList.contains('hidden');
-                hideAllDropdowns();
-                if (wasHidden) {
-                    // Sync dropdown with current filter state
-                    const timeFilter = document.getElementById('time-filter');
-                    if (timeFilter) timeFilter.value = this.filters.timeFilter;
-                    timeDropdown.classList.remove('hidden');
-                    timeTextEl.classList.add('active');
+                
+                if (this.activeDropdown && this.activeFilterEl === timeTextEl) {
+                    hideAllDropdowns();
+                    return;
                 }
+                
+                const content = `
+                    <select id="time-filter">
+                        <option value="sunrise">Next Sunrise (6 AM)</option>
+                        <option value="6h">Next 6 hours</option>
+                        <option value="12h">Next 12 hours</option>
+                        <option value="24h">Next 24 hours</option>
+                        <option value="48h">Next 48 hours</option>
+                        <option value="all">All upcoming events</option>
+                    </select>
+                `;
+                const dropdown = createDropdown(content, timeTextEl);
+                
+                const select = dropdown.querySelector('#time-filter');
+                select.value = this.filters.timeFilter;
+                select.addEventListener('change', (e) => {
+                    this.filters.timeFilter = e.target.value;
+                    this.displayEvents();
+                    hideAllDropdowns();
+                });
             });
         }
         
         // Distance filter click
-        if (distanceTextEl && distanceDropdown) {
+        if (distanceTextEl) {
             distanceTextEl.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const wasHidden = distanceDropdown.classList.contains('hidden');
-                hideAllDropdowns();
-                if (wasHidden) {
-                    // Sync dropdown with current filter state
-                    const distanceFilter = document.getElementById('distance-filter');
-                    const distanceValue = document.getElementById('distance-value');
-                    if (distanceFilter) distanceFilter.value = this.filters.maxDistance;
-                    if (distanceValue) distanceValue.textContent = `${this.filters.maxDistance} km`;
-                    distanceDropdown.classList.remove('hidden');
-                    distanceTextEl.classList.add('active');
+                
+                if (this.activeDropdown && this.activeFilterEl === distanceTextEl) {
+                    hideAllDropdowns();
+                    return;
                 }
+                
+                const content = `
+                    <input type="range" id="distance-filter" min="1" max="50" value="${this.filters.maxDistance}" step="0.5">
+                    <span id="distance-value">${this.filters.maxDistance} km</span>
+                `;
+                const dropdown = createDropdown(content, distanceTextEl);
+                
+                const slider = dropdown.querySelector('#distance-filter');
+                const valueDisplay = dropdown.querySelector('#distance-value');
+                slider.addEventListener('input', (e) => {
+                    const value = parseFloat(e.target.value);
+                    this.filters.maxDistance = value;
+                    valueDisplay.textContent = `${value} km`;
+                    this.displayEvents();
+                });
             });
         }
         
         // Location filter click
-        if (locationTextEl && locationDropdown) {
+        if (locationTextEl) {
             locationTextEl.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const wasHidden = locationDropdown.classList.contains('hidden');
-                hideAllDropdowns();
-                if (wasHidden) {
-                    // Sync dropdown with current filter state
-                    const useCustomLocation = document.getElementById('use-custom-location');
-                    const customLocationInputs = document.getElementById('custom-location-inputs');
-                    if (useCustomLocation) useCustomLocation.checked = this.filters.useCustomLocation;
-                    if (this.filters.useCustomLocation && this.filters.customLat && this.filters.customLon) {
-                        if (customLocationInputs) customLocationInputs.classList.remove('hidden');
-                        const customLat = document.getElementById('custom-lat');
-                        const customLon = document.getElementById('custom-lon');
-                        if (customLat) customLat.value = this.filters.customLat;
-                        if (customLon) customLon.value = this.filters.customLon;
-                    } else {
-                        if (customLocationInputs) customLocationInputs.classList.add('hidden');
-                    }
-                    locationDropdown.classList.remove('hidden');
-                    locationTextEl.classList.add('active');
+                
+                if (this.activeDropdown && this.activeFilterEl === locationTextEl) {
+                    hideAllDropdowns();
+                    return;
                 }
+                
+                const latValue = this.filters.customLat || (this.userLocation ? this.userLocation.lat.toFixed(4) : '');
+                const lonValue = this.filters.customLon || (this.userLocation ? this.userLocation.lon.toFixed(4) : '');
+                const checked = this.filters.useCustomLocation ? ' checked' : '';
+                const inputsHidden = !this.filters.useCustomLocation ? ' hidden' : '';
+                
+                const content = `
+                    <label>
+                        <input type="checkbox" id="use-custom-location"${checked}>
+                        Use custom location
+                    </label>
+                    <div id="custom-location-inputs" class="${inputsHidden}">
+                        <input type="number" id="custom-lat" placeholder="Latitude" step="0.0001" value="${latValue}">
+                        <input type="number" id="custom-lon" placeholder="Longitude" step="0.0001" value="${lonValue}">
+                        <button id="apply-custom-location">Apply</button>
+                    </div>
+                `;
+                const dropdown = createDropdown(content, locationTextEl);
+                
+                const checkbox = dropdown.querySelector('#use-custom-location');
+                const inputs = dropdown.querySelector('#custom-location-inputs');
+                const applyBtn = dropdown.querySelector('#apply-custom-location');
+                
+                checkbox.addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        inputs.classList.remove('hidden');
+                        // Pre-fill with current location if available
+                        if (this.userLocation) {
+                            dropdown.querySelector('#custom-lat').value = this.userLocation.lat.toFixed(4);
+                            dropdown.querySelector('#custom-lon').value = this.userLocation.lon.toFixed(4);
+                        }
+                    } else {
+                        inputs.classList.add('hidden');
+                        this.filters.useCustomLocation = false;
+                        this.filters.customLat = null;
+                        this.filters.customLon = null;
+                        this.displayEvents();
+                        hideAllDropdowns();
+                    }
+                });
+                
+                applyBtn.addEventListener('click', () => {
+                    const lat = parseFloat(dropdown.querySelector('#custom-lat').value);
+                    const lon = parseFloat(dropdown.querySelector('#custom-lon').value);
+                    
+                    if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+                        this.filters.useCustomLocation = true;
+                        this.filters.customLat = lat;
+                        this.filters.customLon = lon;
+                        
+                        // Update map view to custom location
+                        if (this.map) {
+                            this.map.setView([lat, lon], 13);
+                        }
+                        
+                        this.displayEvents();
+                        hideAllDropdowns();
+                    } else {
+                        alert('Please enter valid latitude (-90 to 90) and longitude (-180 to 180) values.');
+                    }
+                });
             });
         }
         
@@ -726,88 +1078,6 @@ class EventsApp {
                 hideAllDropdowns();
             }
         });
-        
-        // Distance filter
-        const distanceFilter = document.getElementById('distance-filter');
-        const distanceValue = document.getElementById('distance-value');
-        if (distanceFilter && distanceValue) {
-            distanceFilter.addEventListener('input', (e) => {
-                const value = parseFloat(e.target.value);
-                this.filters.maxDistance = value;
-                distanceValue.textContent = `${value} km`;
-                this.displayEvents();
-            });
-        }
-        
-        // Time filter
-        const timeFilter = document.getElementById('time-filter');
-        if (timeFilter) {
-            timeFilter.addEventListener('change', (e) => {
-                this.filters.timeFilter = e.target.value;
-                this.displayEvents();
-                hideAllDropdowns();
-            });
-        }
-        
-        // Category filter
-        const categoryFilter = document.getElementById('category-filter');
-        if (categoryFilter) {
-            categoryFilter.addEventListener('change', (e) => {
-                this.filters.category = e.target.value;
-                this.displayEvents();
-                hideAllDropdowns();
-            });
-        }
-        
-        // Custom location checkbox
-        const useCustomLocation = document.getElementById('use-custom-location');
-        const customLocationInputs = document.getElementById('custom-location-inputs');
-        if (useCustomLocation && customLocationInputs) {
-            useCustomLocation.addEventListener('change', (e) => {
-                if (e.target.checked) {
-                    customLocationInputs.classList.remove('hidden');
-                    // Pre-fill with current location if available
-                    if (this.userLocation) {
-                        const customLat = document.getElementById('custom-lat');
-                        const customLon = document.getElementById('custom-lon');
-                        if (customLat) customLat.value = this.userLocation.lat.toFixed(4);
-                        if (customLon) customLon.value = this.userLocation.lon.toFixed(4);
-                    }
-                } else {
-                    customLocationInputs.classList.add('hidden');
-                    this.filters.useCustomLocation = false;
-                    this.filters.customLat = null;
-                    this.filters.customLon = null;
-                    this.displayEvents();
-                    hideAllDropdowns();
-                }
-            });
-        }
-        
-        // Apply custom location button
-        const applyCustomLocation = document.getElementById('apply-custom-location');
-        if (applyCustomLocation) {
-            applyCustomLocation.addEventListener('click', () => {
-                const lat = parseFloat(document.getElementById('custom-lat').value);
-                const lon = parseFloat(document.getElementById('custom-lon').value);
-                
-                if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
-                    this.filters.useCustomLocation = true;
-                    this.filters.customLat = lat;
-                    this.filters.customLon = lon;
-                    
-                    // Update map view to custom location
-                    if (this.map) {
-                        this.map.setView([lat, lon], 13);
-                    }
-                    
-                    this.displayEvents();
-                    hideAllDropdowns();
-                } else {
-                    alert('Please enter valid latitude (-90 to 90) and longitude (-180 to 180) values.');
-                }
-            });
-        }
         
         // Reset filters button
         const resetFilters = document.getElementById('reset-filters-btn');
@@ -821,21 +1091,6 @@ class EventsApp {
                 this.filters.useCustomLocation = false;
                 this.filters.customLat = null;
                 this.filters.customLon = null;
-                
-                // Reset UI elements
-                const distanceFilterEl = document.getElementById('distance-filter');
-                const distanceValueEl = document.getElementById('distance-value');
-                const timeFilterEl = document.getElementById('time-filter');
-                const categoryFilterEl = document.getElementById('category-filter');
-                const useCustomLocationEl = document.getElementById('use-custom-location');
-                const customLocationInputsEl = document.getElementById('custom-location-inputs');
-                
-                if (distanceFilterEl) distanceFilterEl.value = 5;
-                if (distanceValueEl) distanceValueEl.textContent = '5 km';
-                if (timeFilterEl) timeFilterEl.value = 'sunrise';
-                if (categoryFilterEl) categoryFilterEl.value = 'all';
-                if (useCustomLocationEl) useCustomLocationEl.checked = false;
-                if (customLocationInputsEl) customLocationInputsEl.classList.add('hidden');
                 
                 // Reset map view
                 if (this.userLocation && this.map) {
