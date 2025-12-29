@@ -41,6 +41,7 @@ header {
     flex: 1;
     position: relative;
     z-index: 1;
+    background: #2a2a2a;
 }
 
 /* Set dark gray background for unloaded map tiles */
