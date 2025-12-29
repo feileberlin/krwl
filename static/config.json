@@ -1,42 +1,13 @@
 {
   "app": {
     "name": "KRWL HOF Community Events",
-    "description": "Community events scraper and viewer with geolocation filtering",
-    "language": "auto",
-    "language_comment": "Set to 'en' for English, 'de' for German, or 'auto' for browser detection. Loads content.json or content.de.json accordingly."
-  },
-  "ui": {
-    "logo": "logo.svg",
-    "imprint_url": "#",
-    "imprint_url_comment": "Set to '#' to show project location on map, or URL for separate page",
-    "theme_color": "#4CAF50",
-    "background_color": "#1a1a1a"
-  },
-  "imprint": {
-    "enabled": true,
-    "location": {
-      "lat": 50.3167,
-      "lon": 11.9167,
-      "marker": "marker-city-center.svg"
-    },
-    "contact": {
-      "email": "",
-      "website": "https://krwl.in",
-      "github": "https://github.com/feileberlin/krwl-hof"
-    },
-    "responsible": {
-      "name": "",
-      "email": ""
-    },
-    "technical": {
-      "hosting": "GitHub Pages",
-      "domain": "krwl.in",
-      "technology": "HTML5, JavaScript, Leaflet.js",
-      "open_source": true,
-      "repository": "https://github.com/feileberlin/krwl-hof"
-    }
+    "description": "Community events scraper and viewer with geolocation filtering"
   },
   "scraping": {
+    "schedule": {
+      "timezone": "Europe/Berlin",
+      "times": ["04:00", "16:00"]
+    },
     "sources": [
       {
         "name": "Wochenmarkt Hof",
@@ -135,23 +106,8 @@
       "lon": 11.9167
     },
     "default_zoom": 13,
-    "tile_provider": "https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png",
-    "tile_provider_comment": "CartoDB Dark No Labels - Minimal map showing only major roads and features, no city labels or points of interest. Keeps focus on event markers.",
-    "attribution": "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
-    "predefined_locations": [
-      {
-        "name": "location.no1",
-        "lat": 50.3167,
-        "lon": 11.9167,
-        "display_name": "Hof Hauptbahnhof"
-      },
-      {
-        "name": "location.no2",
-        "lat": 50.3175,
-        "lon": 11.9165,
-        "display_name": "Hof Rathaus"
-      }
-    ]
+    "tile_provider": "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    "attribution": "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
   },
   "editor": {
     "require_approval": true,

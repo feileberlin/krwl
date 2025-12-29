@@ -3,201 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Interactive fullscreen map showing community events near you with geolocation filtering">
     <title>KRWL HOF - Community Events</title>
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
-    
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#4CAF50">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="KRWL HOF">
-    
-    <!-- Apple Touch Icons -->
-    <link rel="apple-touch-icon" href="icon-192.svg">
-    
     <link rel="stylesheet" href="css/style.css">
-    <!-- Leaflet CSS - loaded from CDN with local fallback -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
-          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" 
-          crossorigin="" />
-    <link rel="stylesheet" href="lib/leaflet/leaflet.css" onerror="this.remove()" />
-
-
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
-    <!-- No JavaScript Fallback -->
-    <noscript>
-        <div class="noscript-container">
-            <header class="noscript-header">
-                <h1>KRWL HOF Community Events</h1>
-                <p class="warning">⚠️ JavaScript is disabled. Showing static event list.</p>
-                <p class="info">Enable JavaScript for the interactive map experience with filters and geolocation.</p>
-            </header>
-            
-            <main class="noscript-main">
-                <h2>Upcoming Events</h2>
-                
-                <!-- This section would be populated by a server-side script -->
-                <!-- For static deployment, we'll use a JavaScript snippet to populate it -->
-                <div id="noscript-events">
-                    <p class="loading">Loading events...</p>
-                </div>
-                
-                <!-- Inline script to load events even without main JS -->
-                <script>
-                    // This minimal script runs even in noscript context for static sites
-                    fetch('events.json')
-                        .then(res => res.json())
-                        .then(data => {
-                            const container = document.getElementById('noscript-events');
-                            const now = new Date();
-                            const events = data.events
-                                .filter(e => new Date(e.start_time) > now)
-                                .sort((a, b) => new Date(a.start_time) - new Date(b.start_time))
-                                .slice(0, 50); // Show max 50 events
-                            
-                            if (events.length === 0) {
-                                container.innerHTML = '<p class="no-events">No upcoming events found.</p>';
-                                return;
-                            }
-                            
-                            let html = '<ul class="event-list">';
-                            events.forEach(event => {
-                                const date = new Date(event.start_time);
-                                const eventText = `${event.title} at ${event.location.name} on ${date.toLocaleDateString()}`;
-                                html += `
-                                    <li class="event-item">
-                                        <h3>${event.title}</h3>
-                                        <p class="event-time">📅 ${date.toLocaleDateString()} at ${date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</p>
-                                        <p class="event-location">📍 ${event.location.name}</p>
-                                        ${event.description ? `<p class="event-description">${event.description}</p>` : ''}
-                                        
-                                        <!-- Context actions as inline buttons -->
-                                        <div class="event-actions">
-                                            ${event.url ? `<a href="${event.url}" target="_blank" rel="noopener" class="action-btn" title="View details">
-                                                <span>🔗</span> view
-                                            </a>` : ''}
-                                            <a href="https://www.google.com/maps/dir/?api=1&destination=${event.location.lat},${event.location.lon}" target="_blank" rel="noopener" class="action-btn" title="Get directions">
-                                                <span>🧭</span> navigate
-                                            </a>
-                                            <button onclick="navigator.clipboard.writeText('${eventText.replace(/'/g, "\\'")}').then(() => this.textContent='✓ copied!').catch(() => this.textContent='✗ failed')" class="action-btn" title="Copy event details">
-                                                <span>📋</span> copy
-                                            </button>
-                                            <button onclick="if(navigator.share){navigator.share({title:'${event.title.replace(/'/g, "\\'")}',text:'${eventText.replace(/'/g, "\\'")}'}).catch(()=>{})}else{alert('Share not supported')}" class="action-btn" title="Share event">
-                                                <span>📤</span> share
-                                            </button>
-                                        </div>
-                                    </li>
-                                `;
-                            });
-                            html += '</ul>';
-                            container.innerHTML = html;
-                        })
-                        .catch(err => {
-                            document.getElementById('noscript-events').innerHTML = 
-                                '<p class="error">Failed to load events. Please refresh the page.</p>';
-                        });
-                </script>
-            </main>
-            
-            <footer class="noscript-footer">
-                <p>For the best experience, please enable JavaScript to access the interactive map.</p>
-                <p><a href="imprint.html">Imprint</a></p>
-            </footer>
+    <div id="app">
+        <header>
+            <h1>KRWL HOF Community Events</h1>
+            <div id="status">
+                <span id="location-status">Getting location...</span>
+            </div>
+        </header>
+        
+        <div id="map">
+            <div id="map-overlay">
+                <div id="event-count">0 events</div>
+                <a href="imprint.html" id="imprint-link">
+                    <img id="site-logo" src="logo.png" alt="Site Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                    <span id="imprint-text" style="display: none;">Imprint</span>
+                </a>
+            </div>
         </div>
         
-        <!-- Hide the main app when JavaScript is disabled -->
-        <style>
-            #app { display: none !important; }
-        </style>
-    </noscript>
-    
-    <!-- Skip to main content for keyboard navigation -->
-    <a href="#map" class="skip-link">Skip to map</a>
-    
-    <!-- Screen reader description of the interface -->
-    <div class="sr-only" role="alert" aria-live="polite">
-        <p>Welcome to KRWL HOF Community Events. This is a fullscreen interactive map interface.</p>
-        <p>Event filters are located at the top of the map. Click on map markers to view event details.</p>
-        <p>All events are shown as markers on the map with time labels. No separate navigation is needed.</p>
-        <p>Keyboard navigation: Use Arrow keys to cycle through events, Enter or Space to open details, Escape to close.</p>
-    </div>
-    
-    <div id="app" role="application" aria-label="Community Events Map Application">
-        <!-- Main interactive map region -->
-        <main id="map" role="main" aria-label="Interactive events map showing community events near your location">
-            <!-- Accessible map overlay with controls -->
-            <div id="map-overlay" aria-label="Map controls and filters">
-                <!-- Interactive filter controls -->
-                <nav id="filter-sentence" role="navigation" aria-label="Event filters">
-                    <h1 class="sr-only">Filter Events</h1>
-                    <span class="filter-part">
-                        <select id="category-filter" class="inline-filter"
-                                aria-label="Filter by event category">
-                            <option value="all">events</option>
-                            <option value="music">music</option>
-                            <option value="sports">sports</option>
-                            <option value="arts">arts & culture</option>
-                            <option value="food">food & drink</option>
-                            <option value="festivals">festivals</option>
-                            <option value="workshops">workshops & classes</option>
-                            <option value="community">community & social</option>
-                        </select>
-                    </span>
-                    <span class="filter-part">
-                        <select id="time-filter" class="inline-filter"
-                                aria-label="Filter by time range">
-                            <option value="sunrise">till sunrise</option>
-                            <option value="sunday">till sunday's prime time</option>
-                            <option value="full-moon">till next full moon</option>
-                        </select>
-                    </span>
-                    <span class="filter-part">
-                        <select id="distance-filter" class="inline-filter"
-                                aria-label="Filter by distance from location">
-                            <option value="1.25" selected>not more than 15 minutes walk</option>
-                            <option value="3.33">10 minutes max. distance by bike</option>
-                            <option value="11.25">45 minutes max. distance by public transport</option>
-                        </select>
-                    </span>
-                    <span class="filter-part">
-                        <select id="location-selector" class="inline-filter"
-                                aria-label="Select reference location">
-                            <option value="geolocation">from your current location</option>
-                        </select>
-                    </span>
-                </nav>
+        <div id="event-list">
+            <div id="filters-section">
+                <h3>Filters</h3>
                 
-                <!-- Category overview panel -->
-                <div id="category-overview" class="category-overview" role="region" aria-label="Category counts overview">
-                    <div id="category-counts"></div>
+                <div class="filter-group">
+                    <label for="category-filter">Event Type:</label>
+                    <select id="category-filter">
+                        <option value="all">All Categories</option>
+                    </select>
                 </div>
                 
-                <!-- Footer navigation (positioned on map) -->
-                <footer role="contentinfo">
-                    <a href="#" id="imprint-link" aria-label="View imprint and legal information">
-                        <svg id="site-logo" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" style="display: none;">
-                            <g transform="translate(1, 1.5)">
-                                <path style="fill:none;stroke:#ffffff;stroke-width:1.2;" 
-                                      d="M 4.43,15.8 H 3.81 c -0.64,-0.19 -0.9,-4.46 -0.02,-5.45 0.61,-0.06 3.81,-0.06 3.81,-0.06 0,0 2.37,0.19 7.44,-3.62 0,0 0.17,0.02 0.85,4.58 0,0 1.42,1.76 -0.11,3.71 0,0 -0.27,3.6 -0.7,4.52 0,0 -4.17,-3.43 -8.8,-3.73 l -0.04,3.58 c -0.07,0.43 -1.71,0.37 -1.72,0 z" />
-                            </g>
-                        </svg>
-                        <span id="imprint-text">Imprint</span>
-                    </a>
-                </footer>
+                <div class="filter-group">
+                    <label for="time-filter">Event Max Start Time:</label>
+                    <select id="time-filter">
+                        <option value="sunrise">Next Sunrise (6 AM)</option>
+                        <option value="6h">Next 6 hours</option>
+                        <option value="12h">Next 12 hours</option>
+                        <option value="24h">Next 24 hours</option>
+                        <option value="48h">Next 48 hours</option>
+                        <option value="all">All upcoming events</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="distance-filter">Event Distance (km):</label>
+                    <input type="range" id="distance-filter" min="1" max="50" value="5" step="0.5">
+                    <span id="distance-value">5 km</span>
+                </div>
+                
+                <div class="filter-group location-override">
+                    <label for="use-custom-location">
+                        <input type="checkbox" id="use-custom-location">
+                        Use custom location
+                    </label>
+                    <div id="custom-location-inputs" class="hidden">
+                        <input type="number" id="custom-lat" placeholder="Latitude" step="0.0001">
+                        <input type="number" id="custom-lon" placeholder="Longitude" step="0.0001">
+                        <button id="apply-custom-location">Apply</button>
+                    </div>
+                </div>
+                
+                <button id="reset-filters">Reset All Filters</button>
             </div>
-        </main>
+            
+            <h2>Events</h2>
+            <div id="events-container">
+                <p>Loading events...</p>
+            </div>
+        </div>
         
-        <!-- Event detail modal dialog -->
-        <div id="event-detail" class="hidden" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+        <div id="event-detail" class="hidden">
             <div class="detail-content">
-                <button id="close-detail" aria-label="Close event details">&times;</button>
+                <button id="close-detail">&times;</button>
                 <h2 id="detail-title"></h2>
                 <p id="detail-description"></p>
                 <div id="detail-info">
@@ -205,17 +86,12 @@
                     <p><strong>Time:</strong> <span id="detail-time"></span></p>
                     <p><strong>Distance:</strong> <span id="detail-distance"></span></p>
                 </div>
-                <a id="detail-link" href="#" target="_blank" rel="noopener noreferrer">More Info</a>
+                <a id="detail-link" href="#" target="_blank">More Info</a>
             </div>
         </div>
     </div>
     
-    <!-- Leaflet JS - loaded from CDN with local fallback -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" 
-            crossorigin=""></script>
-    <script>window.L || document.write('<script src="lib/leaflet/leaflet.js"><\/script>')</script>
-    <script src="js/i18n.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
