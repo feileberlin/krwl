@@ -132,9 +132,7 @@ header {
 
 /* Filter dropdowns */
 .filter-dropdown {
-    position: absolute;
-    top: calc(100% + 5px); /* Position just below the parent span */
-    left: 0;
+    position: fixed;
     background: rgba(30, 30, 30, 0.98);
     backdrop-filter: blur(10px);
     border: 2px solid #FF69B4;
@@ -145,10 +143,6 @@ header {
     z-index: 2000;
     min-width: 200px;
     white-space: normal;
-}
-
-.filter-dropdown.hidden {
-    display: none;
 }
 
 .filter-dropdown select,
