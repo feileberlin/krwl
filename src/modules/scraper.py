@@ -2,6 +2,7 @@
 
 import json
 import re
+import sys
 from datetime import datetime, timedelta
 from urllib.parse import urljoin, urlparse
 from .utils import load_pending_events, save_pending_events
@@ -13,7 +14,8 @@ try:
     SCRAPING_ENABLED = True
 except ImportError:
     SCRAPING_ENABLED = False
-    print("Warning: Scraping libraries not installed. Install with: pip install -r requirements.txt")
+    # Print to stderr to avoid interfering with JSON output on stdout
+    print("Warning: Scraping libraries not installed. Install with: pip install -r requirements.txt", file=sys.stderr)
 
 
 class EventScraper:
@@ -31,8 +33,8 @@ class EventScraper:
     def scrape_all_sources(self):
         """Scrape events from all configured sources"""
         if not SCRAPING_ENABLED:
-            print("ERROR: Scraping libraries not installed. Cannot scrape events.")
-            print("Install with: pip install requests beautifulsoup4 lxml feedparser")
+            print("ERROR: Scraping libraries not installed. Cannot scrape events.", file=sys.stderr)
+            print("Install with: pip install requests beautifulsoup4 lxml feedparser", file=sys.stderr)
             return []
             
         pending_data = load_pending_events(self.base_path)

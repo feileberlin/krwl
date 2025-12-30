@@ -45,6 +45,10 @@ Thumbs.db
 *.tmp
 .cache/
 
+# Test and report artifacts
+kiss_results.json
+kiss_report.txt
+
 # Deployment artifacts
 publish/
 

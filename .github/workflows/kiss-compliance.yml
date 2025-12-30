@@ -55,7 +55,7 @@ jobs:
           echo "Running KISS compliance check..."
           python3 check_kiss.py --verbose > kiss_report.txt 2>&1 || true
           
-          # Capture exit code separately
+          # Capture JSON output - only redirect stdout, let stderr go to console
           python3 check_kiss.py --json > kiss_results.json
           KISS_EXIT_CODE=$?
           
