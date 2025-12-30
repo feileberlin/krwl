@@ -164,7 +164,7 @@ class StaticSiteGenerator:
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KRWL HOF - Community Events</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="lib/leaflet/leaflet.css" />
 </head>
 <body>
     <!-- AUTO-GENERATED: This file is generated from src/modules/generator.py -->
@@ -310,7 +310,7 @@ class StaticSiteGenerator:
         window.__INLINE_EVENTS_DATA__ = {events_json};
     </script>
     
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="lib/leaflet/leaflet.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
@@ -1184,7 +1184,6 @@ class EventsApp {
                 const data = window.__INLINE_EVENTS_DATA__;
                 this.events = data.events || [];
                 this.log(`Loaded ${this.events.length} events from inline data`);
-                this.populateCategories();
                 return;
             }
             

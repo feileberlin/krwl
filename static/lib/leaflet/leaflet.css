@@ -1,0 +1,34 @@
+/* Leaflet CSS placeholder for local testing */
+/* In production, this file is downloaded by the deployment workflow using manage_libs.py */
+/* This is a minimal mock to prevent errors during development without network access */
+
+.leaflet-container {
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.leaflet-tile-container {
+    margin: 0;
+    padding: 0;
+}
+
+.leaflet-control,
+.leaflet-marker-icon,
+.leaflet-popup {
+    position: absolute;
+}
+
+/* Add minimal styling for map functionality */
+.leaflet-marker-icon {
+    display: block;
+}
+
+.leaflet-popup-content-wrapper {
+    padding: 1px;
+    text-align: left;
+}
+
+.leaflet-popup-tip {
+    background: white;
+}

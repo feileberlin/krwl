@@ -229,7 +229,6 @@ class EventsApp {
                 const data = window.__INLINE_EVENTS_DATA__;
                 this.events = data.events || [];
                 this.log(`Loaded ${this.events.length} events from inline data`);
-                this.populateCategories();
                 return;
             }
             
