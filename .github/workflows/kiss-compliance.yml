@@ -55,9 +55,12 @@ jobs:
           echo "Running KISS compliance check..."
           python3 check_kiss.py --verbose > kiss_report.txt 2>&1 || true
           
-          # Capture JSON output - only redirect stdout, let stderr go to console
+          # Capture JSON output and exit code
+          # Note: We capture exit code immediately to prevent workflow failure
+          set +e  # Temporarily disable fail-fast
           python3 check_kiss.py --json > kiss_results.json
           KISS_EXIT_CODE=$?
+          set -e  # Re-enable fail-fast
           
           # Display the verbose output
           cat kiss_report.txt

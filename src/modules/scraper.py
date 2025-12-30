@@ -14,8 +14,8 @@ try:
     SCRAPING_ENABLED = True
 except ImportError:
     SCRAPING_ENABLED = False
-    # Print to stderr to avoid interfering with JSON output on stdout
-    print("Warning: Scraping libraries not installed. Install with: pip install -r requirements.txt", file=sys.stderr)
+    # Note: Warning is printed only when scraping is actually attempted,
+    # not at import time to avoid interference with other modules
 
 
 class EventScraper:
@@ -24,8 +24,15 @@ class EventScraper:
     def __init__(self, config, base_path):
         self.config = config
         self.base_path = base_path
-        self.session = requests.Session() if SCRAPING_ENABLED else None
-        if self.session:
+        
+        if not SCRAPING_ENABLED:
+            # Print warning when scraper is instantiated without required libraries
+            print("Warning: Scraping libraries not installed.", file=sys.stderr)
+            print("Install with: pip install -r requirements.txt", file=sys.stderr)
+            print("Or install directly: pip install requests beautifulsoup4 lxml feedparser", file=sys.stderr)
+            self.session = None
+        else:
+            self.session = requests.Session()
             self.session.headers.update({
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
             })
@@ -34,7 +41,8 @@ class EventScraper:
         """Scrape events from all configured sources"""
         if not SCRAPING_ENABLED:
             print("ERROR: Scraping libraries not installed. Cannot scrape events.", file=sys.stderr)
-            print("Install with: pip install requests beautifulsoup4 lxml feedparser", file=sys.stderr)
+            print("Install with: pip install -r requirements.txt", file=sys.stderr)
+            print("Or install directly: pip install requests beautifulsoup4 lxml feedparser", file=sys.stderr)
             return []
             
         pending_data = load_pending_events(self.base_path)
