@@ -159,7 +159,7 @@ header {
     background: var(--barbie-shade-darkest);
     backdrop-filter: blur(10px);
     border-radius: 8px;
-    border: 2px solid var(--border-primary);
+    border: 0px;
     line-height: 1.6;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
                 0 0 10px rgba(255, 105, 180, 0.3);
@@ -278,7 +278,8 @@ header {
 #site-logo {
     height: 40px;
     width: 40px;
-    display: block;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 #site-logo path {
@@ -319,7 +320,7 @@ header {
 #env-watermark.preview,
 #env-watermark.testing,
 #env-watermark.development {
-    border: 2px solid var(--barbie-tone-light);
+    border: 0px;
     color: var(--barbie-tone-light);
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
 }
