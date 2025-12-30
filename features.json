@@ -87,7 +87,7 @@
             "code_patterns": [
                 {
                     "file": "static/js/app.js",
-                    "pattern": "L.map\\('map'\\)",
+                    "pattern": "L\\.map\\('map'",
                     "description": "Leaflet map initialization"
                 },
                 {
@@ -302,7 +302,7 @@
                 },
                 {
                     "file": "static/index.html",
-                    "pattern": "id=\".*-filter\"",
+                    "pattern": "class=\"filter-part\"|id=\"filter-sentence\"",
                     "description": "Filter UI elements"
                 }
             ],
@@ -368,7 +368,7 @@
                 },
                 {
                     "file": "static/index.html",
-                    "pattern": "custom-location|use-custom-location",
+                    "pattern": "id=\"location-text\"",
                     "description": "Custom location UI elements"
                 }
             ],
