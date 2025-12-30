@@ -151,15 +151,7 @@ jobs:
           
           if [ -f kiss_results.json ]; then
             echo "### Summary" >> $GITHUB_STEP_SUMMARY
-            python3 -c "
-import json
-with open('kiss_results.json', 'r') as f:
-    results = json.load(f)
-    print(f\"- **Score**: {results['overall_score']}\")
-    print(f\"- **Files Checked**: {results['total_files_checked']}\")
-    print(f\"- **Violations**: {results['summary']['total_violations']}\")
-    print(f\"- **Warnings**: {results['summary']['total_warnings']}\")
-" >> $GITHUB_STEP_SUMMARY
+            python3 -c "import json; f = open('kiss_results.json', 'r'); results = json.load(f); f.close(); print(f\"- **Score**: {results['overall_score']}\"); print(f\"- **Files Checked**: {results['total_files_checked']}\"); print(f\"- **Violations**: {results['summary']['total_violations']}\"); print(f\"- **Warnings**: {results['summary']['total_warnings']}\");" >> $GITHUB_STEP_SUMMARY
             
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "### KISS Principles" >> $GITHUB_STEP_SUMMARY

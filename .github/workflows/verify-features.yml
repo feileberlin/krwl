@@ -201,14 +201,7 @@ jobs:
           
           if [ -f verification_results.json ]; then
             echo "### Details" >> $GITHUB_STEP_SUMMARY
-            python3 -c "
-import json
-with open('verification_results.json', 'r') as f:
-    results = json.load(f)
-    print(f\"- **Total Features**: {results['total']}\")
-    print(f\"- **Passed**: {results['passed']}\")
-    print(f\"- **Failed**: {results['failed']}\")
-" >> $GITHUB_STEP_SUMMARY
+            python3 -c "import json; f = open('verification_results.json', 'r'); results = json.load(f); f.close(); print(f\"- **Total Features**: {results['total']}\"); print(f\"- **Passed**: {results['passed']}\"); print(f\"- **Failed**: {results['failed']}\");" >> $GITHUB_STEP_SUMMARY
           fi
       
       - name: Fail if verification failed
