@@ -1,89 +1,44 @@
-/* 
-This devcontainer configuration defines a reproducible development environment for the KRWL HOF project. It:
-
-- Standardizes the development setup - Every developer gets the same Python 3.11 environment with identical tools and extensions
-- Automates environment setup - Automatically installs dependencies via requirements.txt and runs download-libs.sh
-- Integrates with VS Code - Pre-configures extensions (Python, Copilot, Git tools, linters) and settings
-- Enables containerized development - Uses Docker to isolate the project environment from the host system
-- Facilitates collaboration - Ensures consistent tooling across the team and with GitHub Codespaces
-
-This is particularly useful for:
-
-- Onboarding new developers quickly
-- Running the project in GitHub Codespaces
-- Avoiding "works on my machine" problems
-- Maintaining consistent code formatting and linting rules 
-*/
-
 {
-  // Display name for the development container
   "name": "KRWL HOF Development Container",
-  
-  // Base Docker image - uses Microsoft's official Python 3.11 devcontainer image
-  // This provides a pre-configured Python development environment
   "image": "mcr.microsoft.com/devcontainers/python:3.11",
-  
-  // Additional features to install in the container
   "features": {
-    // Installs Git for version control
     "ghcr.io/devcontainers/features/git:1": {},
-    // Installs GitHub CLI (gh) for GitHub operations from terminal
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
-  
-  // VS Code specific customizations
   "customizations": {
     "vscode": {
-      // Extensions that will be automatically installed in the container
       "extensions": [
-        "github.copilot",                    // AI-powered code completion
-        "github.copilot-chat",               // AI chat assistant
-        "ms-python.python",                  // Core Python language support
-        "ms-python.vscode-pylance",          // Fast Python language server
-        "ms-python.black-formatter",         // Python code formatter (Black)
-        "dbaeumer.vscode-eslint",            // JavaScript/TypeScript linting
-        "redhat.vscode-yaml",                // YAML language support
-        "mhutchie.git-graph",                // Visual Git repository browser
-        "eamodio. gitlens",                   // Enhanced Git capabilities
-        "yzhang.markdown-all-in-one"         // Markdown editing tools
+        "github.copilot",
+        "github.copilot-chat",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.black-formatter",
+        "dbaeumer.vscode-eslint",
+        "redhat.vscode-yaml",
+        "mhutchie.git-graph",
+        "eamodio.gitlens",
+        "yzhang.markdown-all-in-one"
       ],
-      // VS Code settings specific to this container
       "settings": {
-        // Path to Python interpreter in the container
         "python.defaultInterpreterPath": "/usr/local/bin/python",
-        // Enable Python linting
         "python.linting.enabled": true,
-        // Use flake8 as the linting tool
         "python.linting.flake8Enabled": true,
-        // Enable GitHub Copilot for all file types
         "github.copilot.enable": {
           "*": true
         }
       }
     }
   },
-  
-  // Commands to run after the container is created
-  // Installs Python dependencies and downloads required libraries
-  "postCreateCommand":  "pip install -r requirements.txt && ./download-libs.sh",
-  
-  // Ports to forward from the container to the host machine
-  "forwardPorts":  [8000],
-  
-  // Configure how forwarded ports behave
-  "portsAttributes":  {
+  "postCreateCommand": "pip install -r requirements.txt && ./download-libs.sh",
+  "forwardPorts": [8000],
+  "portsAttributes": {
     "8000": {
-      "label": "Local Dev Server",           // Friendly name for port 8000
-      "onAutoForward": "notify"              // Show notification when port is forwarded
+      "label": "Local Dev Server",
+      "onAutoForward": "notify"
     }
   },
-  
-  // User to run as inside the container (non-root for security)
   "remoteUser": "vscode",
-  
-  // Mount local directories into the container
-  "mounts":  [
-    // Syncs local . vscode folder with container for consistent settings
+  "mounts": [
     "source=${localWorkspaceFolder}/.vscode,target=/workspaces/${localWorkspaceFolderBasename}/.vscode,type=bind,consistency=cached"
   ]
 }

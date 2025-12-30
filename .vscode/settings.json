@@ -14,8 +14,6 @@
     "**/.git": true,
     "**/.DS_Store": true
   },
-  
-  // Python settings
   "python.defaultInterpreterPath": "${workspaceFolder}/venv/bin/python",
   "python.linting.enabled": true,
   "python.linting.pylintEnabled": false,
@@ -27,22 +25,14 @@
   "python.formatting.provider": "none",
   "python.analysis.typeCheckingMode": "basic",
   "python.analysis.autoImportCompletions": true,
-  
-  // JavaScript/JSON settings
   "javascript.validate.enable": true,
   "javascript.preferences.quoteStyle": "single",
   "json.validate.enable": true,
   "json.format.enable": true,
-  
-  // HTML/CSS settings
   "html.format.indentInnerHtml": true,
   "html.format.wrapLineLength": 120,
   "css.validate": true,
-  
-  // Git settings
   "git.ignoreLimitWarning": true,
-  
-  // GitHub Copilot settings
   "github.copilot.enable": {
     "*": true,
     "yaml": true,
@@ -56,8 +46,6 @@
     "css": true
   },
   "github.copilot.editor.enableAutoCompletions": true,
-  
-  // Search settings to exclude generated files from search
   "search.exclude": {
     "**/node_modules": true,
     "**/.git": true,
@@ -65,8 +53,6 @@
     "**/venv": true,
     "**/static/libs": true
   },
-  
-  // File watching
   "files.watcherExclude": {
     "**/.git/objects/**": true,
     "**/.git/subtree-cache/**": true,
@@ -74,8 +60,6 @@
     "**/venv/**": true,
     "**/__pycache__/**": true
   },
-  
-  // KRWL HOF specific warnings
   "[html]": {
     "editor.defaultFormatter": "vscode.html-language-features"
   },
@@ -95,14 +79,10 @@
     "editor.defaultFormatter": "ms-python.black-formatter",
     "editor.formatOnSave": false
   },
-  
-  // Auto-generated file protection
   "files.readonlyInclude": {
     "static/index.html": true,
     "static/js/app.js": true,
     "static/css/style.css": true
   },
-  
-  // Task runner
   "task.autoDetect": "on"
 }
