@@ -244,9 +244,9 @@ header {
 #env-watermark.preview,
 #env-watermark.testing,
 #env-watermark.development {
-    border: 2px solid #FF69B4;
-    color: #FF69B4;
-    text-shadow: 0 0 5px rgba(255, 105, 180, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.5);
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
 }
 
 #event-list {
