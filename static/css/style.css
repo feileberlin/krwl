@@ -122,22 +122,6 @@ header {
     text-align: center;
 }
 
-#reset-filters-btn {
-    background: none;
-    border: none;
-    color: #FF69B4;
-    font-size: 1.2rem;
-    cursor: pointer;
-    padding: 0 0.3rem;
-    margin-left: 0.3rem;
-    transition: all 0.2s;
-}
-
-#reset-filters-btn:hover {
-    color: #ffffff;
-    transform: rotate(-90deg);
-}
-
 /* Filter dropdowns */
 .filter-dropdown {
     position: fixed;
@@ -196,22 +180,6 @@ header {
     margin-bottom: 0.5rem;
 }
 
-#reset-filters-btn {
-    background: none;
-    border: none;
-    color: #FF69B4;
-    font-size: 1.2rem;
-    cursor: pointer;
-    padding: 0 0.3rem;
-    margin-left: 0.3rem;
-    transition: all 0.2s;
-}
-
-#reset-filters-btn:hover {
-    color: #ffffff;
-    transform: rotate(-90deg);
-}
-
 #imprint-link {
     display: inline-flex;
     align-items: center;
@@ -233,13 +201,13 @@ header {
 }
 
 #site-logo {
-    height: 20px;
-    width: 20px;
+    height: 40px;
+    width: 40px;
     display: block;
 }
 
 #site-logo path {
-    stroke: #ccc !important;
+    stroke: #FF69B4 !important;
     transition: stroke 0.2s;
 }
 

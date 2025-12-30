@@ -260,12 +260,12 @@ class StaticSiteGenerator:
             <div id="map-overlay">
                 <!-- Interactive filter sentence -->
                 <div id="filter-sentence">
-                    <!-- Logo: Inline SVG megaphone (gray stroke, transitions to pink on hover) -->
+                    <!-- Logo: Inline SVG megaphone (barbie red stroke) -->
                     <!-- Source: Generated from src/modules/generator.py template -->
                     <a href="imprint.html" id="imprint-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" id="site-logo" width="20" height="20" viewBox="0 0 20 20">
+                        <svg xmlns="http://www.w3.org/2000/svg" id="site-logo" width="40" height="40" viewBox="0 0 20 20">
                             <g transform="translate(1, 1.5)">
-                                <path style="fill:none;stroke:#cccccc;stroke-width:1.2;" 
+                                <path style="fill:none;stroke:#FF69B4;stroke-width:2.4;" 
                                       d="M 4.43,15.8 H 3.81 c -0.64,-0.19 -0.9,-4.46 -0.02,-5.45 0.61,-0.06 3.81,-0.06 3.81,-0.06 0,0 2.37,0.19 7.44,-3.62 0,0 0.17,0.02 0.85,4.58 0,0 1.42,1.76 -0.11,3.71 0,0 -0.27,3.6 -0.7,4.52 0,0 -4.17,-3.43 -8.8,-3.73 l -0.04,3.58 c -0.07,0.43 -1.71,0.37 -1.72,0 z" />
                             </g>
                         </svg>
@@ -280,8 +280,6 @@ class StaticSiteGenerator:
                     <span id="distance-text" class="filter-part" title="Click to change distance">within 15 minutes walk</span>
                     
                     <span id="location-text" class="filter-part" title="Click to change location">from your location</span>
-                    
-                    <button id="reset-filters-btn" class="reset-icon" title="Reset all filters">⟲</button>
                 </div>
                 
                 <!-- Environment watermark (bottom-left) -->
@@ -451,22 +449,6 @@ header {
     text-align: center;
 }
 
-#reset-filters-btn {
-    background: none;
-    border: none;
-    color: #FF69B4;
-    font-size: 1.2rem;
-    cursor: pointer;
-    padding: 0 0.3rem;
-    margin-left: 0.3rem;
-    transition: all 0.2s;
-}
-
-#reset-filters-btn:hover {
-    color: #ffffff;
-    transform: rotate(-90deg);
-}
-
 /* Filter dropdowns */
 .filter-dropdown {
     position: fixed;
@@ -525,22 +507,6 @@ header {
     margin-bottom: 0.5rem;
 }
 
-#reset-filters-btn {
-    background: none;
-    border: none;
-    color: #FF69B4;
-    font-size: 1.2rem;
-    cursor: pointer;
-    padding: 0 0.3rem;
-    margin-left: 0.3rem;
-    transition: all 0.2s;
-}
-
-#reset-filters-btn:hover {
-    color: #ffffff;
-    transform: rotate(-90deg);
-}
-
 #imprint-link {
     display: inline-flex;
     align-items: center;
@@ -562,13 +528,13 @@ header {
 }
 
 #site-logo {
-    height: 20px;
-    width: 20px;
+    height: 40px;
+    width: 40px;
     display: block;
 }
 
 #site-logo path {
-    stroke: #ccc !important;
+    stroke: #FF69B4 !important;
     transition: stroke 0.2s;
 }
 
@@ -2057,29 +2023,6 @@ class EventsApp {
                 hideAllDropdowns();
             }
         });
-        
-        // Reset filters button
-        const resetFilters = document.getElementById('reset-filters-btn');
-        if (resetFilters) {
-            resetFilters.addEventListener('click', (e) => {
-                e.stopPropagation();
-                // Reset all filters to defaults
-                this.filters.maxDistance = 5;
-                this.filters.timeFilter = 'sunrise';
-                this.filters.category = 'all';
-                this.filters.useCustomLocation = false;
-                this.filters.customLat = null;
-                this.filters.customLon = null;
-                
-                // Reset map view
-                if (this.userLocation && this.map) {
-                    this.map.setView([this.userLocation.lat, this.userLocation.lon], 13);
-                }
-                
-                this.displayEvents();
-                hideAllDropdowns();
-            });
-        }
         
         // Event detail close listeners
         const closeDetail = document.getElementById('close-detail');

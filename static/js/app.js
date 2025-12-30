@@ -1145,29 +1145,6 @@ class EventsApp {
             }
         });
         
-        // Reset filters button
-        const resetFilters = document.getElementById('reset-filters-btn');
-        if (resetFilters) {
-            resetFilters.addEventListener('click', (e) => {
-                e.stopPropagation();
-                // Reset all filters to defaults
-                this.filters.maxDistance = 5;
-                this.filters.timeFilter = 'sunrise';
-                this.filters.category = 'all';
-                this.filters.useCustomLocation = false;
-                this.filters.customLat = null;
-                this.filters.customLon = null;
-                
-                // Reset map view
-                if (this.userLocation && this.map) {
-                    this.map.setView([this.userLocation.lat, this.userLocation.lon], 13);
-                }
-                
-                this.displayEvents();
-                hideAllDropdowns();
-            });
-        }
-        
         // Event detail close listeners
         const closeDetail = document.getElementById('close-detail');
         const eventDetail = document.getElementById('event-detail');
