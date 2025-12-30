@@ -3,15 +3,81 @@
 /* To modify: Edit templates in src/modules/generator.py, then run: python3 src/main.py generate */
 
 /*
-MONOCHROME COLOR PALETTE:
-- Accent (Barbie Red): #FF69B4
-- Accent Glow: rgba(255, 105, 180, 0.3-0.5)
-- Backgrounds: #1a1a1a, #2d2d2d, #2a2a2a (dark grays)
-- Text Primary: #ffffff, #ccc (light grays)
-- Text Secondary: #aaa, #888 (medium grays)
-- Borders/Accents: All use #FF69B4 or gray shades
-- NO other colors used (no green, blue, yellow, etc.)
+MONOCHROMATIC BARBIE RED COLOR PALETTE:
+Base Color: Barbie Red #FF69B4 (RGB: 255, 105, 180)
+
+TINTS (Barbie Red + White):
+- Lightest: #FFE5F3 (10% red, 90% white)
+- Light: #FFCCEB (30% red, 70% white)
+- Medium: #FFB3DF (50% red, 50% white)
+
+PURE:
+- Barbie Red: #FF69B4
+
+TONES (Barbie Red + Grey):
+- Light Tone: #D689B8 (red + light grey)
+- Medium Tone: #B05F8E (red + medium grey)
+- Dark Tone: #8A4A70 (red + dark grey)
+
+SHADES (Barbie Red + Black):
+- Light Shade: #BF5087 (75% red, 25% black)
+- Medium Shade: #80355A (50% red, 50% black)
+- Dark Shade: #401B2D (25% red, 75% black)
+- Darkest: #200D16 (10% red, 90% black)
+
+BLACKS & GREYS:
+- Pure Black: #000000
+- Near Black: #0D0D0D
+- Dark Grey: #1a1a1a
+- Medium Dark: #2a2a2a
+- Medium Grey: #3a3a3a
+- Light Grey: #555555
+- Lighter Grey: #888888
+- White: #ffffff
 */
+
+:root {
+    /* Barbie Red Tints (lighter versions) */
+    --barbie-tint-lightest: #FFE5F3;
+    --barbie-tint-light: #FFCCEB;
+    --barbie-tint-medium: #FFB3DF;
+    
+    /* Pure Barbie Red */
+    --barbie-red: #FF69B4;
+    --barbie-red-hover: #ff4da6;
+    
+    /* Barbie Red Tones (muted versions) */
+    --barbie-tone-light: #D689B8;
+    --barbie-tone-medium: #B05F8E;
+    --barbie-tone-dark: #8A4A70;
+    
+    /* Barbie Red Shades (darker versions) */
+    --barbie-shade-light: #BF5087;
+    --barbie-shade-medium: #80355A;
+    --barbie-shade-dark: #401B2D;
+    --barbie-shade-darkest: #200D16;
+    
+    /* Blacks & Greys */
+    --black: #000000;
+    --near-black: #0D0D0D;
+    --dark-grey: #1a1a1a;
+    --medium-dark: #2a2a2a;
+    --medium-grey: #3a3a3a;
+    --light-grey: #555555;
+    --lighter-grey: #888888;
+    --white: #ffffff;
+    
+    /* Semantic color mappings */
+    --bg-primary: var(--dark-grey);
+    --bg-secondary: var(--medium-dark);
+    --bg-tertiary: var(--medium-grey);
+    --text-primary: var(--white);
+    --text-secondary: #ccc;
+    --text-tertiary: var(--lighter-grey);
+    --accent-primary: var(--barbie-red);
+    --accent-hover: var(--barbie-red-hover);
+    --border-primary: var(--barbie-red);
+}
 
 * {
     margin: 0;
@@ -21,8 +87,8 @@ MONOCHROME COLOR PALETTE:
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: #1a1a1a;
-    color: #ffffff;
+    background: var(--bg-primary);
+    color: var(--text-primary);
     overflow: hidden;
 }
 
@@ -44,16 +110,25 @@ header {
     width: 100vw;
     height: 100vh;
     z-index: 1;
-    background: #2a2a2a;
+    background: var(--barbie-shade-darkest);
 }
 
-/* Set dark gray background for unloaded map tiles */
+/* Apply monochromatic filter to Leaflet map tiles */
 .leaflet-container {
-    background: #2a2a2a;
+    background: var(--barbie-shade-darkest);
+    /* Monochromatic filter: Convert to grayscale, then apply Barbie Red hue */
+    filter: grayscale(100%) brightness(0.5) sepia(100%) hue-rotate(290deg) saturate(200%);
 }
 
 .leaflet-tile-container {
-    background: #2a2a2a;
+    background: var(--barbie-shade-darkest);
+}
+
+/* Remove filter from map controls and markers so they stay colorful */
+.leaflet-control,
+.leaflet-marker-icon,
+.leaflet-popup {
+    filter: none !important;
 }
 
 #map-overlay {
@@ -79,12 +154,12 @@ header {
     max-width: calc(100vw - 80px); /* Mobile first: adapt to screen width */
     font-size: 0.95rem;
     font-weight: 500;
-    color: #FF69B4;
+    color: var(--accent-primary);
     padding: 0.8rem;
-    background: rgba(30, 30, 30, 0.95);
+    background: var(--barbie-shade-darkest);
     backdrop-filter: blur(10px);
     border-radius: 8px;
-    border: 2px solid #FF69B4;
+    border: 2px solid var(--border-primary);
     line-height: 1.6;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
                 0 0 10px rgba(255, 105, 180, 0.3);
@@ -107,13 +182,13 @@ header {
 }
 
 #filter-sentence .filter-part:hover {
-    color: #ffffff;
+    color: var(--text-primary);
     text-shadow: 0 0 15px rgba(255, 105, 180, 0.8);
     text-decoration-style: solid;
 }
 
 #filter-sentence .filter-part.editing {
-    color: #ffffff;
+    color: var(--text-primary);
     background: rgba(255, 105, 180, 0.3);
     padding: 0.1rem 0.5rem;
     border-radius: 4px;
@@ -125,9 +200,9 @@ header {
 /* Filter dropdowns */
 .filter-dropdown {
     position: fixed;
-    background: rgba(30, 30, 30, 0.98);
+    background: var(--barbie-shade-darkest);
     backdrop-filter: blur(10px);
-    border: 2px solid #FF69B4;
+    border: 2px solid var(--border-primary);
     border-radius: 8px;
     padding: 0.5rem 0;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
@@ -144,8 +219,8 @@ header {
     width: 100%;
     margin: 0.3rem 0;
     padding: 0.5rem;
-    background: #2a2a2a;
-    color: #ffffff;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
     cursor: pointer;
     transition: all 0.2s;
     font-size: 0.9rem;
@@ -153,12 +228,12 @@ header {
 
 .custom-dropdown-item:hover {
     background: rgba(255, 105, 180, 0.2);
-    color: #FF69B4;
+    color: var(--accent-primary);
 }
 
 .custom-dropdown-item.selected {
     background: rgba(255, 105, 180, 0.3);
-    color: #FF69B4;
+    color: var(--accent-primary);
     font-weight: 600;
 }
 
@@ -173,7 +248,7 @@ header {
 }
 
 .distance-slider-container .distance-display {
-    color: #FF69B4;
+    color: var(--accent-primary);
     font-weight: 600;
     text-align: center;
     font-size: 1.1rem;
@@ -187,7 +262,7 @@ header {
     padding: 0.2rem;
     margin-right: 0.5rem;
     background: none;
-    color: #ccc;
+    color: var(--text-secondary);
     text-decoration: none;
     border-radius: 4px;
     font-size: 0.85rem;
@@ -197,7 +272,7 @@ header {
 
 #imprint-link:hover {
     background: rgba(255, 105, 180, 0.1);
-    color: #FF69B4;
+    color: var(--accent-primary);
 }
 
 #site-logo {
@@ -207,12 +282,12 @@ header {
 }
 
 #site-logo path {
-    stroke: #FF69B4 !important;
+    stroke: var(--accent-primary) !important;
     transition: stroke 0.2s;
 }
 
 #imprint-link:hover #site-logo path {
-    stroke: #FF69B4 !important;
+    stroke: var(--accent-primary) !important;
 }
 
 #imprint-text {
@@ -224,7 +299,7 @@ header {
     bottom: 0;
     left: 0;
     padding: 0.5rem 1rem;
-    background: rgba(30, 30, 30, 0.95);
+    background: var(--barbie-shade-darkest);
     backdrop-filter: blur(10px);
     border-radius: 8px;
     font-size: 0.75rem;
@@ -239,13 +314,13 @@ header {
     display: none;
 }
 
-/* All environment markers use same monochrome style */
+/* All environment markers use monochrome Barbie Red theme */
 #env-watermark.production,
 #env-watermark.preview,
 #env-watermark.testing,
 #env-watermark.development {
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    color: rgba(255, 255, 255, 0.5);
+    border: 2px solid var(--barbie-tone-light);
+    color: var(--barbie-tone-light);
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
 }
 
@@ -255,7 +330,7 @@ header {
     top: 0;
     bottom: 0;
     width: 350px;
-    background: rgba(30, 30, 30, 0.95);
+    background: var(--barbie-shade-darkest);
     backdrop-filter: blur(10px);
     padding: 1.5rem;
     overflow-y: auto;
@@ -267,9 +342,9 @@ header {
     display: none;
 }
 
-    background: rgba(100, 100, 100, 0.2);
-    color: #aaa;
-    border: 1px solid #555;
+    background: var(--barbie-shade-dark);
+    color: var(--text-tertiary);
+    border: 1px solid var(--light-grey);
     border-radius: 5px;
     cursor: pointer;
     font-size: 0.85rem;
@@ -278,9 +353,9 @@ header {
 }
 
 #reset-filters:hover {
-    background: rgba(100, 100, 100, 0.3);
-    border-color: #888;
-    color: #ccc;
+    background: var(--barbie-shade-medium);
+    border-color: var(--lighter-grey);
+    color: var(--text-secondary);
 }
 
 .location-override label {
@@ -295,35 +370,35 @@ header {
 }
 
 .event-card {
-    background: rgba(45, 45, 45, 0.9);
+    background: var(--barbie-shade-dark);
     border-radius: 8px;
     padding: 1rem;
     margin-bottom: 1rem;
     cursor: pointer;
     transition: all 0.2s;
-    border-left: 3px solid #FF69B4;
+    border-left: 3px solid var(--accent-primary);
 }
 
 .event-card:hover {
     transform: translateX(-5px);
     box-shadow: 0 5px 15px rgba(255, 105, 180, 0.3);
-    background: rgba(55, 55, 55, 0.9);
+    background: var(--barbie-shade-medium);
 }
 
 .event-card h3 {
     font-size: 1rem;
     margin-bottom: 0.5rem;
-    color: #FF69B4;
+    color: var(--accent-primary);
 }
 
 .event-card p {
     font-size: 0.85rem;
-    color: #ccc;
+    color: var(--text-secondary);
     margin-bottom: 0.3rem;
 }
 
 .event-card .distance {
-    color: #888;
+    color: var(--text-tertiary);
     font-size: 0.8rem;
 }
 
@@ -345,7 +420,7 @@ header {
 }
 
 .detail-content {
-    background: #2d2d2d;
+    background: var(--bg-secondary);
     border-radius: 12px;
     padding: 2rem;
     max-width: 600px;
@@ -353,7 +428,7 @@ header {
     max-height: 80vh;
     overflow-y: auto;
     position: relative;
-    border: 2px solid #FF69B4;
+    border: 2px solid var(--border-primary);
     box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
 }
 
@@ -363,7 +438,7 @@ header {
     right: 1rem;
     background: none;
     border: none;
-    color: #ccc;
+    color: var(--text-secondary);
     font-size: 2rem;
     cursor: pointer;
     line-height: 1;
@@ -371,23 +446,23 @@ header {
 }
 
 #close-detail:hover {
-    color: #FF69B4;
+    color: var(--accent-primary);
 }
 
 .detail-content h2 {
     margin-bottom: 1rem;
-    color: #FF69B4;
+    color: var(--accent-primary);
     text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
 }
 
 .detail-content p {
     line-height: 1.6;
     margin-bottom: 1rem;
-    color: #ccc;
+    color: var(--text-secondary);
 }
 
 #detail-info {
-    background: rgba(0, 0, 0, 0.3);
+    background: var(--barbie-shade-darkest);
     padding: 1rem;
     border-radius: 8px;
     margin: 1rem 0;
@@ -396,7 +471,7 @@ header {
 
 #detail-link {
     display: inline-block;
-    background: #FF69B4;
+    background: var(--accent-primary);
     color: white;
     padding: 0.75rem 1.5rem;
     border-radius: 5px;
@@ -406,16 +481,16 @@ header {
 }
 
 #detail-link:hover {
-    background: #ff4da6;
+    background: var(--accent-hover);
     box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
 }
 
 /* Edge-positioned event details with arrows */
 .event-detail-edge {
     position: fixed;
-    background: rgba(30, 30, 30, 0.98);
+    background: var(--barbie-shade-darkest);
     backdrop-filter: blur(10px);
-    border: 2px solid #FF69B4;
+    border: 2px solid var(--border-primary);
     border-radius: 8px;
     padding: 1rem;
     max-width: 280px;
@@ -426,26 +501,26 @@ header {
 }
 
 .event-detail-edge h3 {
-    color: #FF69B4;
+    color: var(--accent-primary);
     font-size: 0.95rem;
     margin-bottom: 0.5rem;
     line-height: 1.3;
 }
 
 .event-detail-edge p {
-    color: #ccc;
+    color: var(--text-secondary);
     font-size: 0.85rem;
     margin: 0.3rem 0;
     line-height: 1.4;
 }
 
 .event-detail-edge .detail-time {
-    color: #aaa;
+    color: var(--text-tertiary);
     font-size: 0.8rem;
 }
 
 .event-detail-edge .detail-distance {
-    color: #888;
+    color: var(--text-tertiary);
     font-size: 0.75rem;
     margin-top: 0.5rem;
 }
@@ -468,43 +543,43 @@ header {
 
 /* Leaflet customization */
 .leaflet-popup-content-wrapper {
-    background: #2d2d2d;
-    color: white;
-    border: 2px solid #FF69B4;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 2px solid var(--border-primary);
 }
 
 .leaflet-popup-tip {
-    background: #2d2d2d;
-    border-color: #FF69B4;
+    background: var(--bg-secondary);
+    border-color: var(--border-primary);
 }
 
-/* Monochrome marker glow - barbie red instead of green */
+/* Monochrome marker glow - barbie red */
 .leaflet-marker-icon {
-    filter: drop-shadow(0 0 2px #FF69B4);
+    filter: drop-shadow(0 0 2px var(--barbie-red));
     transition: filter 0.2s ease;
 }
 
 .leaflet-marker-icon:hover {
-    filter: drop-shadow(0 0 4px #FF69B4) 
-            drop-shadow(0 0 8px #FF69B4);
+    filter: drop-shadow(0 0 4px var(--barbie-red)) 
+            drop-shadow(0 0 8px var(--barbie-red));
 }
 
-/* Scrollbar styling - monochrome */
+/* Scrollbar styling - monochrome Barbie Red theme */
 ::-webkit-scrollbar {
     width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.2);
+    background: var(--barbie-shade-darkest);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #FF69B4;
+    background: var(--accent-primary);
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #ff4da6;
+    background: var(--accent-hover);
 }
 
 @media (max-width: 768px) {

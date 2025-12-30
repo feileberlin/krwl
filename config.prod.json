@@ -120,7 +120,7 @@
     },
     "default_zoom": 13,
     "tile_provider": "https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png",
-    "tile_provider_comment": "CartoDB Dark No Labels - Minimal dark map for green-on-black theme",
+    "tile_provider_comment": "CartoDB Dark No Labels - Converted to monochromatic Barbie Red via CSS filters",
     "attribution": "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
     "predefined_locations": [
       {
