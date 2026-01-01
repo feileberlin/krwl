@@ -27,84 +27,210 @@
         "url": "https://www.hof.de/hof/hof_deu/leben/veranstaltungen.html",
         "type": "html",
         "enabled": true,
-        "notes": "Veranstaltungshinweise"
+        "notes": "Veranstaltungshinweise",
+        "options": {
+          "filter_ads": true,
+          "exclude_keywords": ["gewinnspiel", "werbung", "anzeige"],
+          "max_days_ahead": 90,
+          "category": "market",
+          "default_location": {
+            "name": "Wochenmarkt Hof",
+            "lat": 50.3177,
+            "lon": 11.9156
+          }
+        }
       },
       {
         "name": "Freiheitshalle",
         "url": "https://www.freiheitshalle.de/de/die-freiheitshalle/veranstaltungen",
         "type": "html",
         "enabled": true,
-        "notes": "Kulturzentrum"
+        "notes": "Kulturzentrum",
+        "options": {
+          "filter_ads": true,
+          "exclude_keywords": ["werbung", "sponsored"],
+          "max_days_ahead": 120,
+          "category": "culture",
+          "default_location": {
+            "name": "Freiheitshalle Hof",
+            "lat": 50.3191,
+            "lon": 11.9173
+          }
+        }
       },
       {
         "name": "Galeriehaus",
         "url": "https://www.facebook.com/GaleriehausHof/events",
         "type": "facebook",
         "enabled": true,
-        "notes": "Kunstkneipe"
+        "notes": "Kunstkneipe",
+        "options": {
+          "filter_ads": true,
+          "max_days_ahead": 90,
+          "category": "art",
+          "default_location": {
+            "name": "Galeriehaus Hof",
+            "lat": 50.3167,
+            "lon": 11.9167
+          }
+        }
       },
       {
         "name": "Vanishing Walls",
         "url": "https://www.facebook.com/people/Vanishing-Walls/100093518893300/",
         "type": "facebook",
         "enabled": true,
-        "notes": "Kunstverein"
+        "notes": "Kunstverein",
+        "options": {
+          "filter_ads": true,
+          "max_days_ahead": 90,
+          "category": "art",
+          "default_location": {
+            "name": "Vanishing Walls Hof",
+            "lat": 50.3167,
+            "lon": 11.9167
+          }
+        }
       },
       {
         "name": "Punkrock in Hof",
         "url": "https://www.facebook.com/people/Punk-in-Hof/100090512583516/",
         "type": "facebook",
         "enabled": true,
-        "notes": "Punkrock"
+        "notes": "Punkrock",
+        "options": {
+          "filter_ads": true,
+          "max_days_ahead": 120,
+          "category": "music",
+          "default_location": {
+            "name": "Hof",
+            "lat": 50.3167,
+            "lon": 11.9167
+          }
+        }
       },
       {
         "name": "VHS Last Minute",
         "url": "https://www.vhshoferland.de/p/last-minute-kurse-646-CAT-KAT282",
         "type": "html",
         "enabled": true,
-        "notes": "Volkshochschule"
+        "notes": "Volkshochschule",
+        "options": {
+          "filter_ads": true,
+          "exclude_keywords": ["werbung", "anzeige"],
+          "max_days_ahead": 60,
+          "category": "education",
+          "default_location": {
+            "name": "VHS Hofer Land",
+            "lat": 50.3167,
+            "lon": 11.9167
+          }
+        }
       },
       {
         "name": "Wochenmarkt Rehau",
         "url": "https://rehau.bayern/de/kultur/veranstaltungen/wochenmarkt",
         "type": "html",
         "enabled": true,
-        "notes": "Wochenmarkt"
+        "notes": "Wochenmarkt",
+        "options": {
+          "filter_ads": true,
+          "exclude_keywords": ["gewinnspiel", "werbung"],
+          "max_days_ahead": 90,
+          "category": "market",
+          "default_location": {
+            "name": "Wochenmarkt Rehau",
+            "lat": 50.2489,
+            "lon": 12.0364
+          }
+        }
       },
       {
         "name": "Wochenmarkt Selb",
         "url": "https://www.selb.de/freizeit-tourismus/veranstaltungen/detailansicht/selber-wochenmarkt",
         "type": "html",
         "enabled": true,
-        "notes": "Wochenmarkt"
+        "notes": "Wochenmarkt",
+        "options": {
+          "filter_ads": true,
+          "exclude_keywords": ["gewinnspiel", "werbung"],
+          "max_days_ahead": 90,
+          "category": "market",
+          "default_location": {
+            "name": "Wochenmarkt Selb",
+            "lat": 50.1705,
+            "lon": 12.1328
+          }
+        }
       },
       {
         "name": "Kunstkaufhaus",
         "url": "https://www.facebook.com/Kunstkaufhaus.Hof/events",
         "type": "facebook",
         "enabled": true,
-        "notes": "Kunstkneipe"
+        "notes": "Kunstkneipe",
+        "options": {
+          "filter_ads": true,
+          "max_days_ahead": 90,
+          "category": "art",
+          "default_location": {
+            "name": "Kunstkaufhaus Hof",
+            "lat": 50.3167,
+            "lon": 11.9167
+          }
+        }
       },
       {
         "name": "DiePelle",
         "url": "https://www.facebook.com/OffTheaterDuPelle/events",
         "type": "facebook",
         "enabled": true,
-        "notes": "Off-Theater"
+        "notes": "Off-Theater",
+        "options": {
+          "filter_ads": true,
+          "max_days_ahead": 120,
+          "category": "theater",
+          "default_location": {
+            "name": "Off-Theater DiePelle",
+            "lat": 50.3167,
+            "lon": 11.9167
+          }
+        }
       },
       {
         "name": "Frankenpost",
         "url": "https://event.frankenpost.de/index.php?kat=&community=95028+Hof&range=50",
         "type": "html",
         "enabled": true,
-        "notes": "Regionalzeitung"
+        "notes": "Regionalzeitung",
+        "options": {
+          "filter_ads": true,
+          "exclude_keywords": ["gewinnspiel", "werbung", "anzeige", "sponsored"],
+          "max_days_ahead": 90,
+          "category": "community",
+          "default_location": {
+            "name": "Hof",
+            "lat": 50.3167,
+            "lon": 11.9167
+          }
+        }
       },
       {
         "name": "Brauerei Meinel",
         "url": "https://www.facebook.com/MeinelBraeu/upcoming_hosted_events",
         "type": "facebook",
         "enabled": true,
-        "notes": "Privatbrauerei"
+        "notes": "Privatbrauerei",
+        "options": {
+          "filter_ads": true,
+          "max_days_ahead": 120,
+          "category": "food-drink",
+          "default_location": {
+            "name": "Brauerei Meinel",
+            "lat": 50.3167,
+            "lon": 11.9167
+          }
+        }
       }
     ],
     "interval_minutes": 60
