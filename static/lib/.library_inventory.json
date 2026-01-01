@@ -1,14 +1,8 @@
 {
   "leaflet": {
-    "success": true,
+    "success": false,
     "version": "1.9.4",
-    "files": [
-      "leaflet/leaflet.css",
-      "leaflet/leaflet.js",
-      "leaflet/images/marker-icon.png",
-      "leaflet/images/marker-icon-2x.png",
-      "leaflet/images/marker-shadow.png"
-    ],
-    "downloaded_at": "2026-01-01T23:26:45.076959"
+    "files": [],
+    "downloaded_at": "2026-01-01T23:35:02.751159"
   }
 }
