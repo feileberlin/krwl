@@ -1,0 +1,150 @@
+name: 📦 Download CDN Libraries
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform'
+        required: true
+        type: choice
+        options:
+          - 'download'
+          - 'verify'
+          - 'list'
+      commit_changes:
+        description: 'Commit and push downloaded files?'
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+jobs:
+  manage-libs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Run library management action
+        id: manage_libs
+        run: |
+          echo "Running: python3 scripts/manage_libs.py ${{ github.event.inputs.action }}"
+          
+          # Run the selected action and capture output
+          if python3 scripts/manage_libs.py ${{ github.event.inputs.action }} > /tmp/lib_output.txt 2>&1; then
+            echo "success=true" >> $GITHUB_OUTPUT
+            echo "✓ Action completed successfully"
+          else
+            echo "success=false" >> $GITHUB_OUTPUT
+            echo "⚠️ Action completed with errors"
+          fi
+          
+          # Display output
+          cat /tmp/lib_output.txt
+
+      - name: Check for changes
+        id: check_changes
+        if: github.event.inputs.action == 'download' && github.event.inputs.commit_changes == 'true'
+        run: |
+          if [[ -n $(git status --porcelain static/lib/) ]]; then
+            echo "changes=true" >> $GITHUB_OUTPUT
+            echo "✓ Library files changed"
+            
+            # Count files changed
+            changed_count=$(git status --porcelain static/lib/ | wc -l)
+            echo "changed_count=$changed_count" >> $GITHUB_OUTPUT
+          else
+            echo "changes=false" >> $GITHUB_OUTPUT
+            echo "ℹ No library files changed"
+            echo "changed_count=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit library files
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          git add static/lib/
+          git commit -m "chore: download CDN libraries via workflow by @${{ github.actor }}"
+          echo "✓ Changes committed"
+
+      - name: Push changes
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          git push
+          echo "✓ Changes pushed to repository"
+
+      - name: Generate summary
+        if: always()
+        run: |
+          echo "## 📦 Library Management Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Action**: ${{ github.event.inputs.action }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Executed by**: @${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Timestamp**: $(date -u +"%Y-%m-%d %H:%M UTC")" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ github.event.inputs.action }}" == "download" ]; then
+            if [ "${{ steps.manage_libs.outputs.success }}" == "true" ]; then
+              echo "### ✅ Download Completed" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              
+              if [ "${{ github.event.inputs.commit_changes }}" == "true" ]; then
+                if [ "${{ steps.check_changes.outputs.changes }}" == "true" ]; then
+                  echo "- **Files Changed**: ${{ steps.check_changes.outputs.changed_count }}" >> $GITHUB_STEP_SUMMARY
+                  echo "- **Status**: ✅ Files downloaded and committed to repository" >> $GITHUB_STEP_SUMMARY
+                  echo "" >> $GITHUB_STEP_SUMMARY
+                  echo "### Changed Files" >> $GITHUB_STEP_SUMMARY
+                  echo '```' >> $GITHUB_STEP_SUMMARY
+                  git diff HEAD~1 --name-status static/lib/ >> $GITHUB_STEP_SUMMARY || echo "No diff available" >> $GITHUB_STEP_SUMMARY
+                  echo '```' >> $GITHUB_STEP_SUMMARY
+                else
+                  echo "- **Status**: ℹ️ Libraries already up to date, no changes needed" >> $GITHUB_STEP_SUMMARY
+                fi
+              else
+                echo "- **Status**: ⚠️ Files downloaded but NOT committed (commit_changes was false)" >> $GITHUB_STEP_SUMMARY
+                echo "" >> $GITHUB_STEP_SUMMARY
+                echo "To commit these changes, run this workflow again with 'Commit and push' enabled." >> $GITHUB_STEP_SUMMARY
+              fi
+            else
+              echo "### ❌ Download Failed" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "Check the workflow logs for details." >> $GITHUB_STEP_SUMMARY
+            fi
+            
+          elif [ "${{ github.event.inputs.action }}" == "verify" ]; then
+            if [ "${{ steps.manage_libs.outputs.success }}" == "true" ]; then
+              echo "### ✅ Verification Passed" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "All library files are present and accounted for." >> $GITHUB_STEP_SUMMARY
+            else
+              echo "### ❌ Verification Failed" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "Some library files are missing. Run the workflow with action 'download' to fix." >> $GITHUB_STEP_SUMMARY
+            fi
+            
+          elif [ "${{ github.event.inputs.action }}" == "list" ]; then
+            echo "### 📚 Library Inventory" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Action Output" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat /tmp/lib_output.txt >> $GITHUB_STEP_SUMMARY || echo "No output available" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
