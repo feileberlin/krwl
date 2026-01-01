@@ -9,12 +9,12 @@
         "lat": 50.3167,
         "lon": 11.9167
       },
-      "start_time": "2026-01-01T21:15:05",
-      "end_time": "2026-01-01T23:15:05",
+      "start_time": "2026-01-01T21:30:52",
+      "end_time": "2026-01-01T23:30:52",
       "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
       "source": "demo",
       "status": "published",
-      "published_at": "2026-01-01T21:45:05"
+      "published_at": "2026-01-01T22:00:52"
     },
     {
       "id": "demo_started_5min_ago",
@@ -25,12 +25,12 @@
         "lat": 50.3167,
         "lon": 11.9167
       },
-      "start_time": "2026-01-01T21:40:05",
-      "end_time": "2026-01-01T23:40:05",
+      "start_time": "2026-01-01T21:55:52",
+      "end_time": "2026-01-01T23:55:52",
       "url": "https://event.frankenpost.de/detail.php?event_id=3202184",
       "source": "demo",
       "status": "published",
-      "published_at": "2026-01-01T21:45:05"
+      "published_at": "2026-01-01T22:00:52"
     },
     {
       "id": "demo_starting_5min",
@@ -41,12 +41,12 @@
         "lat": 50.3167,
         "lon": 11.9167
       },
-      "start_time": "2026-01-01T21:50:05",
-      "end_time": "2026-01-01T23:50:05",
+      "start_time": "2026-01-01T22:05:52",
+      "end_time": "2026-01-02T00:05:52",
       "url": "https://event.frankenpost.de/detail.php?event_id=3185852",
       "source": "demo",
       "status": "published",
-      "published_at": "2026-01-01T21:45:05"
+      "published_at": "2026-01-01T22:00:52"
     },
     {
       "id": "demo_starting_15min",
@@ -57,12 +57,12 @@
         "lat": 52.52,
         "lon": 13.405
       },
-      "start_time": "2026-01-01T22:00:05",
-      "end_time": "2026-01-02T00:00:05",
+      "start_time": "2026-01-01T22:15:52",
+      "end_time": "2026-01-02T00:15:52",
       "url": "https://example.com/test-event",
       "source": "demo",
       "status": "published",
-      "published_at": "2026-01-01T21:45:05"
+      "published_at": "2026-01-01T22:00:52"
     },
     {
       "id": "demo_starting_30min",
@@ -73,12 +73,12 @@
         "lat": 50.3167,
         "lon": 11.9167
       },
-      "start_time": "2026-01-01T22:15:05",
-      "end_time": "2026-01-02T00:15:05",
+      "start_time": "2026-01-01T22:30:52",
+      "end_time": "2026-01-02T00:30:52",
       "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
       "source": "demo",
       "status": "published",
-      "published_at": "2026-01-01T21:45:05"
+      "published_at": "2026-01-01T22:00:52"
     },
     {
       "id": "demo_in_1hour",
@@ -89,12 +89,12 @@
         "lat": 50.3167,
         "lon": 11.9167
       },
-      "start_time": "2026-01-01T22:45:05",
-      "end_time": "2026-01-02T00:45:05",
+      "start_time": "2026-01-01T23:00:52",
+      "end_time": "2026-01-02T01:00:52",
       "url": "https://event.frankenpost.de/detail.php?event_id=3202184",
       "source": "demo",
       "status": "published",
-      "published_at": "2026-01-01T21:45:05"
+      "published_at": "2026-01-01T22:00:52"
     },
     {
       "id": "demo_in_2hours",
@@ -105,12 +105,12 @@
         "lat": 50.3167,
         "lon": 11.9167
       },
-      "start_time": "2026-01-01T23:45:05",
-      "end_time": "2026-01-02T01:45:05",
+      "start_time": "2026-01-02T00:00:52",
+      "end_time": "2026-01-02T02:00:52",
       "url": "https://event.frankenpost.de/detail.php?event_id=3185852",
       "source": "demo",
       "status": "published",
-      "published_at": "2026-01-01T21:45:05"
+      "published_at": "2026-01-01T22:00:52"
     },
     {
       "id": "demo_this_evening",
@@ -121,12 +121,12 @@
         "lat": 52.52,
         "lon": 13.405
       },
-      "start_time": "2026-01-02T01:45:05",
-      "end_time": "2026-01-02T03:45:05",
+      "start_time": "2026-01-02T02:00:52",
+      "end_time": "2026-01-02T04:00:52",
       "url": "https://example.com/test-event",
       "source": "demo",
       "status": "published",
-      "published_at": "2026-01-01T21:45:05"
+      "published_at": "2026-01-01T22:00:52"
     },
     {
       "id": "demo_just_ended",
@@ -137,12 +137,12 @@
         "lat": 50.3167,
         "lon": 11.9167
       },
-      "start_time": "2026-01-01T19:35:05",
-      "end_time": "2026-01-01T21:35:05",
+      "start_time": "2026-01-01T19:50:52",
+      "end_time": "2026-01-01T21:50:52",
       "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
       "source": "demo",
       "status": "published",
-      "published_at": "2026-01-01T21:45:05"
+      "published_at": "2026-01-01T22:00:52"
     },
     {
       "id": "demo_very_soon",
@@ -153,12 +153,12 @@
         "lat": 50.3167,
         "lon": 11.9167
       },
-      "start_time": "2026-01-01T22:30:05",
-      "end_time": "2026-01-02T00:30:05",
+      "start_time": "2026-01-01T22:45:52",
+      "end_time": "2026-01-02T00:45:52",
       "url": "https://event.frankenpost.de/detail.php?event_id=3202184",
       "source": "demo",
       "status": "published",
-      "published_at": "2026-01-01T21:45:05"
+      "published_at": "2026-01-01T22:00:52"
     },
     {
       "id": "demo_utc_plus1",
@@ -169,12 +169,12 @@
         "lat": 50.3167,
         "lon": 11.9167
       },
-      "start_time": "2026-01-01T22:45:05+01:00",
-      "end_time": "2026-01-02T00:45:05+01:00",
+      "start_time": "2026-01-01T23:00:52+01:00",
+      "end_time": "2026-01-02T01:00:52+01:00",
       "url": "https://event.frankenpost.de/detail.php?event_id=3185852",
       "source": "demo",
       "status": "published",
-      "published_at": "2026-01-01T21:45:05"
+      "published_at": "2026-01-01T22:00:52"
     },
     {
       "id": "demo_utc_plus2",
@@ -185,12 +185,12 @@
         "lat": 52.52,
         "lon": 13.405
       },
-      "start_time": "2026-01-01T22:45:05+02:00",
-      "end_time": "2026-01-02T00:45:05+02:00",
+      "start_time": "2026-01-01T23:00:52+02:00",
+      "end_time": "2026-01-02T01:00:52+02:00",
       "url": "https://example.com/test-event",
       "source": "demo",
       "status": "published",
-      "published_at": "2026-01-01T21:45:05"
+      "published_at": "2026-01-01T22:00:52"
     },
     {
       "id": "demo_utc_minus5",
@@ -201,12 +201,12 @@
         "lat": 50.3167,
         "lon": 11.9167
       },
-      "start_time": "2026-01-01T22:45:05-05:00",
-      "end_time": "2026-01-02T00:45:05-05:00",
+      "start_time": "2026-01-01T23:00:52-05:00",
+      "end_time": "2026-01-02T01:00:52-05:00",
       "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
       "source": "demo",
       "status": "published",
-      "published_at": "2026-01-01T21:45:05"
+      "published_at": "2026-01-01T22:00:52"
     },
     {
       "id": "demo_utc_plus9",
@@ -217,12 +217,12 @@
         "lat": 50.3167,
         "lon": 11.9167
       },
-      "start_time": "2026-01-01T22:45:05+09:00",
-      "end_time": "2026-01-02T00:45:05+09:00",
+      "start_time": "2026-01-01T23:00:52+09:00",
+      "end_time": "2026-01-02T01:00:52+09:00",
       "url": "https://event.frankenpost.de/detail.php?event_id=3202184",
       "source": "demo",
       "status": "published",
-      "published_at": "2026-01-01T21:45:05"
+      "published_at": "2026-01-01T22:00:52"
     },
     {
       "id": "demo_utc_plus530",
@@ -233,12 +233,12 @@
         "lat": 50.3167,
         "lon": 11.9167
       },
-      "start_time": "2026-01-01T22:15:05+05:30",
-      "end_time": "2026-01-02T00:15:05+05:30",
+      "start_time": "2026-01-01T22:30:52+05:30",
+      "end_time": "2026-01-02T00:30:52+05:30",
       "url": "https://event.frankenpost.de/detail.php?event_id=3185852",
       "source": "demo",
       "status": "published",
-      "published_at": "2026-01-01T21:45:05"
+      "published_at": "2026-01-01T22:00:52"
     },
     {
       "id": "demo_before_sunrise_5min",
@@ -254,7 +254,7 @@
       "url": "https://example.com/test-event",
       "source": "demo",
       "status": "published",
-      "published_at": "2026-01-01T21:45:05"
+      "published_at": "2026-01-01T22:00:52"
     },
     {
       "id": "demo_at_sunrise",
@@ -270,7 +270,7 @@
       "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
       "source": "demo",
       "status": "published",
-      "published_at": "2026-01-01T21:45:05"
+      "published_at": "2026-01-01T22:00:52"
     },
     {
       "id": "demo_after_sunrise_5min",
@@ -286,7 +286,7 @@
       "url": "https://event.frankenpost.de/detail.php?event_id=3202184",
       "source": "demo",
       "status": "published",
-      "published_at": "2026-01-01T21:45:05"
+      "published_at": "2026-01-01T22:00:52"
     },
     {
       "id": "demo_crossing_sunrise",
@@ -302,7 +302,7 @@
       "url": "https://event.frankenpost.de/detail.php?event_id=3185852",
       "source": "demo",
       "status": "published",
-      "published_at": "2026-01-01T21:45:05"
+      "published_at": "2026-01-01T22:00:52"
     },
     {
       "id": "demo_starting_before_sunrise",
@@ -318,7 +318,7 @@
       "url": "https://example.com/test-event",
       "source": "demo",
       "status": "published",
-      "published_at": "2026-01-01T21:45:05"
+      "published_at": "2026-01-01T22:00:52"
     },
     {
       "id": "demo_starting_after_sunrise",
@@ -334,7 +334,7 @@
       "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
       "source": "demo",
       "status": "published",
-      "published_at": "2026-01-01T21:45:05"
+      "published_at": "2026-01-01T22:00:52"
     },
     {
       "id": "demo_all_night",
@@ -350,7 +350,7 @@
       "url": "https://event.frankenpost.de/detail.php?event_id=3202184",
       "source": "demo",
       "status": "published",
-      "published_at": "2026-01-01T21:45:05"
+      "published_at": "2026-01-01T22:00:52"
     },
     {
       "id": "demo_far_away",
@@ -361,15 +361,15 @@
         "lat": 52.52,
         "lon": 13.405
       },
-      "start_time": "2026-01-01T23:45:05",
-      "end_time": "2026-01-02T01:45:05",
+      "start_time": "2026-01-02T00:00:52",
+      "end_time": "2026-01-02T02:00:52",
       "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
       "source": "demo",
       "status": "published",
-      "published_at": "2026-01-01T21:45:05"
+      "published_at": "2026-01-01T22:00:52"
     }
   ],
-  "last_updated": "2026-01-01T21:45:05",
-  "demo_generated_at": "2026-01-01T21:45:05",
+  "last_updated": "2026-01-01T22:00:52",
+  "demo_generated_at": "2026-01-01T22:00:52",
   "note": "Demo events generated from real event templates with current timestamps for testing"
 }
