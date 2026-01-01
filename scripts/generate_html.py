@@ -9,7 +9,7 @@ def generate(mode='preview'):
     
     # Load resources
     css = (static/'lib/leaflet/leaflet.css').read_text() + (static/'css/style.css').read_text()
-    js = (static/'lib/leaflet/leaflet.js').read_text() + (static/'js/i18n.js').read_text() + (static/'js/app.js').read_text()
+    js = (static/'lib/leaflet/leaflet.js').read_text() + '\n' + (static/'js/i18n.js').read_text() + '\n' + (static/'js/app.js').read_text()
     icon = 'data:image/svg+xml;base64,' + base64.b64encode((static/'favicon.svg').read_text().encode()).decode()
     
     # Load data
