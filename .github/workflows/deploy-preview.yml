@@ -14,141 +14,32 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: preview
-      url: ${{ steps.deployment.outputs.page_url }}preview/
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Download Leaflet library
-        run: |
-          ./download-libs.sh
-          echo "✓ Leaflet library downloaded"
+        run: ./download-libs.sh
 
-      - name: Prepare preview publish directory
+      - name: Generate fresh demo events
+        run: python3 scripts/generate_demo_events.py > static/events.demo.json
+
+      - name: Generate self-contained preview HTML
+        run: python3 scripts/generate_preview.py
+
+      - name: Commit preview to repository
         run: |
-          set -euo pipefail
-          rm -rf publish
-          mkdir -p publish/preview
-          
-          if [ -d static ]; then
-            # Copy everything from static into publish/preview
-            cp -a static/. publish/preview/
-            echo "✓ Static files copied to /preview/ path"
-          fi
-          
-          # Generate fresh demo events with current timestamps
-          if [ -f scripts/generate_demo_events.py ]; then
-            python3 scripts/generate_demo_events.py > publish/preview/events.demo.json
-            echo "✓ Generated fresh demo events with current timestamps"
-          fi
-          
-          # Use preview config (debugging enabled, caching disabled, both real and demo events)
-          if [ -f config.preview.json ]; then
-            cp config.preview.json publish/preview/config.json
-            echo "✓ Using preview config (debug mode enabled, showing both real and demo events)"
-          elif [ -f config.dev.json ]; then
-            cp config.dev.json publish/preview/config.json
-            echo "✓ Using development config (fallback)"
-          elif [ -f config.sample.json ]; then
-            cp config.sample.json publish/preview/config.json
-            echo "✓ Using sample config"
-          fi
-          
-          # Inject build metadata (commit SHA, PR number) into config
-          if [ -f publish/preview/config.json ]; then
-            COMMIT_SHORT="${GITHUB_SHA:0:7}"
-            
-            # Try to get PR number from various sources
-            PR_NUMBER=""
-            if [ "${{ github.event_name }}" = "pull_request" ]; then
-              PR_NUMBER="${{ github.event.pull_request.number }}"
-            elif [ -n "${{ github.event.number }}" ]; then
-              PR_NUMBER="${{ github.event.number }}"
-            fi
-            
-            # Create build_info section using jq
-            if command -v jq &> /dev/null; then
-              BUILD_INFO=$(jq -n \
-                --arg commit "$COMMIT_SHORT" \
-                --arg sha "$GITHUB_SHA" \
-                --arg pr "$PR_NUMBER" \
-                --arg ref "$GITHUB_REF" \
-                --arg actor "$GITHUB_ACTOR" \
-                --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-                '{
-                  commit_short: $commit,
-                  commit_sha: $sha,
-                  pr_number: $pr,
-                  ref: $ref,
-                  deployed_by: $actor,
-                  deployed_at: $timestamp
-                }')
-              
-              # Merge build_info into config.json
-              jq --argjson build_info "$BUILD_INFO" '. + {build_info: $build_info}' \
-                publish/preview/config.json > publish/preview/config.json.tmp
-              mv publish/preview/config.json.tmp publish/preview/config.json
-              
-              echo "✓ Injected build metadata: commit $COMMIT_SHORT, PR #$PR_NUMBER"
-            else
-              echo "⚠ jq not available, skipping build metadata injection"
-            fi
-          fi
-          
-          # DO NOT copy CNAME for preview environment (prevents custom domain conflict)
-          rm -f publish/preview/CNAME
-          
-          # Prevent Jekyll processing
-          touch publish/preview/.nojekyll
-          
-          # Dynamically determine base URL for preview environment
-          # Support both GitHub Pages default URLs and custom domains
-          if [ -f CNAME ]; then
-            CUSTOM_DOMAIN=$(cat CNAME | tr -d '[:space:]')
-            BASE_URL="https://${CUSTOM_DOMAIN}/preview/"
-            echo "✓ Custom domain detected: ${CUSTOM_DOMAIN}"
-            echo "  Preview environment will be available at: ${BASE_URL}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add preview/index.html
+          if git diff --staged --quiet; then
+            echo "No changes to preview"
           else
-            # Use GitHub Pages default URL format
-            REPO_NAME="${GITHUB_REPOSITORY#*/}"
-            BASE_URL="/${REPO_NAME}/preview/"
-            echo "✓ Using GitHub Pages default URL"
-            echo "  Preview environment will be available at: https://${GITHUB_REPOSITORY_OWNER}.github.io${BASE_URL}"
+            git commit -m "Update preview/index.html"
+            git push
+            echo "✓ Preview updated at /preview/"
           fi
-          
-          # Inject base tag for preview path if not present
-          if [ -f publish/preview/index.html ]; then
-            if ! grep -q '<base' publish/preview/index.html; then
-              # Use relative path for base href (works with both custom domains and github.io)
-              sed -i '/<head>/a\    <base href="/preview/">' publish/preview/index.html
-              echo "✓ Base tag injected: <base href=\"/preview/\">"
-              echo "  This works with both custom domains and GitHub Pages URLs"
-            fi
-          fi
-          
-          echo ""
-          echo "Preview environment publish directory contents:"
-          ls -la publish/preview
-          echo ""
-          echo "Note: This preview environment shows both real and demo events for testing purposes."
-        env:
-          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: publish
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
