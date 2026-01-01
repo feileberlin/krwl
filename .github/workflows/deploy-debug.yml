@@ -48,7 +48,7 @@ jobs:
           
           # Generate fresh demo events with current timestamps
           if [ -f generate_demo_events.py ]; then
-            python3 generate_demo_events.py > publish/debug/events.demo.json 2>&1
+            python3 generate_demo_events.py > publish/debug/events.demo.json
             echo "✓ Generated fresh demo events with current timestamps"
           fi
           
