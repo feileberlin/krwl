@@ -23,17 +23,14 @@ def cleanup_old_files(base_dir="."):
         # Old demo files with outdated timestamps
         "static/events.demo.json",
         "static/events.demo.json.old",
-        "data/events.demo.json",
-        "data/events.demo.json.old",
         # Old backup files
         "static/events.backup.json",
-        "data/events.json.backup",
-        "data/pending_events.json.backup",
-        "data/events_example.json.old",
-        "data/pending_events_example.json.old",
+        "static/events.json.backup",
+        "static/pending_events.json.backup",
+        "examples/events_example.json.old",
+        "examples/pending_events_example.json.old",
         # Any other temporary files
         "static/events.tmp.json",
-        "data/events.tmp.json",
     ]
     
     removed = []

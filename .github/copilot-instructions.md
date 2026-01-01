@@ -199,6 +199,8 @@ When adding features:
 
 The "Promote Preview" workflow is **manually triggered** via GitHub Actions workflow_dispatch.
 
+GitHub Pages serves the `static/` directory directly - no separate deployment workflow needed.
+
 See `.github/DEPLOYMENT.md` and `.github/PROMOTE_WORKFLOW.md` for details.
 
 ## Documentation Standards
@@ -225,19 +227,22 @@ See `.github/DEPLOYMENT.md` and `.github/PROMOTE_WORKFLOW.md` for details.
 1. Configure source in `config.json` under `scraping.sources[]`
 2. Implement scraper logic in `src/modules/scraper.py` if needed
 3. Test with: `python3 test_scraper.py --verbose`
-4. Scraped events go to `data/pending_events.json` for editorial review
+4. Scraped events go to `static/pending_events.json` for editorial review
 
 ### Editorial Workflow
 1. Pending events require approval (unless `editor.auto_publish: true`)
 2. Use TUI: `python3 src/main.py` → "Review Pending Events"
-3. Actions: approve (a), edit (e), reject (r)
-4. Approved events → `data/events.json` → appear on map
+3. Or use GitHub UI: Actions → "Review Events (GitHub UI)" → Run workflow
+4. Actions: approve (a), edit (e), reject (r)
+5. Approved events → `static/events.json` → appear on map
+6. Approved events backed up to `backups/events/`
 
 ### Static Generation
 1. Templates in `src/modules/generator.py`
 2. Generate: `python3 src/main.py generate`
-3. Output: `static/` directory
-4. Built-in protection detects manual changes before overwriting
+3. Output: `static/` directory (HTML, CSS, JS)
+4. Note: Data files live directly in `static/` - no copying needed
+5. Built-in protection detects manual changes before overwriting
 
 ## Security Considerations
 

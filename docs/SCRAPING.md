@@ -132,7 +132,7 @@ python3 src/main.py scrape
 This will:
 1. Load configuration from `config/config.json`
 2. Scrape all enabled sources
-3. Save events to `data/pending_events.json`
+3. Save events to `static/pending_events.json`
 4. Show summary of scraped events
 
 ### Automated Scraping
@@ -183,17 +183,19 @@ jobs:
         run: |
           git config user.name "Event Scraper Bot"
           git config user.email "bot@example.com"
-          git add data/pending_events.json
+          git add static/pending_events.json
+          git add backups/
           git commit -m "Auto-scraped events" || exit 0
           git push
 ```
 
 ## Event Processing Workflow
 
-1. **Scraping** → Events saved to `data/pending_events.json`
-2. **Review** → Use editor UI to review pending events
+1. **Scraping** → Events saved to `static/pending_events.json`
+2. **Review** → Use TUI or GitHub UI workflow to review pending events
 3. **Approval** → Approve events to move them to `static/events.json`
-4. **Publishing** → Approved events appear on the map
+4. **Backup** → Each approved event backed up to `backups/events/`
+5. **Publishing** → Approved events appear on the map (GitHub Pages serves `static/` directly)
 
 ## Deduplication
 

@@ -180,7 +180,7 @@ jobs:
             - ✅ Production site will be updated with preview changes
             - ✅ Site will use \`config.prod.json\` (optimized for maximum speed, no debugging)
             - ✅ Custom domain (CNAME) will be preserved
-            - ✅ Auto-deploy to GitHub Pages via \`deploy-pages.yml\` workflow
+            - ✅ Auto-deploy to GitHub Pages (serves static/ directory directly)
             
             ### ✅ Testing checklist:
             - [ ] Preview site tested at \`/preview/\` path

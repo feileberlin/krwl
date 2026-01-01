@@ -97,10 +97,11 @@ python3 test_filters.py --verbose
 
 ```
 krwl-hof/
-├── static/          # The actual web app (HTML, CSS, JS)
+├── static/          # The actual web app (HTML, CSS, JS) and event data
 ├── src/             # Python backend (scraping, generation)
 ├── docs/            # Documentation (auto-synced to wiki)
-├── data/            # Scraped event data
+├── backups/         # Individual event backups
+├── examples/        # Example event data
 └── README.md        # This file (auto-generated)
 ```
 

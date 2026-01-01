@@ -359,23 +359,33 @@ class EventSchemaTester:
         return len(errors) == 0, errors
     
     def load_events_file(self, filename: str) -> Tuple[List[Dict], str]:
-        """Load events from a JSON file"""
-        file_path = self.repo_root / "data" / filename
-        if not file_path.exists():
-            # Try static folder
-            file_path = self.repo_root / "static" / filename
+        """
+        Load events from a file with flexible path handling.
         
-        if not file_path.exists():
-            return [], f"File not found: {filename}"
+        Checks in multiple locations:
+        1. static/ directory (production events)
+        2. examples/ directory (example events)
         
-        try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-            return data.get("events", []), ""
-        except json.JSONDecodeError as e:
-            return [], f"Invalid JSON in {filename}: {e}"
-        except Exception as e:
-            return [], f"Error loading {filename}: {e}"
+        Returns tuple of (events_list, error_message)
+        """
+        # Try multiple locations
+        possible_paths = [
+            self.repo_root / "static" / filename,
+            self.repo_root / "examples" / filename,
+        ]
+        
+        for file_path in possible_paths:
+            if file_path.exists():
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        data = json.load(f)
+                    return data.get("events", []), ""
+                except json.JSONDecodeError as e:
+                    return [], f"Invalid JSON in {filename}: {e}"
+                except Exception as e:
+                    return [], f"Error loading {filename}: {e}"
+        
+        return [], f"File not found: {filename} (checked: static/, examples/)"
     
     def test_schema_definition(self):
         """Test that the schema is properly defined"""
@@ -721,7 +731,7 @@ class EventSchemaTester:
         print("HOW TO RECOVER FULL FUNCTIONALITY:")
         print("-" * 60)
         print("""
-1. Open the affected event file (data/events.json or data/events_example.json)
+1. Open the affected event file (static/events.json or examples/events_example.json)
 
 2. For each event with issues:
    - Add missing required fields (id, title, location, start_time, source, status)
