@@ -6,8 +6,8 @@ Tests for bulk approve/reject operations with wildcard support.
 import sys
 from pathlib import Path
 
-# Add src to path
-sys.path.insert(0, str(Path(__file__).parent / 'src'))
+# Add src to path (go up one level from tests/ to project root, then to src/)
+sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))
 
 from main import expand_wildcard_patterns
 
