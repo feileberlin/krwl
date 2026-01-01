@@ -60,6 +60,20 @@ class EventScraper:
             print("ERROR: Scraping libraries not installed. Cannot scrape events.", file=sys.stderr)
             print("Install with: pip install -r requirements.txt", file=sys.stderr)
             print("Or install directly: pip install requests beautifulsoup4 lxml feedparser", file=sys.stderr)
+            
+            # Still write status file even if scraping is disabled
+            status = {
+                'scraped': 0,
+                'added': 0,
+                'duplicates': 0,
+                'rejected': 0,
+                'timestamp': datetime.now().isoformat(),
+                'error': 'Scraping libraries not installed'
+            }
+            status_file = self.base_path / '.scrape_status'
+            with open(status_file, 'w') as f:
+                json.dump(status, f, indent=2)
+            
             return []
             
         pending_data = load_pending_events(self.base_path)
@@ -118,6 +132,19 @@ class EventScraper:
                 
         save_pending_events(self.base_path, pending_data)
         print(f"\n📊 Total: {len(new_events)} scraped, {added_count} new, {skipped_duplicate} duplicates skipped, {skipped_rejected} rejected")
+        
+        # Write scrape status for workflow automation
+        status = {
+            'scraped': len(new_events),
+            'added': added_count,
+            'duplicates': skipped_duplicate,
+            'rejected': skipped_rejected,
+            'timestamp': datetime.now().isoformat()
+        }
+        status_file = self.base_path / '.scrape_status'
+        with open(status_file, 'w') as f:
+            json.dump(status, f, indent=2)
+        
         return new_events
         
     def scrape_source(self, source):

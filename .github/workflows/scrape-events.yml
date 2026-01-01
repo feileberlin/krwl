@@ -59,11 +59,26 @@ jobs:
       - name: Check for changes
         id: check_changes
         run: |
-          if [[ -n $(git status --porcelain) ]]; then
+          # Check if scrape status file exists and read added count
+          if [[ -f .scrape_status ]]; then
+            added_count=$(python3 -c "import json; print(json.load(open('.scrape_status'))['added'])")
+            echo "added_count=$added_count" >> $GITHUB_OUTPUT
+            
+            if [[ $added_count -gt 0 ]]; then
+              echo "changes=true" >> $GITHUB_OUTPUT
+              echo "✓ $added_count new event(s) found"
+            else
+              echo "changes=false" >> $GITHUB_OUTPUT
+              echo "ℹ No new events found (checked all sources, all were duplicates or rejected)"
+            fi
+          elif [[ -n $(git status --porcelain) ]]; then
+            # Fallback to git check if status file doesn't exist
             echo "changes=true" >> $GITHUB_OUTPUT
-            echo "✓ New events found"
+            echo "added_count=unknown" >> $GITHUB_OUTPUT
+            echo "✓ Changes detected (legacy mode)"
           else
             echo "changes=false" >> $GITHUB_OUTPUT
+            echo "added_count=0" >> $GITHUB_OUTPUT
             echo "ℹ No new events found"
           fi
 
@@ -86,8 +101,34 @@ jobs:
           echo "## Scraping Run Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- **Date**: $(date -u +"%Y-%m-%d %H:%M UTC")" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ steps.check_changes.outputs.changes }}" == "true" ]; then
-            echo "- **Status**: ✅ New events found and added to pending queue" >> $GITHUB_STEP_SUMMARY
+          
+          # Get detailed stats from status file if available
+          if [[ -f .scrape_status ]]; then
+            scraped=$(python3 -c "import json; print(json.load(open('.scrape_status'))['scraped'])")
+            added=$(python3 -c "import json; print(json.load(open('.scrape_status'))['added'])")
+            duplicates=$(python3 -c "import json; print(json.load(open('.scrape_status'))['duplicates'])")
+            rejected=$(python3 -c "import json; print(json.load(open('.scrape_status'))['rejected'])")
+            
+            echo "- **Events Scraped**: $scraped" >> $GITHUB_STEP_SUMMARY
+            echo "- **New Events Added**: $added" >> $GITHUB_STEP_SUMMARY
+            echo "- **Duplicates Skipped**: $duplicates" >> $GITHUB_STEP_SUMMARY
+            echo "- **Rejected Events Skipped**: $rejected" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            if [ "$added" -gt 0 ]; then
+              echo "- **Status**: ✅ New events added to pending queue" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "To review and approve pending events:" >> $GITHUB_STEP_SUMMARY
+              echo "1. Go to **Actions** → **Review Events (GitHub UI)**" >> $GITHUB_STEP_SUMMARY
+              echo "2. Click **Run workflow** and select **list** to see pending events" >> $GITHUB_STEP_SUMMARY
+              echo "3. Approve or reject events using the workflow" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "- **Status**: ℹ️ No new events added (all were duplicates or previously rejected)" >> $GITHUB_STEP_SUMMARY
+            fi
+          elif [ "${{ steps.check_changes.outputs.changes }}" == "true" ]; then
+            echo "- **Status**: ✅ Changes detected (detailed stats unavailable)" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
