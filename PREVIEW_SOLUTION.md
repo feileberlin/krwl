@@ -3,20 +3,21 @@
 ## Problem
 The original question: "why does the Deploy Preview Environment workflow do artifacts?"
 
-The issue was that the preview deployment was using GitHub Pages artifacts (`upload-pages-artifact` and `deploy-pages` actions), which:
-1. Created unnecessary complexity
-2. Required special GitHub Pages deployment permissions
-3. Could conflict with production deployment (only one GitHub Pages source allowed)
-4. Made production show 404 when preview was enabled
+The evolved requirements:
+1. Preview deployment was using GitHub Pages artifacts (complex)
+2. Production showed 404 when preview was enabled (conflict)
+3. Need everything in one file - no deployment at all
+4. Get rid of "deployment" terminology - it's just generation
 
-## Solution: Self-Contained Single HTML File
+## Solution: Self-Contained Single HTML File (NO DEPLOYMENT)
 
-Instead of deploying via GitHub Pages artifacts, we generate a **single, self-contained HTML file** (`preview/index.html`) that:
+Instead of deploying anywhere, we generate a **single, self-contained HTML file** (`preview/index.html`) that:
 
 - **Inlines everything**: All CSS, JavaScript, configuration, and event data
 - **No external dependencies**: Works completely offline
 - **~260KB file size**: Reasonable for a complete app with 27+ events
 - **KISS compliant**: Generation script is only 101 lines
+- **No deployment needed**: Just download and open the file
 
 ### How It Works
 
@@ -27,7 +28,7 @@ Instead of deploying via GitHub Pages artifacts, we generate a **single, self-co
                   │
                   ▼
 ┌─────────────────────────────────────────────────────┐
-│ 2. GitHub Action runs:                             │
+│ 2. GitHub Action (generate-preview.yml) runs:      │
 │    - Download Leaflet library                      │
 │    - Generate fresh demo events                    │
 │    - Run scripts/generate_preview.py               │
@@ -48,6 +49,12 @@ Instead of deploying via GitHub Pages artifacts, we generate a **single, self-co
 ┌─────────────────────────────────────────────────────┐
 │ 4. Commit preview/index.html back to preview       │
 │    branch (with [skip ci] to avoid infinite loop)  │
+└─────────────────┬───────────────────────────────────┘
+                  │
+                  ▼
+┌─────────────────────────────────────────────────────┐
+│ 5. NO DEPLOYMENT! Just download and open the file  │
+│    Or optionally merge to main for /preview/ path  │
 └─────────────────────────────────────────────────────┘
 ```
 

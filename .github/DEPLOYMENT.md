@@ -61,7 +61,7 @@ Demo events are automatically generated from real event templates with fresh tim
 
 **Result**: Fast production site at `krwl.in` + preview at `krwl.in/preview/`
 
-### 2. Preview Generation (`deploy-preview.yml`)
+### 2. Preview Generation (`generate-preview.yml`)
 **Triggers**: Push to `preview` branch, manual dispatch
 
 **What it does**:
@@ -70,11 +70,11 @@ Demo events are automatically generated from real event templates with fresh tim
 - Inlines all CSS, JavaScript, config, and event data
 - Commits `preview/index.html` to preview branch (single file, ~260KB)
 
-**Result**: Self-contained HTML file you can download and test locally
+**Result**: Self-contained HTML file - NO DEPLOYMENT, just download and open
 
-**To view preview**:
+**To test preview**:
 1. Download `preview/index.html` from preview branch
-2. Open in browser (works completely offline)
+2. Open in browser (works completely offline, no server needed)
 3. OR merge to main to make it available at `krwl.in/preview/`
 
 ### 3. Promote Preview (`promote-preview.yml`)

@@ -23,9 +23,9 @@ jobs:
         run: python3 scripts/generate_demo_events.py > static/events.demo.json
 
       - name: Generate self-contained preview HTML
-        run: python3 scripts/generate_preview.py
+        run: python3 scripts/generate_html.py preview
 
-      - name: Commit preview to repository
+      - name: Commit preview file
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -36,13 +36,11 @@ jobs:
             git commit -m "Update preview/index.html [skip ci]"
             git push
             echo ""
-            echo "✓ Preview updated!"
+            echo "✓ Self-contained preview/index.html generated!"
             echo ""
-            echo "To view the preview:"
-            echo "  1. Open: https://github.com/${{ github.repository }}/blob/preview/preview/index.html"
-            echo "  2. Click 'Raw' or 'Download' to view the self-contained HTML"
+            echo "📥 To test the preview (NO DEPLOYMENT NEEDED):"
+            echo "  1. Download: https://github.com/${{ github.repository }}/raw/preview/preview/index.html"
+            echo "  2. Open the file in your browser (works completely offline)"
             echo ""
-            echo "To deploy preview to production site at /preview/:"
-            echo "  1. Merge preview branch into main"
-            echo "  2. The preview/index.html will be accessible at yoursite.com/preview/"
+            echo "🔗 Or merge to main to make available at /preview/ on production site"
           fi
