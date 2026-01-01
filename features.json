@@ -246,7 +246,7 @@
             "category": "backend",
             "implemented": true,
             "files": [
-                "generate_demo_events.py"
+                "scripts/generate_demo_events.py"
             ],
             "test_method": "check_files_exist"
         },

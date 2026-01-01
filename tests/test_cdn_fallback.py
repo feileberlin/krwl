@@ -11,8 +11,8 @@ from pathlib import Path
 from unittest.mock import patch, MagicMock
 import urllib.error
 
-# Add src to path
-sys.path.insert(0, str(Path(__file__).parent / 'src'))
+# Add src to path (go up one level from tests/ to project root, then to src/)
+sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))
 
 from modules.cdn_inliner import CDNInliner
 from modules.utils import load_config

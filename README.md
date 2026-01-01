@@ -88,10 +88,10 @@ Make sure everything works before you commit:
 python3 docs/build_docs.py --validate
 
 # Test event scrapers
-python3 test_scraper.py --verbose
+python3 tests/test_scraper.py --verbose
 
 # Test filtering logic
-python3 test_filters.py --verbose
+python3 tests/test_filters.py --verbose
 ```
 
 ## 📝 Project Structure
@@ -100,6 +100,8 @@ python3 test_filters.py --verbose
 krwl-hof/
 ├── static/          # The actual web app (HTML, CSS, JS) and event data
 ├── src/             # Python backend (scraping, generation)
+├── scripts/         # Utility and wrapper scripts
+├── tests/           # Test scripts
 ├── docs/            # Documentation (auto-synced to wiki)
 ├── backups/         # Individual event backups
 ├── examples/        # Example event data
@@ -112,7 +114,7 @@ We welcome contributions! Found a bug? Know a venue that should be included? Wan
 
 1. Fork the repository
 2. Make your changes (keep it simple - we follow KISS principles!)
-3. Run tests: `python3 test_scraper.py --verbose`
+3. Run tests: `python3 tests/test_scraper.py --verbose`
 4. Submit a pull request
 
 Questions? Open an issue!

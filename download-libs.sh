@@ -21,10 +21,10 @@ fi
 
 # Use the Python library manager
 cd "$SCRIPT_DIR"
-python3 manage_libs.py download
+python3 scripts/manage_libs.py download
 
 echo ""
 echo "✅ Library download complete!"
 echo ""
-echo "💡 Tip: Use 'python3 manage_libs.py list' to see installed libraries"
-echo "💡 Tip: Use 'python3 manage_libs.py verify' to verify installations"
+echo "💡 Tip: Use 'python3 scripts/manage_libs.py list' to see installed libraries"
+echo "💡 Tip: Use 'python3 scripts/manage_libs.py verify' to verify installations"

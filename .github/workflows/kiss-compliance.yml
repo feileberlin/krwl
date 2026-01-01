@@ -47,18 +47,18 @@ jobs:
           python-version: '3.x'
       
       - name: Make script executable
-        run: chmod +x check_kiss.py
+        run: chmod +x scripts/check_kiss.py
       
       - name: Run KISS compliance check
         id: kiss_check
         run: |
           echo "Running KISS compliance check..."
-          python3 check_kiss.py --verbose > kiss_report.txt 2>&1 || true
+          python3 scripts/check_kiss.py --verbose > kiss_report.txt 2>&1 || true
           
           # Capture JSON output and exit code
           # Note: We capture exit code immediately to prevent workflow failure
           set +e  # Temporarily disable fail-fast
-          python3 check_kiss.py --json > kiss_results.json
+          python3 scripts/check_kiss.py --json > kiss_results.json
           KISS_EXIT_CODE=$?
           set -e  # Re-enable fail-fast
           
@@ -134,7 +134,7 @@ jobs:
             commentBody += '- Keep each component focused on one thing\n\n';
             
             commentBody += '---\n';
-            commentBody += '*Run `python3 check_kiss.py` locally to see the full report.*\n';
+            commentBody += '*Run `python3 scripts/check_kiss.py` locally to see the full report.*\n';
             
             // Post comment
             github.rest.issues.createComment({
@@ -263,7 +263,7 @@ jobs:
               policyBody += '**Required Actions:**\n';
               policyBody += '1. Review the KISS compliance violations below\n';
               policyBody += '2. Simplify the complex code\n';
-              policyBody += '3. Run `python3 check_kiss.py` locally to verify\n';
+              policyBody += '3. Run `python3 scripts/check_kiss.py` locally to verify\n';
               policyBody += '4. Push your fixes\n\n';
               policyBody += '---\n\n';
             } else {
@@ -314,7 +314,7 @@ jobs:
           echo "To fix:"
           echo "1. Review the KISS compliance report above"
           echo "2. Simplify complex code (break up large files/functions)"
-          echo "3. Run 'python3 check_kiss.py' locally to verify"
+          echo "3. Run 'python3 scripts/check_kiss.py' locally to verify"
           echo "4. Push your changes"
           echo ""
           echo "To disable this check (not recommended):"

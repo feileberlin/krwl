@@ -54,13 +54,13 @@ A Python script that verifies all features documented in `features.json` are pre
 
 ```bash
 # Basic verification
-python3 verify_features.py
+python3 scripts/verify_features.py
 
 # Verbose output (shows detailed checks)
-python3 verify_features.py --verbose
+python3 scripts/verify_features.py --verbose
 
 # JSON output (for CI/CD integration)
-python3 verify_features.py --json
+python3 scripts/verify_features.py --json
 ```
 
 #### Verification Methods
@@ -105,7 +105,7 @@ When adding a new feature:
    - What files implement it
    - What code patterns verify it
    - What config keys it uses
-3. Run `python3 verify_features.py` locally to verify
+3. Run `python3 scripts/verify_features.py` locally to verify
 
 ### 2. Automatic Verification
 
@@ -169,7 +169,7 @@ Add an entry to `features.json`:
 ### Step 3: Verify Locally
 
 ```bash
-python3 verify_features.py --verbose
+python3 scripts/verify_features.py --verbose
 ```
 
 Ensure your new feature passes verification before committing.
@@ -205,7 +205,7 @@ In your commit message, explain why the feature was removed.
 
 ### Step 4: Verify
 
-Run `python3 verify_features.py` to ensure no other features were accidentally affected.
+Run `python3 scripts/verify_features.py` to ensure no other features were accidentally affected.
 
 ## Preview Deployment with Custom Domains
 
@@ -314,10 +314,10 @@ Periodically review:
 
 ```bash
 # Before committing
-python3 verify_features.py
+python3 scripts/verify_features.py
 
 # See detailed output
-python3 verify_features.py --verbose
+python3 scripts/verify_features.py --verbose
 ```
 
 ### Pull Request Workflow
@@ -388,7 +388,7 @@ class EventsApp {
 ### 3. Verify
 
 ```bash
-$ python3 verify_features.py
+$ python3 scripts/verify_features.py
 ============================================================
 KRWL HOF Feature Verification
 ============================================================
@@ -450,10 +450,10 @@ The JSON output can be used by other tools:
 
 ```bash
 # Generate HTML report
-python3 verify_features.py --json | python3 generate_report.py > report.html
+python3 scripts/verify_features.py --json | python3 generate_report.py > report.html
 
 # Send to monitoring system
-python3 verify_features.py --json | curl -X POST -d @- https://monitoring.example.com/api
+python3 scripts/verify_features.py --json | curl -X POST -d @- https://monitoring.example.com/api
 ```
 
 ## Maintenance

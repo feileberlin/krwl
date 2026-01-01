@@ -96,7 +96,7 @@ All UI strings, labels, and messages are organized into categories:
    - JSON structure unchanged
    - Placeholder syntax `{variable}` intact
    - Icons (emoji) unchanged
-3. Test with `python3 test_translations.py --verbose`
+3. Test with `python3 tests/test_translations.py --verbose`
 4. Update language selector in `static/js/i18n.js`:
    ```javascript
    getAvailableLanguages() {
@@ -156,7 +156,7 @@ Some English words have different German translations depending on context:
 
 Test translation completeness:
 ```bash
-python3 test_translations.py --verbose
+python3 tests/test_translations.py --verbose
 ```
 
 This checks:
@@ -180,7 +180,7 @@ python3 -m json.tool content.de.json > /dev/null
 3. Verify all UI elements show translated text
 4. Test with screen reader for accessibility
 5. Check mobile and desktop views
-6. Run automated tests: `python3 test_translations.py`
+6. Run automated tests: `python3 tests/test_translations.py`
 
 ## How Language Detection Works
 
@@ -213,7 +213,7 @@ navigator.language = "de-DE"
 To contribute a new language translation:
 
 1. Create `content.[locale].json` following the structure
-2. Run tests: `python3 test_translations.py`
+2. Run tests: `python3 tests/test_translations.py`
 3. Test thoroughly in browser
 4. Submit a pull request with:
    - New content file
@@ -235,7 +235,7 @@ To contribute a new language translation:
 - Check config.json syntax
 
 ### Missing translations
-- Run `python3 test_translations.py` to find missing keys
+- Run `python3 tests/test_translations.py` to find missing keys
 - Check console for "Translation key not found" warnings
 
 ### Icons translated by mistake

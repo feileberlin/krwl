@@ -24,7 +24,7 @@ Continuous validation of live production environment.
 - ✅ Data validation
 - ✅ Error handling
 - Runtime: ~5 seconds
-- Run: `python3 test_scraper.py --verbose`
+- Run: `python3 tests/test_scraper.py --verbose`
 
 **test_filters.py** - Event filtering logic
 - ✅ Time filtering (sunrise, sunday, full moon, hours)
@@ -32,7 +32,7 @@ Continuous validation of live production environment.
 - ✅ Category filtering
 - ✅ Location filtering
 - Runtime: ~3 seconds
-- Run: `python3 test_filters.py --verbose`
+- Run: `python3 tests/test_filters.py --verbose`
 
 **test_event_schema.py** - Event schema and filter stringency validation
 - ✅ JSON schema definition validation
@@ -44,22 +44,22 @@ Continuous validation of live production environment.
 - ✅ Category filter stringency testing
 - ✅ Recovery suggestions for schema violations
 - Runtime: ~2 seconds
-- Run: `python3 test_event_schema.py --verbose`
-- Show schema: `python3 test_event_schema.py --show-schema`
+- Run: `python3 tests/test_event_schema.py --verbose`
+- Show schema: `python3 tests/test_event_schema.py --show-schema`
 
 **verify_features.py** - Feature registry validation
 - ✅ All declared features are implemented
 - ✅ Feature registry matches codebase
 - ✅ No undeclared features exist
 - Runtime: ~2 seconds
-- Run: `python3 verify_features.py --verbose`
+- Run: `python3 scripts/verify_features.py --verbose`
 
 **check_kiss.py** - KISS principle compliance
 - ✅ Code complexity checks
 - ✅ File size limits
 - ✅ Dependency checks
 - Runtime: ~2 seconds
-- Run: `python3 check_kiss.py --verbose`
+- Run: `python3 scripts/check_kiss.py --verbose`
 
 ### Component Tests
 
@@ -75,7 +75,7 @@ Continuous validation of live production environment.
 - ✅ File checksums valid
 - ✅ Version compatibility
 - Runtime: ~1 second
-- Run: `python3 manage_libs.py verify`
+- Run: `python3 scripts/manage_libs.py verify`
 
 ### Running All Development Tests
 
@@ -252,9 +252,9 @@ python3 test_load.py --url https://krwl.in --users 100
 ./run-dev-tests.sh
 
 # Run specific test
-python3 test_scraper.py --verbose
-python3 test_filters.py --verbose
-python3 verify_features.py --verbose
+python3 tests/test_scraper.py --verbose
+python3 tests/test_filters.py --verbose
+python3 scripts/verify_features.py --verbose
 ```
 
 ### CI/CD Pipeline
