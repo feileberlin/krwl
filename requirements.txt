@@ -7,5 +7,25 @@ beautifulsoup4>=4.12.0  # For HTML parsing
 lxml>=4.9.0  # Fast HTML parser for BeautifulSoup
 feedparser>=6.0.10  # For RSS feed parsing
 
+# Image Analysis (optional - install as needed)
+# Pillow>=10.0.0  # Image processing
+# pytesseract>=0.3.10  # OCR with Tesseract
+# exifread>=3.0.0  # EXIF metadata extraction
+# easyocr>=1.7.0  # Alternative OCR (GPU recommended)
+# paddleocr>=2.7.0  # Another OCR alternative
+
+# AI Providers (optional - install as needed)
+# DuckDuckAI>=0.1.0  # DuckDuckGo AI (free)
+# google-generativeai>=0.3.0  # Google Gemini (free tier available)
+# openai>=1.0.0  # OpenAI API (paid)
+# anthropic>=0.18.0  # Anthropic Claude (paid)
+# groq>=0.4.0  # Groq (fast inference)
+
+# Social Media Scraping (optional - install as needed)
+# facebook-sdk>=3.1.0  # Facebook Graph API
+# instagrapi>=1.16.0  # Instagram unofficial API
+# TikTokApi>=5.3.0  # TikTok unofficial API
+# python-telegram-bot>=20.0  # Telegram Bot API
+
 # Optional dependencies for enhanced capabilities:
 # astral>=3.2  # For accurate sunrise/sunset calculations (using approximation for now)
