@@ -187,7 +187,7 @@ The following files are SOURCE files (edit directly):
 Run the development environment test:
 
 ```bash
-python3 test_dev_environment.py
+python3 tests/test_dev_environment.py
 ```
 
 This validates:
@@ -271,4 +271,4 @@ When adding new development environment features:
 2. Add entry to `features.json`
 3. Document in `.github/DEV_ENVIRONMENT.md`
 4. Update this guide if setup steps change
-5. Run `python3 test_dev_environment.py` to verify
+5. Run `python3 tests/test_dev_environment.py` to verify

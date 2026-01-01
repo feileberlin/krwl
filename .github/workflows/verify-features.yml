@@ -50,10 +50,10 @@ jobs:
         id: verify
         run: |
           echo "Running feature verification..."
-          python3 verify_features.py --verbose > verification_output.txt 2>&1 || true
+          python3 scripts/verify_features.py --verbose > verification_output.txt 2>&1 || true
           
           # Capture exit code separately
-          python3 verify_features.py --json > verification_results.json
+          python3 scripts/verify_features.py --json > verification_results.json
           VERIFY_EXIT_CODE=$?
           
           # Display the verbose output
@@ -74,7 +74,7 @@ jobs:
         id: scraper_test
         run: |
           echo "Running scraper tests..."
-          python3 test_scraper.py --verbose > scraper_test_output.txt 2>&1
+          python3 tests/test_scraper.py --verbose > scraper_test_output.txt 2>&1
           SCRAPER_EXIT_CODE=$?
           
           # Display the output
@@ -96,7 +96,7 @@ jobs:
         id: translation_test
         run: |
           echo "Running translation tests..."
-          python3 test_translations.py --verbose > translation_test_output.txt 2>&1
+          python3 tests/test_translations.py --verbose > translation_test_output.txt 2>&1
           TRANSLATION_EXIT_CODE=$?
           
           # Display the output

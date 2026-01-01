@@ -124,7 +124,7 @@ marker.bindPopup(i18n.t('map.user_location_popup'));
 
 If you want to enable Leaflet's built-in controls AND translate them:
 
-### 1. Add Leaflet.i18n to manage_libs.py
+### 1. Add Leaflet.i18n to scripts/manage_libs.py
 
 ```python
 LIBRARIES = {
@@ -204,7 +204,7 @@ this.map = L.map('map', {
 Our tests verify:
 ```bash
 # Check all translations are complete
-python3 test_translations.py --verbose
+python3 tests/test_translations.py --verbose
 
 # Verify Leaflet content renders with translations
 # (Would need browser/e2e tests for this)

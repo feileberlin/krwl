@@ -296,7 +296,7 @@ def _scrape_custom_site(self, source):
 Run scraper tests:
 
 ```bash
-python3 test_scraper.py --verbose
+python3 tests/test_scraper.py --verbose
 ```
 
 This tests:

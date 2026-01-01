@@ -78,7 +78,7 @@ We welcome contributions! Whether you're adding event sources, fixing bugs, or i
 1. Fork the repository
 2. Create a feature branch from `preview`
 3. Make your changes (keep it simple - we follow KISS principles!)
-4. Run tests: `python3 test_scraper.py --verbose`
+4. Run tests: `python3 tests/test_scraper.py --verbose`
 5. Submit a pull request to `preview` branch
 
 Know a local venue that should be included? Found a bug? Open an issue!

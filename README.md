@@ -88,10 +88,10 @@ Make sure everything works before you commit:
 python3 docs/build_docs.py --validate
 
 # Test event scrapers
-python3 test_scraper.py --verbose
+python3 tests/test_scraper.py --verbose
 
 # Test filtering logic
-python3 test_filters.py --verbose
+python3 tests/test_filters.py --verbose
 ```
 
 ## 📝 Project Structure
@@ -112,7 +112,7 @@ We welcome contributions! Found a bug? Know a venue that should be included? Wan
 
 1. Fork the repository
 2. Make your changes (keep it simple - we follow KISS principles!)
-3. Run tests: `python3 test_scraper.py --verbose`
+3. Run tests: `python3 tests/test_scraper.py --verbose`
 4. Submit a pull request
 
 Questions? Open an issue!
