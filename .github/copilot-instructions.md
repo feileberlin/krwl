@@ -98,9 +98,8 @@ python3 test_scheduler.py --verbose
 
 #### Documentation
 ```bash
-# Validate and regenerate README.md (auto-generated from docs/)
-python3 docs/build_docs.py --validate
-python3 docs/build_docs.py  # Regenerates README.md
+# Regenerate README.md (auto-generated)
+python3 scripts/generate_readme.py
 ```
 
 #### Linting
@@ -204,14 +203,11 @@ GitHub Pages serves the `static/` directory directly.
 - **Production**: Real events only, optimized
 - **Development**: Real + demo events, DEV badge shown
 
-See `.github/DEPLOYMENT.md` for details.
-
 ## Documentation Standards
 
 ### README.md
-**AUTO-GENERATED** by `docs/build_docs.py`. Do not edit directly.
-- Edit source files in `docs/` directory
-- Run `python3 docs/build_docs.py` to regenerate
+**AUTO-GENERATED** by `scripts/generate_readme.py`. Do not edit directly.
+- Run `python3 scripts/generate_readme.py` to regenerate
 
 ### Code Documentation
 - Python modules: Docstring at top of file
@@ -280,9 +276,8 @@ See `.github/DEPLOYMENT.md` for details.
 4. Test: `python3 test_translations.py --verbose`
 
 ### Update documentation
-1. Edit files in `docs/` directory
-2. Run: `python3 docs/build_docs.py`
-3. Commit both source files and generated `README.md`
+1. Run: `python3 scripts/generate_readme.py` to regenerate README.md
+2. Commit generated `README.md`
 
 ## Accessibility (A11y)
 
@@ -322,11 +317,9 @@ See `.github/DEPLOYMENT.md` for details.
 
 ## Questions or Issues?
 
-- Check `docs/TESTING.md` for comprehensive testing guide
-- Check `.github/DEPLOYMENT.md` for deployment details
-- Check `docs/FEATURE_REGISTRY.md` for feature registry documentation
-- Check `docs/SCRAPING.md` for event scraping guide
-- Check `docs/LOCALIZATION.md` for i18n details
+- Check `README.md` for comprehensive guide
+- Check `features.json` for feature registry documentation
+- Run CLI commands with `--help` for detailed usage information
 
 ## Remember
 
