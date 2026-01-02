@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Dict, Any, List
 
 
-def list_sources(config_path: str = 'config.prod.json'):
+def list_sources(config_path: str = 'config.json'):
     """List all configured sources."""
     try:
         with open(config_path, 'r') as f:
@@ -43,7 +43,7 @@ def list_sources(config_path: str = 'config.prod.json'):
 
 
 def add_source(name: str, url: str, source_type: str = 'html',
-               enabled: bool = True, config_path: str = 'config.prod.json',
+               enabled: bool = True, config_path: str = 'config.json',
                **options):
     """Add a new scraping source.
     
@@ -91,7 +91,7 @@ def add_source(name: str, url: str, source_type: str = 'html',
         sys.exit(1)
 
 
-def test_source(name: str, config_path: str = 'config.prod.json',
+def test_source(name: str, config_path: str = 'config.json',
                 base_path: str = '.'):
     """Test a scraping source.
     
@@ -146,12 +146,12 @@ def test_source(name: str, config_path: str = 'config.prod.json',
         sys.exit(1)
 
 
-def enable_source(name: str, config_path: str = 'config.prod.json'):
+def enable_source(name: str, config_path: str = 'config.json'):
     """Enable a source."""
     _toggle_source(name, True, config_path)
 
 
-def disable_source(name: str, config_path: str = 'config.prod.json'):
+def disable_source(name: str, config_path: str = 'config.json'):
     """Disable a source."""
     _toggle_source(name, False, config_path)
 
@@ -186,7 +186,7 @@ def _toggle_source(name: str, enabled: bool, config_path: str):
         sys.exit(1)
 
 
-def test_all_sources(config_path: str = 'config.prod.json',
+def test_all_sources(config_path: str = 'config.json',
                      base_path: str = '.'):
     """Test all configured sources."""
     try:
@@ -271,7 +271,7 @@ Examples:
     
     # List command
     list_parser = subparsers.add_parser('list', help='List all sources')
-    list_parser.add_argument('--config', default='config.prod.json',
+    list_parser.add_argument('--config', default='config.json',
                             help='Config file path')
     
     # Add command
@@ -284,7 +284,7 @@ Examples:
                            help='Source type')
     add_parser.add_argument('--disabled', action='store_false', dest='enabled',
                            help='Add as disabled')
-    add_parser.add_argument('--config', default='config.prod.json',
+    add_parser.add_argument('--config', default='config.json',
                            help='Config file path')
     add_parser.add_argument('--filter-ads', action='store_true',
                            help='Enable ad filtering')
@@ -295,14 +295,14 @@ Examples:
     # Test command
     test_parser = subparsers.add_parser('test', help='Test a source')
     test_parser.add_argument('name', help='Source name')
-    test_parser.add_argument('--config', default='config.prod.json',
+    test_parser.add_argument('--config', default='config.json',
                             help='Config file path')
     test_parser.add_argument('--base-path', default='.',
                             help='Base path for data files')
     
     # Test all command
     test_all_parser = subparsers.add_parser('test-all', help='Test all sources')
-    test_all_parser.add_argument('--config', default='config.prod.json',
+    test_all_parser.add_argument('--config', default='config.json',
                                 help='Config file path')
     test_all_parser.add_argument('--base-path', default='.',
                                 help='Base path for data files')
@@ -310,13 +310,13 @@ Examples:
     # Enable command
     enable_parser = subparsers.add_parser('enable', help='Enable a source')
     enable_parser.add_argument('name', help='Source name')
-    enable_parser.add_argument('--config', default='config.prod.json',
+    enable_parser.add_argument('--config', default='config.json',
                               help='Config file path')
     
     # Disable command
     disable_parser = subparsers.add_parser('disable', help='Disable a source')
     disable_parser.add_argument('name', help='Source name')
-    disable_parser.add_argument('--config', default='config.prod.json',
+    disable_parser.add_argument('--config', default='config.json',
                                help='Config file path')
     
     args = parser.parse_args()

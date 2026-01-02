@@ -1,0 +1,11 @@
+{
+  "build": {
+    "builder": "nixpacks",
+    "buildCommand": "pip install -r requirements.txt && python3 src/event_manager.py generate"
+  },
+  "deploy": {
+    "startCommand": "cd static && python3 -m http.server $PORT",
+    "restartPolicyType": "on-failure",
+    "restartPolicyMaxRetries": 10
+  }
+}

@@ -12,9 +12,9 @@ class ScheduleConfig:
     def __init__(self, config_path=None):
         """Initialize with config file path"""
         if config_path is None:
-            # Default to config.prod.json in repo root
+            # Default to config.json in repo root
             base_path = Path(__file__).parent.parent.parent
-            config_path = base_path / 'config.prod.json'
+            config_path = base_path / 'config.json'
         
         self.config_path = Path(config_path)
         self.config = self._load_config()

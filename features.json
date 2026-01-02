@@ -159,12 +159,12 @@
         {
             "id": "debug-mode",
             "name": "Debug Mode",
-            "description": "Development config with console logging for troubleshooting",
+            "description": "Debug mode with console logging for troubleshooting. Automatically enabled in development environment.",
             "category": "frontend",
             "implemented": true,
             "files": [
                 "static/js/app.js",
-                "config.dev.json"
+                "config.json"
             ],
             "config_keys": [
                 "debug"
@@ -176,9 +176,9 @@
                     "description": "Debug logging implementation"
                 },
                 {
-                    "file": "config.dev.json",
-                    "pattern": "\"debug\":\\s*true",
-                    "description": "Debug mode enabled in dev config"
+                    "file": "config.json",
+                    "pattern": "\"debug\":|_comment_debug",
+                    "description": "Debug mode auto-detected based on environment"
                 }
             ],
             "test_method": "check_code_patterns"
@@ -186,12 +186,12 @@
         {
             "id": "production-optimization",
             "name": "Production Optimization",
-            "description": "Production config optimized for maximum speed with caching",
+            "description": "Production-optimized config with caching. Automatically enabled in CI/production.",
             "category": "frontend",
             "implemented": true,
             "files": [
                 "static/js/app.js",
-                "config.prod.json"
+                "config.json"
             ],
             "config_keys": [
                 "performance.cache_enabled",
@@ -199,9 +199,9 @@
             ],
             "code_patterns": [
                 {
-                    "file": "config.prod.json",
-                    "pattern": "\"cache_enabled\":\\s*true",
-                    "description": "Caching enabled in prod config"
+                    "file": "config.json",
+                    "pattern": "\"cache_enabled\":|_comment_cache_enabled",
+                    "description": "Caching auto-detected based on environment"
                 }
             ],
             "test_method": "check_code_patterns"
@@ -600,14 +600,12 @@
         {
             "id": "environment-watermark",
             "name": "Environment Watermark with Build Info",
-            "description": "Visual watermark in bottom-left corner showing environment (production/preview/testing), commit SHA, and PR number. Configurable per environment with clickable details.",
+            "description": "Visual watermark in bottom-left corner showing environment (production/preview/testing), commit SHA, and PR number. Configurable per environment with automatic detection.",
             "category": "frontend",
             "implemented": true,
             "files": [
                 "src/modules/cdn_inliner.py",
-                "config.prod.json",
-                "config.preview.json",
-                "config.dev.json"
+                "config.json"
             ],
             "config_keys": [
                 "app.environment",

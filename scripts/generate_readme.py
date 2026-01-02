@@ -40,10 +40,10 @@ def get_cli_help(script_path):
 
 
 def load_config():
-    """Load configuration from config.prod.json in root"""
-    config_path = Path('config.prod.json')
+    """Load configuration from config.json in root"""
+    config_path = Path('config.json')
     if not config_path.exists():
-        print("❌ Error: config.prod.json not found")
+        print("❌ Error: config.json not found")
         sys.exit(1)
     
     with open(config_path, 'r', encoding='utf-8') as f:
@@ -153,7 +153,7 @@ python3 src/event_manager.py --help       # Show all commands
     # Add configuration section
     readme += f"""## ⚙️ Configuration
 
-All configuration lives in `config.prod.json`:
+All configuration lives in `config.json`:
 
 ```json
 {{
@@ -214,8 +214,7 @@ python3 scripts/check_kiss.py --verbose
 
 ```
 krwl-hof/
-├── config.dev.json      # Development environment config
-├── config.prod.json     # Production environment config (default)
+├── config.json          # Unified configuration (auto-detects environment)
 ├── static/              # Only index.html
 │   └── index.html       # Main app (auto-generated, DO NOT EDIT)
 ├── assets/              # Frontend assets (CSS, JS, libraries, icons)
@@ -287,7 +286,7 @@ Output: `static/index.html` (single-file HTML with everything inlined)
 
 ## 🕷️ Adding Event Sources
 
-Edit `config.prod.json`:
+Edit `config.json`:
 
 ```json
 {{

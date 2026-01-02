@@ -1,0 +1,145 @@
+# ==============================================================================
+# HOSTING ENVIRONMENT .gitignore
+# ==============================================================================
+# This file should be placed in your hosting environment ONLY
+# It prevents production-specific files from being overwritten during git pull
+# 
+# USAGE:
+# 1. SSH into your hosting server (VPS, EC2, etc.)
+# 2. Copy this file to: /path/to/your/app/.gitignore.hosting
+# 3. Add to git config: git config core.excludesFile .gitignore.hosting
+# 
+# Or place in: ~/.gitignore_global and run:
+# git config --global core.excludesFile ~/.gitignore_global
+# ==============================================================================
+
+# Production Environment Variables
+# These contain production secrets and should NEVER be pulled from git
+.env
+.env.production
+.env.local
+
+# Production Database Files (if using local SQLite or similar)
+*.db
+*.sqlite
+*.sqlite3
+database/production.db
+
+# Production SSL/TLS Certificates
+# Keep these on server only
+ssl/
+certs/
+*.pem
+*.key
+*.crt
+*.ca-bundle
+
+# Production Configuration Overrides
+# Server-specific config that overrides defaults
+config.local.json
+config.production.local.json
+config.override.json
+
+# Production Logs
+# Keep production logs on server, don't pull to dev
+logs/
+*.log
+*.log.*
+production.log
+error.log
+access.log
+
+# Production Backups
+# These can be huge and should stay on server
+backups/
+backup/
+*.backup
+*.bak
+event-data/backups/
+event-data/old/
+
+# Production Generated Files
+# Files generated during production operation
+static/index.html.production
+static/*.generated.html
+generated/
+
+# Production Cache
+# Server-side caches should not be synced
+.cache/
+cache/
+tmp/
+.tmp/
+
+# Production Uploads
+# User-uploaded content stays on production server
+uploads/
+user-uploads/
+media/
+
+# Server-Specific Files
+# Files specific to the hosting environment
+.server-id
+.deployment-id
+server-config/
+.pm2/
+.forever/
+
+# Production Build Artifacts
+# Keep production builds separate from dev
+dist/
+build/
+.next/
+out/
+
+# Production Process IDs
+# Running process identifiers
+*.pid
+pids/
+
+# Production Session Storage
+sessions/
+.sessions/
+
+# Terraform/Infrastructure State (if using IaC)
+# Infrastructure configs should not be pulled to dev
+terraform.tfstate
+terraform.tfstate.backup
+.terraform/
+
+# Docker Production Volumes
+# Production docker data should stay on server
+docker-volumes/
+volumes/
+
+# Production Analytics/Metrics
+analytics/
+metrics/
+stats/
+
+# Production Secrets Management
+secrets/
+.secrets/
+vault/
+
+# Platform-Specific Production Files
+# Heroku
+.heroku/
+
+# AWS
+.aws/
+.elasticbeanstalk/
+
+# Google Cloud
+.gcloud/
+
+# Azure
+.azure/
+
+# ==============================================================================
+# NOTES:
+# - This file prevents git pull from overwriting production files
+# - Developers won't see these files when cloning
+# - Production data stays on production server
+# - Use with: git config core.excludesFile .gitignore.hosting
+# ==============================================================================

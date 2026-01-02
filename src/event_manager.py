@@ -347,15 +347,14 @@ Step 3: Fetch Third-Party Dependencies (Leaflet)
 3. CONFIGURATION
 ═══════════════════════════════════════════════════════════════════════════════
 
-Step 1: Edit Production Config (config.prod.json)
+Edit config.json (Unified Configuration - Auto-Adapts to Environment)
 ────────────────────────────────────────────────────────────────────────────────
-  Open config.prod.json and customize:
+  Open config.json and customize:
 
   {
     "app": {
       "name": "Your City Events",           ← Change this
-      "description": "Community events",
-      "environment": "production"
+      "description": "Community events"
     },
     "map": {
       "default_center": {
@@ -376,14 +375,16 @@ Step 1: Edit Production Config (config.prod.json)
     }
   }
 
-Step 2: Edit Development Config (config.dev.json)
-────────────────────────────────────────────────────────────────────────────────
-  Similar to production, but with:
-  - "environment": "development"
-  - "debug": true
-  - Includes demo events for testing
+  ✨ AUTOMATIC ENVIRONMENT DETECTION:
+  - Local development: Automatically enables debug mode and demo events
+  - Production/CI: Automatically optimizes for performance and real data only
+  - Works with all hosting platforms: GitHub Pages, Vercel, Netlify, Heroku, 
+    Railway, Render, Fly.io, Google Cloud Run, AWS, and more!
+  - No manual switching needed - just deploy and it adapts!
 
-Step 3: Update Translations
+  See DEPLOYMENT.md for hosting platform setup guides.
+
+Update Translations
 ────────────────────────────────────────────────────────────────────────────────
   Edit these files for your language:
   - data/content.json (English)
@@ -418,7 +419,7 @@ Customize Branding
 
 Add Event Sources
 ────────────────────────────────────────────────────────────────────────────────
-  In config.prod.json → scraping.sources[], add:
+  In config.json → scraping.sources[], add:
   
   {
     "name": "Your Event Source",
@@ -544,14 +545,12 @@ Automated Updates
 
   □ Install dependencies: pip install -r requirements.txt
   □ Fetch libraries: python3 src/event_manager.py dependencies fetch
-  □ Edit config.prod.json (name, location, event sources)
-  □ Edit config.dev.json (same as prod, for testing)
+  □ Edit config.json (app name, location, event sources)
   □ Customize colors in static/css/style.css
   □ Replace favicon: static/favicon.svg
   □ Generate site: python3 src/event_manager.py generate
   □ Test locally: cd static && python3 -m http.server 8000
-  □ Push to git host
-  □ Enable Pages in git host settings
+  □ Deploy to hosting platform (see DEPLOYMENT.md)
   □ (Optional) Configure custom domain
 
 ═══════════════════════════════════════════════════════════════════════════════

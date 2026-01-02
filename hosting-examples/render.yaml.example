@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: krwl-hof-events
+    env: python
+    region: frankfurt
+    plan: free
+    buildCommand: pip install -r requirements.txt && python3 src/event_manager.py generate
+    startCommand: cd static && python3 -m http.server $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.6
+      - key: NODE_ENV
+        value: production
+    healthCheckPath: /

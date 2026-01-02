@@ -1,15 +1,184 @@
 """Utility functions for the event manager"""
 
 import json
+import os
 from pathlib import Path
 from datetime import datetime
 
 
+def is_ci():
+    """
+    Detect if running in CI environment.
+    
+    Checks for common CI environment variables set by:
+    - GitHub Actions (GITHUB_ACTIONS, CI)
+    - GitLab CI (GITLAB_CI, CI)
+    - Travis CI (TRAVIS, CI)
+    - CircleCI (CIRCLECI, CI)
+    - Jenkins (JENKINS_HOME, JENKINS_URL)
+    - Bitbucket Pipelines (BITBUCKET_BUILD_NUMBER)
+    - Azure Pipelines (TF_BUILD)
+    - AWS CodeBuild (CODEBUILD_BUILD_ID)
+    
+    Returns:
+        bool: True if running in CI, False otherwise
+    """
+    ci_indicators = [
+        'CI',                          # Generic CI flag (set by most CI systems)
+        'GITHUB_ACTIONS',              # GitHub Actions
+        'GITLAB_CI',                   # GitLab CI
+        'TRAVIS',                      # Travis CI
+        'CIRCLECI',                    # CircleCI
+        'JENKINS_HOME', 'JENKINS_URL', # Jenkins
+        'BITBUCKET_BUILD_NUMBER',      # Bitbucket Pipelines
+        'TF_BUILD',                    # Azure Pipelines
+        'CODEBUILD_BUILD_ID'           # AWS CodeBuild
+    ]
+    
+    return any(os.environ.get(var) for var in ci_indicators)
+
+
+def is_production():
+    """
+    Detect if running in production environment.
+    
+    Checks for production indicators from:
+    - Explicit NODE_ENV=production
+    - Vercel (VERCEL_ENV=production)
+    - Netlify (NETLIFY=true + CONTEXT=production)
+    - Heroku (DYNO environment variable presence)
+    - Railway (RAILWAY_ENVIRONMENT=production)
+    - Render (RENDER=true + IS_PULL_REQUEST!=true)
+    - Fly.io (FLY_APP_NAME presence)
+    - Google Cloud Run (K_SERVICE presence)
+    - AWS (AWS_EXECUTION_ENV presence + not in Lambda)
+    
+    Returns:
+        bool: True if in production, False otherwise
+    """
+    # Explicit production setting
+    if os.environ.get('NODE_ENV') == 'production':
+        return True
+    
+    # Vercel production
+    if os.environ.get('VERCEL_ENV') == 'production':
+        return True
+    
+    # Netlify production
+    if os.environ.get('NETLIFY') == 'true' and os.environ.get('CONTEXT') == 'production':
+        return True
+    
+    # Heroku (presence of DYNO indicates production deployment)
+    if os.environ.get('DYNO'):
+        return True
+    
+    # Railway production
+    if os.environ.get('RAILWAY_ENVIRONMENT') == 'production':
+        return True
+    
+    # Render production (RENDER=true and not a PR preview)
+    if os.environ.get('RENDER') == 'true' and os.environ.get('IS_PULL_REQUEST') != 'true':
+        return True
+    
+    # Fly.io (presence of FLY_APP_NAME indicates production)
+    if os.environ.get('FLY_APP_NAME'):
+        return True
+    
+    # Google Cloud Run
+    if os.environ.get('K_SERVICE'):
+        return True
+    
+    # AWS (but not Lambda, as Lambda might be dev/test)
+    if os.environ.get('AWS_EXECUTION_ENV') and not os.environ.get('AWS_LAMBDA_FUNCTION_NAME'):
+        return True
+    
+    return False
+
+
+def is_development():
+    """
+    Detect if running in local development environment.
+    
+    Development is the default mode when NOT in CI and NOT in production.
+    This is the typical environment for developers working locally.
+    
+    Returns:
+        bool: True if in development (local), False otherwise
+    """
+    return not is_production() and not is_ci()
+
+
 def load_config(base_path):
-    """Load configuration from config.prod.json"""
-    config_path = base_path / 'config.prod.json'
-    with open(config_path, 'r') as f:
-        return json.load(f)
+    """
+    Load config.json with automatic environment detection.
+    
+    This function intelligently adjusts configuration based on the detected environment:
+    - **Development (Local)**: debug=true, data.source="both" (real+demo), watermark="DEV"
+    - **CI/Production**: debug=false, data.source="real", watermark="PRODUCTION"
+    
+    The environment is detected automatically using os.environ checks:
+    - CI: CI=true or GITHUB_ACTIONS=true
+    - Production: NODE_ENV=production  
+    - Development: Default when not in CI or production (typical for local dev)
+    
+    NO MANUAL CONFIGURATION NEEDED - Just run the code and it adapts!
+    
+    Args:
+        base_path: Root path of the repository
+        
+    Returns:
+        dict: Configuration dictionary with environment-specific overrides applied
+    """
+    config_path = base_path / 'config.json'
+    
+    # Load base configuration
+    with open(config_path, 'r', encoding='utf-8') as f:
+        config = json.load(f)
+    
+    # Detect environment
+    env_is_dev = is_development()
+    env_is_ci = is_ci()
+    
+    # Determine environment name for logging
+    if env_is_dev:
+        env_name = 'development'
+    elif env_is_ci:
+        env_name = 'ci'
+    else:
+        env_name = 'production'
+    
+    # Apply environment-specific overrides
+    # These smart defaults automatically adjust behavior based on where the code runs
+    # NOTE: CI and Production intentionally use the same settings (production-like)
+    # to ensure builds and deployments are tested with production configuration
+    if env_is_dev:
+        # Development mode: Optimized for local testing and debugging
+        config['debug'] = True
+        config['data']['source'] = 'both'  # Include demo events for testing
+        config['watermark']['text'] = 'DEV'
+        config['app']['environment'] = 'development'
+        # Add [DEV] suffix if not already present
+        if '[DEV]' not in config['app']['name']:
+            config['app']['name'] = config['app']['name'] + ' [DEV]'
+        config['performance']['cache_enabled'] = False  # Fresh data each time
+        config['performance']['prefetch_events'] = False  # On-demand loading
+    else:
+        # CI or Production mode: Both use production settings
+        # This ensures CI builds match production behavior exactly
+        config['debug'] = False
+        config['data']['source'] = 'real'  # Real events only
+        config['watermark']['text'] = 'PRODUCTION'
+        config['app']['environment'] = env_name
+        # Remove [DEV] suffix if present
+        config['app']['name'] = config['app']['name'].replace(' [DEV]', '')
+        config['performance']['cache_enabled'] = True  # Enable caching
+        config['performance']['prefetch_events'] = True  # Preload for speed
+    
+    # Log environment detection for transparency
+    # This helps developers understand which mode is active
+    print(f"🚀 Running in {env_name} mode (debug: {config['debug']}, data source: {config['data']['source']})")
+    
+    return config
 
 
 def load_events(base_path):

@@ -1,0 +1,27 @@
+name: krwl-hof-events
+region: fra
+
+services:
+  - name: web
+    github:
+      repo: yourusername/krwl-hof
+      branch: main
+      deploy_on_push: true
+    
+    build_command: pip install -r requirements.txt && python3 src/event_manager.py generate
+    run_command: cd static && python3 -m http.server 8080
+    
+    environment_slug: python
+    instance_size_slug: basic-xxs
+    instance_count: 1
+    
+    http_port: 8080
+    
+    health_check:
+      http_path: /
+    
+    envs:
+      - key: NODE_ENV
+        value: production
+      - key: PYTHON_VERSION
+        value: "3.11"

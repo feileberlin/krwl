@@ -45,6 +45,36 @@ Thumbs.db
 *.tmp
 .cache/
 
+# Environment variables (contains local/sensitive data)
+.env
+.env.local
+.env.production
+
+# Keep .env.example in git as a template
+!.env.example
+
+# Hosting-specific gitignore (used on production servers)
+.gitignore.hosting
+
+# Platform-specific deployment configs (use examples in hosting-examples/)
+# These are gitignored by default to prevent committing secrets or deployment-specific settings
+# Copy from hosting-examples/*.example if you need them
+vercel.json
+netlify.toml
+Procfile
+railway.json
+render.yaml
+fly.toml
+app.yaml
+cloudbuild.yaml
+staticwebapp.config.json
+Dockerfile
+.dockerignore
+
+# Server identity files
+.server-id
+.deployment-id
+
 # Test and report artifacts
 kiss_results.json
 kiss_report.txt

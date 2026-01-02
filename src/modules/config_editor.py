@@ -3,7 +3,7 @@
 KRWL HOF Configuration Editor Module
 
 This module provides interactive and CLI-based editing of configuration files.
-Supports both config.dev.json and config.prod.json editing.
+Supports config.json editing with automatic environment detection.
 
 Supports three execution modes:
 - CLI Mode: Direct config value updates via command line
@@ -27,7 +27,7 @@ class ConfigEditor:
         Initialize config editor
         
         Args:
-            config_path: Path to config file (default: config.dev.json)
+            config_path: Path to config file (default: config.json)
             verbose: Enable verbose output
         """
         self.verbose = verbose
@@ -36,8 +36,8 @@ class ConfigEditor:
         if config_path:
             self.config_path = Path(config_path)
         else:
-            # Default to config.dev.json
-            self.config_path = self.repo_root / "config.dev.json"
+            # Default to config.json
+            self.config_path = self.repo_root / "config.json"
         
         if not self.config_path.exists():
             raise FileNotFoundError(f"Config file not found: {self.config_path}")
@@ -553,7 +553,7 @@ def main():
         "--config", "-c",
         type=str,
         default=None,
-        help="Path to config file (default: config.dev.json)"
+        help="Path to config file (default: config.json)"
     )
     parser.add_argument(
         "--verbose", "-v",

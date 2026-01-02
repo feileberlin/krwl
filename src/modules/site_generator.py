@@ -168,13 +168,18 @@ class SiteGenerator:
         return events
     
     def load_all_configs(self) -> List[Dict]:
-        """Load all configuration files"""
+        """
+        Load configuration file.
+        
+        Now loads unified config.json. Environment-specific overrides
+        are applied by the load_config() function in utils.py.
+        """
         configs = []
-        for config_file in ['config.prod.json', 'config.dev.json']:
-            path = self.base_path / config_file
-            if path.exists():
-                with open(path, 'r') as f:
-                    configs.append(json.load(f))
+        config_file = 'config.json'
+        path = self.base_path / config_file
+        if path.exists():
+            with open(path, 'r', encoding='utf-8') as f:
+                configs.append(json.load(f))
         return configs
     
     def load_stylesheet_resources(self) -> Dict[str, str]:

@@ -1,25 +1,67 @@
 {
+  "_comment_environment_detection": "═══════════════════════════════════════════════════════════════════════════════",
+  "_comment_auto_behavior": "AUTOMATIC ENVIRONMENT DETECTION - This config uses smart defaults that change based on environment",
+  "_comment_detection_logic": "Environment is detected automatically using Python os.environ checks:",
+  "_comment_detection_1": "  • Local Development: NOT in CI and NOT in production (default for developers)",
+  "_comment_detection_2": "  • CI: GitHub Actions, GitLab CI, Travis, CircleCI, Jenkins, etc.",
+  "_comment_detection_3": "  • Production: Vercel, Netlify, Heroku, Railway, Render, Fly.io, Google Cloud Run, AWS, or NODE_ENV=production",
+  "_comment_no_manual_config": "NO MANUAL SWITCHING NEEDED - Just run the code and it adapts automatically!",
+  "_comment_hosting_support": "WORKS WITH: GitHub Pages, Vercel, Netlify, Heroku, Railway, Render, Fly.io, Google Cloud, AWS, and more!",
+  "_comment_separator": "═══════════════════════════════════════════════════════════════════════════════",
+  
   "app": {
     "name": "KRWL HOF Community Events",
+    "_comment_name": "App name is auto-adjusted: adds '[DEV]' suffix in development mode",
     "description": "Community events scraper and viewer with geolocation filtering",
-    "environment": "production"
+    "environment": "auto-detected",
+    "_comment_environment": "This field is overridden at runtime based on actual environment detection"
   },
+  
   "debug": false,
+  "_comment_debug": "Auto-detected: true in development (local), false in CI/production. Enables verbose logging and debug features.",
+  
   "watermark": {
     "enabled": true,
-    "text": "PRODUCTION"
+    "text": "PRODUCTION",
+    "_comment_text": "Auto-detected: 'DEV' in development, 'PRODUCTION' in CI/production. Displayed in app UI."
   },
+  
   "performance": {
     "cache_enabled": true,
-    "prefetch_events": true
+    "_comment_cache_enabled": "Auto-detected: false in development (fresh data), true in CI/production (performance).",
+    "prefetch_events": true,
+    "_comment_prefetch_events": "Auto-detected: false in development (on-demand loading), true in CI/production (preload for speed)."
   },
+  
   "data": {
-    "source": "real"
+    "source": "real",
+    "_comment_source": "Auto-detected: 'both' in development (real+demo events for testing), 'real' in CI/production (real events only).",
+    "_comment_sources_explanation": "The 'source' field above determines which data source(s) to load. The sources below define what each option means:",
+    "sources": {
+      "real": {
+        "url": "events.json",
+        "description": "Real scraped events data"
+      },
+      "demo": {
+        "url": "events.demo.json",
+        "description": "Demo events with current timestamps for testing"
+      },
+      "both": {
+        "urls": ["events.json", "events.demo.json"],
+        "description": "Combine real and demo events (useful for testing with live data)"
+      }
+    }
   },
+  
+  "_comment_scraping_section": "────────────────────────────────────────────────────────────────────────────────",
+  "_comment_scraping_identical": "SCRAPING CONFIGURATION - Same in all environments, no auto-detection applied here",
+  "_comment_scraping_schedule": "Schedule is only used in production/CI for automated scraping",
+  
   "scraping": {
     "schedule": {
       "timezone": "Europe/Berlin",
-      "times": ["04:00", "16:00"]
+      "times": ["04:00", "16:00"],
+      "_comment_schedule_usage": "Only active in CI/production environments for automated scraping"
     },
     "sources": [
       {
@@ -235,10 +277,18 @@
     ],
     "interval_minutes": 60
   },
+  
+  "_comment_filtering_section": "────────────────────────────────────────────────────────────────────────────────",
+  "_comment_filtering_identical": "FILTERING CONFIGURATION - Same in all environments",
+  
   "filtering": {
     "max_distance_km": 5.0,
     "show_until": "next_sunrise"
   },
+  
+  "_comment_map_section": "────────────────────────────────────────────────────────────────────────────────",
+  "_comment_map_identical": "MAP CONFIGURATION - Same in all environments",
+  
   "map": {
     "default_center": {
       "lat": 50.3167,
@@ -263,6 +313,10 @@
       }
     ]
   },
+  
+  "_comment_editor_section": "────────────────────────────────────────────────────────────────────────────────",
+  "_comment_editor_identical": "EDITORIAL WORKFLOW - Same in all environments",
+  
   "editor": {
     "require_approval": true,
     "auto_publish": false

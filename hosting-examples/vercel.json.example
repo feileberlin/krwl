@@ -1,0 +1,45 @@
+{
+  "buildCommand": "pip install -r requirements.txt && python3 src/event_manager.py generate",
+  "outputDirectory": "static",
+  "installCommand": "pip install -r requirements.txt",
+  "framework": null,
+  "devCommand": "cd static && python3 -m http.server 8000",
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "functions": {},
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    },
+    {
+      "source": "/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}

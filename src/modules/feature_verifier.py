@@ -136,13 +136,8 @@ class FeatureVerifier:
             if isinstance(key_def, str):
                 # Simple string format: "config.key"
                 key = key_def
-                # Try both config files
-                found = False
-                for config_file in ['config.dev.json', 'config.prod.json']:
-                    if self._check_config_key_in_file(config_file, key):
-                        found = True
-                        break
-                if not found:
+                # Check unified config file
+                if not self._check_config_key_in_file('config.json', key):
                     missing.append(key)
             else:
                 # Object format: {"file": "config.json", "key": "config.key"}
