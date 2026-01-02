@@ -218,7 +218,7 @@ COMMANDS:
     dependencies fetch        Fetch third-party dependencies
     dependencies check        Check if dependencies are present
     
-    archive                   Archive past events (automatic on generate)
+    archive                   Archive past events to archived_events.json
     load-examples             Load example data for development
     clear-data                Clear all event data
     
