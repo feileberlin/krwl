@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
+  <!-- Terminal style national archive/library marker -->
+  
+  <!-- Drop shadow -->
+  <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
+  
+  <!-- Archive building pin -->
+  <path d="M7 10 L25 10 L25 20 L18 20 L16 46 L14 20 L7 20 Z" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Pediment (triangular roof) -->
+  <path d="M5 10 L16 4 L27 10" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Large entrance columns -->
+  <line x1="10" y1="11" x2="10" y2="18" stroke="#00ff00" stroke-width="2"/>
+  <line x1="16" y1="11" x2="16" y2="18" stroke="#00ff00" stroke-width="2"/>
+  <line x1="22" y1="11" x2="22" y2="18" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Entrance -->
+  <rect x="13" y="14" width="6" height="4" fill="none" stroke="#00ff00" stroke-width="1"/>
+  
+  <!-- Base line -->
+  <line x1="7" y1="18" x2="25" y2="18" stroke="#00ff00" stroke-width="2"/>
+</svg>

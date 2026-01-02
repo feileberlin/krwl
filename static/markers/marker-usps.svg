@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
+  <!-- Terminal style USPS marker - eagle symbol -->
+  
+  <!-- Drop shadow -->
+  <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
+  
+  <!-- Envelope pin -->
+  <path d="M8 8 L24 8 L24 18 L18 18 L16 46 L14 18 L8 18 Z" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Eagle (simplified) -->
+  <path d="M16 10 L13 12 L16 11 L19 12 Z" 
+        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+  <circle cx="16" cy="10" r="1" fill="none" stroke="#00ff00" stroke-width="1"/>
+  
+  <!-- Wings spread -->
+  <path d="M11 12 Q13 11 16 11 Q19 11 21 12" 
+        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+  
+  <!-- Shield -->
+  <path d="M14 12 L14 15 L16 16 L18 15 L18 12" 
+        fill="none" stroke="#00ff00" stroke-width="1"/>
+  <line x1="14" y1="13" x2="18" y2="13" stroke="#00ff00" stroke-width="0.5"/>
+  <line x1="14" y1="14" x2="18" y2="14" stroke="#00ff00" stroke-width="0.5"/>
+  
+  <!-- Brand text -->
+  <text x="16" y="17" font-family="monospace" font-size="4" fill="#00ff00" text-anchor="middle">USPS</text>
+</svg>

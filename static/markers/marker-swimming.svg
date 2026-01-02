@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
+  <!-- Terminal style swimming/pool marker - wave shape -->
+  
+  <!-- Drop shadow -->
+  <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
+  
+  <!-- Wave-topped pin -->
+  <path d="M8 10 Q10 8 12 10 Q14 12 16 10 Q18 8 20 10 Q22 12 24 10 L24 20 L18 20 L16 46 L14 20 L8 20 Z" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Inner wave pattern -->
+  <path d="M10 12 Q12 11 14 12 Q16 13 18 12 Q20 11 22 12" 
+        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+  <path d="M10 15 Q12 14 14 15 Q16 16 18 15 Q20 14 22 15" 
+        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+  
+  <!-- Swimming person icon -->
+  <circle cx="16" cy="11" r="1" fill="#00ff00"/>
+  <path d="M15 12 L17 14" stroke="#00ff00" stroke-width="1"/>
+  <path d="M15 14 Q16 13 17 14" fill="none" stroke="#00ff00" stroke-width="1"/>
+</svg>

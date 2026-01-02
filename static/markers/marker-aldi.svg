@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
+  <!-- Terminal style Aldi marker - minimalist A -->
+  
+  <!-- Drop shadow -->
+  <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
+  
+  <!-- A-frame pin shape -->
+  <path d="M12 18 L16 4 L20 18 L18 18 L16 46 L14 18 Z" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Large A letter -->
+  <path d="M10 20 L16 6 L22 20" fill="none" stroke="#00ff00" stroke-width="2"/>
+  <line x1="13" y1="14" x2="19" y2="14" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Brand indicator -->
+  <text x="16" y="17" font-family="monospace" font-size="6" fill="#00ff00" text-anchor="middle">ALDI</text>
+</svg>

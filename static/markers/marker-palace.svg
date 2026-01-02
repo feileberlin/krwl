@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
+  <!-- Terminal style palace/castle marker - crenellated tower -->
+  
+  <!-- Drop shadow -->
+  <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
+  
+  <!-- Castle pin with battlements -->
+  <path d="M8 6 L8 20 L14 20 L16 46 L18 20 L24 20 L24 6 L22 6 L22 8 L20 8 L20 6 L18 6 L18 8 L16 8 L16 6 L14 6 L14 8 L12 8 L12 6 L10 6 L10 8 L8 8 Z" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Tower windows -->
+  <rect x="10" y="10" width="2" height="3" fill="none" stroke="#00ff00" stroke-width="1"/>
+  <rect x="20" y="10" width="2" height="3" fill="none" stroke="#00ff00" stroke-width="1"/>
+  
+  <!-- Gate/entrance -->
+  <path d="M14 16 Q14 14 16 14 Q18 14 18 16 L18 20 L14 20 Z" 
+        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+  
+  <!-- Flag on top -->
+  <line x1="11" y1="6" x2="11" y2="3" stroke="#00ff00" stroke-width="1"/>
+  <path d="M11 3 L15 3 L15 5 L11 5 Z" fill="none" stroke="#00ff00" stroke-width="0.5"/>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
+  <!-- Terminal style music marker - note shape -->
+  
+  <!-- Drop shadow -->
+  <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
+  
+  <!-- Standard gyro shape -->
+  <path d="M16 2 C9 2 3 8 3 15 C3 24 16 46 16 46 C16 46 29 24 29 15 C29 8 23 2 16 2 Z" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Music note icon -->
+  <path d="M18 9 L18 17" stroke="#00ff00" stroke-width="1.5" fill="none"/>
+  <circle cx="15" cy="18" r="2" fill="none" stroke="#00ff00" stroke-width="1.5"/>
+  <path d="M18 9 L20 10 L20 14 L18 13 Z" fill="none" stroke="#00ff00" stroke-width="1"/>
+</svg>

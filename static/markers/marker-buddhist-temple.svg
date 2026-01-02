@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
+  <!-- Terminal style Buddhist temple marker - stupa -->
+  
+  <!-- Drop shadow -->
+  <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
+  
+  <!-- Stupa pin -->
+  <path d="M14 20 L16 46 L18 20" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Dome (anda) -->
+  <path d="M10 16 Q10 10 16 10 Q22 10 22 16" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Harmika (square platform) -->
+  <rect x="14" y="8" width="4" height="2" fill="none" stroke="#00ff00" stroke-width="1.5"/>
+  
+  <!-- Spire (yasti) -->
+  <line x1="16" y1="8" x2="16" y2="3" stroke="#00ff00" stroke-width="1.5"/>
+  
+  <!-- Umbrella discs (chattras) -->
+  <line x1="14" y1="7" x2="18" y2="7" stroke="#00ff00" stroke-width="1"/>
+  <line x1="14.5" y1="6" x2="17.5" y2="6" stroke="#00ff00" stroke-width="1"/>
+  <line x1="15" y1="5" x2="17" y2="5" stroke="#00ff00" stroke-width="1"/>
+  <line x1="15.5" y1="4" x2="16.5" y2="4" stroke="#00ff00" stroke-width="1"/>
+  
+  <!-- Top jewel -->
+  <circle cx="16" cy="3" r="1" fill="#00ff00"/>
+  
+  <!-- Base platform -->
+  <path d="M8 16 L24 16 L22 18 L10 18 Z" 
+        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+  <path d="M10 18 L22 18 L20 20 L12 20 Z" 
+        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+</svg>

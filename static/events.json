@@ -1,0 +1,375 @@
+{
+  "events": [
+    {
+      "id": "demo_happening_now",
+      "title": "[DEMO] Kunst in Bayreuth - Werke der 1940er bis 1960er Jahre - aus den Sammlungen und Stiftungen im Kunstmuseum",
+      "description": "Event happening now. Donnerstag,01.01.2026,",
+      "location": {
+        "name": "Regionalzeitung",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-02T03:49:43",
+      "end_time": "2026-01-02T05:49:43",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
+      "source": "demo",
+      "status": "published",
+      "published_at": "2026-01-02T04:19:43"
+    },
+    {
+      "id": "demo_started_5min_ago",
+      "title": "[DEMO] Ausstellung zum Fotowettbewerb: Zeig mir deine Lebenswerte Stadt (bis 7. Januar 2026)",
+      "description": "Started 5 minutes ago. Donnerstag,01.01.2026,",
+      "location": {
+        "name": "Regionalzeitung",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-02T04:14:43",
+      "end_time": "2026-01-02T06:14:43",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3202184",
+      "source": "demo",
+      "status": "published",
+      "published_at": "2026-01-02T04:19:43"
+    },
+    {
+      "id": "demo_starting_5min",
+      "title": "[DEMO] Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline",
+      "description": "Starting in 5 minutes. 01.Januar",
+      "location": {
+        "name": "Regionalzeitung",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-02T04:24:43",
+      "end_time": "2026-01-02T06:24:43",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3185852",
+      "source": "demo",
+      "status": "published",
+      "published_at": "2026-01-02T04:19:43"
+    },
+    {
+      "id": "demo_starting_15min",
+      "title": "[DEMO] Test Community Gathering",
+      "description": "Starting in 15 minutes. A test event for approval flow testing",
+      "location": {
+        "name": "Test Venue Berlin",
+        "lat": 52.52,
+        "lon": 13.405
+      },
+      "start_time": "2026-01-02T04:34:43",
+      "end_time": "2026-01-02T06:34:43",
+      "url": "https://example.com/test-event",
+      "source": "demo",
+      "status": "published",
+      "published_at": "2026-01-02T04:19:43"
+    },
+    {
+      "id": "demo_starting_30min",
+      "title": "[DEMO] Kunst in Bayreuth - Werke der 1940er bis 1960er Jahre - aus den Sammlungen und Stiftungen im Kunstmuseum",
+      "description": "Starting in 30 minutes. Donnerstag,01.01.2026,",
+      "location": {
+        "name": "Regionalzeitung",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-02T04:49:43",
+      "end_time": "2026-01-02T06:49:43",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
+      "source": "demo",
+      "status": "published",
+      "published_at": "2026-01-02T04:19:43"
+    },
+    {
+      "id": "demo_in_1hour",
+      "title": "[DEMO] Ausstellung zum Fotowettbewerb: Zeig mir deine Lebenswerte Stadt (bis 7. Januar 2026)",
+      "description": "Event starting in 1 hour. Donnerstag,01.01.2026,",
+      "location": {
+        "name": "Regionalzeitung",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-02T05:19:43",
+      "end_time": "2026-01-02T07:19:43",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3202184",
+      "source": "demo",
+      "status": "published",
+      "published_at": "2026-01-02T04:19:43"
+    },
+    {
+      "id": "demo_in_2hours",
+      "title": "[DEMO] Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline",
+      "description": "Event in 2 hours. 01.Januar",
+      "location": {
+        "name": "Regionalzeitung",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-02T06:19:43",
+      "end_time": "2026-01-02T08:19:43",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3185852",
+      "source": "demo",
+      "status": "published",
+      "published_at": "2026-01-02T04:19:43"
+    },
+    {
+      "id": "demo_this_evening",
+      "title": "[DEMO] Test Community Gathering",
+      "description": "Event this evening. A test event for approval flow testing",
+      "location": {
+        "name": "Test Venue Berlin",
+        "lat": 52.52,
+        "lon": 13.405
+      },
+      "start_time": "2026-01-02T08:19:43",
+      "end_time": "2026-01-02T10:19:43",
+      "url": "https://example.com/test-event",
+      "source": "demo",
+      "status": "published",
+      "published_at": "2026-01-02T04:19:43"
+    },
+    {
+      "id": "demo_just_ended",
+      "title": "[DEMO] Kunst in Bayreuth - Werke der 1940er bis 1960er Jahre - aus den Sammlungen und Stiftungen im Kunstmuseum",
+      "description": "Event that just ended. Donnerstag,01.01.2026,",
+      "location": {
+        "name": "Regionalzeitung",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-02T02:09:43",
+      "end_time": "2026-01-02T04:09:43",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
+      "source": "demo",
+      "status": "published",
+      "published_at": "2026-01-02T04:19:43"
+    },
+    {
+      "id": "demo_very_soon",
+      "title": "[DEMO] Ausstellung zum Fotowettbewerb: Zeig mir deine Lebenswerte Stadt (bis 7. Januar 2026)",
+      "description": "Event very soon. Donnerstag,01.01.2026,",
+      "location": {
+        "name": "Regionalzeitung",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-02T05:04:43",
+      "end_time": "2026-01-02T07:04:43",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3202184",
+      "source": "demo",
+      "status": "published",
+      "published_at": "2026-01-02T04:19:43"
+    },
+    {
+      "id": "demo_utc_plus1",
+      "title": "[DEMO] Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline (TZ: +1.0)",
+      "description": "Event in UTC+1 timezone. 01.Januar",
+      "location": {
+        "name": "Regionalzeitung",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-02T05:19:43+01:00",
+      "end_time": "2026-01-02T07:19:43+01:00",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3185852",
+      "source": "demo",
+      "status": "published",
+      "published_at": "2026-01-02T04:19:43"
+    },
+    {
+      "id": "demo_utc_plus2",
+      "title": "[DEMO] Test Community Gathering (TZ: +2.0)",
+      "description": "Event in UTC+2 timezone. A test event for approval flow testing",
+      "location": {
+        "name": "Test Venue Berlin",
+        "lat": 52.52,
+        "lon": 13.405
+      },
+      "start_time": "2026-01-02T05:19:43+02:00",
+      "end_time": "2026-01-02T07:19:43+02:00",
+      "url": "https://example.com/test-event",
+      "source": "demo",
+      "status": "published",
+      "published_at": "2026-01-02T04:19:43"
+    },
+    {
+      "id": "demo_utc_minus5",
+      "title": "[DEMO] Kunst in Bayreuth - Werke der 1940er bis 1960er Jahre - aus den Sammlungen und Stiftungen im Kunstmuseum (TZ: -5.0)",
+      "description": "Event in UTC-5 timezone (EST). Donnerstag,01.01.2026,",
+      "location": {
+        "name": "Regionalzeitung",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-02T05:19:43-05:00",
+      "end_time": "2026-01-02T07:19:43-05:00",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
+      "source": "demo",
+      "status": "published",
+      "published_at": "2026-01-02T04:19:43"
+    },
+    {
+      "id": "demo_utc_plus9",
+      "title": "[DEMO] Ausstellung zum Fotowettbewerb: Zeig mir deine Lebenswerte Stadt (bis 7. Januar 2026) (TZ: +9.0)",
+      "description": "Event in UTC+9 timezone (JST). Donnerstag,01.01.2026,",
+      "location": {
+        "name": "Regionalzeitung",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-02T05:19:43+09:00",
+      "end_time": "2026-01-02T07:19:43+09:00",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3202184",
+      "source": "demo",
+      "status": "published",
+      "published_at": "2026-01-02T04:19:43"
+    },
+    {
+      "id": "demo_utc_plus530",
+      "title": "[DEMO] Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline (TZ: +5.5)",
+      "description": "Event in UTC+5:30 (IST). 01.Januar",
+      "location": {
+        "name": "Regionalzeitung",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-02T04:49:43+05:30",
+      "end_time": "2026-01-02T06:49:43+05:30",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3185852",
+      "source": "demo",
+      "status": "published",
+      "published_at": "2026-01-02T04:19:43"
+    },
+    {
+      "id": "demo_before_sunrise_5min",
+      "title": "[DEMO] Test Community Gathering",
+      "description": "Ends 5min before sunrise. A test event for approval flow testing",
+      "location": {
+        "name": "Test Venue Berlin",
+        "lat": 52.52,
+        "lon": 13.405
+      },
+      "start_time": "2026-01-02T04:00:00",
+      "end_time": "2026-01-02T05:55:00",
+      "url": "https://example.com/test-event",
+      "source": "demo",
+      "status": "published",
+      "published_at": "2026-01-02T04:19:43"
+    },
+    {
+      "id": "demo_at_sunrise",
+      "title": "[DEMO] Kunst in Bayreuth - Werke der 1940er bis 1960er Jahre - aus den Sammlungen und Stiftungen im Kunstmuseum",
+      "description": "Ends at sunrise. Donnerstag,01.01.2026,",
+      "location": {
+        "name": "Regionalzeitung",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-02T04:30:00",
+      "end_time": "2026-01-02T06:00:00",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
+      "source": "demo",
+      "status": "published",
+      "published_at": "2026-01-02T04:19:43"
+    },
+    {
+      "id": "demo_after_sunrise_5min",
+      "title": "[DEMO] Ausstellung zum Fotowettbewerb: Zeig mir deine Lebenswerte Stadt (bis 7. Januar 2026)",
+      "description": "Ends 5min after sunrise. Donnerstag,01.01.2026,",
+      "location": {
+        "name": "Regionalzeitung",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-02T05:00:00",
+      "end_time": "2026-01-02T06:05:00",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3202184",
+      "source": "demo",
+      "status": "published",
+      "published_at": "2026-01-02T04:19:43"
+    },
+    {
+      "id": "demo_crossing_sunrise",
+      "title": "[DEMO] Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline",
+      "description": "Crosses sunrise boundary. 01.Januar",
+      "location": {
+        "name": "Regionalzeitung",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-02T04:00:00",
+      "end_time": "2026-01-02T07:00:00",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3185852",
+      "source": "demo",
+      "status": "published",
+      "published_at": "2026-01-02T04:19:43"
+    },
+    {
+      "id": "demo_starting_before_sunrise",
+      "title": "[DEMO] Test Community Gathering",
+      "description": "Starts 30min before sunrise. A test event for approval flow testing",
+      "location": {
+        "name": "Test Venue Berlin",
+        "lat": 52.52,
+        "lon": 13.405
+      },
+      "start_time": "2026-01-02T05:30:00",
+      "end_time": "2026-01-02T06:30:00",
+      "url": "https://example.com/test-event",
+      "source": "demo",
+      "status": "published",
+      "published_at": "2026-01-02T04:19:43"
+    },
+    {
+      "id": "demo_starting_after_sunrise",
+      "title": "[DEMO] Kunst in Bayreuth - Werke der 1940er bis 1960er Jahre - aus den Sammlungen und Stiftungen im Kunstmuseum",
+      "description": "Starts 30min after sunrise. Donnerstag,01.01.2026,",
+      "location": {
+        "name": "Regionalzeitung",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-02T06:30:00",
+      "end_time": "2026-01-02T08:00:00",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
+      "source": "demo",
+      "status": "published",
+      "published_at": "2026-01-02T04:19:43"
+    },
+    {
+      "id": "demo_all_night",
+      "title": "[DEMO] Ausstellung zum Fotowettbewerb: Zeig mir deine Lebenswerte Stadt (bis 7. Januar 2026)",
+      "description": "All night until sunrise. Donnerstag,01.01.2026,",
+      "location": {
+        "name": "Regionalzeitung",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-01T22:00:00",
+      "end_time": "2026-01-02T00:00:00",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3202184",
+      "source": "demo",
+      "status": "published",
+      "published_at": "2026-01-02T04:19:43"
+    },
+    {
+      "id": "demo_far_away",
+      "title": "[DEMO] Kunst in Bayreuth - Werke der 1940er bis 1960er Jahre - aus den Sammlungen und Stiftungen im Kunstmuseum",
+      "description": "Event 250km away for distance testing. Donnerstag,01.01.2026,",
+      "location": {
+        "name": "Berlin Alexanderplatz (Demo - Far)",
+        "lat": 52.52,
+        "lon": 13.405
+      },
+      "start_time": "2026-01-02T06:19:43",
+      "end_time": "2026-01-02T08:19:43",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
+      "source": "demo",
+      "status": "published",
+      "published_at": "2026-01-02T04:19:43"
+    }
+  ],
+  "last_updated": "2026-01-02T04:19:43",
+  "demo_generated_at": "2026-01-02T04:19:43",
+  "note": "Demo events generated from real event templates with current timestamps for testing"
+}

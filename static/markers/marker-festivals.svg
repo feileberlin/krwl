@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
+  <!-- Terminal style festivals marker - star shape -->
+  
+  <!-- Drop shadow -->
+  <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
+  
+  <!-- Star pin shape -->
+  <path d="M16 2 L18 10 L26 10 L20 15 L22 22 L16 17 L16 46 L16 17 L10 22 L12 15 L6 10 L14 10 Z" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Inner star -->
+  <path d="M16 6 L17 11 L21 11 L18 14 L19 18 L16 15.5 L13 18 L14 14 L11 11 L15 11 Z" 
+        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+  
+  <!-- Flag icon - minimalist -->
+  <line x1="15" y1="18" x2="15" y2="10" stroke="#00ff00" stroke-width="1"/>
+  <path d="M15 10 L19 10 L19 12 L17 13 L19 14 L19 16 L15 16" 
+        fill="none" stroke="#00ff00" stroke-width="1"/>
+</svg>

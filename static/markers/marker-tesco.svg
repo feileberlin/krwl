@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
+  <!-- Terminal style Tesco marker - T shape -->
+  
+  <!-- Drop shadow -->
+  <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
+  
+  <!-- T-shaped pin -->
+  <path d="M9 4 L23 4 L23 6 L17 6 L17 18 L16 46 L15 18 L15 6 L9 6 Z" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Large T -->
+  <line x1="10" y1="6" x2="22" y2="6" stroke="#00ff00" stroke-width="2"/>
+  <line x1="16" y1="6" x2="16" y2="17" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Brand indicator -->
+  <text x="16" y="14" font-family="monospace" font-size="5" fill="#00ff00" text-anchor="middle">TESCO</text>
+</svg>

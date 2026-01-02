@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
+  <!-- Terminal style active marker - pulsing green with glow -->
+  
+  <!-- Drop shadow -->
+  <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
+  
+  <!-- Outer glow -->
+  <path d="M16 2 C9 2 3 8 3 15 C3 24 16 46 16 46 C16 46 29 24 29 15 C29 8 23 2 16 2 Z" 
+        fill="none" stroke="#00ff00" stroke-width="4" opacity="0.3"/>
+  
+  <!-- Main pin outline - thicker -->
+  <path d="M16 2 C9 2 3 8 3 15 C3 24 16 46 16 46 C16 46 29 24 29 15 C29 8 23 2 16 2 Z" 
+        fill="none" stroke="#00ff00" stroke-width="2.5"/>
+  
+  <!-- Inner circle outline - thicker -->
+  <circle cx="16" cy="15" r="7" fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Center dot - filled and glowing -->
+  <circle cx="16" cy="15" r="4" fill="#00ff00"/>
+  <circle cx="16" cy="15" r="4" fill="#00ff00" opacity="0.5"/>
+</svg>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
+  <!-- Terminal style supreme court marker - scales of justice -->
+  
+  <!-- Drop shadow -->
+  <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
+  
+  <!-- Building pin -->
+  <path d="M8 12 L24 12 L24 20 L18 20 L16 46 L14 20 L8 20 Z" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Pediment -->
+  <path d="M6 12 L16 4 L26 12" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Columns -->
+  <line x1="10" y1="13" x2="10" y2="19" stroke="#00ff00" stroke-width="1.5"/>
+  <line x1="14" y1="13" x2="14" y2="19" stroke="#00ff00" stroke-width="1.5"/>
+  <line x1="18" y1="13" x2="18" y2="19" stroke="#00ff00" stroke-width="1.5"/>
+  <line x1="22" y1="13" x2="22" y2="19" stroke="#00ff00" stroke-width="1.5"/>
+  
+  <!-- Scales of justice -->
+  <line x1="16" y1="8" x2="16" y2="10" stroke="#00ff00" stroke-width="1.5"/>
+  <line x1="12" y1="8" x2="20" y2="8" stroke="#00ff00" stroke-width="1.5"/>
+  <rect x="11" y="8" width="2" height="1.5" fill="none" stroke="#00ff00" stroke-width="0.5"/>
+  <rect x="19" y="8" width="2" height="1.5" fill="none" stroke="#00ff00" stroke-width="0.5"/>
+</svg>

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
+  <!-- Terminal style mosque marker - dome and minaret -->
+  
+  <!-- Drop shadow -->
+  <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
+  
+  <!-- Building pin -->
+  <path d="M8 14 L24 14 L24 20 L18 20 L16 46 L14 20 L8 20 Z" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Dome -->
+  <path d="M10 14 Q10 8 16 8 Q22 8 22 14" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Crescent on top -->
+  <path d="M15 8 Q15 6 16 6 Q17 6 17 8" 
+        fill="none" stroke="#00ff00" stroke-width="1"/>
+  <circle cx="16" cy="5" r="1" fill="none" stroke="#00ff00" stroke-width="1"/>
+  
+  <!-- Minarets (towers) on sides -->
+  <line x1="9" y1="14" x2="9" y2="8" stroke="#00ff00" stroke-width="1.5"/>
+  <line x1="23" y1="14" x2="23" y2="8" stroke="#00ff00" stroke-width="1.5"/>
+  <circle cx="9" cy="8" r="1" fill="none" stroke="#00ff00" stroke-width="1"/>
+  <circle cx="23" cy="8" r="1" fill="none" stroke="#00ff00" stroke-width="1"/>
+  
+  <!-- Arched entrance -->
+  <path d="M14 16 Q14 15 16 15 Q18 15 18 16 L18 19 L14 19 Z" 
+        fill="none" stroke="#00ff00" stroke-width="1"/>
+</svg>

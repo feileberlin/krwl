@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
+  <!-- Terminal style castle marker - fortress with towers -->
+  
+  <!-- Drop shadow -->
+  <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
+  
+  <!-- Central keep -->
+  <path d="M12 6 L20 6 L20 18 L18 18 L16 46 L14 18 L12 18 Z" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Battlements on keep -->
+  <path d="M12 6 L12 4 L14 4 L14 6 L16 6 L16 4 L18 4 L18 6 L20 6 L20 4" 
+        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+  
+  <!-- Side towers -->
+  <path d="M7 10 L11 10 L11 18 L7 18 L7 10 M7 10 L7 8 L9 8 L9 10" 
+        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+  <path d="M21 10 L25 10 L25 18 L21 18 L21 10 M23 10 L23 8 L25 8 L25 10" 
+        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+  
+  <!-- Windows -->
+  <rect x="14" y="9" width="2" height="3" fill="none" stroke="#00ff00" stroke-width="1"/>
+  <rect x="14" y="13" width="2" height="3" fill="none" stroke="#00ff00" stroke-width="1"/>
+  <rect x="8" y="13" width="2" height="3" fill="none" stroke="#00ff00" stroke-width="0.5"/>
+  <rect x="22" y="13" width="2" height="3" fill="none" stroke="#00ff00" stroke-width="0.5"/>
+</svg>

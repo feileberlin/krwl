@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
+  <!-- Terminal style Maori meeting house marker - wharenui -->
+  
+  <!-- Drop shadow -->
+  <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
+  
+  <!-- Meeting house pin -->
+  <path d="M8 12 L24 12 L24 20 L18 20 L16 46 L14 20 L8 20 Z" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Distinctive peaked roof -->
+  <path d="M6 12 L16 4 L26 12" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Roof ridge ornament (tekoteko) -->
+  <path d="M16 4 L16 2" stroke="#00ff00" stroke-width="1.5"/>
+  <path d="M15 3 L16 2 L17 3" fill="none" stroke="#00ff00" stroke-width="1"/>
+  
+  <!-- Carved panels representation -->
+  <rect x="10" y="14" width="3" height="4" fill="none" stroke="#00ff00" stroke-width="1"/>
+  <rect x="19" y="14" width="3" height="4" fill="none" stroke="#00ff00" stroke-width="1"/>
+  
+  <!-- Center entrance -->
+  <path d="M14 15 Q14 14 16 14 Q18 14 18 15 L18 20 L14 20 Z" 
+        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+  
+  <!-- Posts (pou) -->
+  <line x1="11" y1="12" x2="11" y2="20" stroke="#00ff00" stroke-width="1"/>
+  <line x1="21" y1="12" x2="21" y2="20" stroke="#00ff00" stroke-width="1"/>
+</svg>

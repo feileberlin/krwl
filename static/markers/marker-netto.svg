@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
+  <!-- Terminal style Netto marker - N shape -->
+  
+  <!-- Drop shadow -->
+  <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
+  
+  <!-- N-shaped pin -->
+  <path d="M10 4 L12 4 L12 10 L18 4 L20 4 L20 18 L18 18 L16 46 L14 18 L12 18 L10 18 Z" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Large N -->
+  <line x1="11" y1="6" x2="11" y2="17" stroke="#00ff00" stroke-width="2"/>
+  <line x1="11" y1="6" x2="19" y2="17" stroke="#00ff00" stroke-width="2"/>
+  <line x1="19" y1="6" x2="19" y2="17" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Brand indicator -->
+  <text x="16" y="14" font-family="monospace" font-size="5" fill="#00ff00" text-anchor="middle">NETTO</text>
+</svg>

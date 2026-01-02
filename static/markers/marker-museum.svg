@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
+  <!-- Terminal style museum/culture marker - classical temple -->
+  
+  <!-- Drop shadow -->
+  <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
+  
+  <!-- Temple/museum pin shape -->
+  <path d="M8 10 L24 10 L24 20 L18 20 L16 46 L14 20 L8 20 Z" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Temple pediment (triangular roof) -->
+  <path d="M6 10 L16 4 L26 10" fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Columns -->
+  <line x1="10" y1="11" x2="10" y2="18" stroke="#00ff00" stroke-width="1.5"/>
+  <line x1="14" y1="11" x2="14" y2="18" stroke="#00ff00" stroke-width="1.5"/>
+  <line x1="18" y1="11" x2="18" y2="18" stroke="#00ff00" stroke-width="1.5"/>
+  <line x1="22" y1="11" x2="22" y2="18" stroke="#00ff00" stroke-width="1.5"/>
+  
+  <!-- Base -->
+  <line x1="8" y1="18" x2="24" y2="18" stroke="#00ff00" stroke-width="2"/>
+</svg>

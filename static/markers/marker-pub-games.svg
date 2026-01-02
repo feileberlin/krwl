@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
+  <!-- Terminal style pub-games marker - hexagon shape -->
+  
+  <!-- Drop shadow -->
+  <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
+  
+  <!-- Hexagon pin shape -->
+  <path d="M10 8 L22 8 L26 15 L20 15 L16 46 L12 15 L6 15 Z" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Inner hexagon -->
+  <path d="M12 10 L20 10 L23 13 L20 16 L12 16 L9 13 Z" 
+        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+  
+  <!-- Beer mug icon - minimalist -->
+  <rect x="14" y="11" width="4" height="4" fill="none" stroke="#00ff00" stroke-width="1"/>
+  <rect x="14" y="11.5" width="4" height="1.5" fill="#00ff00" opacity="0.3"/>
+  <line x1="18" y1="12" x2="19" y2="12" stroke="#00ff00" stroke-width="1"/>
+  <line x1="18" y1="14" x2="19" y2="14" stroke="#00ff00" stroke-width="1"/>
+</svg>

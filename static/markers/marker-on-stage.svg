@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
+  <!-- Terminal style on-stage marker - diamond shape -->
+  
+  <!-- Drop shadow -->
+  <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
+  
+  <!-- Diamond pin shape -->
+  <path d="M16 2 L28 15 L18 15 L16 46 L14 15 L4 15 Z" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Inner diamond -->
+  <path d="M16 6 L23 13 L16 20 L9 13 Z" 
+        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+  
+  <!-- Microphone icon - minimalist -->
+  <rect x="15" y="10" width="2" height="5" rx="1" fill="none" stroke="#00ff00" stroke-width="1"/>
+  <line x1="16" y1="15" x2="16" y2="17" stroke="#00ff00" stroke-width="1"/>
+  <line x1="14" y1="17" x2="18" y2="17" stroke="#00ff00" stroke-width="1"/>
+</svg>

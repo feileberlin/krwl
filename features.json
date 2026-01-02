@@ -647,6 +647,38 @@
             ],
             "test_method": "manual",
             "test_instructions": "1. Navigate to GitHub repository\n2. Click 'Environments' in sidebar\n3. Verify 'production' and 'preview' environments are listed\n4. Click on environment to see deployment history\n5. Click 'View deployment' button to open deployed site"
+        },
+        {
+            "id": "time-drawer",
+            "name": "Dynamic Time-Based Marker Resizing",
+            "description": "Interactive timeline drawer with dynamic marker scaling based on event proximity to selected time. Shows events from 'Now' to 'Sunrise' with smooth animations",
+            "category": "frontend",
+            "implemented": true,
+            "files": [
+                "assets/js/time-drawer.js",
+                "assets/css/time-drawer.css",
+                "assets/js/app.js",
+                "src/modules/site_generator.py"
+            ],
+            "code_patterns": [
+                {
+                    "file": "assets/js/time-drawer.js",
+                    "pattern": "class TimeDrawer|calculateMarkerScale|applyMarkerScale",
+                    "description": "TimeDrawer class with marker scaling logic"
+                },
+                {
+                    "file": "assets/js/app.js",
+                    "pattern": "this.timeDrawer|new TimeDrawer|registerMarker",
+                    "description": "TimeDrawer integration in EventsApp"
+                },
+                {
+                    "file": "assets/css/time-drawer.css",
+                    "pattern": ".time-drawer|.time-drawer-handle|.time-drawer-progress",
+                    "description": "Time drawer styling"
+                }
+            ],
+            "test_method": "manual",
+            "test_instructions": "1. Open the app with 5+ events\n2. Set filter to 'til sunrise'\n3. Verify time drawer appears at bottom\n4. Drag the handle left/right\n5. Verify markers scale dynamically (70%-130%)\n6. Verify largest markers have glow effect\n7. Try with < 5 events - drawer should show threshold message\n8. Change filter to '6h' - drawer should disappear\n9. Test on mobile - touch gestures should work"
         }
     ]
 }

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
+  <!-- Terminal style Hindu temple marker - shikhara tower -->
+  
+  <!-- Drop shadow -->
+  <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
+  
+  <!-- Temple pin with curved tower -->
+  <path d="M14 20 L16 46 L18 20" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Shikhara (curved tower) -->
+  <path d="M12 20 Q12 10 16 4 Q20 10 20 20" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Tiers/levels -->
+  <path d="M13 16 Q16 13 19 16" fill="none" stroke="#00ff00" stroke-width="1"/>
+  <path d="M13 13 Q16 10 19 13" fill="none" stroke="#00ff00" stroke-width="1"/>
+  <path d="M14 10 Q16 8 18 10" fill="none" stroke="#00ff00" stroke-width="1"/>
+  
+  <!-- Kalasha (top ornament) -->
+  <circle cx="16" cy="4" r="1" fill="none" stroke="#00ff00" stroke-width="1"/>
+  <line x1="16" y1="3" x2="16" y2="2" stroke="#00ff00" stroke-width="1"/>
+  
+  <!-- Base platform -->
+  <rect x="10" y="18" width="12" height="2" fill="none" stroke="#00ff00" stroke-width="1.5"/>
+  
+  <!-- Entrance -->
+  <path d="M15 17 Q15 16 16 16 Q17 16 17 17" 
+        fill="none" stroke="#00ff00" stroke-width="1"/>
+</svg>

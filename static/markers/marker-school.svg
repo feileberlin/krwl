@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
+  <!-- Terminal style school/education marker - graduation cap -->
+  
+  <!-- Drop shadow -->
+  <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
+  
+  <!-- Trapezoid (graduation cap) pin shape -->
+  <path d="M10 8 L22 8 L26 14 L26 20 L18 20 L16 46 L14 20 L6 20 L6 14 Z" 
+        fill="none" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Graduation cap top -->
+  <path d="M11 10 L21 10 L24 14 L8 14 Z" fill="none" stroke="#00ff00" stroke-width="1.5"/>
+  
+  <!-- Cap board -->
+  <line x1="8" y1="14" x2="24" y2="14" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Tassel -->
+  <line x1="20" y1="10" x2="22" y2="8" stroke="#00ff00" stroke-width="1"/>
+  <circle cx="22" cy="8" r="1" fill="#00ff00"/>
+  
+  <!-- Book under cap -->
+  <rect x="12" y="15" width="8" height="3" fill="none" stroke="#00ff00" stroke-width="1"/>
+</svg>
