@@ -41,34 +41,10 @@ class RSSSource(BaseSource):
         try:
             # Extract basic info
             title = entry.get('title', 'Untitled Event')
-            description = entry.get('summary', entry.get('description', ''))
+            description = self._extract_description(entry)
             link = entry.get('link', '')
-            
-            # Try to extract date
-            published = entry.get('published_parsed') or entry.get('updated_parsed')
-            if published:
-                start_time = datetime(*published[:6]).isoformat()
-            else:
-                # Default to tomorrow if no date
-                start_time = (datetime.now() + timedelta(days=1)).replace(
-                    hour=18, minute=0).isoformat()
-            
-            # Get default location
-            location = self.options.default_location or {
-                'name': self.name,
-                'lat': 50.3167,
-                'lon': 11.9167
-            }
-            
-            # Clean description
-            if description:
-                # Remove HTML tags
-                try:
-                    from bs4 import BeautifulSoup
-                    description = BeautifulSoup(description, 'lxml').get_text(strip=True)
-                except:
-                    pass
-                description = description[:500]  # Limit length
+            start_time = self._extract_start_time(entry)
+            location = self._get_default_location()
             
             return {
                 'id': f"rss_{self.name.lower().replace(' ', '_')}_{hash(title + start_time)}",
@@ -85,3 +61,36 @@ class RSSSource(BaseSource):
         except Exception as e:
             print(f"      Error parsing RSS entry: {str(e)}")
             return None
+    
+    def _extract_description(self, entry) -> str:
+        """Extract and clean description from RSS entry."""
+        description = entry.get('summary', entry.get('description', ''))
+        if not description:
+            return ''
+        
+        # Remove HTML tags
+        try:
+            from bs4 import BeautifulSoup
+            description = BeautifulSoup(description, 'lxml').get_text(strip=True)
+        except:
+            pass
+        
+        return description[:500]  # Limit length
+    
+    def _extract_start_time(self, entry) -> str:
+        """Extract start time from RSS entry."""
+        published = entry.get('published_parsed') or entry.get('updated_parsed')
+        if published:
+            return datetime(*published[:6]).isoformat()
+        
+        # Default to tomorrow if no date
+        return (datetime.now() + timedelta(days=1)).replace(
+            hour=18, minute=0).isoformat()
+    
+    def _get_default_location(self) -> Dict[str, Any]:
+        """Get default location for events."""
+        return self.options.default_location or {
+            'name': self.name,
+            'lat': 50.3167,
+            'lon': 11.9167
+        }
