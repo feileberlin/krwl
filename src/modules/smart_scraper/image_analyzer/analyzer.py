@@ -33,48 +33,79 @@ class ImageAnalyzer:
         result = {}
         
         # Extract metadata (GPS, datetime, etc.)
-        metadata = extract_metadata(image_path)
-        if metadata:
-            result['metadata'] = metadata
-            
-            # Use GPS coordinates if available
-            if 'gps' in metadata:
-                result['location'] = {
-                    'name': 'From image GPS',
-                    'lat': metadata['gps']['lat'],
-                    'lon': metadata['gps']['lon']
-                }
-            
-            # Use EXIF datetime if available
-            if 'datetime' in metadata:
-                result['start_time'] = metadata['datetime']
+        self._extract_image_metadata(image_path, result)
         
         # Extract text with OCR
         if self.ocr_enabled:
-            text = extract_text(image_path, self.languages)
-            if text:
-                result['ocr_text'] = text
-                
-                # Extract structured data from text
-                dates = extract_dates(text)
-                if dates:
-                    result['dates_found'] = dates
-                
-                times = extract_times(text)
-                if times:
-                    result['times_found'] = times
-                
-                urls = extract_urls(text)
-                if urls:
-                    result['urls_found'] = urls
-                
-                # Use AI to extract structured event info
-                if self.ai_providers:
-                    ai_result = self._ai_extract(text, image_path)
-                    if ai_result:
-                        result.update(ai_result)
+            self._extract_text_data(image_path, result)
         
         return result if result else None
+    
+    def _extract_image_metadata(self, image_path: str, result: Dict[str, Any]) -> None:
+        """Extract and process image metadata.
+        
+        Args:
+            image_path: Path to image file
+            result: Dictionary to update with extracted data
+        """
+        metadata = extract_metadata(image_path)
+        if not metadata:
+            return
+        
+        result['metadata'] = metadata
+        
+        # Use GPS coordinates if available
+        if 'gps' in metadata:
+            result['location'] = {
+                'name': 'From image GPS',
+                'lat': metadata['gps']['lat'],
+                'lon': metadata['gps']['lon']
+            }
+        
+        # Use EXIF datetime if available
+        if 'datetime' in metadata:
+            result['start_time'] = metadata['datetime']
+    
+    def _extract_text_data(self, image_path: str, result: Dict[str, Any]) -> None:
+        """Extract text data from image using OCR.
+        
+        Args:
+            image_path: Path to image file
+            result: Dictionary to update with extracted data
+        """
+        text = extract_text(image_path, self.languages)
+        if not text:
+            return
+        
+        result['ocr_text'] = text
+        
+        # Extract structured data from text
+        self._extract_structured_text_data(text, result)
+        
+        # Use AI to extract structured event info
+        if self.ai_providers:
+            ai_result = self._ai_extract(text, image_path)
+            if ai_result:
+                result.update(ai_result)
+    
+    def _extract_structured_text_data(self, text: str, result: Dict[str, Any]) -> None:
+        """Extract structured data (dates, times, URLs) from text.
+        
+        Args:
+            text: OCR extracted text
+            result: Dictionary to update with extracted data
+        """
+        dates = extract_dates(text)
+        if dates:
+            result['dates_found'] = dates
+        
+        times = extract_times(text)
+        if times:
+            result['times_found'] = times
+        
+        urls = extract_urls(text)
+        if urls:
+            result['urls_found'] = urls
     
     def _ai_extract(self, text: str, image_path: str) -> Optional[Dict[str, Any]]:
         """Use AI to extract structured event information.

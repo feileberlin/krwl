@@ -69,66 +69,95 @@ class HTMLSource(BaseSource):
     def _parse_element(self, element) -> Dict[str, Any]:
         """Parse HTML element into event format."""
         try:
-            # Extract title
-            title_elem = element.find(['h1', 'h2', 'h3', 'h4', 'a'])
-            title = title_elem.get_text(strip=True) if title_elem else 'Untitled Event'
-            
-            # Extract description
-            desc_elem = element.find(['p', 'div', 'span'])
-            description = desc_elem.get_text(strip=True)[:500] if desc_elem else ''
-            
-            # Extract link
-            link_elem = element.find('a', href=True)
-            url = urljoin(self.url, link_elem['href']) if link_elem else self.url
+            # Extract basic fields
+            title = self._extract_title(element)
+            description = self._extract_description(element)
+            url = self._extract_url(element)
             
             # Extract date
             date_text = element.get_text()
             start_time = self._extract_date(date_text)
             
             # Use default location
-            location = self.options.default_location or {
-                'name': self.name,
-                'lat': 50.3167,
-                'lon': 11.9167
-            }
+            location = self._get_default_location()
             
-            if title and title != 'Untitled Event':
-                return {
-                    'id': f"html_{self.name.lower().replace(' ', '_')}_{hash(title + start_time)}",
-                    'title': title[:200],
-                    'description': description,
-                    'location': location,
-                    'start_time': start_time,
-                    'end_time': None,
-                    'url': url,
-                    'source': self.name,
-                    'scraped_at': datetime.now().isoformat(),
-                    'status': 'pending'
-                }
+            # Return event if valid title
+            if not title or title == 'Untitled Event':
+                return None
+            
+            return {
+                'id': f"html_{self.name.lower().replace(' ', '_')}_{hash(title + start_time)}",
+                'title': title[:200],
+                'description': description,
+                'location': location,
+                'start_time': start_time,
+                'end_time': None,
+                'url': url,
+                'source': self.name,
+                'scraped_at': datetime.now().isoformat(),
+                'status': 'pending'
+            }
         except Exception as e:
             print(f"      Error parsing HTML element: {str(e)}")
-        return None
+            return None
+    
+    def _extract_title(self, element) -> str:
+        """Extract title from HTML element."""
+        title_elem = element.find(['h1', 'h2', 'h3', 'h4', 'a'])
+        return title_elem.get_text(strip=True) if title_elem else 'Untitled Event'
+    
+    def _extract_description(self, element) -> str:
+        """Extract description from HTML element."""
+        desc_elem = element.find(['p', 'div', 'span'])
+        return desc_elem.get_text(strip=True)[:500] if desc_elem else ''
+    
+    def _extract_url(self, element) -> str:
+        """Extract URL from HTML element."""
+        link_elem = element.find('a', href=True)
+        return urljoin(self.url, link_elem['href']) if link_elem else self.url
+    
+    def _get_default_location(self) -> Dict[str, Any]:
+        """Get default location for events."""
+        return self.options.default_location or {
+            'name': self.name,
+            'lat': 50.3167,
+            'lon': 11.9167
+        }
     
     def _extract_date(self, text: str) -> str:
         """Extract date from text using patterns."""
         patterns = [
-            r'(\d{1,2})\.(\d{1,2})\.(\d{4})',  # DD.MM.YYYY
-            r'(\d{4})-(\d{2})-(\d{2})',  # YYYY-MM-DD
+            (r'(\d{1,2})\.(\d{1,2})\.(\d{4})', 'DMY'),  # DD.MM.YYYY
+            (r'(\d{4})-(\d{2})-(\d{2})', 'YMD'),  # YYYY-MM-DD
         ]
         
-        for pattern in patterns:
+        for pattern, format_type in patterns:
             match = re.search(pattern, text)
             if match:
-                try:
-                    if '.' in pattern:
-                        day, month, year = match.groups()
-                        date = datetime(int(year), int(month), int(day), 18, 0)
-                    else:
-                        year, month, day = match.groups()
-                        date = datetime(int(year), int(month), int(day), 18, 0)
-                    return date.isoformat()
-                except ValueError:
-                    pass
+                date = self._parse_date_match(match.groups(), format_type)
+                if date:
+                    return date
         
         # Default to next week if no date found
         return (datetime.now() + timedelta(days=7)).replace(hour=18, minute=0).isoformat()
+    
+    def _parse_date_match(self, groups: tuple, format_type: str) -> str:
+        """Parse matched date groups into ISO format.
+        
+        Args:
+            groups: Regex match groups
+            format_type: 'DMY' or 'YMD'
+            
+        Returns:
+            ISO formatted date string or None if invalid
+        """
+        try:
+            if format_type == 'DMY':
+                day, month, year = groups
+                date = datetime(int(year), int(month), int(day), 18, 0)
+            else:  # YMD
+                year, month, day = groups
+                date = datetime(int(year), int(month), int(day), 18, 0)
+            return date.isoformat()
+        except ValueError:
+            return None

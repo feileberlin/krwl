@@ -743,6 +743,82 @@ def cli_reject_event(base_path, event_id):
     return 0
 
 
+def _find_events_to_process(event_ids, events):
+    """Find events and their indices from the pending list.
+    
+    Args:
+        event_ids: List of event IDs to find
+        events: List of pending events
+        
+    Returns:
+        Tuple of (events_to_process, failed_ids)
+    """
+    events_to_process = []
+    failed_ids = []
+    
+    for event_id in event_ids:
+        # Find event
+        event = None
+        event_index = None
+        for i, e in enumerate(events):
+            if e.get('id') == event_id:
+                event = e
+                event_index = i
+                break
+        
+        if not event:
+            print(f"✗ Event '{event_id}' not found in pending queue")
+            failed_ids.append(event_id)
+        else:
+            events_to_process.append((event_index, event_id, event))
+    
+    # Sort by index in reverse order to safely remove from pending list
+    events_to_process.sort(key=lambda x: x[0], reverse=True)
+    
+    return events_to_process, failed_ids
+
+
+def _publish_events_batch(base_path, events_to_publish, events, events_data):
+    """Publish a batch of events.
+    
+    Args:
+        base_path: Repository root path
+        events_to_publish: List of (index, id, event) tuples
+        events: Pending events list (modified in place)
+        events_data: Published events data (modified in place)
+        
+    Returns:
+        Tuple of (published_count, failed_count, failed_ids)
+    """
+    published_count = 0
+    failed_count = 0
+    failed_ids = []
+    
+    for event_index, event_id, event in events_to_publish:
+        try:
+            # Publish event
+            event['status'] = 'published'
+            event['published_at'] = datetime.now().isoformat()
+            
+            # Backup the published event
+            backup_published_event(base_path, event)
+            
+            # Add to published events
+            events_data['events'].append(event)
+            
+            # Remove from pending (safe because we're removing in reverse order)
+            events.pop(event_index)
+            
+            print(f"✓ Published: {event.get('title')} (ID: {event_id})")
+            published_count += 1
+        except Exception as e:
+            print(f"✗ Failed to publish '{event_id}': {e}")
+            failed_count += 1
+            failed_ids.append(event_id)
+    
+    return published_count, failed_count, failed_ids
+
+
 def cli_bulk_publish_events(base_path, event_ids_str):
     """CLI: Bulk publish pending events (supports wildcards)"""
     # Parse comma-separated event IDs/patterns
@@ -764,56 +840,19 @@ def cli_bulk_publish_events(base_path, event_ids_str):
     
     events_data = load_events(base_path)
     
-    published_count = 0
-    failed_count = 0
-    failed_ids = []
-    
     print(f"Bulk publishing {len(event_ids)} event(s)...")
     print("-" * 80)
     
-    # Collect events and indices first
-    events_to_publish = []
-    for event_id in event_ids:
-        # Find event
-        event = None
-        event_index = None
-        for i, e in enumerate(events):
-            if e.get('id') == event_id:
-                event = e
-                event_index = i
-                break
-        
-        if not event:
-            print(f"✗ Event '{event_id}' not found in pending queue")
-            failed_count += 1
-            failed_ids.append(event_id)
-        else:
-            events_to_publish.append((event_index, event_id, event))
+    # Find events to publish
+    events_to_publish, initial_failed_ids = _find_events_to_process(event_ids, events)
+    failed_count = len(initial_failed_ids)
     
-    # Sort by index in reverse order to safely remove from pending list
-    events_to_publish.sort(key=lambda x: x[0], reverse=True)
-    
-    for event_index, event_id, event in events_to_publish:
-        try:
-            # Publish event
-            event['status'] = 'published'
-            event['published_at'] = datetime.now().isoformat()
-            
-            # Backup the published event
-            backup_path = backup_published_event(base_path, event)
-            
-            # Add to published events
-            events_data['events'].append(event)
-            
-            # Remove from pending (safe because we're removing in reverse order)
-            events.pop(event_index)
-            
-            print(f"✓ Published: {event.get('title')} (ID: {event_id})")
-            published_count += 1
-        except Exception as e:
-            print(f"✗ Failed to publish '{event_id}': {e}")
-            failed_count += 1
-            failed_ids.append(event_id)
+    # Publish events
+    published_count, pub_failed_count, pub_failed_ids = _publish_events_batch(
+        base_path, events_to_publish, events, events_data
+    )
+    failed_count += pub_failed_count
+    failed_ids = initial_failed_ids + pub_failed_ids
     
     # Save changes
     if published_count > 0:
@@ -835,6 +874,38 @@ def cli_bulk_publish_events(base_path, event_ids_str):
     return 0
 
 
+def _reject_events_batch(base_path, events_to_reject, events):
+    """Reject a batch of events.
+    
+    Args:
+        base_path: Repository root path
+        events_to_reject: List of (index, id, title, source) tuples
+        events: Pending events list (modified in place)
+        
+    Returns:
+        Tuple of (rejected_count, failed_count, failed_ids)
+    """
+    rejected_count = 0
+    failed_count = 0
+    failed_ids = []
+    
+    for event_index, event_id, event_title, event_source in events_to_reject:
+        try:
+            # Add to rejected events list
+            add_rejected_event(base_path, event_title, event_source)
+            
+            # Remove from pending (safe because we're removing in reverse order)
+            events.pop(event_index)
+            print(f"✓ Rejected: {event_title} (ID: {event_id})")
+            rejected_count += 1
+        except Exception as e:
+            print(f"✗ Failed to reject '{event_id}': {e}")
+            failed_count += 1
+            failed_ids.append(event_id)
+    
+    return rejected_count, failed_count, failed_ids
+
+
 def cli_bulk_reject_events(base_path, event_ids_str):
     """CLI: Bulk reject pending events (supports wildcards)"""
     # Parse comma-separated event IDs/patterns
@@ -854,15 +925,13 @@ def cli_bulk_reject_events(base_path, event_ids_str):
         print("Error: No events matched the provided patterns")
         return 1
     
-    rejected_count = 0
-    failed_count = 0
-    failed_ids = []
-    
     print(f"Bulk rejecting {len(event_ids)} event(s)...")
     print("-" * 80)
     
-    # Collect indices first to avoid shifting issues during removal
-    indices_to_remove = []
+    # Find events to reject
+    events_to_reject = []
+    failed_ids = []
+    
     for event_id in event_ids:
         # Find event
         event_index = None
@@ -877,27 +946,19 @@ def cli_bulk_reject_events(base_path, event_ids_str):
         
         if event_index is None:
             print(f"✗ Event '{event_id}' not found in pending queue")
-            failed_count += 1
             failed_ids.append(event_id)
         else:
-            indices_to_remove.append((event_index, event_id, event_title, event_source))
+            events_to_reject.append((event_index, event_id, event_title, event_source))
     
-    # Sort by index in reverse order and remove
-    indices_to_remove.sort(key=lambda x: x[0], reverse=True)
+    # Sort by index in reverse order
+    events_to_reject.sort(key=lambda x: x[0], reverse=True)
     
-    for event_index, event_id, event_title, event_source in indices_to_remove:
-        try:
-            # Add to rejected events list
-            add_rejected_event(base_path, event_title, event_source)
-            
-            # Remove from pending (safe because we're removing in reverse order)
-            events.pop(event_index)
-            print(f"✓ Rejected: {event_title} (ID: {event_id})")
-            rejected_count += 1
-        except Exception as e:
-            print(f"✗ Failed to reject '{event_id}': {e}")
-            failed_count += 1
-            failed_ids.append(event_id)
+    # Reject events
+    rejected_count, rej_failed_count, rej_failed_ids = _reject_events_batch(
+        base_path, events_to_reject, events
+    )
+    failed_count = len(failed_ids) + rej_failed_count
+    failed_ids.extend(rej_failed_ids)
     
     # Save changes
     if rejected_count > 0:
@@ -1005,6 +1066,124 @@ def cli_archive_old_events(base_path):
     return 0
 
 
+def _execute_command(args, base_path, config):
+    """Execute the specified CLI command.
+    
+    Args:
+        args: Parsed command line arguments
+        base_path: Repository root path
+        config: Loaded configuration
+        
+    Returns:
+        Exit code (0 for success, 1 for error)
+    """
+    command = args.command
+    
+    if command == 'setup':
+        print_setup_guide()
+        return 0
+    
+    if command == 'scrape':
+        return cli_scrape(base_path, config)
+    
+    if command == 'list':
+        return cli_list_events(base_path)
+    
+    if command == 'list-pending':
+        return cli_list_pending(base_path)
+    
+    if command == 'publish':
+        if not args.args:
+            print("Error: Missing event ID")
+            print("Usage: python3 event_manager.py publish EVENT_ID")
+            return 1
+        return cli_publish_event(base_path, args.args[0])
+    
+    if command == 'reject':
+        if not args.args:
+            print("Error: Missing event ID")
+            print("Usage: python3 event_manager.py reject EVENT_ID")
+            return 1
+        return cli_reject_event(base_path, args.args[0])
+    
+    if command == 'bulk-publish':
+        if not args.args:
+            print("Error: Missing event IDs")
+            print("Usage: python3 event_manager.py bulk-publish EVENT_ID1,EVENT_ID2,...")
+            return 1
+        return cli_bulk_publish_events(base_path, args.args[0])
+    
+    if command == 'bulk-reject':
+        if not args.args:
+            print("Error: Missing event IDs")
+            print("Usage: python3 event_manager.py bulk-reject EVENT_ID1,EVENT_ID2,...")
+            return 1
+        return cli_bulk_reject_events(base_path, args.args[0])
+    
+    if command == 'generate':
+        return cli_generate(base_path, config)
+    
+    if command == 'update':
+        generator = SiteGenerator(base_path)
+        return 0 if generator.update_events_data() else 1
+    
+    if command == 'dependencies':
+        return _execute_dependencies_command(args, base_path)
+    
+    if command == 'archive':
+        return cli_archive_old_events(base_path)
+    
+    if command == 'load-examples':
+        return cli_load_examples(base_path)
+    
+    if command == 'clear-data':
+        return cli_clear_data(base_path)
+    
+    if command == 'review':
+        app = EventManagerTUI()
+        app.review_pending_events()
+        return 0
+    
+    if command is None:
+        # No command - launch interactive TUI
+        app = EventManagerTUI()
+        app.run()
+        return 0
+    
+    print(f"Error: Unknown command '{command}'")
+    print("Use --help to see available commands")
+    return 1
+
+
+def _execute_dependencies_command(args, base_path):
+    """Execute dependencies subcommand.
+    
+    Args:
+        args: Parsed command line arguments
+        base_path: Repository root path
+        
+    Returns:
+        Exit code (0 for success, 1 for error)
+    """
+    if not args.args:
+        print("Error: Missing dependencies subcommand")
+        print("Usage: python3 event_manager.py dependencies [fetch|check]")
+        return 1
+    
+    generator = SiteGenerator(base_path)
+    subcommand = args.args[0]
+    
+    if subcommand == 'fetch':
+        return 0 if generator.fetch_all_dependencies() else 1
+    
+    if subcommand == 'check':
+        return 0 if generator.check_all_dependencies() else 1
+    
+    print(f"Error: Unknown dependencies subcommand '{subcommand}'")
+    print("Usage: python3 event_manager.py dependencies [fetch|check]")
+    return 1
+
+
 def main():
     """Main entry point"""
     parser = argparse.ArgumentParser(
@@ -1040,100 +1219,8 @@ def main():
         # Load config
         config = load_config(base_path)
         
-        # Handle CLI commands
-        if args.command == 'setup':
-            print_setup_guide()
-            return 0
-        
-        elif args.command == 'scrape':
-            return cli_scrape(base_path, config)
-        
-        elif args.command == 'list':
-            return cli_list_events(base_path)
-        
-        elif args.command == 'list-pending':
-            return cli_list_pending(base_path)
-        
-        elif args.command == 'publish':
-            if not args.args:
-                print("Error: Missing event ID")
-                print("Usage: python3 main.py publish EVENT_ID")
-                return 1
-            return cli_publish_event(base_path, args.args[0])
-        
-        elif args.command == 'reject':
-            if not args.args:
-                print("Error: Missing event ID")
-                print("Usage: python3 main.py reject EVENT_ID")
-                return 1
-            return cli_reject_event(base_path, args.args[0])
-        
-        elif args.command == 'bulk-publish':
-            if not args.args:
-                print("Error: Missing event IDs")
-                print("Usage: python3 main.py bulk-publish EVENT_ID1,EVENT_ID2,...")
-                print("Example: python3 main.py bulk-publish pending_1,pending_2,pending_3")
-                return 1
-            return cli_bulk_publish_events(base_path, args.args[0])
-        
-        elif args.command == 'bulk-reject':
-            if not args.args:
-                print("Error: Missing event IDs")
-                print("Usage: python3 main.py bulk-reject EVENT_ID1,EVENT_ID2,...")
-                print("Example: python3 main.py bulk-reject pending_1,pending_2,pending_3")
-                return 1
-            return cli_bulk_reject_events(base_path, args.args[0])
-        
-        elif args.command == 'generate':
-            return cli_generate(base_path, config)
-        
-        elif args.command == 'update':
-            generator = SiteGenerator(base_path)
-            return 0 if generator.update_events_data() else 1
-        
-        elif args.command == 'dependencies':
-            if not args.args:
-                print("Error: Missing dependencies subcommand")
-                print("Usage: python3 main.py dependencies [fetch|check]")
-                return 1
-            
-            generator = SiteGenerator(base_path)
-            subcommand = args.args[0]
-            
-            if subcommand == 'fetch':
-                return 0 if generator.fetch_all_dependencies() else 1
-            elif subcommand == 'check':
-                return 0 if generator.check_all_dependencies() else 1
-            else:
-                print(f"Error: Unknown dependencies subcommand '{subcommand}'")
-                print("Usage: python3 main.py dependencies [fetch|check]")
-                return 1
-        
-        elif args.command == 'archive':
-            return cli_archive_old_events(base_path)
-        
-        elif args.command == 'load-examples':
-            return cli_load_examples(base_path)
-        
-        elif args.command == 'clear-data':
-            return cli_clear_data(base_path)
-        
-        elif args.command == 'review':
-            # Launch TUI in review mode
-            app = EventManagerTUI()
-            app.review_pending_events()
-            return 0
-        
-        elif args.command is None:
-            # No command - launch interactive TUI
-            app = EventManagerTUI()
-            app.run()
-            return 0
-        
-        else:
-            print(f"Error: Unknown command '{args.command}'")
-            print("Use --help to see available commands")
-            return 1
+        # Execute command
+        return _execute_command(args, base_path, config)
             
     except KeyboardInterrupt:
         print("\n\nExiting...")

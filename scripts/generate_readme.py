@@ -12,12 +12,20 @@ No complex validation. No multiple documentation files.
 Keep it simple, stupid (KISS).
 
 Usage:
-    python3 scripts/generate_readme.py
+    python3 scripts/generate_readme.py [--update-github-about]
+    
+Options:
+    --update-github-about    Also update GitHub repository About section
+                             (requires GITHUB_TOKEN env var)
 """
 
+import argparse
 import json
+import os
 import subprocess
 import sys
+import urllib.request
+import urllib.error
 from datetime import datetime
 from pathlib import Path
 
@@ -67,6 +75,8 @@ def generate_readme():
 
 > {app_description}
 
+**🌐 Live Site: [https://krwl.in](https://krwl.in)**
+
 [![PWA Ready](https://img.shields.io/badge/PWA-Ready-success)](https://web.dev/progressive-web_apps/)
 [![Accessibility](https://img.shields.io/badge/A11y-Compliant-blue)](https://www.w3.org/WAI/WCAG21/quickref/)
 [![Mobile First](https://img.shields.io/badge/Mobile-First-orange)](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps)
@@ -74,6 +84,8 @@ def generate_readme():
 ## 🎯 What is This?
 
 A **grassroots, mobile-first** Progressive Web App (PWA) for discovering local community events in Hof and surrounding region (Bavaria, Germany). Built by and for the local community - from punk concerts to farmers markets, from Off-Theater to VHS courses.
+
+**Visit the live app at [krwl.in](https://krwl.in)** to see events on an interactive map!
 
 ### ✨ Features
 
@@ -367,6 +379,12 @@ Found a security issue? Please report it privately via GitHub Security Advisorie
 
 Built with love for the Hof community. Special thanks to all the local venues and organizations sharing their event information.
 
+## 🔗 Links
+
+- **Live App**: [krwl.in](https://krwl.in)
+- **GitHub Repository**: [github.com/feileberlin/krwl-hof](https://github.com/feileberlin/krwl-hof)
+- **Report Issues**: [GitHub Issues](https://github.com/feileberlin/krwl-hof/issues)
+
 ---
 
 *Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*  
@@ -376,11 +394,126 @@ Built with love for the Hof community. Special thanks to all the local venues an
     return readme
 
 
+def update_github_about(config):
+    """Update GitHub repository About section using GitHub API.
+    
+    Args:
+        config: Configuration dictionary
+        
+    Returns:
+        True if successful, False otherwise
+    """
+    token = os.environ.get('GITHUB_TOKEN')
+    
+    if not token:
+        print("\n⚠️  GITHUB_TOKEN not set. Skipping GitHub About update.")
+        print("   To update GitHub About section, set GITHUB_TOKEN and run again.")
+        print("   Get token at: https://github.com/settings/tokens")
+        return False
+    
+    owner = 'feileberlin'
+    repo = 'krwl-hof'
+    
+    # Prepare description
+    description = f"{config.get('app', {}).get('description', 'Community events viewer')}. Mobile-first PWA for discovering local events in Hof, Bavaria. Live at krwl.in"
+    homepage = "https://krwl.in"
+    
+    topics = [
+        "pwa", "progressive-web-app", "events", "community",
+        "geolocation", "leaflet", "python", "javascript",
+        "mobile-first", "accessibility", "i18n"
+    ]
+    
+    print(f"\n🔧 Updating GitHub About section for {owner}/{repo}...")
+    
+    # Update repository details
+    try:
+        url = f"https://api.github.com/repos/{owner}/{repo}"
+        data = {
+            'description': description,
+            'homepage': homepage
+        }
+        
+        headers = {
+            'Authorization': f'token {token}',
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json',
+        }
+        
+        request = urllib.request.Request(
+            url,
+            data=json.dumps(data).encode('utf-8'),
+            headers=headers,
+            method='PATCH'
+        )
+        
+        with urllib.request.urlopen(request) as response:
+            if response.status == 200:
+                print("✅ Repository description and homepage updated")
+            else:
+                print(f"⚠️  Failed to update repository: HTTP {response.status}")
+                return False
+    except urllib.error.HTTPError as e:
+        print(f"⚠️  HTTP Error: {e.code} - {e.reason}")
+        return False
+    except Exception as e:
+        print(f"⚠️  Error updating repository: {e}")
+        return False
+    
+    # Update topics
+    try:
+        url = f"https://api.github.com/repos/{owner}/{repo}/topics"
+        data = {'names': topics}
+        
+        headers = {
+            'Authorization': f'token {token}',
+            'Accept': 'application/vnd.github.mercy-preview+json',
+            'Content-Type': 'application/json',
+        }
+        
+        request = urllib.request.Request(
+            url,
+            data=json.dumps(data).encode('utf-8'),
+            headers=headers,
+            method='PUT'
+        )
+        
+        with urllib.request.urlopen(request) as response:
+            if response.status == 200:
+                print("✅ Repository topics updated")
+                print(f"   Topics: {', '.join(topics)}")
+            else:
+                print(f"⚠️  Failed to update topics: HTTP {response.status}")
+                return False
+    except urllib.error.HTTPError as e:
+        print(f"⚠️  HTTP Error: {e.code} - {e.reason}")
+        return False
+    except Exception as e:
+        print(f"⚠️  Error updating topics: {e}")
+        return False
+    
+    print(f"🎉 GitHub About section updated successfully!")
+    print(f"🌐 View at: https://github.com/{owner}/{repo}")
+    return True
+
+
 def main():
     """Main entry point"""
+    parser = argparse.ArgumentParser(
+        description='Generate README.md and optionally update GitHub About section'
+    )
+    parser.add_argument(
+        '--update-github-about',
+        action='store_true',
+        help='Update GitHub repository About section (requires GITHUB_TOKEN)'
+    )
+    
+    args = parser.parse_args()
+    
     print("📝 Generating README.md...")
     
     try:
+        config = load_config()
         readme_content = generate_readme()
         
         # Write README
@@ -390,6 +523,10 @@ def main():
         
         print(f"✅ README.md generated successfully ({len(readme_content)} bytes)")
         print(f"📍 Location: {readme_path.absolute()}")
+        
+        # Optionally update GitHub About section
+        if args.update_github_about:
+            update_github_about(config)
         
     except Exception as e:
         print(f"❌ Error generating README: {e}")

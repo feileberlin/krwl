@@ -59,23 +59,7 @@ class APISource(BaseSource):
     def _parse_item(self, item: Dict[str, Any]) -> Dict[str, Any]:
         """Parse API item into event format."""
         try:
-            # Extract location
-            location = None
-            if 'location' in item:
-                loc = item['location']
-                if isinstance(loc, dict):
-                    location = {
-                        'name': loc.get('name', self.name),
-                        'lat': loc.get('lat', loc.get('latitude', 50.3167)),
-                        'lon': loc.get('lon', loc.get('longitude', 11.9167))
-                    }
-            
-            if not location:
-                location = self.options.default_location or {
-                    'name': self.name,
-                    'lat': 50.3167,
-                    'lon': 11.9167
-                }
+            location = self._extract_location(item)
             
             return {
                 'id': f"api_{self.name.lower().replace(' ', '_')}_{item.get('id', hash(str(item)))}",
@@ -92,3 +76,22 @@ class APISource(BaseSource):
         except Exception as e:
             print(f"      Error parsing API item: {str(e)}")
             return None
+    
+    def _extract_location(self, item: Dict[str, Any]) -> Dict[str, Any]:
+        """Extract location from API item."""
+        # Try to extract location from item
+        if 'location' in item:
+            loc = item['location']
+            if isinstance(loc, dict):
+                return {
+                    'name': loc.get('name', self.name),
+                    'lat': loc.get('lat', loc.get('latitude', 50.3167)),
+                    'lon': loc.get('lon', loc.get('longitude', 11.9167))
+                }
+        
+        # Fall back to default
+        return self.options.default_location or {
+            'name': self.name,
+            'lat': 50.3167,
+            'lon': 11.9167
+        }

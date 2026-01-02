@@ -1,0 +1,24 @@
+{
+  "description": "Community events scraper and viewer with geolocation filtering. Mobile-first PWA for discovering local events in Hof, Bavaria. Live at krwl.in",
+  "homepage": "https://krwl.in",
+  "topics": [
+    "pwa",
+    "progressive-web-app",
+    "events",
+    "community",
+    "geolocation",
+    "leaflet",
+    "python",
+    "javascript",
+    "mobile-first",
+    "accessibility",
+    "i18n",
+    "hof",
+    "bavaria",
+    "germany"
+  ],
+  "has_issues": true,
+  "has_projects": true,
+  "has_wiki": false,
+  "has_discussions": false
+}
