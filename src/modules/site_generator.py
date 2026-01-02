@@ -201,32 +201,34 @@ class SiteGenerator:
     
     def load_stylesheet_resources(self) -> Dict[str, str]:
         """Load all CSS resources"""
+        assets_path = self.base_path / 'assets'
         return {
             'leaflet_css': self.read_text_file(
                 self.dependencies_dir / 'leaflet' / 'leaflet.css'
             ),
             'app_css': self.read_text_file(
-                self.static_path / 'css' / 'style.css'
+                assets_path / 'css' / 'style.css'
             ),
             'time_drawer_css': self.read_text_file(
-                self.static_path / 'css' / 'time-drawer.css'
+                assets_path / 'css' / 'time-drawer.css'
             )
         }
     
     def load_script_resources(self) -> Dict[str, str]:
         """Load all JavaScript resources"""
+        assets_path = self.base_path / 'assets'
         return {
             'leaflet_js': self.read_text_file(
                 self.dependencies_dir / 'leaflet' / 'leaflet.js'
             ),
             'i18n_js': self.read_text_file(
-                self.static_path / 'js' / 'i18n.js'
+                assets_path / 'js' / 'i18n.js'
             ),
             'time_drawer_js': self.read_text_file(
-                self.static_path / 'js' / 'time-drawer.js'
+                assets_path / 'js' / 'time-drawer.js'
             ),
             'app_js': self.read_text_file(
-                self.static_path / 'js' / 'app.js'
+                assets_path / 'js' / 'app.js'
             )
         }
     
