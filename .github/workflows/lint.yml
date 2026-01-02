@@ -3,11 +3,9 @@ name: 🔍 Lint Code Quality
 on:
   push:
     branches:
-      - preview
       - main
   pull_request:
     branches:
-      - preview
       - main
   workflow_dispatch:
     inputs:
