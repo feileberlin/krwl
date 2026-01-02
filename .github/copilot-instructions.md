@@ -614,23 +614,27 @@ The unified `config.json` contains:
 
 **Important**: The values in `config.json` represent the **base/production defaults**. Development-specific overrides are applied automatically by `load_config()` when running locally.
 
-#### Environment Variables
+#### Configuration Override (KISS Approach)
 
-Optional `.env` file (gitignored) can be used to force specific environment:
-```bash
-# Force production mode locally (rarely needed)
-ENVIRONMENT=production
+**Simple Override**: To force a specific environment, edit the `environment` field at the top of `config.json`:
 
-# Legacy support (still works for backward compatibility)
-NODE_ENV=production
-
-# Force development mode (default when not in CI/production)
-ENVIRONMENT=development
-
-# Leave empty or unset for automatic detection (recommended)
+```json
+{
+  "environment": "development",  // Options: "development", "production", or "auto"
+  ...
+}
 ```
 
-See `.env.example` for the template.
+**Options:**
+- `"development"` - Force dev mode (debug, demo events, DEV watermark) - bypasses auto-detection
+- `"production"` - Force prod mode (no debug, real events only, PRODUCTION watermark) - bypasses auto-detection  
+- `"auto"` - Use automatic detection (default) - detects from hosting platform
+
+**This is the ONLY setting you need to change** - everything else (debug mode, demo events, watermark, caching) automatically follows!
+
+#### Automatic Detection (when environment="auto")
+
+When `environment` is set to `"auto"` (default), the system automatically detects where code is running based on environment variables. Auto-detection still works as described above for CI systems and hosting platforms.
 
 ### When Suggesting Code Changes
 

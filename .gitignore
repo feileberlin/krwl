@@ -45,14 +45,6 @@ Thumbs.db
 *.tmp
 .cache/
 
-# Environment variables (contains local/sensitive data)
-.env
-.env.local
-.env.production
-
-# Keep .env.example in git as a template
-!.env.example
-
 # Hosting-specific gitignore (used on production servers)
 .gitignore.hosting
 

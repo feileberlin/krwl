@@ -112,18 +112,15 @@ def is_development():
 
 def load_config(base_path):
     """
-    Load config.json with automatic environment detection.
+    Load config.json with environment override support.
     
-    This function intelligently adjusts configuration based on the detected environment:
+    Environment can be:
+    1. Explicitly set in config.json ("development" or "production") - bypasses auto-detection
+    2. Set to "auto" - uses automatic environment detection (default)
+    
+    Auto-detection checks os.environ for:
     - **Development (Local)**: debug=true, data.source="both" (real+demo), watermark="DEV"
     - **CI/Production**: debug=false, data.source="real", watermark="PRODUCTION"
-    
-    The environment is detected automatically using os.environ checks:
-    - CI: CI=true or GITHUB_ACTIONS=true
-    - Production: ENVIRONMENT=production or NODE_ENV=production (legacy)
-    - Development: Default when not in CI or production (typical for local dev)
-    
-    NO MANUAL CONFIGURATION NEEDED - Just run the code and it adapts!
     
     Args:
         base_path: Root path of the repository
@@ -137,22 +134,29 @@ def load_config(base_path):
     with open(config_path, 'r', encoding='utf-8') as f:
         config = json.load(f)
     
-    # Detect environment
-    env_is_dev = is_development()
-    env_is_ci = is_ci()
+    # Check for explicit environment override
+    env_override = config.get('environment', 'auto')
     
-    # Determine environment name for logging
-    if env_is_dev:
-        env_name = 'development'
-    elif env_is_ci:
-        env_name = 'ci'
+    if env_override in ('development', 'production'):
+        # Explicit override - use it directly
+        env_is_dev = (env_override == 'development')
+        env_name = env_override
+        print(f"🎯 Environment forced to: {env_name} (from config.json)")
     else:
-        env_name = 'production'
+        # Auto-detection mode
+        env_is_dev = is_development()
+        env_is_ci = is_ci()
+        
+        if env_is_dev:
+            env_name = 'development'
+        elif env_is_ci:
+            env_name = 'ci'
+        else:
+            env_name = 'production'
+        
+        print(f"🚀 Environment auto-detected: {env_name}")
     
     # Apply environment-specific overrides
-    # These smart defaults automatically adjust behavior based on where the code runs
-    # NOTE: CI and Production intentionally use the same settings (production-like)
-    # to ensure builds and deployments are tested with production configuration
     if env_is_dev:
         # Development mode: Optimized for local testing and debugging
         config['debug'] = True
@@ -165,8 +169,7 @@ def load_config(base_path):
         config['performance']['cache_enabled'] = False  # Fresh data each time
         config['performance']['prefetch_events'] = False  # On-demand loading
     else:
-        # CI or Production mode: Both use production settings
-        # This ensures CI builds match production behavior exactly
+        # Production/CI mode
         config['debug'] = False
         config['data']['source'] = 'real'  # Real events only
         config['watermark']['text'] = 'PRODUCTION'
@@ -176,9 +179,7 @@ def load_config(base_path):
         config['performance']['cache_enabled'] = True  # Enable caching
         config['performance']['prefetch_events'] = True  # Preload for speed
     
-    # Log environment detection for transparency
-    # This helps developers understand which mode is active
-    print(f"🚀 Running in {env_name} mode (debug: {config['debug']}, data source: {config['data']['source']})")
+    print(f"   → debug: {config['debug']}, data source: {config['data']['source']}")
     
     return config
 

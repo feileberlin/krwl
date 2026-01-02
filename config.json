@@ -1,13 +1,23 @@
 {
+  "_comment_environment_override": "═══════════════════════════════════════════════════════════════════════════════",
+  "_comment_override_help": "ENVIRONMENT OVERRIDE - Set to force a specific environment, bypassing auto-detection",
+  "_comment_override_values": "  • 'development' - Force dev mode (debug=true, demo events, DEV watermark)",
+  "_comment_override_values2": "  • 'production' - Force prod mode (debug=false, real events only, PRODUCTION watermark)",
+  "_comment_override_values3": "  • 'auto' - Use auto-detection (default behavior, detects from hosting platform)",
+  "_comment_kiss": "KEEP IT SIMPLE: Change this ONE line to switch environments completely!",
+  "_comment_separator": "═══════════════════════════════════════════════════════════════════════════════",
+  
+  "environment": "development",
+  
   "_comment_environment_detection": "═══════════════════════════════════════════════════════════════════════════════",
-  "_comment_auto_behavior": "AUTOMATIC ENVIRONMENT DETECTION - This config uses smart defaults that change based on environment",
+  "_comment_auto_behavior": "AUTO-DETECTION (when environment='auto') - Smart defaults that change based on environment",
   "_comment_detection_logic": "Environment is detected automatically using Python os.environ checks:",
   "_comment_detection_1": "  • Local Development: NOT in CI and NOT in production (default for developers)",
   "_comment_detection_2": "  • CI: GitHub Actions, GitLab CI, Travis, CircleCI, Jenkins, etc.",
-  "_comment_detection_3": "  • Production: Vercel, Netlify, Heroku, Railway, Render, Fly.io, Google Cloud Run, AWS, or ENVIRONMENT=production (legacy: NODE_ENV=production)",
+  "_comment_detection_3": "  • Production: Vercel, Netlify, Heroku, Railway, Render, Fly.io, Google Cloud Run, AWS",
   "_comment_no_manual_config": "NO MANUAL SWITCHING NEEDED - Just run the code and it adapts automatically!",
   "_comment_hosting_support": "WORKS WITH: GitHub Pages, Vercel, Netlify, Heroku, Railway, Render, Fly.io, Google Cloud, AWS, and more!",
-  "_comment_separator": "═══════════════════════════════════════════════════════════════════════════════",
+  "_comment_separator_2": "═══════════════════════════════════════════════════════════════════════════════",
   
   "app": {
     "name": "KRWL HOF Community Events",
