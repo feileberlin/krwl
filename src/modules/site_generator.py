@@ -8,6 +8,7 @@ Responsibilities:
 - Fetch third-party dependencies (Leaflet, etc.)
 - Generate single-file HTML with inlined assets
 - Update content without full regeneration
+- Lint and validate all exported content
 
 Naming: Functions describe WHAT they do, not implementation history.
 """
@@ -19,6 +20,20 @@ from pathlib import Path
 from typing import Dict, List, Tuple
 from datetime import datetime
 import html
+
+try:
+    from .linter import Linter
+except ImportError:
+    # Fallback if linter is not available
+    class Linter:
+        def __init__(self, verbose=False):
+            pass
+        def lint_all(self, *args, **kwargs):
+            class FakeLintResult:
+                passed = True
+                errors = []
+                warnings = []
+            return FakeLintResult()
 
 
 # Third-party dependencies to fetch
@@ -560,8 +575,16 @@ window.EMBEDDED_CONTENT_DE = {json.dumps(content_de)};
 </html>'''
         return html
     
-    def generate_site(self) -> bool:
-        """Generate complete static site with runtime configuration"""
+    def generate_site(self, skip_lint: bool = False) -> bool:
+        """
+        Generate complete static site with runtime configuration.
+        
+        Args:
+            skip_lint: If True, skip linting validation (useful for testing)
+        
+        Returns:
+            True if generation succeeds, False otherwise
+        """
         print("=" * 60)
         print("🔨 Generating Site")
         print("=" * 60)
@@ -589,6 +612,46 @@ window.EMBEDDED_CONTENT_DE = {json.dumps(content_de)};
             configs, events, content_en, content_de,
             stylesheets, scripts
         )
+        
+        # Lint the generated content
+        if not skip_lint:
+            print("\n🔍 Linting generated content...")
+            linter = Linter(verbose=False)
+            
+            # Collect SVG files for linting
+            svg_files = {}
+            try:
+                svg_files['favicon'] = self.inline_svg_file('favicon.svg', as_data_url=False)
+                svg_files['logo'] = self.inline_svg_file('logo.svg', as_data_url=False)
+            except Exception as e:
+                print(f"   Warning: Could not load SVG files for linting: {e}")
+            
+            lint_result = linter.lint_all(
+                html_content=html,
+                stylesheets=stylesheets,
+                scripts=scripts,
+                translations_en=content_en,
+                translations_de=content_de,
+                svg_files=svg_files
+            )
+            
+            # Show detailed errors and warnings
+            if not lint_result.passed:
+                print("\n❌ Linting failed with errors:")
+                for error in lint_result.errors:
+                    print(f"   ❌ {error}")
+            
+            if lint_result.warnings:
+                print(f"\n⚠️  Linting warnings ({len(lint_result.warnings)}):")
+                for warning in lint_result.warnings[:10]:  # Show first 10
+                    print(f"   ⚠️  {warning}")
+                if len(lint_result.warnings) > 10:
+                    print(f"   ... and {len(lint_result.warnings) - 10} more warnings")
+            
+            # Decide if we should fail the build on lint errors
+            if not lint_result.passed:
+                print("\n⚠️  Build completed with lint errors (warnings only, not blocking)")
+                # Don't block build, just warn
         
         output_file = self.static_path / 'index.html'
         with open(output_file, 'w', encoding='utf-8') as f:

@@ -1,725 +1,751 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "description": "KRWL HOF Feature Registry - Documents all implemented features and how to test them",
-    "version": "1.0.0",
-    "features": [
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "KRWL HOF Feature Registry - Documents all implemented features and how to test them",
+  "version": "1.0.0",
+  "features": [
+    {
+      "id": "event-scraping",
+      "name": "Event Scraping",
+      "description": "Scrape events from RSS feeds, APIs, and HTML pages",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/modules/scraper.py"
+      ],
+      "config_keys": [
+        "scraping.sources",
+        "scraping.interval_minutes"
+      ],
+      "test_method": "check_files_exist"
+    },
+    {
+      "id": "editor-workflow",
+      "name": "Editor Workflow",
+      "description": "Review, edit, approve, or reject events before publishing",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/modules/editor.py"
+      ],
+      "config_keys": [
+        "editor.require_approval",
+        "editor.auto_publish"
+      ],
+      "test_method": "check_files_exist"
+    },
+    {
+      "id": "python-tui",
+      "name": "Python TUI (Text User Interface)",
+      "description": "Interactive terminal interface for managing events with menu navigation",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/main.py"
+      ],
+      "code_patterns": [
         {
-            "id": "event-scraping",
-            "name": "Event Scraping",
-            "description": "Scrape events from RSS feeds, APIs, and HTML pages",
-            "category": "backend",
-            "implemented": true,
-            "files": [
-                "src/modules/scraper.py"
-            ],
-            "config_keys": [
-                "scraping.sources",
-                "scraping.interval_minutes"
-            ],
-            "test_method": "check_files_exist"
-        },
-        {
-            "id": "editor-workflow",
-            "name": "Editor Workflow",
-            "description": "Review, edit, approve, or reject events before publishing",
-            "category": "backend",
-            "implemented": true,
-            "files": [
-                "src/modules/editor.py"
-            ],
-            "config_keys": [
-                "editor.require_approval",
-                "editor.auto_publish"
-            ],
-            "test_method": "check_files_exist"
-        },
-        {
-            "id": "python-tui",
-            "name": "Python TUI (Text User Interface)",
-            "description": "Interactive terminal interface for managing events with menu navigation",
-            "category": "backend",
-            "implemented": true,
-            "files": [
-                "src/main.py"
-            ],
-            "code_patterns": [
-                {
-                    "file": "src/main.py",
-                    "pattern": "class EventManagerTUI|def show_menu|input.*Enter your choice",
-                    "description": "TUI class and menu system"
-                }
-            ],
-            "test_method": "check_code_patterns"
-        },
-        {
-            "id": "cli-commands",
-            "name": "CLI Commands",
-            "description": "Command-line interface for automation and scripting",
-            "category": "backend",
-            "implemented": true,
-            "files": [
-                "src/main.py"
-            ],
-            "code_patterns": [
-                {
-                    "file": "src/main.py",
-                    "pattern": "argparse|ArgumentParser|def cli_",
-                    "description": "CLI argument parsing and command functions"
-                },
-                {
-                    "file": "src/main.py",
-                    "pattern": "def print_help",
-                    "description": "CLI help documentation"
-                }
-            ],
-            "test_method": "check_code_patterns"
-        },
-        {
-            "id": "interactive-map",
-            "name": "Interactive Map",
-            "description": "Fullscreen map interface with Leaflet.js showing events",
-            "category": "frontend",
-            "implemented": true,
-            "files": [
-                "static/index.html",
-                "static/js/app.js"
-            ],
-            "code_patterns": [
-                {
-                    "file": "static/js/app.js",
-                    "pattern": "L\\.map\\('map'",
-                    "description": "Leaflet map initialization"
-                },
-                {
-                    "file": "static/index.html",
-                    "pattern": "<div id=\"map\">",
-                    "description": "Map container element"
-                }
-            ],
-            "test_method": "check_code_patterns"
-        },
-        {
-            "id": "geolocation-filtering",
-            "name": "Geolocation Filtering",
-            "description": "Shows only events near the user's location",
-            "category": "frontend",
-            "implemented": true,
-            "files": [
-                "static/js/app.js"
-            ],
-            "config_keys": [
-                "filtering.max_distance_km"
-            ],
-            "code_patterns": [
-                {
-                    "file": "static/js/app.js",
-                    "pattern": "navigator.geolocation.getCurrentPosition",
-                    "description": "Geolocation API usage"
-                },
-                {
-                    "file": "static/js/app.js",
-                    "pattern": "calculateDistance",
-                    "description": "Distance calculation function"
-                }
-            ],
-            "test_method": "check_code_patterns"
-        },
-        {
-            "id": "sunrise-filtering",
-            "name": "Sunrise Filtering",
-            "description": "Displays events only until the next sunrise",
-            "category": "frontend",
-            "implemented": true,
-            "files": [
-                "static/js/app.js"
-            ],
-            "config_keys": [
-                "filtering.show_until"
-            ],
-            "code_patterns": [
-                {
-                    "file": "static/js/app.js",
-                    "pattern": "getNextSunrise|sunrise",
-                    "description": "Sunrise calculation or filtering"
-                }
-            ],
-            "test_method": "check_code_patterns"
-        },
-        {
-            "id": "static-site-generation",
-            "name": "Static Site Generation (CDN Inliner)",
-            "description": "Generates single-file static HTML with all resources inlined from CDN or local fallback",
-            "category": "backend",
-            "implemented": true,
-            "files": [
-                "src/modules/cdn_inliner.py"
-            ],
-            "test_method": "check_files_exist"
-        },
-        {
-            "id": "debug-mode",
-            "name": "Debug Mode",
-            "description": "Debug mode with console logging for troubleshooting. Automatically enabled in development environment.",
-            "category": "frontend",
-            "implemented": true,
-            "files": [
-                "static/js/app.js",
-                "config.json"
-            ],
-            "config_keys": [
-                "debug"
-            ],
-            "code_patterns": [
-                {
-                    "file": "static/js/app.js",
-                    "pattern": "this.log|\\[KRWL Debug\\]",
-                    "description": "Debug logging implementation"
-                },
-                {
-                    "file": "config.json",
-                    "pattern": "\"debug\":|_comment_debug",
-                    "description": "Debug mode auto-detected based on environment"
-                }
-            ],
-            "test_method": "check_code_patterns"
-        },
-        {
-            "id": "production-optimization",
-            "name": "Production Optimization",
-            "description": "Production-optimized config with caching. Automatically enabled in CI/production.",
-            "category": "frontend",
-            "implemented": true,
-            "files": [
-                "static/js/app.js",
-                "config.json"
-            ],
-            "config_keys": [
-                "performance.cache_enabled",
-                "performance.prefetch_events"
-            ],
-            "code_patterns": [
-                {
-                    "file": "config.json",
-                    "pattern": "\"cache_enabled\":|_comment_cache_enabled",
-                    "description": "Caching auto-detected based on environment"
-                }
-            ],
-            "test_method": "check_code_patterns"
-        },
-        {
-            "id": "preview-deployment",
-            "name": "Preview Deployment",
-            "description": "Deploy testing/preview version with debug mode",
-            "category": "deployment",
-            "implemented": false,
-            "files": [
-                ".github/workflows/deploy-preview.yml"
-            ],
-            "test_method": "check_files_exist"
-        },
-        {
-            "id": "production-deployment",
-            "name": "Production Deployment",
-            "description": "Deploy production version to main branch",
-            "category": "deployment",
-            "implemented": false,
-            "files": [
-                ".github/workflows/deploy-pages.yml"
-            ],
-            "test_method": "check_files_exist"
-        },
-        {
-            "id": "promotion-workflow",
-            "name": "Promotion Workflow",
-            "description": "Promote preview to production via PR",
-            "category": "deployment",
-            "implemented": true,
-            "files": [
-                ".github/workflows/promote-preview.yml"
-            ],
-            "test_method": "check_files_exist"
-        },
-        {
-            "id": "demo-events",
-            "name": "Demo Events Generation",
-            "description": "Generate demo events with current timestamps for testing",
-            "category": "backend",
-            "implemented": true,
-            "files": [
-                "scripts/generate_demo_events.py"
-            ],
-            "test_method": "check_files_exist"
-        },
-        {
-            "id": "multi-data-sources",
-            "name": "Multiple Data Sources",
-            "description": "Support for real, demo, or combined event data sources",
-            "category": "frontend",
-            "implemented": true,
-            "files": [
-                "static/js/app.js"
-            ],
-            "config_keys": [
-                "data.source",
-                "data.sources"
-            ],
-            "code_patterns": [
-                {
-                    "file": "static/js/app.js",
-                    "pattern": "loadEvents.*source|data.source",
-                    "description": "Data source selection logic"
-                }
-            ],
-            "test_method": "check_code_patterns"
-        },
-        {
-            "id": "custom-domain-support",
-            "name": "Custom Domain Support",
-            "description": "Support for custom domains via CNAME",
-            "category": "deployment",
-            "implemented": false,
-            "files": [
-                "CNAME",
-                ".github/workflows/deploy-pages.yml"
-            ],
-            "test_method": "check_files_exist"
-        },
-        {
-            "id": "event-filters",
-            "name": "Event Filters",
-            "description": "Filter events by category, time, and distance",
-            "category": "frontend",
-            "implemented": true,
-            "files": [
-                "static/js/app.js",
-                "static/index.html"
-            ],
-            "code_patterns": [
-                {
-                    "file": "static/js/app.js",
-                    "pattern": "filterEvents|applyFilters",
-                    "description": "Event filtering logic"
-                },
-                {
-                    "file": "static/index.html",
-                    "pattern": "class=\"filter-part\"|id=\"filter-sentence\"",
-                    "description": "Filter UI elements"
-                }
-            ],
-            "test_method": "check_code_patterns"
-        },
-        {
-            "id": "event-archiving",
-            "name": "Event Archiving",
-            "description": "Automatically archive past events to keep published list current",
-            "category": "backend",
-            "implemented": true,
-            "files": [
-                "src/modules/utils.py",
-                "src/main.py"
-            ],
-            "code_patterns": [
-                {
-                    "file": "src/modules/utils.py",
-                    "pattern": "def archive_old_events|archived_events.json",
-                    "description": "Event archiving functionality"
-                },
-                {
-                    "file": "src/main.py",
-                    "pattern": "cli_archive_old_events|archive.*command",
-                    "description": "CLI command for archiving"
-                }
-            ],
-            "test_method": "check_code_patterns"
-        },
-        {
-            "id": "backup-system",
-            "name": "Data Backup System",
-            "description": "Automatic backups when clearing data with .backup extension",
-            "category": "backend",
-            "implemented": true,
-            "files": [
-                "src/main.py"
-            ],
-            "code_patterns": [
-                {
-                    "file": "src/main.py",
-                    "pattern": "\\.backup|shutil.copy.*backup",
-                    "description": "Backup file creation"
-                }
-            ],
-            "test_method": "check_code_patterns"
-        },
-        {
-            "id": "custom-location",
-            "name": "Custom Location Override",
-            "description": "Allow users to set custom location instead of using geolocation",
-            "category": "frontend",
-            "implemented": true,
-            "files": [
-                "static/js/app.js",
-                "static/index.html"
-            ],
-            "code_patterns": [
-                {
-                    "file": "static/js/app.js",
-                    "pattern": "useCustomLocation|custom-location|customLat|customLon",
-                    "description": "Custom location functionality"
-                },
-                {
-                    "file": "static/index.html",
-                    "pattern": "id=\"location-text\"",
-                    "description": "Custom location UI elements"
-                }
-            ],
-            "test_method": "check_code_patterns"
-        },
-        {
-            "id": "documentation-viewer",
-            "name": "Built-in Documentation Viewer",
-            "description": "TUI-based documentation viewer with search and navigation",
-            "category": "backend",
-            "implemented": true,
-            "files": [
-                "src/main.py"
-            ],
-            "code_patterns": [
-                {
-                    "file": "src/main.py",
-                    "pattern": "def view_documentation|_search_docs|_show_toc",
-                    "description": "Documentation viewer functions"
-                }
-            ],
-            "test_method": "check_code_patterns"
-        },
-        {
-            "id": "example-data-loader",
-            "name": "Example Data Loader",
-            "description": "Load example/sample data for development and testing",
-            "category": "backend",
-            "implemented": true,
-            "files": [
-                "src/main.py"
-            ],
-            "code_patterns": [
-                {
-                    "file": "src/main.py",
-                    "pattern": "def load_example_data|cli_load_examples|events_example",
-                    "description": "Example data loading functionality"
-                }
-            ],
-            "test_method": "check_code_patterns"
-        },
-        {
-            "id": "data-management",
-            "name": "Data Management Tools",
-            "description": "CLI and TUI tools to clear, list, and manage event data",
-            "category": "backend",
-            "implemented": true,
-            "files": [
-                "src/main.py"
-            ],
-            "code_patterns": [
-                {
-                    "file": "src/main.py",
-                    "pattern": "def clear_all_data|cli_clear_data|cli_list",
-                    "description": "Data management commands"
-                }
-            ],
-            "test_method": "check_code_patterns"
-        },
-        {
-            "id": "event-cards",
-            "name": "Event Card UI",
-            "description": "Card-based UI for displaying event details in the sidebar",
-            "category": "frontend",
-            "implemented": true,
-            "files": [
-                "static/js/app.js",
-                "static/css/style.css",
-                "static/index.html"
-            ],
-            "code_patterns": [
-                {
-                    "file": "static/js/app.js",
-                    "pattern": "event-card|renderEvents|event-list",
-                    "description": "Event card rendering"
-                }
-            ],
-            "test_method": "check_code_patterns"
-        },
-        {
-            "id": "map-markers",
-            "name": "Map Markers",
-            "description": "Interactive markers on the map for events and user location",
-            "category": "frontend",
-            "implemented": true,
-            "files": [
-                "static/js/app.js"
-            ],
-            "code_patterns": [
-                {
-                    "file": "static/js/app.js",
-                    "pattern": "L\\.marker|this\\.markers|addEventMarkers",
-                    "description": "Leaflet marker management"
-                }
-            ],
-            "test_method": "check_code_patterns"
-        },
-        {
-            "id": "distance-calculation",
-            "name": "Distance Calculation",
-            "description": "Haversine formula distance calculation between coordinates",
-            "category": "backend",
-            "implemented": true,
-            "files": [
-                "src/modules/utils.py",
-                "static/js/app.js"
-            ],
-            "code_patterns": [
-                {
-                    "file": "src/modules/utils.py",
-                    "pattern": "def calculate_distance|Haversine",
-                    "description": "Distance calculation in Python"
-                },
-                {
-                    "file": "static/js/app.js",
-                    "pattern": "calculateDistance",
-                    "description": "Distance calculation in JavaScript"
-                }
-            ],
-            "test_method": "check_code_patterns"
-        },
-        {
-            "id": "responsive-design",
-            "name": "Responsive Design",
-            "description": "Mobile-responsive layout with CSS media queries",
-            "category": "frontend",
-            "implemented": true,
-            "files": [
-                "static/css/style.css",
-                "static/index.html"
-            ],
-            "code_patterns": [
-                {
-                    "file": "static/css/style.css",
-                    "pattern": "@media.*max-width|viewport",
-                    "description": "Responsive CSS media queries"
-                },
-                {
-                    "file": "static/index.html",
-                    "pattern": "viewport.*width=device-width",
-                    "description": "Viewport meta tag"
-                }
-            ],
-            "test_method": "check_code_patterns"
-        },
-        {
-            "id": "workflow-launcher",
-            "name": "GitHub Actions Workflow Launcher",
-            "description": "Launch and manage GitHub Actions workflows from TUI and CLI using GitHub CLI",
-            "category": "backend",
-            "implemented": true,
-            "files": [
-                "src/modules/workflow_launcher.py",
-                "src/main.py"
-            ],
-            "code_patterns": [
-                {
-                    "file": "src/modules/workflow_launcher.py",
-                    "pattern": "class WorkflowLauncher|def trigger_workflow|gh workflow run",
-                    "description": "Workflow launcher class and GitHub CLI integration"
-                },
-                {
-                    "file": "src/main.py",
-                    "pattern": "def launch_workflows|def cli_workflow|workflow list",
-                    "description": "TUI and CLI integration for workflow launching"
-                }
-            ],
-            "test_method": "check_code_patterns"
-        },
-        {
-            "id": "copilot-custom-instructions",
-            "name": "GitHub Copilot Custom Instructions",
-            "description": "Comprehensive project-specific instructions for GitHub Copilot including architecture, coding guidelines, and workflows",
-            "category": "infrastructure",
-            "implemented": true,
-            "files": [
-                ".github/copilot-instructions.md"
-            ],
-            "test_method": "check_files_exist"
-        },
-        {
-            "id": "vscode-workspace-config",
-            "name": "VS Code Workspace Configuration",
-            "description": "Workspace settings, recommended extensions, tasks, and debug configurations for VS Code",
-            "category": "infrastructure",
-            "implemented": true,
-            "files": [
-                ".vscode/settings.json",
-                ".vscode/extensions.json",
-                ".vscode/tasks.json",
-                ".vscode/launch.json"
-            ],
-            "test_method": "check_files_exist"
-        },
-        {
-            "id": "devcontainer-config",
-            "name": "Development Container Configuration",
-            "description": "Docker-based development container with Python 3.11, pre-configured tools, and automatic dependency installation",
-            "category": "infrastructure",
-            "implemented": true,
-            "files": [
-                ".devcontainer/devcontainer.json"
-            ],
-            "test_method": "check_files_exist"
-        },
-        {
-            "id": "mcp-server-config",
-            "name": "Model Context Protocol (MCP) Server Configuration",
-            "description": "MCP server configuration for GitHub, filesystem, and memory context to enhance AI assistance",
-            "category": "infrastructure",
-            "implemented": true,
-            "files": [
-                ".github/mcp/servers.json",
-                ".github/mcp/README.md"
-            ],
-            "test_method": "check_files_exist"
-        },
-        {
-            "id": "dev-environment-docs",
-            "name": "Development Environment Documentation",
-            "description": "Comprehensive documentation for development environment setup including VS Code, devcontainer, and MCP configuration",
-            "category": "infrastructure",
-            "implemented": true,
-            "files": [
-                "README.md"
-            ],
-            "test_method": "check_files_exist"
-        },
-        {
-            "id": "environment-watermark",
-            "name": "Environment Watermark with Build Info",
-            "description": "Visual watermark in bottom-left corner showing environment (production/preview/testing), commit SHA, and PR number. Configurable per environment with automatic detection.",
-            "category": "frontend",
-            "implemented": true,
-            "files": [
-                "src/modules/cdn_inliner.py",
-                "config.json"
-            ],
-            "config_keys": [
-                "app.environment",
-                "watermark.enabled",
-                "watermark.text"
-            ],
-            "code_patterns": [
-                {
-                    "file": "static/js/app.js",
-                    "pattern": "#env-watermark|displayEnvironmentWatermark",
-                    "description": "Watermark HTML element and JavaScript display function"
-                }
-            ],
-            "test_method": "manual",
-            "test_instructions": "1. Start local server: cd static && python3 -m http.server 8000\n2. Edit static/config.json to set watermark.enabled=true\n3. Open http://localhost:8000\n4. Verify watermark appears in bottom-left corner\n5. Click watermark to see build details popup"
-        },
-        {
-            "id": "github-environments",
-            "name": "GitHub Environments UI Integration",
-            "description": "Configure GitHub Actions workflows to use environments, making deployments visible in GitHub UI with direct links to preview and production sites",
-            "category": "infrastructure",
-            "implemented": false,
-            "files": [
-                ".github/workflows/deploy-pages.yml",
-                ".github/workflows/deploy-preview.yml"
-            ],
-            "config_keys": [],
-            "code_patterns": [
-                {
-                    "file": ".github/workflows/deploy-pages.yml",
-                    "pattern": "environment:\\s+name: production",
-                    "description": "Production environment configuration"
-                },
-                {
-                    "file": ".github/workflows/deploy-preview.yml",
-                    "pattern": "environment:\\s+name: preview",
-                    "description": "Preview environment configuration"
-                }
-            ],
-            "test_method": "manual",
-            "test_instructions": "1. Navigate to GitHub repository\n2. Click 'Environments' in sidebar\n3. Verify 'production' and 'preview' environments are listed\n4. Click on environment to see deployment history\n5. Click 'View deployment' button to open deployed site"
-        },
-        {
-            "id": "time-drawer",
-            "name": "Dynamic Time-Based Marker Resizing",
-            "description": "Interactive timeline drawer with dynamic marker scaling based on event proximity to selected time. Shows events from 'Now' to 'Sunrise' with smooth animations",
-            "category": "frontend",
-            "implemented": true,
-            "files": [
-                "assets/js/time-drawer.js",
-                "assets/css/time-drawer.css",
-                "assets/js/app.js",
-                "src/modules/site_generator.py"
-            ],
-            "code_patterns": [
-                {
-                    "file": "assets/js/time-drawer.js",
-                    "pattern": "class TimeDrawer|calculateMarkerScale|applyMarkerScale",
-                    "description": "TimeDrawer class with marker scaling logic"
-                },
-                {
-                    "file": "assets/js/app.js",
-                    "pattern": "this.timeDrawer|new TimeDrawer|registerMarker",
-                    "description": "TimeDrawer integration in EventsApp"
-                },
-                {
-                    "file": "assets/css/time-drawer.css",
-                    "pattern": ".time-drawer|.time-drawer-handle|.time-drawer-progress",
-                    "description": "Time drawer styling"
-                }
-            ],
-            "test_method": "manual",
-            "test_instructions": "1. Open the app with 5+ events\n2. Set filter to 'til sunrise'\n3. Verify time drawer appears at bottom\n4. Drag the handle left/right\n5. Verify markers scale dynamically (70%-130%)\n6. Verify largest markers have glow effect\n7. Try with < 5 events - drawer should show threshold message\n8. Change filter to '6h' - drawer should disappear\n9. Test on mobile - touch gestures should work"
-        },
-        {
-            "id": "keyboard-navigation",
-            "name": "Keyboard Navigation",
-            "description": "Full keyboard controls for map navigation and event browsing - ESC to close popups, arrow keys to navigate events, +/- to zoom",
-            "category": "frontend",
-            "implemented": true,
-            "files": [
-                "assets/js/app.js"
-            ],
-            "code_patterns": [
-                {
-                    "file": "assets/js/app.js",
-                    "pattern": "currentEventIndex|navigateEvents|keydown.*Escape|keydown.*Arrow",
-                    "description": "Keyboard event handling and navigation logic"
-                }
-            ],
-            "test_method": "manual",
-            "test_instructions": "1. Open the app and click on an event to view details\n2. Press ESC - detail popup should close\n3. Open an event detail again\n4. Press Right Arrow - should navigate to next event (sorted by time)\n5. Press Left Arrow - should navigate to previous event\n6. Navigate past the last event - should wrap to first event\n7. Press + or = key - map should zoom in\n8. Press - or _ key - map should zoom out\n9. Test that map centers on events during arrow navigation\n10. Open filter dropdown and press ESC - dropdown should close"
-        },
-        {
-            "id": "app-ready-signal",
-            "name": "App Ready Signal for Screenshots",
-            "description": "Emits a ready signal when the app is fully initialized (config loaded, map initialized, events loaded). Enables reliable screenshot generation by providing a data-app-ready attribute and custom event",
-            "category": "frontend",
-            "implemented": true,
-            "files": [
-                "assets/js/app.js",
-                "static/js/app.js",
-                "docs/SCREENSHOT_GUIDE.md",
-                "scripts/generate_screenshots.py"
-            ],
-            "code_patterns": [
-                {
-                    "file": "assets/js/app.js",
-                    "pattern": "markAppAsReady|data-app-ready|app-ready.*CustomEvent",
-                    "description": "App ready signal implementation and emission"
-                }
-            ],
-            "test_method": "automated",
-            "test_instructions": "1. Start local server: cd static && python3 -m http.server 8000\n2. Run test script: python3 scripts/generate_screenshots.py --verbose\n3. Verify body[data-app-ready='true'] attribute is set after page load\n4. Verify 'app-ready' custom event is dispatched with event.detail metadata\n5. Check that screenshots are captured with fully loaded map and events\n6. Verify both mobile (640×1136) and desktop (1280×800) screenshots are generated"
+          "file": "src/main.py",
+          "pattern": "class EventManagerTUI|def show_menu|input.*Enter your choice",
+          "description": "TUI class and menu system"
         }
-    ]
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "cli-commands",
+      "name": "CLI Commands",
+      "description": "Command-line interface for automation and scripting",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/main.py"
+      ],
+      "code_patterns": [
+        {
+          "file": "src/main.py",
+          "pattern": "argparse|ArgumentParser|def cli_",
+          "description": "CLI argument parsing and command functions"
+        },
+        {
+          "file": "src/main.py",
+          "pattern": "def print_help",
+          "description": "CLI help documentation"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "interactive-map",
+      "name": "Interactive Map",
+      "description": "Fullscreen map interface with Leaflet.js showing events",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "static/index.html",
+        "static/js/app.js"
+      ],
+      "code_patterns": [
+        {
+          "file": "static/js/app.js",
+          "pattern": "L\\.map\\('map'",
+          "description": "Leaflet map initialization"
+        },
+        {
+          "file": "static/index.html",
+          "pattern": "<div id=\"map\">",
+          "description": "Map container element"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "geolocation-filtering",
+      "name": "Geolocation Filtering",
+      "description": "Shows only events near the user's location",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "static/js/app.js"
+      ],
+      "config_keys": [
+        "filtering.max_distance_km"
+      ],
+      "code_patterns": [
+        {
+          "file": "static/js/app.js",
+          "pattern": "navigator.geolocation.getCurrentPosition",
+          "description": "Geolocation API usage"
+        },
+        {
+          "file": "static/js/app.js",
+          "pattern": "calculateDistance",
+          "description": "Distance calculation function"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "sunrise-filtering",
+      "name": "Sunrise Filtering",
+      "description": "Displays events only until the next sunrise",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "static/js/app.js"
+      ],
+      "config_keys": [
+        "filtering.show_until"
+      ],
+      "code_patterns": [
+        {
+          "file": "static/js/app.js",
+          "pattern": "getNextSunrise|sunrise",
+          "description": "Sunrise calculation or filtering"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "static-site-generation",
+      "name": "Static Site Generation (CDN Inliner)",
+      "description": "Generates single-file static HTML with all resources inlined from CDN or local fallback",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/modules/cdn_inliner.py"
+      ],
+      "test_method": "check_files_exist"
+    },
+    {
+      "id": "debug-mode",
+      "name": "Debug Mode",
+      "description": "Debug mode with console logging for troubleshooting. Automatically enabled in development environment.",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "static/js/app.js",
+        "config.json"
+      ],
+      "config_keys": [
+        "debug"
+      ],
+      "code_patterns": [
+        {
+          "file": "static/js/app.js",
+          "pattern": "this.log|\\[KRWL Debug\\]",
+          "description": "Debug logging implementation"
+        },
+        {
+          "file": "config.json",
+          "pattern": "\"debug\":|_comment_debug",
+          "description": "Debug mode auto-detected based on environment"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "production-optimization",
+      "name": "Production Optimization",
+      "description": "Production-optimized config with caching. Automatically enabled in CI/production.",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "static/js/app.js",
+        "config.json"
+      ],
+      "config_keys": [
+        "performance.cache_enabled",
+        "performance.prefetch_events"
+      ],
+      "code_patterns": [
+        {
+          "file": "config.json",
+          "pattern": "\"cache_enabled\":|_comment_cache_enabled",
+          "description": "Caching auto-detected based on environment"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "preview-deployment",
+      "name": "Preview Deployment",
+      "description": "Deploy testing/preview version with debug mode",
+      "category": "deployment",
+      "implemented": false,
+      "files": [
+        ".github/workflows/deploy-preview.yml"
+      ],
+      "test_method": "check_files_exist"
+    },
+    {
+      "id": "production-deployment",
+      "name": "Production Deployment",
+      "description": "Deploy production version to main branch",
+      "category": "deployment",
+      "implemented": false,
+      "files": [
+        ".github/workflows/deploy-pages.yml"
+      ],
+      "test_method": "check_files_exist"
+    },
+    {
+      "id": "promotion-workflow",
+      "name": "Promotion Workflow",
+      "description": "Promote preview to production via PR",
+      "category": "deployment",
+      "implemented": true,
+      "files": [
+        ".github/workflows/promote-preview.yml"
+      ],
+      "test_method": "check_files_exist"
+    },
+    {
+      "id": "demo-events",
+      "name": "Demo Events Generation",
+      "description": "Generate demo events with current timestamps for testing",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "scripts/generate_demo_events.py"
+      ],
+      "test_method": "check_files_exist"
+    },
+    {
+      "id": "multi-data-sources",
+      "name": "Multiple Data Sources",
+      "description": "Support for real, demo, or combined event data sources",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "static/js/app.js"
+      ],
+      "config_keys": [
+        "data.source",
+        "data.sources"
+      ],
+      "code_patterns": [
+        {
+          "file": "static/js/app.js",
+          "pattern": "loadEvents.*source|data.source",
+          "description": "Data source selection logic"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "custom-domain-support",
+      "name": "Custom Domain Support",
+      "description": "Support for custom domains via CNAME",
+      "category": "deployment",
+      "implemented": false,
+      "files": [
+        "CNAME",
+        ".github/workflows/deploy-pages.yml"
+      ],
+      "test_method": "check_files_exist"
+    },
+    {
+      "id": "event-filters",
+      "name": "Event Filters",
+      "description": "Filter events by category, time, and distance",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "static/js/app.js",
+        "static/index.html"
+      ],
+      "code_patterns": [
+        {
+          "file": "static/js/app.js",
+          "pattern": "filterEvents|applyFilters",
+          "description": "Event filtering logic"
+        },
+        {
+          "file": "static/index.html",
+          "pattern": "class=\"filter-part\"|id=\"filter-sentence\"",
+          "description": "Filter UI elements"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "event-archiving",
+      "name": "Event Archiving",
+      "description": "Automatically archive past events to keep published list current",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/modules/utils.py",
+        "src/main.py"
+      ],
+      "code_patterns": [
+        {
+          "file": "src/modules/utils.py",
+          "pattern": "def archive_old_events|archived_events.json",
+          "description": "Event archiving functionality"
+        },
+        {
+          "file": "src/main.py",
+          "pattern": "cli_archive_old_events|archive.*command",
+          "description": "CLI command for archiving"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "backup-system",
+      "name": "Data Backup System",
+      "description": "Automatic backups when clearing data with .backup extension",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/main.py"
+      ],
+      "code_patterns": [
+        {
+          "file": "src/main.py",
+          "pattern": "\\.backup|shutil.copy.*backup",
+          "description": "Backup file creation"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "custom-location",
+      "name": "Custom Location Override",
+      "description": "Allow users to set custom location instead of using geolocation",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "static/js/app.js",
+        "static/index.html"
+      ],
+      "code_patterns": [
+        {
+          "file": "static/js/app.js",
+          "pattern": "useCustomLocation|custom-location|customLat|customLon",
+          "description": "Custom location functionality"
+        },
+        {
+          "file": "static/index.html",
+          "pattern": "id=\"location-text\"",
+          "description": "Custom location UI elements"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "documentation-viewer",
+      "name": "Built-in Documentation Viewer",
+      "description": "TUI-based documentation viewer with search and navigation",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/main.py"
+      ],
+      "code_patterns": [
+        {
+          "file": "src/main.py",
+          "pattern": "def view_documentation|_search_docs|_show_toc",
+          "description": "Documentation viewer functions"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "example-data-loader",
+      "name": "Example Data Loader",
+      "description": "Load example/sample data for development and testing",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/main.py"
+      ],
+      "code_patterns": [
+        {
+          "file": "src/main.py",
+          "pattern": "def load_example_data|cli_load_examples|events_example",
+          "description": "Example data loading functionality"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "data-management",
+      "name": "Data Management Tools",
+      "description": "CLI and TUI tools to clear, list, and manage event data",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/main.py"
+      ],
+      "code_patterns": [
+        {
+          "file": "src/main.py",
+          "pattern": "def clear_all_data|cli_clear_data|cli_list",
+          "description": "Data management commands"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "event-cards",
+      "name": "Event Card UI",
+      "description": "Card-based UI for displaying event details in the sidebar",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "static/js/app.js",
+        "static/css/style.css",
+        "static/index.html"
+      ],
+      "code_patterns": [
+        {
+          "file": "static/js/app.js",
+          "pattern": "event-card|renderEvents|event-list",
+          "description": "Event card rendering"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "map-markers",
+      "name": "Map Markers",
+      "description": "Interactive markers on the map for events and user location",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "static/js/app.js"
+      ],
+      "code_patterns": [
+        {
+          "file": "static/js/app.js",
+          "pattern": "L\\.marker|this\\.markers|addEventMarkers",
+          "description": "Leaflet marker management"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "distance-calculation",
+      "name": "Distance Calculation",
+      "description": "Haversine formula distance calculation between coordinates",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/modules/utils.py",
+        "static/js/app.js"
+      ],
+      "code_patterns": [
+        {
+          "file": "src/modules/utils.py",
+          "pattern": "def calculate_distance|Haversine",
+          "description": "Distance calculation in Python"
+        },
+        {
+          "file": "static/js/app.js",
+          "pattern": "calculateDistance",
+          "description": "Distance calculation in JavaScript"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "responsive-design",
+      "name": "Responsive Design",
+      "description": "Mobile-responsive layout with CSS media queries",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "static/css/style.css",
+        "static/index.html"
+      ],
+      "code_patterns": [
+        {
+          "file": "static/css/style.css",
+          "pattern": "@media.*max-width|viewport",
+          "description": "Responsive CSS media queries"
+        },
+        {
+          "file": "static/index.html",
+          "pattern": "viewport.*width=device-width",
+          "description": "Viewport meta tag"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "workflow-launcher",
+      "name": "GitHub Actions Workflow Launcher",
+      "description": "Launch and manage GitHub Actions workflows from TUI and CLI using GitHub CLI",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/modules/workflow_launcher.py",
+        "src/main.py"
+      ],
+      "code_patterns": [
+        {
+          "file": "src/modules/workflow_launcher.py",
+          "pattern": "class WorkflowLauncher|def trigger_workflow|gh workflow run",
+          "description": "Workflow launcher class and GitHub CLI integration"
+        },
+        {
+          "file": "src/main.py",
+          "pattern": "def launch_workflows|def cli_workflow|workflow list",
+          "description": "TUI and CLI integration for workflow launching"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
+      "id": "copilot-custom-instructions",
+      "name": "GitHub Copilot Custom Instructions",
+      "description": "Comprehensive project-specific instructions for GitHub Copilot including architecture, coding guidelines, and workflows",
+      "category": "infrastructure",
+      "implemented": true,
+      "files": [
+        ".github/copilot-instructions.md"
+      ],
+      "test_method": "check_files_exist"
+    },
+    {
+      "id": "vscode-workspace-config",
+      "name": "VS Code Workspace Configuration",
+      "description": "Workspace settings, recommended extensions, tasks, and debug configurations for VS Code",
+      "category": "infrastructure",
+      "implemented": true,
+      "files": [
+        ".vscode/settings.json",
+        ".vscode/extensions.json",
+        ".vscode/tasks.json",
+        ".vscode/launch.json"
+      ],
+      "test_method": "check_files_exist"
+    },
+    {
+      "id": "devcontainer-config",
+      "name": "Development Container Configuration",
+      "description": "Docker-based development container with Python 3.11, pre-configured tools, and automatic dependency installation",
+      "category": "infrastructure",
+      "implemented": true,
+      "files": [
+        ".devcontainer/devcontainer.json"
+      ],
+      "test_method": "check_files_exist"
+    },
+    {
+      "id": "mcp-server-config",
+      "name": "Model Context Protocol (MCP) Server Configuration",
+      "description": "MCP server configuration for GitHub, filesystem, and memory context to enhance AI assistance",
+      "category": "infrastructure",
+      "implemented": true,
+      "files": [
+        ".github/mcp/servers.json",
+        ".github/mcp/README.md"
+      ],
+      "test_method": "check_files_exist"
+    },
+    {
+      "id": "dev-environment-docs",
+      "name": "Development Environment Documentation",
+      "description": "Comprehensive documentation for development environment setup including VS Code, devcontainer, and MCP configuration",
+      "category": "infrastructure",
+      "implemented": true,
+      "files": [
+        "README.md"
+      ],
+      "test_method": "check_files_exist"
+    },
+    {
+      "id": "environment-watermark",
+      "name": "Environment Watermark with Build Info",
+      "description": "Visual watermark in bottom-left corner showing environment (production/preview/testing), commit SHA, and PR number. Configurable per environment with automatic detection.",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "src/modules/cdn_inliner.py",
+        "config.json"
+      ],
+      "config_keys": [
+        "app.environment",
+        "watermark.enabled",
+        "watermark.text"
+      ],
+      "code_patterns": [
+        {
+          "file": "static/js/app.js",
+          "pattern": "#env-watermark|displayEnvironmentWatermark",
+          "description": "Watermark HTML element and JavaScript display function"
+        }
+      ],
+      "test_method": "manual",
+      "test_instructions": "1. Start local server: cd static && python3 -m http.server 8000\n2. Edit static/config.json to set watermark.enabled=true\n3. Open http://localhost:8000\n4. Verify watermark appears in bottom-left corner\n5. Click watermark to see build details popup"
+    },
+    {
+      "id": "github-environments",
+      "name": "GitHub Environments UI Integration",
+      "description": "Configure GitHub Actions workflows to use environments, making deployments visible in GitHub UI with direct links to preview and production sites",
+      "category": "infrastructure",
+      "implemented": false,
+      "files": [
+        ".github/workflows/deploy-pages.yml",
+        ".github/workflows/deploy-preview.yml"
+      ],
+      "config_keys": [],
+      "code_patterns": [
+        {
+          "file": ".github/workflows/deploy-pages.yml",
+          "pattern": "environment:\\s+name: production",
+          "description": "Production environment configuration"
+        },
+        {
+          "file": ".github/workflows/deploy-preview.yml",
+          "pattern": "environment:\\s+name: preview",
+          "description": "Preview environment configuration"
+        }
+      ],
+      "test_method": "manual",
+      "test_instructions": "1. Navigate to GitHub repository\n2. Click 'Environments' in sidebar\n3. Verify 'production' and 'preview' environments are listed\n4. Click on environment to see deployment history\n5. Click 'View deployment' button to open deployed site"
+    },
+    {
+      "id": "time-drawer",
+      "name": "Dynamic Time-Based Marker Resizing",
+      "description": "Interactive timeline drawer with dynamic marker scaling based on event proximity to selected time. Shows events from 'Now' to 'Sunrise' with smooth animations",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "assets/js/time-drawer.js",
+        "assets/css/time-drawer.css",
+        "assets/js/app.js",
+        "src/modules/site_generator.py"
+      ],
+      "code_patterns": [
+        {
+          "file": "assets/js/time-drawer.js",
+          "pattern": "class TimeDrawer|calculateMarkerScale|applyMarkerScale",
+          "description": "TimeDrawer class with marker scaling logic"
+        },
+        {
+          "file": "assets/js/app.js",
+          "pattern": "this.timeDrawer|new TimeDrawer|registerMarker",
+          "description": "TimeDrawer integration in EventsApp"
+        },
+        {
+          "file": "assets/css/time-drawer.css",
+          "pattern": ".time-drawer|.time-drawer-handle|.time-drawer-progress",
+          "description": "Time drawer styling"
+        }
+      ],
+      "test_method": "manual",
+      "test_instructions": "1. Open the app with 5+ events\n2. Set filter to 'til sunrise'\n3. Verify time drawer appears at bottom\n4. Drag the handle left/right\n5. Verify markers scale dynamically (70%-130%)\n6. Verify largest markers have glow effect\n7. Try with < 5 events - drawer should show threshold message\n8. Change filter to '6h' - drawer should disappear\n9. Test on mobile - touch gestures should work"
+    },
+    {
+      "id": "keyboard-navigation",
+      "name": "Keyboard Navigation",
+      "description": "Full keyboard controls for map navigation and event browsing - ESC to close popups, arrow keys to navigate events, +/- to zoom",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "assets/js/app.js"
+      ],
+      "code_patterns": [
+        {
+          "file": "assets/js/app.js",
+          "pattern": "currentEventIndex|navigateEvents|keydown.*Escape|keydown.*Arrow",
+          "description": "Keyboard event handling and navigation logic"
+        }
+      ],
+      "test_method": "manual",
+      "test_instructions": "1. Open the app and click on an event to view details\n2. Press ESC - detail popup should close\n3. Open an event detail again\n4. Press Right Arrow - should navigate to next event (sorted by time)\n5. Press Left Arrow - should navigate to previous event\n6. Navigate past the last event - should wrap to first event\n7. Press + or = key - map should zoom in\n8. Press - or _ key - map should zoom out\n9. Test that map centers on events during arrow navigation\n10. Open filter dropdown and press ESC - dropdown should close"
+    },
+    {
+      "id": "app-ready-signal",
+      "name": "App Ready Signal for Screenshots",
+      "description": "Emits a ready signal when the app is fully initialized (config loaded, map initialized, events loaded). Enables reliable screenshot generation by providing a data-app-ready attribute and custom event",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "assets/js/app.js",
+        "static/js/app.js",
+        "docs/SCREENSHOT_GUIDE.md",
+        "scripts/generate_screenshots.py"
+      ],
+      "code_patterns": [
+        {
+          "file": "assets/js/app.js",
+          "pattern": "markAppAsReady|data-app-ready|app-ready.*CustomEvent",
+          "description": "App ready signal implementation and emission"
+        }
+      ],
+      "test_method": "automated",
+      "test_instructions": "1. Start local server: cd static && python3 -m http.server 8000\n2. Run test script: python3 scripts/generate_screenshots.py --verbose\n3. Verify body[data-app-ready='true'] attribute is set after page load\n4. Verify 'app-ready' custom event is dispatched with event.detail metadata\n5. Check that screenshots are captured with fully loaded map and events\n6. Verify both mobile (640\u00d71136) and desktop (1280\u00d7800) screenshots are generated"
+    },
+    {
+      "id": "html-export-linting",
+      "name": "HTML Export Linting",
+      "description": "Comprehensive linting of exported HTML, including JavaScript, CSS, HTML structure, SVG content, translations, and accessibility (a11y) checks during site generation",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/modules/linter.py",
+        "src/modules/site_generator.py",
+        "tests/test_linter.py"
+      ],
+      "code_patterns": [
+        {
+          "file": "src/modules/linter.py",
+          "pattern": "class Linter|lint_javascript|lint_css|lint_html|lint_svg|lint_translations|lint_accessibility",
+          "description": "Linter implementation with multiple validation methods"
+        },
+        {
+          "file": "src/modules/site_generator.py",
+          "pattern": "from.*linter import Linter|linter.lint_all",
+          "description": "Integration of linter into site generation process"
+        }
+      ],
+      "test_method": "automated",
+      "test_instructions": "1. Run unit tests: python3 tests/test_linter.py --verbose\n2. Generate site: python3 src/event_manager.py generate\n3. Verify linting output shows validation of:\n   - JavaScript (checks for eval(), console.log, bracket matching)\n   - CSS (checks for bracket matching, !important overuse)\n   - HTML (checks for doctype, lang attribute, required tags)\n   - SVG (checks for script tags, event handlers, security issues)\n   - Translations (checks for completeness, consistency between languages)\n   - Accessibility (checks for WCAG 2.1 Level AA compliance)\n4. Confirm build completes even with lint warnings (non-blocking)\n5. Review lint report for actionable issues"
+    }
+  ]
 }
