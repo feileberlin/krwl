@@ -354,7 +354,7 @@ pip install openai anthropic groq
 
 ## Examples
 
-See `config.smart_scraper.example.json` for complete configuration examples.
+See `examples/config.smart_scraper.example.json` for complete configuration examples.
 
 ## Future Enhancements
 

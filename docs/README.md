@@ -70,7 +70,7 @@ Want to manually sync? We have a script for that:
 
 ```bash
 # From repository root
-./sync-to-wiki.sh
+./scripts/sync-to-wiki.sh
 ```
 
 The script copies all docs to the wiki repository and shows you what changed. Then you can review and push.
@@ -163,7 +163,7 @@ Check:
 ### "I want to update the wiki manually"
 
 ```bash
-./sync-to-wiki.sh
+./scripts/sync-to-wiki.sh
 cd /tmp/krwl-hof.wiki
 git push
 ```

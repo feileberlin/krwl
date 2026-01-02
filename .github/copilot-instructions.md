@@ -60,7 +60,7 @@ These files have AUTO-GENERATED comments at the top. See `static/.copilot-protec
 pip install -r requirements.txt
 
 # Download frontend libraries (Leaflet.js)
-./download-libs.sh
+./scripts/download-libs.sh
 
 # Verify library integrity
 python3 manage_libs.py verify

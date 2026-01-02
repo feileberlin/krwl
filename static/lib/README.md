@@ -8,7 +8,7 @@ This directory contains local copies of third-party JavaScript libraries used by
 
 ```bash
 # Simple method (from repository root)
-./download-libs.sh
+./scripts/download-libs.sh
 
 # Or use the Python manager directly
 python3 manage_libs.py download

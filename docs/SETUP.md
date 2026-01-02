@@ -28,7 +28,7 @@ This guide covers setting up your development environment for KRWL HOF, includin
 
 5. **Download frontend libraries**
    ```bash
-   ./download-libs.sh
+   ./scripts/download-libs.sh
    ```
 
 ### Option 2: Devcontainer (Docker-based)
@@ -58,7 +58,7 @@ The project includes several VS Code configuration files:
 - **`.vscode/extensions.json`** - Recommended extensions for the project
 - **`.vscode/tasks.json`** - Predefined tasks for common operations
 - **`.vscode/launch.json`** - Debug configurations
-- **`krwl-hof.code-workspace`** - VS Code workspace file
+- **`.vscode/krwl-hof.code-workspace`** - VS Code workspace file
 
 ### Devcontainer
 

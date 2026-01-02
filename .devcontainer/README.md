@@ -105,7 +105,7 @@ A development container (devcontainer) is a Docker-based environment that:
 
 **How to configure**:
 ```json
-"postCreateCommand": "pip install -r requirements.txt && ./download-libs.sh"
+"postCreateCommand": "pip install -r requirements.txt && ./scripts/download-libs.sh"
 ```
 - Runs once after container is first created
 - Use `&&` to chain multiple commands
@@ -113,7 +113,7 @@ A development container (devcontainer) is a Docker-based environment that:
 
 **To add database setup**:
 ```json
-"postCreateCommand": "pip install -r requirements.txt && ./download-libs.sh && python setup_db.py"
+"postCreateCommand": "pip install -r requirements.txt && ./scripts/download-libs.sh && python setup_db.py"
 ```
 
 **Other lifecycle hooks**:

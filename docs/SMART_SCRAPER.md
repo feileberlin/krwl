@@ -557,7 +557,7 @@ Use environment variables or gitignored config files.
 - [Configuration Guide](./CONFIGURATION.md)
 
 ### Example Files
-- `config.smart_scraper.example.json` - Complete example
+- `examples/config.smart_scraper.example.json` - Complete example
 - `SMART_SCRAPER_SUMMARY.md` - Implementation summary
 
 ### Support

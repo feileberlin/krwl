@@ -21,7 +21,7 @@ fi
 
 # Use the Python library manager
 cd "$SCRIPT_DIR"
-python3 scripts/manage_libs.py download
+python3 manage_libs.py download
 
 echo ""
 echo "✅ Library download complete!"

@@ -27,7 +27,7 @@ After initializing via Option 1, or if you want to sync immediately:
 
 ```bash
 # From repository root
-./sync-to-wiki.sh
+./scripts/sync-to-wiki.sh
 
 # Follow the prompts:
 # 1. Review changes shown

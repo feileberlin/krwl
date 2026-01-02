@@ -38,7 +38,7 @@ jobs:
           python-version: '3.x'
 
       - name: Download Leaflet library
-        run: ./download-libs.sh
+        run: ./scripts/download-libs.sh
 
       - name: Determine mode
         id: determine_mode

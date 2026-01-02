@@ -120,7 +120,7 @@ When Leaflet versions change:
 
 1. **Download new version**:
    ```bash
-   ./download-libs.sh
+   ./scripts/download-libs.sh
    ```
 
 2. **Verify integrity**:
@@ -162,7 +162,7 @@ Expected output:
 
 **Solution**: Re-download libraries:
 ```bash
-./download-libs.sh
+./scripts/download-libs.sh
 python3 manage_libs.py verify
 ```
 
@@ -197,7 +197,7 @@ When using fallback:
 
 ## Best Practices
 
-1. **Keep local files updated**: Run `./download-libs.sh` regularly
+1. **Keep local files updated**: Run `./scripts/download-libs.sh` regularly
 2. **Test both paths**: Verify CDN and fallback in CI/CD
 3. **Monitor CDN health**: jsDelivr status page
 4. **Version pin CDN**: Don't use `@latest` in production

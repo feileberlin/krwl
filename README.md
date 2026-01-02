@@ -24,7 +24,7 @@ Want to run it locally or contribute?
 # Clone and setup
 git clone https://github.com/feileberlin/krwl-hof.git
 cd krwl-hof
-./download-libs.sh
+./scripts/download-libs.sh
 
 # Run locally
 cd static
