@@ -438,6 +438,13 @@ class SiteGenerator:
         
         return ''.join(html_parts)
     
+    def load_template(self, filename: str) -> str:
+        """Load a template file from templates directory (KISS: simple file read)"""
+        template_path = self.base_path / 'src' / 'templates' / filename
+        if not template_path.exists():
+            raise FileNotFoundError(f"Template not found: {template_path}")
+        return template_path.read_text(encoding='utf-8')
+    
     def build_html_structure(
         self, 
         configs: List[Dict],
@@ -447,137 +454,84 @@ class SiteGenerator:
         stylesheets: Dict[str, str],
         scripts: Dict[str, str]
     ) -> str:
-        """Build complete HTML structure with embedded data"""
+        """Build complete HTML structure using templates (KISS: simple .format())"""
         
-        # Use first config for basic info (they should be similar)
+        # Use first config for basic info
         primary_config = configs[0] if configs else {}
         app_name = primary_config.get('app', {}).get('name', 'KRWL HOF Community Events')
         favicon = self.create_favicon_data_url()
         logo_svg = self.read_logo_svg()
         
-        # Build noscript HTML with sorted events
+        # Build noscript HTML
         noscript_html = self.build_noscript_html(events, content_en, app_name)
         
-        # Runtime config selection script
-        config_loader = '''
-// Runtime configuration loader - detects environment
-(function() {
-    const hostname = window.location.hostname;
-    const pathname = window.location.pathname;
-    
-    // Determine which config to use based on environment
-    let configIndex = 0; // Default to production (first config)
-    
-    // Development indicators
-    if (hostname === 'localhost' || 
-        hostname === '127.0.0.1' ||
-        pathname.includes('/dev/') ||
-        pathname.includes('/test/')) {
-        configIndex = 1; // Use development config if available
-    }
-    
-    // Select config (fallback to first if index out of bounds)
-    window.ACTIVE_CONFIG = window.ALL_CONFIGS[configIndex] || window.ALL_CONFIGS[0];
-    
-    // Filter events based on active config
-    if (window.ACTIVE_CONFIG.data && window.ACTIVE_CONFIG.data.source === 'real') {
-        // Production: only real events (filter out demo events)
-        window.ACTIVE_EVENTS = window.ALL_EVENTS.filter(e => !e.id.includes('demo_'));
-    } else {
-        // Development: all events
-        window.ACTIVE_EVENTS = window.ALL_EVENTS;
-    }
-})();
-'''
+        # Load template files
+        html_template = self.load_template('index.html')
+        config_loader = self.load_template('config-loader.js')
+        fetch_interceptor = self.load_template('fetch-interceptor.js')
         
-        html = f'''<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{app_name}</title>
-<link rel="icon" href="{favicon}">
-<style>{stylesheets['leaflet_css']}</style>
-<style>{stylesheets['app_css']}</style>
-<style>{stylesheets['time_drawer_css']}</style>
-</head>
-<body>
-<div id="app">
-<noscript>
-{noscript_html}
-</noscript>
-<div id="main-content" style="display:none">
-<div id="filter-sentence">
-<span id="filter-logo" class="filter-logo" aria-hidden="true">{logo_svg}</span>
-<span id="event-count-category-text" class="filter-part">0 events</span>
-<span id="time-text" class="filter-part">till sunrise</span>
-<span id="distance-text" class="filter-part">within 5 km</span>
-<span id="location-text" class="filter-part">from here</span>
-</div>
-<div id="map"></div>
-<div id="event-detail" class="hidden">
-<div class="detail-content">
-<button id="close-detail">&times;</button>
-<h2 id="detail-title"></h2>
-<p id="detail-description"></p>
-<p><strong>Location:</strong> <span id="detail-location"></span></p>
-<p><strong>Time:</strong> <span id="detail-time"></span></p>
-<p><strong>Distance:</strong> <span id="detail-distance"></span></p>
-<a id="detail-link" href="#" target="_blank">View Details</a>
-</div>
-</div>
-</div>
-<div id="env-watermark"></div>
-</div>
-<script>
-// Embed all configurations and data
+        # Prepare embedded data
+        embedded_data = f'''// Embed all configurations and data
 window.ALL_CONFIGS = {json.dumps(configs)};
 window.ALL_EVENTS = {json.dumps(events)};
 window.EMBEDDED_CONTENT_EN = {json.dumps(content_en)};
-window.EMBEDDED_CONTENT_DE = {json.dumps(content_de)};
-
-{config_loader}
-
-// Intercept fetch calls to return embedded data
-(function() {{
-    const originalFetch = window.fetch;
-    window.fetch = function(url, options) {{
-        if (url.includes('config.json')) {{
-            return Promise.resolve({{
-                ok: true,
-                json: () => Promise.resolve(window.ACTIVE_CONFIG)
-            }});
-        }}
-        if (url.includes('events.json')) {{
-            return Promise.resolve({{
-                ok: true,
-                json: () => Promise.resolve({{events: window.ACTIVE_EVENTS}})
-            }});
-        }}
-        if (url.includes('content.json')) {{
-            const content = url.includes('.de.') ? window.EMBEDDED_CONTENT_DE : window.EMBEDDED_CONTENT_EN;
-            return Promise.resolve({{
-                ok: true,
-                json: () => Promise.resolve(content)
-            }});
-        }}
-        return originalFetch.apply(this, arguments);
-    }};
-}})();
-
-{scripts['leaflet_js']}
-{scripts['i18n_js']}
-{scripts['time_drawer_js']}
-{scripts['app_js']}
-
-</script>
-</body>
-</html>'''
+window.EMBEDDED_CONTENT_DE = {json.dumps(content_de)};'''
+        
+        # Generate timestamp for output
+        from datetime import datetime
+        generated_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')
+        
+        # Create comment for generated file
+        generated_comment = f'''<!--
+  KRWL HOF Community Events - Auto-generated HTML
+  
+  Generated: {generated_at}
+  Generator: src/modules/site_generator.py
+  Command: python3 src/event_manager.py generate
+  
+  DO NOT EDIT THIS FILE DIRECTLY
+  Edit source files and regenerate instead:
+  - Templates: src/templates/
+  - Styles: static/css/
+  - Scripts: static/js/
+  - Events: event-data/
+-->'''
+        
+        # Simple template substitution (KISS: no templating engine needed)
+        html = html_template.format(
+            generated_comment=generated_comment,
+            app_name=app_name,
+            favicon=favicon,
+            leaflet_css=stylesheets['leaflet_css'],
+            app_css=stylesheets['app_css'],
+            time_drawer_css=stylesheets['time_drawer_css'],
+            noscript_html=noscript_html,
+            logo_svg=logo_svg,
+            embedded_data=embedded_data,
+            config_loader=config_loader,
+            fetch_interceptor=fetch_interceptor,
+            leaflet_js=scripts['leaflet_js'],
+            i18n_js=scripts['i18n_js'],
+            time_drawer_js=scripts['time_drawer_js'],
+            app_js=scripts['app_js']
+        )
+        
         return html
     
     def generate_site(self, skip_lint: bool = False) -> bool:
         """
-        Generate complete static site with runtime configuration.
+        Generate complete static site with inlined HTML.
+        
+        Process:
+        1. Ensures dependencies are present (Leaflet.js) - auto-fetches if missing
+        2. Loads all configurations from config.json
+        3. Loads stylesheets (Leaflet CSS, app CSS, time-drawer CSS)
+        4. Loads JavaScript files (Leaflet, i18n, time-drawer, app.js)
+        5. Loads event data (real events + demo events)
+        6. Loads translations (English and German)
+        7. Builds HTML structure using templates with all assets inlined
+        8. Lints and validates generated content (HTML, CSS, JS, translations, SVG)
+        9. Writes output to static/index.html (self-contained file)
         
         Args:
             skip_lint: If True, skip linting validation (useful for testing)

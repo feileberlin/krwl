@@ -1,0 +1,55 @@
+{generated_comment}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{app_name}</title>
+<link rel="icon" href="{favicon}">
+<style>{leaflet_css}</style>
+<style>{app_css}</style>
+<style>{time_drawer_css}</style>
+</head>
+<body>
+<div id="app">
+<noscript>
+{noscript_html}
+</noscript>
+<div id="main-content" style="display:none">
+<div id="filter-sentence">
+<span id="filter-logo" class="filter-logo" aria-hidden="true">{logo_svg}</span>
+<span id="event-count-category-text" class="filter-part">0 events</span>
+<span id="time-text" class="filter-part">till sunrise</span>
+<span id="distance-text" class="filter-part">within 5 km</span>
+<span id="location-text" class="filter-part">from here</span>
+</div>
+<div id="map"></div>
+<div id="event-detail" class="hidden">
+<div class="detail-content">
+<button id="close-detail">&times;</button>
+<h2 id="detail-title"></h2>
+<p id="detail-description"></p>
+<p><strong>Location:</strong> <span id="detail-location"></span></p>
+<p><strong>Time:</strong> <span id="detail-time"></span></p>
+<p><strong>Distance:</strong> <span id="detail-distance"></span></p>
+<a id="detail-link" href="#" target="_blank">View Details</a>
+</div>
+</div>
+</div>
+<div id="env-watermark"></div>
+</div>
+<script>
+{embedded_data}
+
+{config_loader}
+
+{fetch_interceptor}
+
+{leaflet_js}
+{i18n_js}
+{time_drawer_js}
+{app_js}
+
+</script>
+</body>
+</html>
