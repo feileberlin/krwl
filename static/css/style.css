@@ -329,6 +329,11 @@ header {
     font-size: 0.7rem;
 }
 
+#env-watermark .env-text {
+    /* Environment text styling - inherits from parent but explicitly defined */
+    font-weight: 600;
+}
+
 #env-watermark .filter-stats {
     opacity: 0.8;
     font-size: 0.7rem;

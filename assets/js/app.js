@@ -37,11 +37,16 @@ class EventsApp {
         // Display environment watermark if configured
         this.displayEnvironmentWatermark();
         
+        // Show main content early with error handling
+        this.showMainContent();
+        
         // Initialize map (wrapped in try-catch to handle missing Leaflet)
         try {
             this.initMap();
         } catch (error) {
             console.warn('Map initialization failed:', error.message);
+            // Ensure content is visible even if map fails
+            this.showMainContent();
         }
         
         // Initialize TimeDrawer if map is available
@@ -58,7 +63,13 @@ class EventsApp {
         this.getUserLocation();
         
         // Load events
-        await this.loadEvents();
+        try {
+            await this.loadEvents();
+        } catch (error) {
+            console.error('Failed to load events:', error);
+            // Ensure content is visible even if event loading fails
+            this.showMainContent();
+        }
         
         // Setup event listeners (always run, even if map fails)
         this.setupEventListeners();
@@ -84,6 +95,29 @@ class EventsApp {
             events: this.events.length,
             map: !!this.map
         });
+    }
+    
+    showMainContent() {
+        // Safely show main content with error handling
+        // This prevents flash of unstyled content while ensuring content is visible
+        try {
+            const mainContent = document.getElementById('main-content');
+            if (mainContent && mainContent.style.display === 'none') {
+                mainContent.style.display = 'block';
+                this.log('Main content displayed');
+            }
+        } catch (error) {
+            console.error('Failed to show main content:', error);
+            // Try one more time with a fallback approach
+            try {
+                const mainContent = document.getElementById('main-content');
+                if (mainContent) {
+                    mainContent.removeAttribute('style');
+                }
+            } catch (fallbackError) {
+                console.error('Fallback to show main content also failed:', fallbackError);
+            }
+        }
     }
     
     displayEnvironmentWatermark() {
@@ -569,11 +603,8 @@ class EventsApp {
         // Update watermark with filter statistics
         this.updateWatermarkFilterStats(filteredEvents.length);
         
-        // Show main content after events are loaded and filter description is updated
-        const mainContent = document.getElementById('main-content');
-        if (mainContent) {
-            mainContent.style.display = 'block';
-        }
+        // Ensure main content is visible (with error handling)
+        this.showMainContent();
         
         // Clear existing markers
         this.markers.forEach(marker => marker.remove());

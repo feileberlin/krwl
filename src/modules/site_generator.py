@@ -323,7 +323,7 @@ class SiteGenerator:
 <p>Enable JavaScript to view events</p>
 </div>
 </noscript>
-<div id="main-content">
+<div id="main-content" style="display:none">
 <div id="filter-sentence">
 <span id="filter-logo" class="filter-logo" aria-hidden="true">{logo_svg}</span>
 <span id="event-count-category-text" class="filter-part">0 events</span>
@@ -387,7 +387,6 @@ window.EMBEDDED_CONTENT_DE = {json.dumps(content_de)};
 {scripts['time_drawer_js']}
 {scripts['app_js']}
 
-document.getElementById('main-content').style.display = 'block';
 </script>
 </body>
 </html>'''
