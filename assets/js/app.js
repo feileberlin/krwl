@@ -8,6 +8,7 @@ class EventsApp {
         this.config = null;
         this.currentEdgeDetail = null;
         this.timeDrawer = null; // Time drawer for dynamic marker sizing
+        this.currentEventIndex = null; // Track which event is currently displayed
         this.filters = {
             maxDistance: 5,
             timeFilter: 'sunrise',
@@ -626,7 +627,38 @@ class EventsApp {
         }
     }
     
+    navigateEvents(direction) {
+        if (this.currentEventIndex === null || this.currentEventIndex === undefined) {
+            this.currentEventIndex = 0;
+        }
+        
+        // Get filtered events sorted by start time
+        const filteredEvents = this.filterEvents();
+        filteredEvents.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
+        
+        if (filteredEvents.length === 0) return;
+        
+        // Calculate next index with wrapping
+        this.currentEventIndex = (this.currentEventIndex + direction + filteredEvents.length) % filteredEvents.length;
+        
+        const nextEvent = filteredEvents[this.currentEventIndex];
+        this.showEventDetail(nextEvent);
+        
+        // Center map on the event
+        if (this.map && nextEvent.location) {
+            this.map.setView([nextEvent.location.lat, nextEvent.location.lon], 15);
+        }
+    }
+    
     showEventDetail(event) {
+        // Track current event index for keyboard navigation
+        const filteredEvents = this.filterEvents();
+        filteredEvents.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
+        this.currentEventIndex = filteredEvents.findIndex(e => 
+            (e.id && e.id === event.id) || 
+            (e.title === event.title && e.start_time === event.start_time)
+        );
+        
         const detail = document.getElementById('event-detail');
         
         document.getElementById('detail-title').textContent = event.title;
@@ -1189,6 +1221,66 @@ class EventsApp {
                 }
             });
         }
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            const eventDetail = document.getElementById('event-detail');
+            
+            // ESC: Close event detail popup and dropdowns
+            if (e.key === 'Escape') {
+                if (eventDetail && !eventDetail.classList.contains('hidden')) {
+                    eventDetail.classList.add('hidden');
+                    e.preventDefault();
+                }
+                hideAllDropdowns();
+            }
+            
+            // SPACE: Center map on user's geolocation
+            if (e.key === ' ' || e.code === 'Space') {
+                if (this.map && this.userLocation) {
+                    this.map.setView([this.userLocation.lat, this.userLocation.lon], 13);
+                    e.preventDefault();
+                }
+            }
+            
+            // SHIFT + Arrow keys: Pan the map
+            if (e.shiftKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+                if (this.map) {
+                    const panAmount = 100; // pixels to pan
+                    
+                    switch(e.key) {
+                        case 'ArrowUp':
+                            this.map.panBy([0, -panAmount]);
+                            break;
+                        case 'ArrowDown':
+                            this.map.panBy([0, panAmount]);
+                            break;
+                        case 'ArrowLeft':
+                            this.map.panBy([-panAmount, 0]);
+                            break;
+                        case 'ArrowRight':
+                            this.map.panBy([panAmount, 0]);
+                            break;
+                    }
+                    e.preventDefault();
+                }
+            }
+            // Arrow LEFT/RIGHT: Navigate through listed events (always)
+            else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                this.navigateEvents(e.key === 'ArrowRight' ? 1 : -1);
+                e.preventDefault();
+            }
+            
+            // Map zoom shortcuts
+            if (e.key === '+' || e.key === '=') {
+                if (this.map) this.map.zoomIn();
+                e.preventDefault();
+            }
+            if (e.key === '-' || e.key === '_') {
+                if (this.map) this.map.zoomOut();
+                e.preventDefault();
+            }
+        });
     }
 }
 
