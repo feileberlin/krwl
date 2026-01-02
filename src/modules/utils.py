@@ -7,7 +7,7 @@ from datetime import datetime
 
 def load_config(base_path):
     """Load configuration from config.json"""
-    config_path = base_path / 'config' / 'config.json'
+    config_path = base_path / 'config.json'
     with open(config_path, 'r') as f:
         return json.load(f)
 
