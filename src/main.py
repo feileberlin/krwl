@@ -17,7 +17,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from modules.scraper import EventScraper
 from modules.editor import EventEditor
-from modules.cdn_inliner import CDNInliner
+from modules.builder import Builder
 from modules.workflow_launcher import WorkflowLauncher
 from modules.utils import (
     load_config, load_events, save_events, 
@@ -131,16 +131,12 @@ class EventManagerTUI:
         print("Generating Static Site...")
         print("-" * 60)
         
-        inliner = CDNInliner(self.config, self.base_path)
-        success = inliner.generate_all()
+        builder = Builder(self.base_path)
+        success = builder.build_html('production')
         
         if success:
             print("\nStatic site generated successfully!")
             print(f"Files saved to: {self.base_path / 'static'}")
-            
-            # Update events in HTML
-            print("\nUpdating events data in HTML...")
-            update_events_in_html(self.base_path)
         
         self.print_footer("generate")
         input("\nPress Enter to continue...")
@@ -1033,17 +1029,12 @@ def cli_bulk_reject_events(base_path, event_ids_str):
 
 
 def cli_generate(base_path, config):
-    """CLI: Generate static site"""
+    """CLI: Generate static site (legacy command - uses builder)"""
     print("Generating static site files...")
-    inliner = CDNInliner(config, base_path)
-    success = inliner.generate_all()
+    builder = Builder(base_path)
+    success = builder.build_html('production')
     if success:
         print(f"✓ Static site generated successfully!")
-        print(f"  Files saved to: {base_path / 'static'}")
-        
-        # Update events in HTML
-        print("\nUpdating events data in HTML...")
-        update_events_in_html(base_path)
         return 0
     return 1
 
