@@ -499,7 +499,18 @@ window.EMBEDDED_CONTENT_DE = {json.dumps(content_de)};'''
     
     def generate_site(self, skip_lint: bool = False) -> bool:
         """
-        Generate complete static site with runtime configuration.
+        Generate complete static site with inlined HTML.
+        
+        Process:
+        1. Ensures dependencies are present (Leaflet.js) - auto-fetches if missing
+        2. Loads all configurations from config.json
+        3. Loads stylesheets (Leaflet CSS, app CSS, time-drawer CSS)
+        4. Loads JavaScript files (Leaflet, i18n, time-drawer, app.js)
+        5. Loads event data (real events + demo events)
+        6. Loads translations (English and German)
+        7. Builds HTML structure using templates with all assets inlined
+        8. Lints and validates generated content (HTML, CSS, JS, translations, SVG)
+        9. Writes output to static/index.html (self-contained file)
         
         Args:
             skip_lint: If True, skip linting validation (useful for testing)

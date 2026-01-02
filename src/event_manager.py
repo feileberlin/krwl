@@ -208,7 +208,12 @@ COMMANDS:
     list                      List all published events
     list-pending              List all pending events
     
-    generate                  Generate static site (runtime-configurable)
+    generate                  Generate static site with inlined HTML
+                              - Ensures dependencies (Leaflet.js)
+                              - Loads all resources (CSS, JS, events, translations)
+                              - Builds HTML from templates with inlined assets
+                              - Lints and validates content
+                              - Outputs: static/index.html (self-contained)
     update                    Update events data in existing site (fast)
     dependencies fetch        Fetch third-party dependencies
     dependencies check        Check if dependencies are present
@@ -977,7 +982,14 @@ def cli_bulk_reject_events(base_path, event_ids_str):
 
 
 def cli_generate(base_path, config):
-    """CLI: Generate static site (runtime-configurable)"""
+    """
+    CLI: Generate static site with inlined HTML.
+    
+    Creates a self-contained HTML file with all CSS, JS, events, and translations
+    embedded. Uses KISS templating (Python .format()) from src/templates/.
+    
+    Output: static/index.html (~313KB single-file HTML)
+    """
     print("Generating static site...")
     generator = SiteGenerator(base_path)
     success = generator.generate_site()

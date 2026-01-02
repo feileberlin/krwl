@@ -3,24 +3,16 @@
   
   KISS Templating: Uses Python's .format() for simple substitution
   - No templating engine (Jinja2, etc.) - pure stdlib
-  - Placeholders: {variable_name} (double braces shown as single in output)
+  - Template uses single-brace placeholders
   - Used by: src/modules/site_generator.py
   
-  Available placeholders:
-  - {app_name}         - Application name from config
-  - {favicon}          - Base64 data URL for favicon
-  - {leaflet_css}      - Leaflet map styles (inlined)
-  - {app_css}          - Application styles (inlined)
-  - {time_drawer_css}  - Time drawer component styles (inlined)
-  - {noscript_html}    - Fallback HTML for no-JS users
-  - {logo_svg}         - SVG logo content
-  - {embedded_data}    - JSON data (configs, events, translations)
-  - {config_loader}    - Runtime config selection script
-  - {fetch_interceptor}- Fetch API interceptor script
-  - {leaflet_js}       - Leaflet map library (inlined)
-  - {i18n_js}          - Internationalization module (inlined)
-  - {time_drawer_js}   - Time drawer component (inlined)
-  - {app_js}           - Main application logic (inlined)
+  Available template variables:
+  - app_name, favicon (data URL)
+  - leaflet_css, app_css, time_drawer_css (inlined styles)
+  - noscript_html, logo_svg
+  - embedded_data (JSON configs/events/translations)
+  - config_loader, fetch_interceptor (runtime scripts)
+  - leaflet_js, i18n_js, time_drawer_js, app_js (inlined scripts)
   
   To regenerate: python3 src/event_manager.py generate
 -->

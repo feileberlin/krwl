@@ -5,10 +5,8 @@ on:
     branches:
       - main
     paths:
-      - 'event-data/events.json'
-      - 'event-data/events.demo.json'
-      - 'static/events.json'
-      - 'static/events.demo.json'
+      - 'event-data/events.json'       # Canonical events data (source)
+      - 'event-data/events.demo.json'  # Demo events data (source)
   workflow_dispatch:  # Allow manual trigger
 
 permissions:
