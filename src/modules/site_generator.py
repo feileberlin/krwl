@@ -332,6 +332,7 @@ class SiteGenerator:
 </div>
 </div>
 </div>
+<div id="env-watermark"></div>
 </div>
 <script>
 // Embed all configurations and data

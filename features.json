@@ -679,6 +679,25 @@
             ],
             "test_method": "manual",
             "test_instructions": "1. Open the app with 5+ events\n2. Set filter to 'til sunrise'\n3. Verify time drawer appears at bottom\n4. Drag the handle left/right\n5. Verify markers scale dynamically (70%-130%)\n6. Verify largest markers have glow effect\n7. Try with < 5 events - drawer should show threshold message\n8. Change filter to '6h' - drawer should disappear\n9. Test on mobile - touch gestures should work"
+        },
+        {
+            "id": "keyboard-navigation",
+            "name": "Keyboard Navigation",
+            "description": "Full keyboard controls for map navigation and event browsing - ESC to close popups, arrow keys to navigate events, +/- to zoom",
+            "category": "frontend",
+            "implemented": true,
+            "files": [
+                "assets/js/app.js"
+            ],
+            "code_patterns": [
+                {
+                    "file": "assets/js/app.js",
+                    "pattern": "currentEventIndex|navigateEvents|keydown.*Escape|keydown.*Arrow",
+                    "description": "Keyboard event handling and navigation logic"
+                }
+            ],
+            "test_method": "manual",
+            "test_instructions": "1. Open the app and click on an event to view details\n2. Press ESC - detail popup should close\n3. Open an event detail again\n4. Press Right Arrow - should navigate to next event (sorted by time)\n5. Press Left Arrow - should navigate to previous event\n6. Navigate past the last event - should wrap to first event\n7. Press + or = key - map should zoom in\n8. Press - or _ key - map should zoom out\n9. Test that map centers on events during arrow navigation\n10. Open filter dropdown and press ESC - dropdown should close"
         }
     ]
 }
