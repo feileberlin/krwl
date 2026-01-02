@@ -234,16 +234,20 @@ class SiteGenerator:
             print()
         return True
     
-    def generate_favicon_dataurl(self) -> str:
-        """Generate base64 data URL for favicon"""
-        favicon_path = self.static_path / 'favicon.svg'
+    def create_favicon_data_url(self) -> str:
+        """Create base64 data URL for favicon"""
+        # Try assets directory first, then static
+        favicon_path = self.base_path / 'assets' / 'favicon.svg'
         if not favicon_path.exists():
-            return "favicon.svg"
+            favicon_path = self.static_path / 'favicon.svg'
+        if not favicon_path.exists():
+            # Return fallback - browser will handle missing favicon
+            return "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E"
         
         import base64
         svg_content = self.read_text_file(favicon_path)
-        b64_data = base64.b64encode(svg_content.encode()).decode()
-        return f"data:image/svg+xml;base64,{b64_data}"
+        base64_data = base64.b64encode(svg_content.encode()).decode()
+        return f"data:image/svg+xml;base64,{base64_data}"
     
     def read_logo_svg(self) -> str:
         """Read logo SVG content for inline use"""
@@ -257,111 +261,89 @@ class SiteGenerator:
         svg_content = self.read_text_file(logo_path)
         return svg_content
     
-    def _parse_datetime(self, datetime_str: str) -> datetime:
-        """Parse datetime string, removing timezone suffix if present."""
-        if not datetime_str:
-            return None
-        # Remove timezone suffix for simple parsing
-        clean_str = datetime_str.split('+')[0].rstrip('Z')
-        return datetime.fromisoformat(clean_str)
-    
-    def _is_event_active(self, event: Dict, now: datetime) -> tuple:
-        """Check if event is active (not past). Returns (is_active, start_time, is_running)."""
-        start_time = self._parse_datetime(event.get('start_time', ''))
-        if not start_time:
-            return False, None, False
-        
-        end_time = self._parse_datetime(event.get('end_time', ''))
-        if not end_time:
-            # Assume 2hr duration if no end time
-            end_time = start_time.replace(hour=start_time.hour + 2)
-        
-        is_active = end_time >= now
-        is_running = start_time <= now <= end_time
-        return is_active, start_time, is_running
-    
-    def _filter_and_sort_events(self, events: List[Dict]) -> List[Dict]:
-        """Filter future events and sort by running status, then start time."""
-        now = datetime.now()
-        active_events = []
+    def filter_and_sort_future_events(self, events: List[Dict]) -> List[Dict]:
+        """Filter out past events and sort (running events first, then chronological)."""
+        current_time = datetime.now()
+        future_events = []
         
         for event in events:
             try:
-                is_active, start_time, is_running = self._is_event_active(event, now)
-                if is_active:
-                    active_events.append({
+                # Parse times (remove timezone suffix)
+                start_time_str = event.get('start_time', '').split('+')[0].rstrip('Z')
+                if not start_time_str:
+                    continue
+                start_time = datetime.fromisoformat(start_time_str)
+                
+                # Get or estimate end time
+                end_time_str = event.get('end_time', '').split('+')[0].rstrip('Z')
+                end_time = datetime.fromisoformat(end_time_str) if end_time_str else start_time.replace(hour=start_time.hour + 2)
+                
+                # Include if not past
+                if end_time >= current_time:
+                    future_events.append({
                         'event': event,
                         'start_time': start_time,
-                        'is_running': is_running
+                        'is_running': start_time <= current_time <= end_time
                     })
             except:
-                continue  # Skip invalid events
+                continue
         
-        # Sort: running first, then by start time
-        active_events.sort(key=lambda x: (not x['is_running'], x['start_time']))
-        return active_events
+        # Sort: running first, then chronological
+        future_events.sort(key=lambda x: (not x['is_running'], x['start_time']))
+        return future_events
     
-    def _format_event_card(self, item: Dict) -> str:
-        """Format a single event as HTML card."""
-        event = item['event']
-        start_time = item['start_time']
-        is_running = item['is_running']
+    def build_noscript_html(self, events: List[Dict], content_en: Dict, app_name: str) -> str:
+        """Build complete noscript HTML with event list."""
+        future_events = self.filter_and_sort_future_events(events)
+        translations = content_en.get('noscript', {})
         
-        # Format date and time
-        date_str = start_time.strftime('%A, %B %d, %Y')
-        time_str = start_time.strftime('%I:%M %p').lstrip('0')
+        # Header
+        html_parts = [
+            '<div style="max-width:1200px;margin:0 auto;padding:2rem;background:#1a1a1a;color:#fff;font-family:sans-serif">',
+            f'<h1 style="color:#FF69B4;margin-bottom:1rem">{html.escape(app_name)}</h1>',
+            '<div style="background:#401B2D;padding:1rem;border-radius:8px;margin-bottom:1.5rem;border-left:4px solid #FF69B4">',
+            f'<p style="margin:0;color:#FFB3DF"><strong>{html.escape(translations.get("warning", "⚠️ JavaScript is disabled."))}</strong></p>',
+            f'<p style="margin:0.5rem 0 0 0;color:#ccc;font-size:0.9rem">{html.escape(translations.get("info", "Enable JavaScript for interactive map."))}</p>',
+            '</div>'
+        ]
         
-        # Escape all text content
-        title = html.escape(event.get('title', 'Untitled Event'))
-        description = html.escape(event.get('description', 'No description available.'))
-        location = html.escape(event.get('location', {}).get('name', 'Location not specified'))
-        url = event.get('url', '')
-        
-        # Build badge and link
-        badge = '<span style="background:#4CAF50;color:#fff;padding:0.25rem 0.75rem;border-radius:4px;font-size:0.85rem;font-weight:600;margin-left:0.5rem">HAPPENING NOW</span>' if is_running else ''
-        link = f'<a href="{html.escape(url)}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:#FF69B4;color:#fff;padding:0.5rem 1rem;border-radius:5px;text-decoration:none;font-weight:600">View Event Details →</a>' if url else ''
-        
-        return f'''<article style="background:#2a2a2a;border-radius:8px;padding:1.5rem;border-left:4px solid #FF69B4">
-<h3 style="color:#FF69B4;margin:0 0 0.75rem 0;font-size:1.25rem">{title}{badge}</h3>
-<div style="color:#ccc;margin-bottom:1rem">
-<p style="margin:0.25rem 0"><strong style="color:#FFB3DF">📅 Date:</strong> {html.escape(date_str)}</p>
-<p style="margin:0.25rem 0"><strong style="color:#FFB3DF">🕐 Time:</strong> {html.escape(time_str)}</p>
-<p style="margin:0.25rem 0"><strong style="color:#FFB3DF">📍 Location:</strong> {location}</p>
-</div>
-<p style="color:#ddd;line-height:1.6;margin-bottom:1rem">{description}</p>
-{link}
-</article>'''
-    
-    def generate_noscript_content(self, events: List[Dict], content_en: Dict, app_name: str) -> str:
-        """Generate noscript HTML with sorted event list."""
-        noscript = content_en.get('noscript', {})
-        active_events = self._filter_and_sort_events(events)
-        
-        # Build header
-        header = f'''<div style="max-width:1200px;margin:0 auto;padding:2rem;background:#1a1a1a;color:#fff;font-family:sans-serif">
-<h1 style="color:#FF69B4;margin-bottom:1rem">{html.escape(app_name)}</h1>
-<div style="background:#401B2D;padding:1rem;border-radius:8px;margin-bottom:1.5rem;border-left:4px solid #FF69B4">
-<p style="margin:0;color:#FFB3DF"><strong>{html.escape(noscript.get('warning', '⚠️ JavaScript is disabled. Showing static event list.'))}</strong></p>
-<p style="margin:0.5rem 0 0 0;color:#ccc;font-size:0.9rem">{html.escape(noscript.get('info', 'Enable JavaScript for the interactive map experience with filters and geolocation.'))}</p>
-</div>'''
-        
-        # Build event list or empty message
-        if not active_events:
-            content = f'<p style="color:#888;text-align:center;padding:2rem">{html.escape(noscript.get("no_events", "No upcoming events found."))}</p>'
+        # Events or empty message
+        if not future_events:
+            html_parts.append(f'<p style="color:#888;text-align:center;padding:2rem">{html.escape(translations.get("no_events", "No upcoming events."))}</p>')
         else:
-            event_cards = '\n'.join(self._format_event_card(item) for item in active_events)
-            content = f'''<h2 style="color:#FF69B4;font-size:1.5rem;margin-bottom:1.5rem">{html.escape(noscript.get('upcoming_events', 'Upcoming Events'))} <span style="color:#888;font-size:1rem">({len(active_events)} events)</span></h2>
-<div style="display:flex;flex-direction:column;gap:1.5rem">
-{event_cards}
-</div>'''
+            html_parts.append(f'<h2 style="color:#FF69B4;font-size:1.5rem;margin-bottom:1.5rem">{html.escape(translations.get("upcoming_events", "Upcoming Events"))} <span style="color:#888;font-size:1rem">({len(future_events)} events)</span></h2>')
+            html_parts.append('<div style="display:flex;flex-direction:column;gap:1.5rem">')
+            
+            for event_item in future_events:
+                event_data = event_item['event']
+                event_start_time = event_item['start_time']
+                event_is_running = event_item['is_running']
+                
+                running_badge = '<span style="background:#4CAF50;color:#fff;padding:0.25rem 0.75rem;border-radius:4px;font-size:0.85rem;font-weight:600;margin-left:0.5rem">HAPPENING NOW</span>' if event_is_running else ''
+                event_link = f'<a href="{html.escape(event_data.get("url", ""))}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:#FF69B4;color:#fff;padding:0.5rem 1rem;border-radius:5px;text-decoration:none;font-weight:600">View Event Details →</a>' if event_data.get('url') else ''
+                
+                html_parts.append(f'''<article style="background:#2a2a2a;border-radius:8px;padding:1.5rem;border-left:4px solid #FF69B4">
+<h3 style="color:#FF69B4;margin:0 0 0.75rem 0;font-size:1.25rem">{html.escape(event_data.get('title', 'Untitled'))}{running_badge}</h3>
+<div style="color:#ccc;margin-bottom:1rem">
+<p style="margin:0.25rem 0"><strong style="color:#FFB3DF">📅 Date:</strong> {html.escape(event_start_time.strftime('%A, %B %d, %Y'))}</p>
+<p style="margin:0.25rem 0"><strong style="color:#FFB3DF">🕐 Time:</strong> {html.escape(event_start_time.strftime('%I:%M %p').lstrip('0'))}</p>
+<p style="margin:0.25rem 0"><strong style="color:#FFB3DF">📍 Location:</strong> {html.escape(event_data.get('location', {}).get('name', 'Unknown'))}</p>
+</div>
+<p style="color:#ddd;line-height:1.6;margin-bottom:1rem">{html.escape(event_data.get('description', ''))}</p>
+{event_link}
+</article>''')
+            
+            html_parts.append('</div>')
         
-        # Build footer
-        footer = f'''<footer style="margin-top:2rem;padding-top:2rem;border-top:1px solid #3a3a3a;color:#888;text-align:center">
-<p style="margin:0">{html.escape(noscript.get('footer', 'For the best experience, please enable JavaScript to access the interactive map.'))}</p>
-</footer>
-</div>'''
+        # Footer
+        html_parts.extend([
+            '<footer style="margin-top:2rem;padding-top:2rem;border-top:1px solid #3a3a3a;color:#888;text-align:center">',
+            f'<p style="margin:0">{html.escape(translations.get("footer", "Enable JavaScript for best experience."))}</p>',
+            '</footer>',
+            '</div>'
+        ])
         
-        return header + content + footer
+        return ''.join(html_parts)
     
     def build_html_structure(
         self, 
@@ -377,11 +359,11 @@ class SiteGenerator:
         # Use first config for basic info (they should be similar)
         primary_config = configs[0] if configs else {}
         app_name = primary_config.get('app', {}).get('name', 'KRWL HOF Community Events')
-        favicon = self.generate_favicon_dataurl()
+        favicon = self.create_favicon_data_url()
         logo_svg = self.read_logo_svg()
         
-        # Generate noscript content with sorted events
-        noscript_html = self.generate_noscript_content(events, content_en, app_name)
+        # Build noscript HTML with sorted events
+        noscript_html = self.build_noscript_html(events, content_en, app_name)
         
         # Runtime config selection script
         config_loader = '''
