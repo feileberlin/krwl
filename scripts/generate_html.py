@@ -50,7 +50,7 @@ document.getElementById('main-content').style.display='block';
 </html>'''
     
     # Write output
-    out = (base/'preview'/'index.html') if mode=='preview' else (static/'index.html')
+    out = (static/'preview'/'index.html') if mode=='preview' else (static/'index.html')
     out.parent.mkdir(exist_ok=True)
     out.write_text(html)
     print(f"✓ Generated {out.relative_to(base)} ({len(html)//1024}KB, {len(events)} events)")

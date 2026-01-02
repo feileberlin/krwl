@@ -32,7 +32,7 @@ jobs:
             MODE="production"
           else
             python3 scripts/generate_html.py preview
-            FILE="preview/index.html"
+            FILE="static/preview/index.html"
             MODE="preview"
           fi
           echo "FILE=$FILE" >> $GITHUB_ENV
@@ -43,7 +43,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           if [ "$MODE" == "preview" ]; then
-            git add preview/index.html static/events.demo.json
+            git add static/preview/index.html static/events.demo.json
           else
             git add static/index.html
           fi
@@ -57,7 +57,7 @@ jobs:
             if [ "$MODE" == "preview" ]; then
               echo ""
               echo "📥 NO DEPLOYMENT - Download and open:"
-              echo "  https://github.com/${{ github.repository }}/raw/preview/preview/index.html"
+              echo "  https://github.com/${{ github.repository }}/raw/preview/static/preview/index.html"
             else
               echo ""
               echo "🚀 Deployed at https://krwl.in/"

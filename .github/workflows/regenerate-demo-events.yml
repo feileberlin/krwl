@@ -1,0 +1,95 @@
+name: 🎭 Regenerate Demo Events
+
+on:
+  workflow_dispatch:
+    inputs:
+      rebuild_html:
+        description: 'Also rebuild preview HTML after regenerating demo events'
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Generate fresh demo events
+        run: |
+          echo "🎭 Regenerating demo events with current timestamps..."
+          python3 scripts/generate_demo_events.py > static/events.demo.json
+          echo "✓ Demo events regenerated"
+          
+          # Show summary
+          EVENT_COUNT=$(python3 -c "import json; print(len(json.load(open('static/events.demo.json'))['events']))")
+          echo "📊 Generated $EVENT_COUNT demo events"
+
+      - name: Download Leaflet library (if rebuilding HTML)
+        if: inputs.rebuild_html == true
+        run: ./download-libs.sh
+
+      - name: Rebuild preview HTML
+        if: inputs.rebuild_html == true
+        run: |
+          echo "🔨 Rebuilding preview HTML with new demo events..."
+          python3 scripts/generate_html.py preview
+          echo "✓ Preview HTML rebuilt"
+
+      - name: Commit changes
+        run: |
+          if [ "${{ inputs.rebuild_html }}" == "true" ]; then
+            git add static/events.demo.json static/preview/index.html
+            MSG="Regenerate demo events and rebuild preview HTML"
+          else
+            git add static/events.demo.json
+            MSG="Regenerate demo events"
+          fi
+          
+          if git diff --staged --quiet; then
+            echo "ℹ️ No changes to commit"
+          else
+            git commit -m "$MSG [skip ci]"
+            git push
+            echo ""
+            echo "✅ Successfully regenerated demo events!"
+            if [ "${{ inputs.rebuild_html }}" == "true" ]; then
+              echo "📄 Preview HTML also rebuilt at static/preview/index.html"
+            fi
+          fi
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Demo Events Regeneration Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f "static/events.demo.json" ]; then
+            EVENT_COUNT=$(python3 -c "import json; print(len(json.load(open('static/events.demo.json'))['events']))")
+            echo "✅ **Demo events regenerated:** $EVENT_COUNT events" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            if [ "${{ inputs.rebuild_html }}" == "true" ]; then
+              echo "✅ **Preview HTML rebuilt:** static/preview/index.html" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "ℹ️ **Preview HTML:** Not rebuilt (can be triggered separately)" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "❌ **Error:** Demo events file not found" >> $GITHUB_STEP_SUMMARY
+          fi
