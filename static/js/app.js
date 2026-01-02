@@ -1235,8 +1235,39 @@ class EventsApp {
                 hideAllDropdowns();
             }
             
-            // Arrow keys: Navigate between events (when detail is open)
-            if (eventDetail && !eventDetail.classList.contains('hidden')) {
+            // SPACE: Center map on user's geolocation
+            if (e.key === ' ' || e.code === 'Space') {
+                if (this.map && this.userLocation) {
+                    this.map.setView([this.userLocation.lat, this.userLocation.lon], 13);
+                    e.preventDefault();
+                }
+            }
+            
+            // SHIFT + Arrow keys: Pan the map
+            if (e.shiftKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+                if (this.map) {
+                    const panAmount = 100; // pixels to pan
+                    const center = this.map.getCenter();
+                    
+                    switch(e.key) {
+                        case 'ArrowUp':
+                            this.map.panBy([0, -panAmount]);
+                            break;
+                        case 'ArrowDown':
+                            this.map.panBy([0, panAmount]);
+                            break;
+                        case 'ArrowLeft':
+                            this.map.panBy([-panAmount, 0]);
+                            break;
+                        case 'ArrowRight':
+                            this.map.panBy([panAmount, 0]);
+                            break;
+                    }
+                    e.preventDefault();
+                }
+            }
+            // Arrow keys: Navigate between events (when detail is open and SHIFT is not pressed)
+            else if (eventDetail && !eventDetail.classList.contains('hidden')) {
                 if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
                     this.navigateEvents(e.key === 'ArrowRight' ? 1 : -1);
                     e.preventDefault();
