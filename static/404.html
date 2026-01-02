@@ -67,9 +67,9 @@
             var baseHref = '/';
             var hostname = window.location.hostname;
             
-            if (hostname.indexOf('github.io') !== -1) {
+            if (hostname.includes('github.io')) {
                 // Extract repo name from path (first segment)
-                var parts = path.split('/').filter(function(p) { return p; });
+                var parts = path.split('/').filter(function(part) { return part; });
                 if (parts.length > 0) {
                     baseHref = '/' + parts[0] + '/';
                 }
