@@ -237,6 +237,8 @@ class EventsApp {
                 const data = window.__INLINE_EVENTS_DATA__;
                 this.events = data.events || [];
                 this.log(`Loaded ${this.events.length} events from inline data`);
+                // Process template events with relative times
+                this.events = this.processTemplateEvents(this.events);
                 return;
             }
             
@@ -273,11 +275,116 @@ class EventsApp {
                 this.log(`Loaded ${allEvents.length} events from ${url}`);
             }
             
-            this.events = allEvents;
+            // Process template events with relative times
+            this.events = this.processTemplateEvents(allEvents);
         } catch (error) {
             console.error('Error loading events:', error);
             this.events = [];
         }
+    }
+    
+    processTemplateEvents(events) {
+        /**
+         * Process events with relative_time specifications to calculate actual timestamps.
+         * This allows demo events to always have fresh timestamps on every page load.
+         * Creates copies of events to avoid mutation.
+         */
+        const now = new Date();
+        
+        return events.map(event => {
+            // If no relative_time spec, return event as-is
+            if (!event.relative_time) {
+                return event;
+            }
+            
+            // Create a copy of the event to avoid mutation
+            const processedEvent = { ...event };
+            const spec = event.relative_time;
+            const type = spec.type;
+            
+            let startTime, endTime;
+            
+            if (type === 'offset') {
+                // Calculate start time from current time plus offset
+                startTime = new Date(now);
+                
+                // Add hours offset
+                if (spec.hours) {
+                    startTime.setHours(startTime.getHours() + spec.hours);
+                }
+                
+                // Add minutes offset
+                if (spec.minutes) {
+                    startTime.setMinutes(startTime.getMinutes() + spec.minutes);
+                }
+                
+                // Calculate end time using duration
+                const durationMs = (spec.duration_hours || 2) * 60 * 60 * 1000;
+                endTime = new Date(startTime.getTime() + durationMs);
+                
+                // Apply timezone offset if specified
+                const tzOffset = spec.timezone_offset || 0;
+                if (tzOffset !== 0) {
+                    // Format with timezone
+                    const sign = tzOffset >= 0 ? '+' : '-';
+                    const hours = Math.abs(Math.floor(tzOffset));
+                    const minutes = Math.abs((tzOffset % 1) * 60);
+                    const tzString = `${sign}${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+                    
+                    processedEvent.start_time = this.formatDateTimeWithTZ(startTime, tzString);
+                    processedEvent.end_time = this.formatDateTimeWithTZ(endTime, tzString);
+                } else {
+                    processedEvent.start_time = this.formatDateTime(startTime);
+                    processedEvent.end_time = this.formatDateTime(endTime);
+                }
+                
+            } else if (type === 'sunrise_relative') {
+                // Calculate next sunrise (simplified: 6 AM)
+                const sunrise = this.getNextSunrise();
+                
+                // Calculate start time
+                startTime = new Date(sunrise);
+                if (spec.start_offset_hours) {
+                    startTime.setHours(startTime.getHours() + spec.start_offset_hours);
+                }
+                if (spec.start_offset_minutes) {
+                    startTime.setMinutes(startTime.getMinutes() + spec.start_offset_minutes);
+                }
+                
+                // Calculate end time
+                endTime = new Date(sunrise);
+                if (spec.end_offset_hours) {
+                    endTime.setHours(endTime.getHours() + spec.end_offset_hours);
+                }
+                if (spec.end_offset_minutes) {
+                    endTime.setMinutes(endTime.getMinutes() + spec.end_offset_minutes);
+                }
+                
+                processedEvent.start_time = this.formatDateTime(startTime);
+                processedEvent.end_time = this.formatDateTime(endTime);
+            }
+            
+            // Update published_at to current time
+            processedEvent.published_at = this.formatDateTime(now);
+            
+            return processedEvent;
+        });
+    }
+    
+    formatDateTime(date) {
+        // Format as ISO 8601 without timezone: YYYY-MM-DDTHH:mm:ss
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+    }
+    
+    formatDateTimeWithTZ(date, tzString) {
+        // Format as ISO 8601 with timezone: YYYY-MM-DDTHH:mm:ss+HH:mm
+        return this.formatDateTime(date) + tzString;
     }
     
     calculateDistance(lat1, lon1, lat2, lon2) {

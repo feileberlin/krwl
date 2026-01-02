@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relative Time Event Processing Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-left: 4px solid #4CAF50;
+            background: #f0f8f0;
+        }
+        .test-result.error {
+            border-left-color: #f44336;
+            background: #fff0f0;
+        }
+        .event-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .event-title {
+            font-weight: bold;
+            color: #2196F3;
+            margin-bottom: 8px;
+        }
+        .event-time {
+            color: #666;
+            font-size: 0.9em;
+            margin: 5px 0;
+        }
+        .event-relative {
+            color: #FF9800;
+            font-size: 0.85em;
+            font-style: italic;
+        }
+        .timestamp {
+            color: #999;
+            font-size: 0.8em;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Relative Time Event Processing Test</h1>
+    
+    <div class="test-section">
+        <h2>Test Environment</h2>
+        <div id="test-info"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Results</h2>
+        <div id="test-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Processed Events Preview</h2>
+        <div id="events-preview"></div>
+    </div>
+
+    <script>
+        // Copy the processTemplateEvents function from app.js
+        class EventProcessor {
+            processTemplateEvents(events) {
+                const now = new Date();
+                
+                return events.map(event => {
+                    if (!event.relative_time) {
+                        return event;
+                    }
+                    
+                    const spec = event.relative_time;
+                    const type = spec.type;
+                    
+                    let startTime, endTime;
+                    
+                    if (type === 'offset') {
+                        startTime = new Date(now);
+                        
+                        if (spec.hours) {
+                            startTime.setHours(startTime.getHours() + spec.hours);
+                        }
+                        
+                        if (spec.minutes) {
+                            startTime.setMinutes(startTime.getMinutes() + spec.minutes);
+                        }
+                        
+                        const durationMs = (spec.duration_hours || 2) * 60 * 60 * 1000;
+                        endTime = new Date(startTime.getTime() + durationMs);
+                        
+                        const tzOffset = spec.timezone_offset || 0;
+                        if (tzOffset !== 0) {
+                            const sign = tzOffset >= 0 ? '+' : '-';
+                            const hours = Math.abs(Math.floor(tzOffset));
+                            const minutes = Math.abs((tzOffset % 1) * 60);
+                            const tzString = `${sign}${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+                            
+                            event.start_time = this.formatDateTimeWithTZ(startTime, tzString);
+                            event.end_time = this.formatDateTimeWithTZ(endTime, tzString);
+                        } else {
+                            event.start_time = this.formatDateTime(startTime);
+                            event.end_time = this.formatDateTime(endTime);
+                        }
+                        
+                    } else if (type === 'sunrise_relative') {
+                        const sunrise = this.getNextSunrise();
+                        
+                        startTime = new Date(sunrise);
+                        if (spec.start_offset_hours) {
+                            startTime.setHours(startTime.getHours() + spec.start_offset_hours);
+                        }
+                        if (spec.start_offset_minutes) {
+                            startTime.setMinutes(startTime.getMinutes() + spec.start_offset_minutes);
+                        }
+                        
+                        endTime = new Date(sunrise);
+                        if (spec.end_offset_hours) {
+                            endTime.setHours(endTime.getHours() + spec.end_offset_hours);
+                        }
+                        if (spec.end_offset_minutes) {
+                            endTime.setMinutes(endTime.getMinutes() + spec.end_offset_minutes);
+                        }
+                        
+                        event.start_time = this.formatDateTime(startTime);
+                        event.end_time = this.formatDateTime(endTime);
+                    }
+                    
+                    event.published_at = this.formatDateTime(now);
+                    
+                    return event;
+                });
+            }
+            
+            getNextSunrise() {
+                const now = new Date();
+                const sunrise = new Date(now);
+                sunrise.setHours(6, 0, 0, 0);
+                if (now.getHours() >= 6) {
+                    sunrise.setDate(sunrise.getDate() + 1);
+                }
+                return sunrise;
+            }
+            
+            formatDateTime(date) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                const seconds = String(date.getSeconds()).padStart(2, '0');
+                return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+            }
+            
+            formatDateTimeWithTZ(date, tzString) {
+                return this.formatDateTime(date) + tzString;
+            }
+        }
+
+        // Test data
+        const testEvents = [
+            {
+                id: "demo_happening_now",
+                title: "[DEMO] Event Happening Now",
+                relative_time: {
+                    type: "offset",
+                    minutes: -30,
+                    duration_hours: 2
+                }
+            },
+            {
+                id: "demo_starting_5min",
+                title: "[DEMO] Starting in 5 Minutes",
+                relative_time: {
+                    type: "offset",
+                    minutes: 5,
+                    duration_hours: 2
+                }
+            },
+            {
+                id: "demo_in_1hour",
+                title: "[DEMO] Starting in 1 Hour",
+                relative_time: {
+                    type: "offset",
+                    hours: 1,
+                    duration_hours: 2
+                }
+            },
+            {
+                id: "demo_utc_plus1",
+                title: "[DEMO] Event in UTC+1",
+                relative_time: {
+                    type: "offset",
+                    hours: 1,
+                    duration_hours: 2,
+                    timezone_offset: 1
+                }
+            },
+            {
+                id: "demo_before_sunrise",
+                title: "[DEMO] Before Sunrise",
+                relative_time: {
+                    type: "sunrise_relative",
+                    end_offset_minutes: -5,
+                    start_offset_hours: -2
+                }
+            },
+            {
+                id: "demo_no_relative",
+                title: "[DEMO] Regular Event (No Relative Time)",
+                start_time: "2026-01-15T18:00:00",
+                end_time: "2026-01-15T20:00:00"
+            }
+        ];
+
+        // Run tests
+        function runTests() {
+            const processor = new EventProcessor();
+            const now = new Date();
+            
+            // Display test info
+            document.getElementById('test-info').innerHTML = `
+                <div class="event-time">
+                    <strong>Current Time:</strong> <span class="timestamp">${now.toLocaleString()}</span><br>
+                    <strong>Next Sunrise:</strong> <span class="timestamp">${processor.getNextSunrise().toLocaleString()}</span><br>
+                    <strong>Test Events:</strong> ${testEvents.length}
+                </div>
+            `;
+            
+            // Process events
+            const processed = processor.processTemplateEvents([...testEvents]);
+            
+            // Verify results
+            const results = [];
+            
+            // Test 1: Events with relative_time should have updated timestamps
+            const relativeEvents = processed.filter(e => testEvents.find(te => te.id === e.id)?.relative_time);
+            results.push({
+                name: "Events with relative_time have updated timestamps",
+                passed: relativeEvents.every(e => e.start_time && e.end_time),
+                details: `${relativeEvents.filter(e => e.start_time && e.end_time).length}/${relativeEvents.length} events updated`
+            });
+            
+            // Test 2: Event "happening now" should have start time in the past
+            const nowEvent = processed.find(e => e.id === "demo_happening_now");
+            const nowEventStarted = new Date(nowEvent.start_time) < now;
+            results.push({
+                name: "Event 'happening now' has start time in the past",
+                passed: nowEventStarted,
+                details: `Start: ${nowEvent.start_time}, Now: ${processor.formatDateTime(now)}`
+            });
+            
+            // Test 3: Event "starting in 5 minutes" should have start time in the future
+            const futureEvent = processed.find(e => e.id === "demo_starting_5min");
+            const futureEventFuture = new Date(futureEvent.start_time) > now;
+            results.push({
+                name: "Event 'starting in 5 minutes' has start time in the future",
+                passed: futureEventFuture,
+                details: `Start: ${futureEvent.start_time}`
+            });
+            
+            // Test 4: Timezone event should have timezone suffix
+            const tzEvent = processed.find(e => e.id === "demo_utc_plus1");
+            const hasTz = tzEvent.start_time.includes('+01:00');
+            results.push({
+                name: "Timezone event has timezone suffix",
+                passed: hasTz,
+                details: `Timestamp: ${tzEvent.start_time}`
+            });
+            
+            // Test 5: Event without relative_time should be unchanged
+            const regularEvent = processed.find(e => e.id === "demo_no_relative");
+            const unchanged = regularEvent.start_time === "2026-01-15T18:00:00";
+            results.push({
+                name: "Event without relative_time is unchanged",
+                passed: unchanged,
+                details: `Timestamp: ${regularEvent.start_time}`
+            });
+            
+            // Display results
+            const resultsHtml = results.map(r => `
+                <div class="test-result ${r.passed ? '' : 'error'}">
+                    <strong>${r.passed ? '✅' : '❌'} ${r.name}</strong><br>
+                    <small>${r.details}</small>
+                </div>
+            `).join('');
+            
+            document.getElementById('test-results').innerHTML = resultsHtml;
+            
+            // Display processed events
+            const eventsHtml = processed.map(e => `
+                <div class="event-card">
+                    <div class="event-title">${e.title}</div>
+                    <div class="event-time"><strong>Start:</strong> ${e.start_time || 'N/A'}</div>
+                    <div class="event-time"><strong>End:</strong> ${e.end_time || 'N/A'}</div>
+                    ${e.relative_time ? `
+                        <div class="event-relative">
+                            <strong>Relative Time Spec:</strong> 
+                            <code>${JSON.stringify(e.relative_time)}</code>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+            
+            document.getElementById('events-preview').innerHTML = eventsHtml;
+            
+            // Summary
+            const passed = results.filter(r => r.passed).length;
+            const total = results.length;
+            console.log(`✅ Tests: ${passed}/${total} passed`);
+        }
+
+        // Run tests on load
+        window.addEventListener('DOMContentLoaded', runTests);
+    </script>
+</body>
+</html>

@@ -5,6 +5,29 @@ All notable changes to the KRWL HOF Community Events project will be documented 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- **Dynamic Event Templates with Relative Times**: Demo events now use `relative_time` specifications that calculate actual timestamps on every page reload
+  - Two types supported: `offset` (relative to current time) and `sunrise_relative` (relative to next sunrise)
+  - Timezone offset support for international testing
+  - Comprehensive test suite (`tests/test_relative_times.py` and HTML test page)
+  - Full documentation in `docs/RELATIVE_TIME_TEMPLATES.md`
+- Demo events always show accurate relative times like "happening now" or "starting in 5 minutes"
+- `processTemplateEvents()` method in frontend to calculate timestamps dynamically
+- All 23 demo events now include `relative_time` field for automatic updating
+
+### Fixed
+- Duplicate events in embedded HTML (static/events.json now contains only real events)
+- Event mutation issue in `processTemplateEvents()` (now creates copies instead of mutating)
+- Missing `relative_time` field for `demo_far_away` event
+- Unused imports in test file
+
+### Changed
+- `scripts/generate_demo_events.py` now includes `relative_time` specifications for all demo events
+- Demo event generation now loads from `event-data/events.json` instead of `static/events.json`
+- `assets/js/app.js` updated to process template events without mutation
+
 ## [1.0.0] - 2026-01-01
 
 ### Major Features
