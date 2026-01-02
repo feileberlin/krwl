@@ -14,14 +14,14 @@ def load_config(base_path):
 
 def load_events(base_path):
     """Load published events from events.json"""
-    events_path = base_path / 'static' / 'events.json'
+    events_path = base_path / 'data' / 'events.json'
     with open(events_path, 'r') as f:
         return json.load(f)
 
 
 def save_events(base_path, events_data):
     """Save published events to events.json"""
-    events_path = base_path / 'static' / 'events.json'
+    events_path = base_path / 'data' / 'events.json'
     events_data['last_updated'] = datetime.now().isoformat()
     with open(events_path, 'w') as f:
         json.dump(events_data, f, indent=2)
@@ -29,14 +29,14 @@ def save_events(base_path, events_data):
 
 def load_pending_events(base_path):
     """Load pending events from pending_events.json"""
-    pending_path = base_path / 'static' / 'pending_events.json'
+    pending_path = base_path / 'data' / 'pending_events.json'
     with open(pending_path, 'r') as f:
         return json.load(f)
 
 
 def save_pending_events(base_path, pending_data):
     """Save pending events to pending_events.json"""
-    pending_path = base_path / 'static' / 'pending_events.json'
+    pending_path = base_path / 'data' / 'pending_events.json'
     pending_data['last_scraped'] = datetime.now().isoformat()
     with open(pending_path, 'w') as f:
         json.dump(pending_data, f, indent=2)
@@ -44,7 +44,7 @@ def save_pending_events(base_path, pending_data):
 
 def load_rejected_events(base_path):
     """Load rejected events from rejected_events.json"""
-    rejected_path = base_path / 'static' / 'rejected_events.json'
+    rejected_path = base_path / 'data' / 'rejected_events.json'
     try:
         with open(rejected_path, 'r') as f:
             return json.load(f)
@@ -57,7 +57,7 @@ def load_rejected_events(base_path):
 
 def save_rejected_events(base_path, rejected_data):
     """Save rejected events to rejected_events.json"""
-    rejected_path = base_path / 'static' / 'rejected_events.json'
+    rejected_path = base_path / 'data' / 'rejected_events.json'
     rejected_data['last_updated'] = datetime.now().isoformat()
     with open(rejected_path, 'w') as f:
         json.dump(rejected_data, f, indent=2)
@@ -264,7 +264,7 @@ def filter_events_by_time(events, config):
 
 def backup_published_event(base_path, event):
     """
-    Backup a single published event to backups/events/ folder.
+    Backup a single published event to data/backups/events/ folder.
     Each event is saved as a separate JSON file named by event ID.
     
     Args:
@@ -277,7 +277,7 @@ def backup_published_event(base_path, event):
     import os
     
     # Create backups directory structure
-    backups_dir = base_path / 'backups' / 'events'
+    backups_dir = base_path / 'data' / 'backups' / 'events'
     backups_dir.mkdir(parents=True, exist_ok=True)
     
     # Generate filename from event ID and timestamp
@@ -302,7 +302,7 @@ def backup_published_event(base_path, event):
 
 def load_historical_events(base_path):
     """
-    Load all historical events from backups/events/ folder.
+    Load all historical events from data/backups/events/ folder.
     Returns a list of event dictionaries from all backup files.
     
     This is used by the scraper to check against historical data
@@ -314,7 +314,7 @@ def load_historical_events(base_path):
     Returns:
         List of event dictionaries
     """
-    backups_dir = base_path / 'backups' / 'events'
+    backups_dir = base_path / 'data' / 'backups' / 'events'
     historical_events = []
     
     if not backups_dir.exists():

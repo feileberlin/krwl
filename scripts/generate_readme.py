@@ -40,10 +40,10 @@ def get_cli_help(script_path):
 
 
 def load_config():
-    """Load configuration from static/config.json"""
-    config_path = Path('static/config.json')
+    """Load configuration from data/config.json"""
+    config_path = Path('data/config.json')
     if not config_path.exists():
-        print("❌ Error: static/config.json not found")
+        print("❌ Error: data/config.json not found")
         sys.exit(1)
     
     with open(config_path, 'r', encoding='utf-8') as f:
@@ -153,7 +153,7 @@ python3 src/event_manager.py --help       # Show all commands
     # Add configuration section
     readme += f"""## ⚙️ Configuration
 
-All configuration lives in `static/config.json`:
+All configuration lives in `data/config.json`:
 
 ```json
 {{
@@ -214,20 +214,30 @@ python3 scripts/check_kiss.py --verbose
 
 ```
 krwl-hof/
-├── static/              # Frontend (HTML, CSS, JS) and event data
-│   ├── index.html       # Main app (auto-generated, DO NOT EDIT)
+├── static/              # Only index.html
+│   └── index.html       # Main app (auto-generated, DO NOT EDIT)
+├── assets/              # Frontend assets (CSS, JS, libraries, icons)
+│   ├── css/             # Stylesheets
+│   ├── js/              # JavaScript modules
+│   ├── lib/             # Third-party libraries (Leaflet.js)
+│   ├── markers/         # Event marker SVG icons
+│   ├── manifest.json    # PWA manifest
+│   └── *.svg            # App icons (favicon, PWA icons, logo)
+├── data/                # All data files
 │   ├── events.json      # Published events
 │   ├── pending_events.json  # Events awaiting approval
+│   ├── rejected_events.json # Rejected events
+│   ├── archived_events.json # Past events
 │   ├── config.json      # Application configuration
-│   ├── js/              # JavaScript modules
-│   ├── css/             # Stylesheets
-│   └── lib/             # Third-party libraries (Leaflet.js)
+│   ├── content.json     # English translations
+│   ├── content.de.json  # German translations
+│   └── backups/         # Individual event backups
+│       └── events/      # Timestamped event backup files
 ├── src/                 # Python backend
 │   ├── event_manager.py # Main CLI/TUI entry point
 │   └── modules/         # Modular components
 ├── scripts/             # Utility scripts
 ├── tests/               # Test suite
-├── backups/             # Individual event backups
 └── README.md            # This file (auto-generated)
 ```
 
@@ -260,7 +270,7 @@ python3 src/event_manager.py bulk-publish "pending_*"
 python3 src/event_manager.py bulk-reject "pending_*"
 ```
 
-Approved events move to `static/events.json` and appear on the map.
+Approved events move to `data/events.json` and appear on the map.
 
 ### 3. Static Site Generation
 
@@ -276,7 +286,7 @@ Output: `static/index.html` (single-file HTML with everything inlined)
 
 ## 🕷️ Adding Event Sources
 
-Edit `static/config.json`:
+Edit `data/config.json`:
 
 ```json
 {{
@@ -304,7 +314,7 @@ python3 tests/test_scraper.py --verbose
 
 The app supports English and German:
 
-- `static/content.json` - English translations
+- `data/content.json` - English translations
 - `static/content.de.json` - German translations
 
 Add translations using the key path format:

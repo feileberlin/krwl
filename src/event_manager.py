@@ -386,12 +386,12 @@ Step 2: Edit Development Config (config.dev.json)
 Step 3: Update Translations
 ────────────────────────────────────────────────────────────────────────────────
   Edit these files for your language:
-  - static/content.json (English)
-  - static/content.de.json (German)
+  - data/content.json (English)
+  - data/content.de.json (German)
   
   Or create new language files:
-  - static/content.fr.json (French)
-  - static/content.es.json (Spanish)
+  - data/content.fr.json (French)
+  - data/content.es.json (Spanish)
 
 ═══════════════════════════════════════════════════════════════════════════════
 4. CUSTOMIZATION

@@ -363,13 +363,13 @@ class EventSchemaTester:
         Load events from a file with flexible path handling.
         
         Checks in multiple locations:
-        1. static/ directory (production events)
+        1. data/ directory (production events)
         
         Returns tuple of (events_list, error_message)
         """
         # Try multiple locations
         possible_paths = [
-            self.repo_root / "static" / filename,
+            self.repo_root / "data" / filename,
         ]
         
         for file_path in possible_paths:
@@ -383,7 +383,7 @@ class EventSchemaTester:
                 except Exception as e:
                     return [], f"Error loading {filename}: {e}"
         
-        return [], f"File not found: {filename} (checked: static/)"
+        return [], f"File not found: {filename} (checked: data/)"
     
     def test_schema_definition(self):
         """Test that the schema is properly defined"""
@@ -729,7 +729,7 @@ class EventSchemaTester:
         print("HOW TO RECOVER FULL FUNCTIONALITY:")
         print("-" * 60)
         print("""
-1. Open the affected event file (static/events.json or examples/events_example.json)
+1. Open the affected event file (data/events.json)
 
 2. For each event with issues:
    - Add missing required fields (id, title, location, start_time, source, status)
