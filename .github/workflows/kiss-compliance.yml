@@ -3,11 +3,9 @@ name: 💡 Check KISS Compliance
 on:
   push:
     branches:
-      - preview
       - main
   pull_request:
     branches:
-      - preview
       - main
   workflow_dispatch:
     inputs:

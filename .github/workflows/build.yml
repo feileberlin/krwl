@@ -1,0 +1,74 @@
+name: 🔨 Build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'static/css/**'
+      - 'static/js/**'
+      - 'src/modules/builder.py'
+      - 'config.prod.json'
+      - 'config.dev.json'
+  workflow_dispatch:
+    inputs:
+      command:
+        description: 'Build command to run'
+        required: true
+        type: choice
+        options:
+          - build
+          - events
+          - libs
+        default: build
+      mode:
+        description: 'Build mode (for build command)'
+        required: true
+        type: choice
+        options:
+          - production
+          - development
+        default: production
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run build command
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ "${{ inputs.command }}" = "build" ]; then
+              python3 src/main.py build ${{ inputs.mode }}
+            else
+              python3 src/main.py ${{ inputs.command }}
+            fi
+          else
+            # Auto-build on push (production mode)
+            python3 src/main.py build production
+          fi
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add static/
+          if ! git diff --staged --quiet; then
+            git commit -m "Build: ${{ inputs.command || 'build' }} [skip ci]"
+            git push
+          else
+            echo "No changes to commit"
+          fi
