@@ -75,7 +75,8 @@ class EventManagerTUI:
         print("4. Generate Static Site")
         print("5. Settings")
         print("6. View Documentation")
-        print("7. Exit")
+        print("7. 📘 Setup Guide (Create Your Own Site)")
+        print("8. Exit")
         print("-" * 60)
         self.print_footer("main")
         
@@ -138,6 +139,50 @@ class EventManagerTUI:
         
         self.print_footer("generate")
         input("\nPress Enter to continue...")
+    
+    def show_setup_guide(self):
+        """Show setup guide for creating your own site"""
+        self.clear_screen()
+        print_setup_guide()
+        input("\nPress Enter to return to menu...")
+    
+    def run(self):
+        """Main TUI loop"""
+        while self.running:
+            self.show_menu()
+            choice = input("\nEnter your choice (1-8): ").strip()
+            
+            if choice == '1':
+                self.scrape_events()
+            elif choice == '2':
+                self.review_pending_events()
+            elif choice == '3':
+                self.view_published_events()
+            elif choice == '4':
+                self.generate_site()
+            elif choice == '5':
+                # Settings - placeholder
+                self.clear_screen()
+                self.print_header()
+                print("Settings (Coming soon)")
+                input("\nPress Enter to continue...")
+            elif choice == '6':
+                # Documentation - placeholder
+                self.clear_screen()
+                self.print_header()
+                print("Documentation")
+                print("-" * 60)
+                print("\nFor full documentation, see README.md")
+                print("Or visit: https://github.com/feileberlin/krwl-hof")
+                input("\nPress Enter to continue...")
+            elif choice == '7':
+                self.show_setup_guide()
+            elif choice == '8':
+                self.running = False
+                print("\nGoodbye!")
+            else:
+                print("\nInvalid choice. Please try again.")
+                input("Press Enter to continue...")
         
 def print_help():
     """Print CLI help information"""
@@ -153,6 +198,7 @@ USAGE:
 
 COMMANDS:
     (no command)              Launch interactive TUI (default)
+    setup                     Show detailed setup instructions for your own site
     scrape                    Scrape events from configured sources
     review                    Review pending events interactively
     publish EVENT_ID          Publish a specific pending event
@@ -231,6 +277,304 @@ For more information, visit:
     https://github.com/feileberlin/krwl-hof
 """
     print(help_text)
+
+
+def print_setup_guide():
+    """Print detailed setup instructions for creating your own KRWL site"""
+    setup_guide = """
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    KRWL SETUP GUIDE - Create Your Own Site                   ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+This guide helps you set up "krwl-xyz" - your own community events website.
+
+📋 TABLE OF CONTENTS
+────────────────────────────────────────────────────────────────────────────────
+1. Prerequisites
+2. Initial Setup
+3. Configuration
+4. Customization
+5. Deployment
+6. Maintenance
+
+═══════════════════════════════════════════════════════════════════════════════
+1. PREREQUISITES
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Python 3.7 or higher
+✓ Git
+✓ A git hosting account (GitHub, GitLab, Gitea, etc.)
+✓ Optional: Domain name for your site
+
+Check your setup:
+  $ python3 --version
+  $ git --version
+
+═══════════════════════════════════════════════════════════════════════════════
+2. INITIAL SETUP
+═══════════════════════════════════════════════════════════════════════════════
+
+Step 1: Clone or Fork the Repository
+────────────────────────────────────────────────────────────────────────────────
+  # Option A: Fork on your git hosting platform
+  1. Go to the repository page
+  2. Click "Fork" button
+  3. Clone your fork:
+     $ git clone https://your-host.com/your-username/krwl-xyz.git
+     $ cd krwl-xyz
+
+  # Option B: Clone and re-initialize
+     $ git clone https://github.com/feileberlin/krwl-hof.git krwl-xyz
+     $ cd krwl-xyz
+     $ rm -rf .git
+     $ git init
+     $ git add .
+     $ git commit -m "Initial commit for krwl-xyz"
+
+Step 2: Install Dependencies
+────────────────────────────────────────────────────────────────────────────────
+  $ pip install -r requirements.txt
+
+Step 3: Fetch Third-Party Dependencies (Leaflet)
+────────────────────────────────────────────────────────────────────────────────
+  $ python3 src/event_manager.py dependencies fetch
+
+  This downloads:
+  - Leaflet.js (map library)
+  - Required CSS and images
+
+═══════════════════════════════════════════════════════════════════════════════
+3. CONFIGURATION
+═══════════════════════════════════════════════════════════════════════════════
+
+Step 1: Edit Production Config (config.prod.json)
+────────────────────────────────────────────────────────────────────────────────
+  Open config.prod.json and customize:
+
+  {
+    "app": {
+      "name": "Your City Events",           ← Change this
+      "description": "Community events",
+      "environment": "production"
+    },
+    "map": {
+      "default_center": {
+        "lat": 50.3167,                     ← Your city coordinates
+        "lon": 11.9167
+      },
+      "default_zoom": 13
+    },
+    "scraping": {
+      "sources": [                          ← Add your event sources
+        {
+          "name": "Local Events Site",
+          "url": "https://example.com/events",
+          "type": "html",
+          "enabled": true
+        }
+      ]
+    }
+  }
+
+Step 2: Edit Development Config (config.dev.json)
+────────────────────────────────────────────────────────────────────────────────
+  Similar to production, but with:
+  - "environment": "development"
+  - "debug": true
+  - Includes demo events for testing
+
+Step 3: Update Translations
+────────────────────────────────────────────────────────────────────────────────
+  Edit these files for your language:
+  - static/content.json (English)
+  - static/content.de.json (German)
+  
+  Or create new language files:
+  - static/content.fr.json (French)
+  - static/content.es.json (Spanish)
+
+═══════════════════════════════════════════════════════════════════════════════
+4. CUSTOMIZATION
+═══════════════════════════════════════════════════════════════════════════════
+
+Customize Branding
+────────────────────────────────────────────────────────────────────────────────
+  1. Replace favicon:
+     - static/favicon.svg
+     
+  2. Update colors in static/css/style.css:
+     :root {
+       --primary-color: #FF69B4;    ← Change to your brand color
+       --bg-color: #1a1a1a;
+       --text-color: #ffffff;
+     }
+  
+  3. Update PWA manifest (static/manifest.json):
+     {
+       "name": "Your City Events",
+       "short_name": "YourCity",
+       "theme_color": "#FF69B4"
+     }
+
+Add Event Sources
+────────────────────────────────────────────────────────────────────────────────
+  In config.prod.json → scraping.sources[], add:
+  
+  {
+    "name": "Your Event Source",
+    "url": "https://example.com/events",
+    "type": "html",          # or "rss", "api"
+    "enabled": true,
+    "options": {
+      "category": "culture",
+      "default_location": {
+        "name": "City Center",
+        "lat": 50.000,
+        "lon": 11.000
+      }
+    }
+  }
+
+═══════════════════════════════════════════════════════════════════════════════
+5. DEPLOYMENT
+═══════════════════════════════════════════════════════════════════════════════
+
+Generate Your Site
+────────────────────────────────────────────────────────────────────────────────
+  $ python3 src/event_manager.py generate
+
+  This creates:
+  - static/index.html (your complete site in one file!)
+  - Embeds all configs (runtime environment detection)
+  - Includes all events
+
+Test Locally
+────────────────────────────────────────────────────────────────────────────────
+  $ cd static
+  $ python3 -m http.server 8000
+  
+  Open: http://localhost:8000
+  
+  The site will automatically detect it's running locally and use dev config.
+
+Deploy to Git Hosting
+────────────────────────────────────────────────────────────────────────────────
+  Most git hosts support static site hosting:
+
+  GitHub Pages:
+    1. Push to main branch
+    2. Go to Settings → Pages
+    3. Source: Deploy from branch "main", folder "/static"
+    4. Save
+
+  GitLab Pages:
+    1. Add .gitlab-ci.yml:
+       pages:
+         script:
+           - cp -r static public
+         artifacts:
+           paths:
+             - public
+    2. Push to main branch
+
+  Gitea Pages:
+    1. Enable Pages in repository settings
+    2. Configure to serve from /static directory
+    3. Push to main branch
+
+Custom Domain (Optional)
+────────────────────────────────────────────────────────────────────────────────
+  1. Add CNAME file in static/ with your domain
+  2. Configure DNS:
+     - CNAME record pointing to your git host
+  3. Enable HTTPS in your git host settings
+
+═══════════════════════════════════════════════════════════════════════════════
+6. MAINTENANCE
+═══════════════════════════════════════════════════════════════════════════════
+
+Daily Operations
+────────────────────────────────────────────────────────────────────────────────
+  # Scrape new events
+  $ python3 src/event_manager.py scrape
+
+  # Review pending events
+  $ python3 src/event_manager.py review
+
+  # Update site with new events (fast!)
+  $ python3 src/event_manager.py update
+
+  # Commit and push
+  $ git add static/
+  $ git commit -m "Update events"
+  $ git push
+
+Automated Updates
+────────────────────────────────────────────────────────────────────────────────
+  Set up automation in your git host:
+
+  GitHub Actions (.github/workflows/scrape.yml):
+    on:
+      schedule:
+        - cron: '0 4 * * *'  # Daily at 4 AM
+    jobs:
+      scrape:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v4
+          - run: pip install -r requirements.txt
+          - run: python3 src/event_manager.py scrape
+          - run: python3 src/event_manager.py update
+          - run: |
+              git config user.name "bot"
+              git config user.email "bot@example.com"
+              git add static/
+              git commit -m "Auto-update events"
+              git push
+
+  GitLab CI (.gitlab-ci.yml):
+    Similar structure with scheduled pipelines
+
+  Gitea Actions:
+    Similar to GitHub Actions
+
+═══════════════════════════════════════════════════════════════════════════════
+💡 QUICK START CHECKLIST
+═══════════════════════════════════════════════════════════════════════════════
+
+  □ Install dependencies: pip install -r requirements.txt
+  □ Fetch libraries: python3 src/event_manager.py dependencies fetch
+  □ Edit config.prod.json (name, location, event sources)
+  □ Edit config.dev.json (same as prod, for testing)
+  □ Customize colors in static/css/style.css
+  □ Replace favicon: static/favicon.svg
+  □ Generate site: python3 src/event_manager.py generate
+  □ Test locally: cd static && python3 -m http.server 8000
+  □ Push to git host
+  □ Enable Pages in git host settings
+  □ (Optional) Configure custom domain
+
+═══════════════════════════════════════════════════════════════════════════════
+🎯 NEXT STEPS
+═══════════════════════════════════════════════════════════════════════════════
+
+  1. Run interactive TUI to explore features:
+     $ python3 src/event_manager.py
+
+  2. Read full documentation:
+     - README.md
+     - docs/ directory
+
+  3. Join the community:
+     - GitHub: https://github.com/feileberlin/krwl-hof
+     - Issues: Report bugs or request features
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Need help? Run: python3 src/event_manager.py --help
+
+"""
+    print(setup_guide)
 
 
 def cli_scrape(base_path, config):
@@ -698,7 +1042,11 @@ def main():
         config = load_config(base_path)
         
         # Handle CLI commands
-        if args.command == 'scrape':
+        if args.command == 'setup':
+            print_setup_guide()
+            return 0
+        
+        elif args.command == 'scrape':
             return cli_scrape(base_path, config)
         
         elif args.command == 'list':
