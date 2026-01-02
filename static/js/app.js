@@ -37,11 +37,16 @@ class EventsApp {
         // Display environment watermark if configured
         this.displayEnvironmentWatermark();
         
+        // Show main content early with error handling
+        this.showMainContent();
+        
         // Initialize map (wrapped in try-catch to handle missing Leaflet)
         try {
             this.initMap();
         } catch (error) {
             console.warn('Map initialization failed:', error.message);
+            // Ensure content is visible even if map fails
+            this.showMainContent();
         }
         
         // Initialize TimeDrawer if map is available
@@ -58,7 +63,13 @@ class EventsApp {
         this.getUserLocation();
         
         // Load events
-        await this.loadEvents();
+        try {
+            await this.loadEvents();
+        } catch (error) {
+            console.error('Failed to load events:', error);
+            // Ensure content is visible even if event loading fails
+            this.showMainContent();
+        }
         
         // Setup event listeners (always run, even if map fails)
         this.setupEventListeners();
@@ -84,6 +95,29 @@ class EventsApp {
             events: this.events.length,
             map: !!this.map
         });
+    }
+    
+    showMainContent() {
+        // Safely show main content with error handling
+        // This prevents flash of unstyled content while ensuring content is visible
+        try {
+            const mainContent = document.getElementById('main-content');
+            if (mainContent && mainContent.style.display === 'none') {
+                mainContent.style.display = 'block';
+                this.log('Main content displayed');
+            }
+        } catch (error) {
+            console.error('Failed to show main content:', error);
+            // Try one more time with a fallback approach
+            try {
+                const mainContent = document.getElementById('main-content');
+                if (mainContent) {
+                    mainContent.removeAttribute('style');
+                }
+            } catch (fallbackError) {
+                console.error('Fallback to show main content also failed:', fallbackError);
+            }
+        }
     }
     
     displayEnvironmentWatermark() {
@@ -117,8 +151,16 @@ class EventsApp {
             text += ` • PR#${buildInfo.pr_number}`;
         }
         
+        // Get or create environment span for consistent DOM structure
+        let envSpan = watermark.querySelector('.env-text');
+        if (!envSpan) {
+            envSpan = document.createElement('span');
+            envSpan.className = 'env-text';
+            watermark.appendChild(envSpan);
+        }
+        
         // Set watermark text and style
-        watermark.textContent = text;
+        envSpan.textContent = text;
         watermark.classList.remove('hidden', 'production', 'preview', 'testing', 'development');
         watermark.classList.add(environment.toLowerCase());
         
@@ -174,10 +216,23 @@ class EventsApp {
     }
     
     getUserLocation() {
-        const statusEl = document.getElementById('location-status');
+        // Update watermark with location status
+        const updateLocationStatus = (status) => {
+            const watermark = document.getElementById('env-watermark');
+            if (!watermark) return;
+            
+            // Get or create location status span
+            let statusSpan = watermark.querySelector('.location-status');
+            if (!statusSpan) {
+                statusSpan = document.createElement('span');
+                statusSpan.className = 'location-status';
+                watermark.appendChild(statusSpan);
+            }
+            statusSpan.textContent = status;
+        };
         
         if ('geolocation' in navigator) {
-            if (statusEl) statusEl.textContent = 'Getting your location...';
+            updateLocationStatus('Getting your location...');
             
             navigator.geolocation.getCurrentPosition(
                 (position) => {
@@ -210,14 +265,14 @@ class EventsApp {
                         }).addTo(this.map).bindPopup('You are here');
                     }
                     
-                    if (statusEl) statusEl.textContent = '📍 Location found';
+                    updateLocationStatus('📍 Location found');
                     
                     // Update events display
                     this.displayEvents();
                 },
                 (error) => {
                     console.error('Location error:', error);
-                    if (statusEl) statusEl.textContent = '⚠️ Location unavailable - using default location';
+                    updateLocationStatus('⚠️ Location unavailable - using default location');
                     
                     // Use config default location as fallback
                     const defaultCenter = this.config.map.default_center;
@@ -236,7 +291,7 @@ class EventsApp {
                 }
             );
         } else {
-            if (statusEl) statusEl.textContent = '⚠️ Geolocation not supported - using default location';
+            updateLocationStatus('⚠️ Geolocation not supported - using default location');
             
             // Use config default location as fallback
             const defaultCenter = this.config.map.default_center;
@@ -545,11 +600,11 @@ class EventsApp {
         // Update count with descriptive sentence
         this.updateFilterDescription(filteredEvents.length);
         
-        // Show main content after events are loaded and filter description is updated
-        const mainContent = document.getElementById('main-content');
-        if (mainContent) {
-            mainContent.style.display = 'block';
-        }
+        // Update watermark with filter statistics
+        this.updateWatermarkFilterStats(filteredEvents.length);
+        
+        // Ensure main content is visible (with error handling)
+        this.showMainContent();
         
         // Clear existing markers
         this.markers.forEach(marker => marker.remove());
@@ -659,6 +714,39 @@ class EventsApp {
                 locDescription = 'from default location';
             }
             locationText.textContent = locDescription;
+        }
+    }
+    
+    updateWatermarkFilterStats(visibleCount) {
+        const watermark = document.getElementById('env-watermark');
+        if (!watermark) return;
+        
+        const totalEvents = this.events.length;
+        const filteredCount = totalEvents - visibleCount;
+        
+        // Get or create filter stats span
+        let statsSpan = watermark.querySelector('.filter-stats');
+        if (!statsSpan) {
+            statsSpan = document.createElement('span');
+            statsSpan.className = 'filter-stats';
+            watermark.appendChild(statsSpan);
+        }
+        
+        // Helper to get proper singular/plural form
+        const getEventWord = (count) => {
+            // Use i18n translations when available, fall back to English
+            if (window.i18n && typeof window.i18n.t === 'function') {
+                const key = count === 1 ? 'filters.event_word.singular' : 'filters.event_word.plural';
+                return window.i18n.t(key);
+            }
+            return count === 1 ? 'event' : 'events';
+        };
+        
+        // Create descriptive text about filtering
+        if (filteredCount === 0) {
+            statsSpan.textContent = `Showing all ${totalEvents} ${getEventWord(totalEvents)}`;
+        } else {
+            statsSpan.textContent = `${visibleCount}/${totalEvents} ${getEventWord(totalEvents)} (${filteredCount} filtered)`;
         }
     }
     

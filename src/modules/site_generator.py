@@ -331,10 +331,9 @@ class SiteGenerator:
 <span id="distance-text" class="filter-part">within 5 km</span>
 <span id="location-text" class="filter-part">from here</span>
 </div>
-<div id="location-status"></div>
 <div id="map"></div>
 <div id="event-detail" class="hidden">
-<div class="event-detail-content">
+<div class="detail-content">
 <button id="close-detail">&times;</button>
 <h2 id="detail-title"></h2>
 <p id="detail-description"></p>
@@ -388,7 +387,6 @@ window.EMBEDDED_CONTENT_DE = {json.dumps(content_de)};
 {scripts['time_drawer_js']}
 {scripts['app_js']}
 
-document.getElementById('main-content').style.display = 'block';
 </script>
 </body>
 </html>'''

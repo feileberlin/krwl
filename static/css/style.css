@@ -319,6 +319,26 @@ header {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     text-transform: uppercase;
     font-family: 'Courier New', monospace;
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+#env-watermark .location-status {
+    opacity: 0.8;
+    font-size: 0.7rem;
+}
+
+#env-watermark .env-text {
+    /* Environment text styling - inherits from parent but explicitly defined */
+    font-weight: 600;
+}
+
+#env-watermark .filter-stats {
+    opacity: 0.8;
+    font-size: 0.7rem;
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
+    padding-left: 0.75rem;
 }
 
 #env-watermark.hidden {
