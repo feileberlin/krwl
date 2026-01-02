@@ -70,14 +70,18 @@ def test_watermark_simplification():
         tests_failed += 1
     print()
     
-    # Test 4: Simple watermark format
-    print("Test 4: Simple watermark format (ENVIRONMENT | X/Y events)")
-    format_pattern = r'`\$\{.*\}\s*\|\s*\$\{.*\}/\$\{.*\}\s*events`'
-    if re.search(format_pattern, app_js):
-        print("✓ PASS: Simple format template string found")
+    # Test 4: Simple watermark format with i18n support
+    print("Test 4: Simple watermark format (ENVIRONMENT | X/Y eventWord) with i18n")
+    # Check for the format pattern with eventWord variable (supports i18n)
+    format_pattern = r'`\$\{.*\}\s*\|\s*\$\{.*\}/\$\{.*\}\s*\$\{.*\}`'
+    has_format = re.search(format_pattern, app_js)
+    # Also check for i18n usage
+    has_i18n = 'window.i18n' in app_js and 'event_word' in app_js
+    if has_format and has_i18n:
+        print("✓ PASS: Simple format with i18n support found")
         tests_passed += 1
     else:
-        print("✗ FAIL: Simple format template string not found")
+        print("✗ FAIL: Simple format with i18n support not found")
         tests_failed += 1
     print()
     

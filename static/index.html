@@ -2676,8 +2676,20 @@ class EventsApp {
         const totalEvents = this.events.length;
         const visibleEvents = this.filterEvents().length;
         
-        // Simple format: "DEV | 5/10 events"
-        watermark.textContent = `${environment.toUpperCase()} | ${visibleEvents}/${totalEvents} events`;
+        // Determine localized word for "event(s)" using i18n with fallback
+        const isSingular = visibleEvents === 1;
+        let eventWord = isSingular ? 'event' : 'events';
+        if (window.i18n && typeof window.i18n.t === 'function') {
+            const eventWordKey = isSingular ? 'filters.event_word.singular' : 'filters.event_word.plural';
+            const translated = window.i18n.t(eventWordKey);
+            // Only use translation if it's not the key itself (which means it wasn't found)
+            if (translated && translated !== eventWordKey) {
+                eventWord = translated;
+            }
+        }
+        
+        // Simple format: "DEV | 5/10 events" (with localized event word)
+        watermark.textContent = `${environment.toUpperCase()} | ${visibleEvents}/${totalEvents} ${eventWord}`;
     }
     
     async loadConfig() {
