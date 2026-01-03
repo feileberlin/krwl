@@ -259,7 +259,7 @@ class FilterTester:
         print("\n## Predefined Location Tests")
         
         # Load config
-        config_file = self.repo_root / "config.json"
+        config_file = self.repo_root / "data/config.json"
         if config_file.exists():
             with open(config_file, 'r') as f:
                 config = json.load(f)

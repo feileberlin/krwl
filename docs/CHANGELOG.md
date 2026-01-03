@@ -175,7 +175,7 @@ See [SMART_SCRAPER_SUMMARY.md](SMART_SCRAPER_SUMMARY.md) for complete details.
 ### For Developers
 **Old workflow** (Template-based):
 ```bash
-vim src/modules/generator.py  # Edit templates
+vim src-modules/generator.py  # Edit templates
 python3 src/main.py generate
 ```
 

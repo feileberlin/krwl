@@ -137,10 +137,10 @@ class FeatureVerifier:
                 # Simple string format: "config.key"
                 key = key_def
                 # Check unified config file
-                if not self._check_config_key_in_file('config.json', key):
+                if not self._check_config_key_in_file('data/config.json', key):
                     missing.append(key)
             else:
-                # Object format: {"file": "config.json", "key": "config.key"}
+                # Object format: {"file": "data/config.json", "key": "config.key"}
                 file_path = key_def['file']
                 key = key_def['key']
                 if not self._check_config_key_in_file(file_path, key):

@@ -2,7 +2,7 @@
 """
 KRWL HOF Feature Verification Script (Wrapper)
 
-Thin wrapper that delegates to src/modules/feature_verifier.py
+Thin wrapper that delegates to src-modules/feature_verifier.py
 Maintains backward compatibility with existing scripts and CI workflows.
 """
 

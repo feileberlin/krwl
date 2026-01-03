@@ -213,13 +213,13 @@ python3 scripts/validate_docs.py --verbose
 
 ```bash
 # Lint all code
-python3 src/modules/linter.py
+python3 src-modules/linter.py
 
 # Check KISS compliance
-python3 src/modules/kiss_checker.py
+python3 src-modules/kiss_checker.py
 
 # Verify features registry
-python3 src/modules/feature_verifier.py --verbose
+python3 src-modules/feature_verifier.py --verbose
 ```
 
 ## 🏗️ Architecture
@@ -250,22 +250,22 @@ python3 src/modules/feature_verifier.py --verbose
 krwl-hof/
 ├── src/
 │   ├── event_manager.py              # Main CLI entry point
-│   ├── modules/                       # Core modules
-│   │   ├── scraper.py                # Event scraping
-│   │   ├── editor.py                 # Editorial workflow
-│   │   ├── site_generator.py         # HTML generation
-│   │   ├── linter.py                 # Code validation
-│   │   └── utils.py                  # Utilities
 │   └── templates/
 │       ├── index.html                # Main template
 │       └── components/               # Modular components
+├── src-modules/                      # Core modules (flat)
+│   ├── scraper.py                    # Event scraping
+│   ├── editor.py                     # Editorial workflow
+│   ├── site_generator.py             # HTML generation
+│   ├── linter.py                     # Code validation
+│   └── utils.py                      # Utilities
 ├── assets/
-│   ├── css/                          # Source stylesheets
+│   ├── css/                          # Source stylesheets (modular)
 │   ├── js/                           # Source scripts
 │   ├── markers/                      # SVG marker icons
 │   ├── leaflet/                      # Leaflet.js library
 │   └── lucide/                       # Lucide icons library
-├── static/                           # Generated site (output)
+├── target/                           # Generated site (output)
 ├── event-data/                       # Event JSON files
 ├── tests/                            # Test suites
 ├── scripts/                          # Utility scripts
@@ -290,7 +290,7 @@ krwl-hof/
 # Update features.json
 
 # Validate
-python3 src/modules/feature_verifier.py --verbose
+python3 src-modules/feature_verifier.py --verbose
 
 # Run tests
 python3 -m pytest tests/ -v
@@ -336,7 +336,7 @@ python3 tests/test_*.py --verbose
 ### Map not loading
 
 1. Check browser console for errors
-2. Verify `static/index.html` exists
+2. Verify `target/index.html` exists
 3. Ensure Leaflet.js is downloaded (`libs` command)
 4. Try clearing browser cache
 

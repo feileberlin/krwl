@@ -1,0 +1,43 @@
+/* Map */
+
+#map {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    background: var(--barbie-shade-darkest);
+}
+
+/* Apply monochromatic filter to Leaflet map tiles */
+.leaflet-container {
+    background: var(--barbie-shade-darkest);
+    /* Monochromatic filter: Convert to grayscale, then apply Barbie Red hue */
+    filter: grayscale(100%) brightness(0.5) sepia(100%) hue-rotate(290deg) saturate(200%);
+}
+
+.leaflet-tile-container {
+    background: var(--barbie-shade-darkest);
+}
+
+/* Remove filter from map controls and markers so they stay colorful */
+.leaflet-control,
+.leaflet-marker-icon,
+.leaflet-popup {
+    filter: none !important;
+}
+
+#map-overlay {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+#map-overlay > * {
+    pointer-events: auto;
+}

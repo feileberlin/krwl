@@ -96,7 +96,7 @@ class BaseSource(ABC):
         """Initialize source scraper.
         
         Args:
-            source_config: Source configuration from config.json
+            source_config: Source configuration from data/config.json
             options: SourceOptions instance
         """
         self.source_config = source_config

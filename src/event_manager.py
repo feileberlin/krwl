@@ -49,11 +49,11 @@ class EventManagerTUI:
         """Print footer with contextual tooltips for admin/editorial users"""
         tooltips = {
             "main": "💡 Admin Tip: Use CLI mode for automation (python3 main.py --help) | View docs: option 6",
-            "scrape": "💡 Editorial Tip: Configure sources in config.json | Scraped events go to pending queue for review",
+            "scrape": "💡 Editorial Tip: Configure sources in data/config.json | Scraped events go to pending queue for review",
             "review": "💡 Editorial Tip: (a)pprove publishes to site | (e)dit before approval | (r)eject removes permanently",
             "published": "💡 Admin Tip: Published events appear on the map | Filtered by geolocation (<5km) & time (till sunrise)",
             "generate": "💡 Admin Tip: Static files → static/ dir | Deploy to GitHub Pages | Include .nojekyll file",
-            "settings": "💡 Admin Tip: Load examples for testing | Backups created with .backup extension | Config: config.json",
+            "settings": "💡 Admin Tip: Load examples for testing | Backups created with .backup extension | Config: data/config.json",
             "docs": "💡 Documentation Tip: Search with keywords | Navigate with n/p/q | Full docs in README.txt"
         }
         
@@ -135,7 +135,7 @@ class EventManagerTUI:
         
         if success:
             print("\nStatic site generated successfully!")
-            print(f"Files saved to: {self.base_path / 'static'}")
+            print(f"Files saved to: {self.base_path / 'target'}")
         
         self.print_footer("generate")
         input("\nPress Enter to continue...")
@@ -352,9 +352,9 @@ Step 3: Fetch Third-Party Dependencies (Leaflet)
 3. CONFIGURATION
 ═══════════════════════════════════════════════════════════════════════════════
 
-Edit config.json (Unified Configuration - Auto-Adapts to Environment)
+Edit data/config.json (Unified Configuration - Auto-Adapts to Environment)
 ────────────────────────────────────────────────────────────────────────────────
-  Open config.json and customize:
+  Open data/config.json and customize:
 
   {
     "app": {
@@ -424,7 +424,7 @@ Customize Branding
 
 Add Event Sources
 ────────────────────────────────────────────────────────────────────────────────
-  In config.json → scraping.sources[], add:
+  In data/config.json → scraping.sources[], add:
   
   {
     "name": "Your Event Source",
@@ -550,7 +550,7 @@ Automated Updates
 
   □ Install dependencies: pip install -r requirements.txt
   □ Fetch libraries: python3 src/event_manager.py dependencies fetch
-  □ Edit config.json (app name, location, event sources)
+  □ Edit data/config.json (app name, location, event sources)
   □ Customize colors in static/css/style.css
   □ Replace favicon: static/favicon.svg
   □ Generate site: python3 src/event_manager.py generate
@@ -1006,8 +1006,8 @@ def cli_load_examples(base_path):
     print("Loading example data...")
     
     # Backup existing data
-    events_file = base_path / 'event-data' / 'events.json'
-    pending_file = base_path / 'event-data' / 'pending_events.json'
+    events_file = base_path / 'data' / 'events.json'
+    pending_file = base_path / 'data' / 'pending_events.json'
     
     if events_file.exists():
         shutil.copy(events_file, str(events_file) + '.backup')
@@ -1016,8 +1016,8 @@ def cli_load_examples(base_path):
         shutil.copy(pending_file, str(pending_file) + '.backup')
     
     # Copy example data
-    example_events = base_path / 'event-data' / 'events_example.json'
-    example_pending = base_path / 'event-data' / 'pending_events_example.json'
+    example_events = base_path / 'data' / 'events_example.json'
+    example_pending = base_path / 'data' / 'pending_events_example.json'
     
     if example_events.exists():
         shutil.copy(example_events, events_file)
@@ -1043,8 +1043,8 @@ def cli_clear_data(base_path):
         print("Cancelled.")
         return 0
     
-    events_file = base_path / 'event-data' / 'events.json'
-    pending_file = base_path / 'event-data' / 'pending_events.json'
+    events_file = base_path / 'data' / 'events.json'
+    pending_file = base_path / 'data' / 'pending_events.json'
     
     # Backup before clearing
     if events_file.exists():
@@ -1071,7 +1071,7 @@ def cli_archive_old_events(base_path):
     
     if archived_count > 0:
         print(f"✓ Archived {archived_count} past event(s)")
-        print(f"  Archived events saved to: {base_path / 'event-data' / 'archived_events.json'}")
+        print(f"  Archived events saved to: {base_path / 'data' / 'archived_events.json'}")
     else:
         print("✓ No past events to archive")
     

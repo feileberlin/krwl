@@ -1,0 +1,133 @@
+/* Dashboard */
+
+/* Dashboard menu modal */
+#dashboard-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 1rem;
+}
+
+#dashboard-menu.hidden {
+    display: none;
+}
+
+.dashboard-content {
+    background: var(--color-bg-secondary);
+    border-radius: 12px;
+    padding: 1.5rem;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    border: 2px solid var(--color-border-primary);
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+}
+
+#close-dashboard {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    font-size: 1.8rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+    padding: 0.5rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#close-dashboard:hover {
+    color: var(--color-primary);
+}
+
+.dashboard-content h2 {
+    margin-bottom: 1rem;
+    color: var(--color-primary);
+    text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
+    font-size: 1.5rem;
+    padding-right: 2.5rem;
+}
+
+.dashboard-section {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 105, 180, 0.2);
+}
+
+.dashboard-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.dashboard-section h3 {
+    color: var(--color-primary);
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-section p {
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+
+.dashboard-section strong {
+    color: var(--color-text-primary);
+}
+
+.dashboard-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dashboard-links li {
+    margin-bottom: 0.4rem;
+}
+
+.dashboard-links a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-block;
+    font-size: 0.9rem;
+}
+
+.dashboard-links a:hover {
+    color: var(--color-primary-hover);
+    text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+    transform: translateX(3px);
+}
+
+/* Environment and debug mode state classes */
+.env-dev {
+    color: #FFB3DF;
+}
+
+.env-production {
+    color: #4CAF50;
+}
+
+.debug-enabled {
+    color: #FFB3DF;
+}
+
+.debug-disabled {
+    color: #888;
+}

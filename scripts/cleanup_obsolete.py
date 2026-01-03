@@ -44,7 +44,7 @@ def find_obsolete_files(base_path):
     
     # Already removed files (for documentation)
     obsolete['already_removed'] = [
-        'src/modules/generator.py (2185 lines - deleted ✓)',
+        'src-modules/generator.py (2185 lines - deleted ✓)',
     ]
     
     return obsolete

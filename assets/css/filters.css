@@ -1,0 +1,194 @@
+/* Filters */
+
+/* Interactive filter bar */
+#event-filter-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: auto;
+    max-width: calc(100vw - 80px); /* Mobile first: adapt to screen width */
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-primary);
+    padding: 0.8rem;
+    background: var(--barbie-shade-darkest);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    border: 0px;
+    line-height: 1.6;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
+                0 0 10px rgba(255, 105, 180, 0.3);
+    text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    align-items: center;
+    word-break: break-word;
+    z-index: 1001;
+}
+
+#event-filter-bar .filter-bar-item {
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 3px;
+    transition: all 0.2s;
+    position: relative;
+    display: inline-block;
+}
+
+#event-filter-bar .filter-bar-item:hover {
+    color: var(--color-text-primary);
+    text-shadow: 0 0 15px rgba(255, 105, 180, 0.8);
+    text-decoration-style: solid;
+}
+
+#event-filter-bar .filter-bar-item.editing {
+    color: var(--color-text-primary);
+    background: rgba(255, 105, 180, 0.3);
+    padding: 0.1rem 0.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    min-width: 150px;
+    text-align: center;
+}
+
+/* Filter logo button */
+#event-filter-bar .filter-bar-logo {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+    cursor: pointer;
+    padding: 0.2rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+    background: none;
+    border: none;
+    color: inherit;
+}
+
+#event-filter-bar .filter-bar-logo:hover {
+    background: rgba(255, 105, 180, 0.2);
+    transform: scale(1.1);
+}
+
+#event-filter-bar .filter-bar-logo:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+#event-filter-bar .filter-bar-logo svg {
+    width: 20px;
+    height: 20px;
+    filter: drop-shadow(0 0 5px rgba(255, 105, 180, 0.6));
+    transition: filter 0.2s;
+}
+
+#event-filter-bar .filter-bar-logo:hover svg {
+    filter: drop-shadow(0 0 8px rgba(255, 105, 180, 1));
+}
+
+/* Filter dropdowns */
+.filter-bar-dropdown {
+    position: fixed;
+    background: var(--barbie-shade-darkest);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--color-border-primary);
+    border-radius: 8px;
+    padding: 0.5rem 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
+                0 0 10px rgba(255, 105, 180, 0.3);
+    z-index: 3000;
+    min-width: 200px;
+    white-space: normal;
+}
+
+.filter-bar-dropdown select,
+.filter-bar-dropdown input[type="range"],
+.filter-bar-dropdown input[type="number"],
+.filter-bar-dropdown button {
+    width: 100%;
+    margin: 0.3rem 0;
+    padding: 0.5rem;
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+
+.filter-bar-dropdown-item {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-bar-dropdown-item:hover {
+    background: rgba(255, 105, 180, 0.2);
+    color: var(--color-primary);
+}
+
+.filter-bar-dropdown-item.selected {
+    background: rgba(255, 105, 180, 0.3);
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+/* Distance slider container */
+.distance-slider-container {
+    padding: 1rem;
+}
+
+.distance-slider-container input[type="range"] {
+    width: 100%;
+    margin: 0.5rem 0;
+}
+
+.distance-slider-container .distance-display {
+    color: var(--color-primary);
+    font-weight: 600;
+    text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+#imprint-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.2rem;
+    margin-right: 0.5rem;
+    background: none;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+#imprint-link:hover {
+    background: rgba(255, 105, 180, 0.1);
+    color: var(--color-primary);
+}
+
+#site-logo {
+    height: 40px;
+    width: 40px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#site-logo path {
+    stroke: var(--color-primary) !important;
+    transition: stroke 0.2s;
+}
+
+#imprint-link:hover #site-logo path {
+    stroke: var(--color-primary) !important;
+}
+
+#imprint-text {
+    display: none;
+}
