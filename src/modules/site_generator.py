@@ -42,6 +42,12 @@ except ImportError:
                 warnings = []
             return FakeLintResult()
 
+try:
+    from .utils import load_config
+except ImportError:
+    # Fallback if utils is not available
+    load_config = None
+
 
 # Third-party dependencies to fetch
 DEPENDENCIES = {
@@ -203,17 +209,26 @@ class SiteGenerator:
     
     def load_all_configs(self) -> List[Dict]:
         """
-        Load configuration file.
+        Load configuration file with environment-specific overrides applied.
         
-        Now loads unified config.json. Environment-specific overrides
-        are applied by the load_config() function in utils.py.
+        Uses load_config() from utils.py to apply runtime overrides based on
+        the environment setting in config.json. This ensures the generated
+        static HTML contains the correct configuration for the target environment.
         """
         configs = []
-        config_file = 'config.json'
-        path = self.base_path / config_file
-        if path.exists():
-            with open(path, 'r', encoding='utf-8') as f:
-                configs.append(json.load(f))
+        
+        if load_config is not None:
+            # Use load_config() to get environment-aware configuration
+            config = load_config(self.base_path)
+            configs.append(config)
+        else:
+            # Fallback: load raw config.json (for backward compatibility)
+            config_file = 'config.json'
+            path = self.base_path / config_file
+            if path.exists():
+                with open(path, 'r', encoding='utf-8') as f:
+                    configs.append(json.load(f))
+        
         return configs
     
     def load_stylesheet_resources(self) -> Dict[str, str]:
