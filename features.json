@@ -548,6 +548,7 @@
         ".github/copilot-instructions.md",
         ".github/COPILOT_SETUP.md",
         ".github/COPILOT_QUICK_REF.md",
+        ".github/HOW_TO_CONFIGURE_COPILOT.md",
         ".github/CODEOWNERS",
         ".github/pull_request_template.md"
       ],
