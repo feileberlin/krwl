@@ -17,7 +17,7 @@
     padding: 1rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
                 0 0 10px rgba(255, 105, 180, 0.3);
-    z-index: 1100;
+    z-index: 1600;
     opacity: 0;
     transition: opacity 0.3s ease-out, transform 0.3s ease-out;
     pointer-events: auto;
@@ -146,7 +146,7 @@
     border-radius: 8px;
     padding: 0.75rem 1rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    z-index: 1200;
+    z-index: 1700;
     display: flex;
     align-items: center;
     gap: 0.75rem;
