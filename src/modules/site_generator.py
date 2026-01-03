@@ -114,7 +114,7 @@ class SiteGenerator:
             print(f"✗ {e}")
             return False
     
-    def fetch_dependency_files(self, name: str, config: Dict) -> tuple[bool, bool]:
+    def fetch_dependency_files(self, name: str, config: Dict) -> Tuple[bool, bool]:
         """Fetch all files for one dependency package
         
         Checks if files already exist before fetching. If all files are present,
