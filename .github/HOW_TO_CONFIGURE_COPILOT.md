@@ -74,7 +74,7 @@ Copilot automatically understands:
 - **Data Flow**: Scraping → Pending → Editorial Review → Published
 
 ### Critical Rules
-- ❌ Never edit `static/index.html` (auto-generated)
+- ❌ Never edit `public/index.html` (auto-generated)
 - ❌ Never create `src/main.py` (single entry point is `src/event_manager.py`)
 - ✅ Always edit source files in `assets/` for frontend changes
 - ✅ Always update `features.json` when adding features

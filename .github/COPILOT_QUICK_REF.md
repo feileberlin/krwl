@@ -27,8 +27,8 @@ code .
 
 ✅ **Architecture**: Python backend + Vanilla JS frontend + Leaflet maps  
 ✅ **Entry Point**: Only `src/event_manager.py` (never create `src/main.py`)  
-✅ **Auto-Generated**: Never edit `static/index.html`  
-✅ **Source Files**: Edit in `assets/`, not `static/`  
+✅ **Auto-Generated**: Never edit `public/index.html`  
+✅ **Source Files**: Edit in `assets/`, not `public/`  
 ✅ **Features**: Always update `features.json` for new features  
 ✅ **KISS Principles**: Keep it simple, avoid over-engineering  
 ✅ **Mobile First**: Design for mobile, enhance for desktop  
@@ -52,7 +52,7 @@ A: No! Use src/event_manager.py (single entry point rule)
 
 ## 🚫 Anti-Patterns (Copilot Will Flag)
 
-❌ Editing `static/index.html` directly  
+❌ Editing `public/index.html` directly  
 ❌ Creating `src/main.py`  
 ❌ Top-level Python files outside `src/`  
 ❌ Missing `features.json` updates  

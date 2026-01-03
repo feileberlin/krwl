@@ -48,7 +48,7 @@ pip install -r requirements.txt
 python3 src/event_manager.py dependencies fetch
 
 # Run locally
-cd static
+cd public
 python3 -m http.server 8000
 ```
 
@@ -107,7 +107,7 @@ COMMANDS:
                               - Loads all resources (CSS, JS, events, translations)
                               - Builds HTML from templates with inlined assets
                               - Lints and validates content
-                              - Outputs: static/index.html (self-contained)
+                              - Outputs: public/index.html (self-contained)
     update                    Update events data in existing site (fast)
     dependencies fetch        Fetch third-party dependencies
     dependencies check        Check if dependencies are present
@@ -311,7 +311,7 @@ python3 src/event_manager.py generate
 python3 src/event_manager.py update
 ```
 
-Output: `static/index.html` (single-file HTML with everything inlined)
+Output: `public/index.html` (single-file HTML with everything inlined)
 
 ## 🕷️ Adding Event Sources
 

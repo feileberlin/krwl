@@ -30,7 +30,7 @@
 
 ### Implementation ✅
 
-- [ ] Edited source files only (never auto-generated files like `static/index.html`)
+- [ ] Edited source files only (never auto-generated files like `public/index.html`)
 - [ ] Added/updated tests in `tests/` directory
 - [ ] Followed existing code style and patterns
 - [ ] Kept changes minimal and focused
@@ -62,7 +62,7 @@
 
 ### File Edit Policy
 
-- [ ] ✅ **Did NOT** edit `static/index.html` directly
+- [ ] ✅ **Did NOT** edit `public/index.html` directly
 - [ ] ✅ **Did NOT** create `src/main.py` (duplicate entry point)
 - [ ] ✅ **Did NOT** create top-level Python files outside `src/`
 - [ ] ✅ **DID** edit source files in `assets/` for frontend changes

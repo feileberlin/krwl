@@ -324,7 +324,7 @@ assets/                   ← Would be processed/transformed
 
 **Our Implementation:**
 ```
-static/leaflet/           ← Correct! Copied as-is
+lib/leaflet/           ← Correct! Copied as-is
 public/leaflet/           ← Output (identical)
 ```
 
@@ -342,7 +342,7 @@ assets/leaflet/leaflet.css  ❌ Wrong directory
 
 **✅ Correct:**
 ```
-static/leaflet/leaflet.css  ✅ Correct directory
+lib/leaflet/leaflet.css  ✅ Correct directory
 → Copied as-is
 → Works exactly as Leaflet designed
 ```
@@ -421,7 +421,7 @@ map.on('moveend', () => { ... });  ✅ Use events and API
 - [x] Z-index respects Leaflet's layers
 - [x] Standard initialization pattern used
 - [x] Responsive design via container sizing
-- [x] Static assets in `static/` directory (SSG standard)
+- [x] Static assets in `public/` directory (SSG standard)
 - [x] Third-party libraries not processed
 
 ## 🎯 Testing Compliance

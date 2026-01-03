@@ -50,7 +50,7 @@ def generate_site(self, skip_lint: bool = False) -> bool:
     6. Loads translations (English and German)
     7. Builds HTML structure using templates with all assets inlined
     8. Lints and validates generated content (HTML, CSS, JS, translations, SVG)
-    9. Writes output to static/index.html (self-contained file)  ← ONE FILE
+    9. Writes output to public/index.html (self-contained file)  ← ONE FILE
     
     Args:
         skip_lint: If True, skip linting validation (useful for testing)
@@ -246,11 +246,11 @@ def generate_marker_icon_map(self) -> Dict[str, str]:
 
 | Template Variable | Source | Type | Purpose |
 |------------------|--------|------|---------|
-| `{leaflet_css}` | `static/leaflet/leaflet.css` | String | Leaflet core styles |
+| `{leaflet_css}` | `lib/leaflet/leaflet.css` | String | Leaflet core styles |
 | `{app_css}` | `src/css/style.css` | String | App styles (9 modules) |
 | `{time_drawer_css}` | `src/css/time-drawer.css` | String | Time drawer styles |
-| `{leaflet_js}` | `static/leaflet/leaflet.js` | String | Leaflet core library |
-| `{lucide_js}` | `static/lucide/lucide.min.js` | String | Lucide icon library |
+| `{leaflet_js}` | `lib/leaflet/leaflet.js` | String | Leaflet core library |
+| `{lucide_js}` | `lib/lucide/lucide.min.js` | String | Lucide icon library |
 | `{i18n_js}` | `src/js/i18n.js` | String | i18n implementation |
 | `{time_drawer_js}` | `src/js/time-drawer.js` | String | Time drawer logic |
 | `{app_js}` | `src/js/app.js` | String | Main app logic |
@@ -372,14 +372,14 @@ python3 src/event_manager.py generate
 **Steps:**
 
 1. **Fetch dependencies** (if missing):
-   - `static/leaflet/leaflet.css`
-   - `static/leaflet/leaflet.js`
-   - `static/lucide/lucide.min.js`
+   - `lib/leaflet/leaflet.css`
+   - `lib/leaflet/leaflet.js`
+   - `lib/lucide/lucide.min.js`
 
 2. **Load source files into memory**:
-   - Read `static/leaflet/leaflet.css` → `leaflet_css` string
+   - Read `lib/leaflet/leaflet.css` → `leaflet_css` string
    - Read `src/css/style.css` → `app_css` string
-   - Read `static/leaflet/leaflet.js` → `leaflet_js` string
+   - Read `lib/leaflet/leaflet.js` → `leaflet_js` string
    - Read `src/js/app.js` → `app_js` string
    - Read all 78 marker SVGs → base64 data URLs
 

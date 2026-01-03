@@ -51,12 +51,12 @@ jobs:
       - name: Add deployment timestamp
         run: |
           TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
-          sed -i "s/BUILD_TIMESTAMP_PLACEHOLDER/$TIMESTAMP/g" target/index.html
+          sed -i "s/BUILD_TIMESTAMP_PLACEHOLDER/$TIMESTAMP/g" public/index.html
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./target
+          path: ./public
 
   deploy:
     environment:

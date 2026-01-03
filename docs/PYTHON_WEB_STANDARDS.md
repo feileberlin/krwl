@@ -322,7 +322,7 @@ tests/
 | **Directory Structure** |
 | src/ layout (PEP 517/518) | ✅ 100% | `src/` with modules/ |
 | templates/ or layouts/ | ✅ 100% | `layouts/` directory |
-| static/ assets | ✅ 100% | `static/` directory |
+| static/ assets | ✅ 100% | `public/` directory |
 | tests/ directory | ✅ 100% | `tests/` with 21 tests |
 | **Code Standards** |
 | Type hints (PEP 484) | ✅ 100% | Throughout codebase |

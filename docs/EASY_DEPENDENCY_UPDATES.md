@@ -331,7 +331,7 @@ https://unpkg.com/leaflet@latest/package.json
 # Uses event_manager's download function
 python3 src/event_manager.py libs
 → Downloads from unpkg.com
-→ Saves to static/leaflet/
+→ Saves to lib/leaflet/
 ```
 
 ### 4. Testing

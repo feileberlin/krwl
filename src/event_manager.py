@@ -52,7 +52,7 @@ class EventManagerTUI:
             "scrape": "💡 Editorial Tip: Configure sources in data/config.json | Scraped events go to pending queue for review",
             "review": "💡 Editorial Tip: (a)pprove publishes to site | (e)dit before approval | (r)eject removes permanently",
             "published": "💡 Admin Tip: Published events appear on the map | Filtered by geolocation (<5km) & time (till sunrise)",
-            "generate": "💡 Admin Tip: Static files → static/ dir | Deploy to GitHub Pages | Include .nojekyll file",
+            "generate": "💡 Admin Tip: Build output → public/ dir | Deploy to GitHub Pages | Include .nojekyll file",
             "settings": "💡 Admin Tip: Load examples for testing | Backups created with .backup extension | Config: data/config.json",
             "docs": "💡 Documentation Tip: Search with keywords | Navigate with n/p/q | Full docs in README.txt"
         }
@@ -135,7 +135,7 @@ class EventManagerTUI:
         
         if success:
             print("\nStatic site generated successfully!")
-            print(f"Files saved to: {self.base_path / 'target'}")
+            print(f"Files saved to: {self.base_path / 'public'}")
         
         self.print_footer("generate")
         input("\nPress Enter to continue...")
@@ -213,7 +213,7 @@ COMMANDS:
                               - Loads all resources (CSS, JS, events, translations)
                               - Builds HTML from templates with inlined assets
                               - Lints and validates content
-                              - Outputs: static/index.html (self-contained)
+                              - Outputs: public/index.html (self-contained)
     update                    Update events data in existing site (fast)
     dependencies fetch        Fetch third-party dependencies
     dependencies check        Check if dependencies are present
@@ -406,16 +406,16 @@ Update Translations
 Customize Branding
 ────────────────────────────────────────────────────────────────────────────────
   1. Replace favicon:
-     - static/favicon.svg
+     - assets/favicon.svg
      
-  2. Update colors in static/css/style.css:
+  2. Update colors in assets/css/style.css:
      :root {
        --primary-color: #FF69B4;    ← Change to your brand color
        --bg-color: #1a1a1a;
        --text-color: #ffffff;
      }
   
-  3. Update PWA manifest (static/manifest.json):
+  3. Update PWA manifest (assets/manifest.json):
      {
        "name": "Your City Events",
        "short_name": "YourCity",
@@ -450,13 +450,13 @@ Generate Your Site
   $ python3 src/event_manager.py generate
 
   This creates:
-  - static/index.html (your complete site in one file!)
+  - public/index.html (your complete site in one file!)
   - Embeds all configs (runtime environment detection)
   - Includes all events
 
 Test Locally
 ────────────────────────────────────────────────────────────────────────────────
-  $ cd static
+  $ cd public
   $ python3 -m http.server 8000
   
   Open: http://localhost:8000
@@ -470,14 +470,14 @@ Deploy to Git Hosting
   GitHub Pages:
     1. Push to main branch
     2. Go to Settings → Pages
-    3. Source: Deploy from branch "main", folder "/static"
+    3. Source: Deploy from branch "main", folder "/public"
     4. Save
 
   GitLab Pages:
     1. Add .gitlab-ci.yml:
        pages:
          script:
-           - cp -r static public
+           - cp -r public .
          artifacts:
            paths:
              - public
@@ -485,12 +485,12 @@ Deploy to Git Hosting
 
   Gitea Pages:
     1. Enable Pages in repository settings
-    2. Configure to serve from /static directory
+    2. Configure to serve from /public directory
     3. Push to main branch
 
 Custom Domain (Optional)
 ────────────────────────────────────────────────────────────────────────────────
-  1. Add CNAME file in static/ with your domain
+  1. Add CNAME file in public/ with your domain
   2. Configure DNS:
      - CNAME record pointing to your git host
   3. Enable HTTPS in your git host settings
@@ -511,7 +511,7 @@ Daily Operations
   $ python3 src/event_manager.py update
 
   # Commit and push
-  $ git add static/
+  $ git add public/
   $ git commit -m "Update events"
   $ git push
 
@@ -534,7 +534,7 @@ Automated Updates
           - run: |
               git config user.name "bot"
               git config user.email "bot@example.com"
-              git add static/
+              git add public/
               git commit -m "Auto-update events"
               git push
 
@@ -551,10 +551,10 @@ Automated Updates
   □ Install dependencies: pip install -r requirements.txt
   □ Fetch libraries: python3 src/event_manager.py dependencies fetch
   □ Edit data/config.json (app name, location, event sources)
-  □ Customize colors in static/css/style.css
-  □ Replace favicon: static/favicon.svg
+  □ Customize colors in assets/css/style.css
+  □ Replace favicon: assets/favicon.svg
   □ Generate site: python3 src/event_manager.py generate
-  □ Test locally: cd static && python3 -m http.server 8000
+  □ Test locally: cd public && python3 -m http.server 8000
   □ Deploy to hosting platform (see DEPLOYMENT.md)
   □ (Optional) Configure custom domain
 
@@ -988,7 +988,7 @@ def cli_generate(base_path, config):
     Creates a self-contained HTML file with all CSS, JS, events, and translations
     embedded. Uses KISS templating (Python .format()) from partials/.
     
-    Output: static/index.html (~313KB single-file HTML)
+    Output: public/index.html (~313KB single-file HTML)
     """
     print("Generating static site...")
     generator = SiteGenerator(base_path)

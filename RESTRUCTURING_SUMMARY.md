@@ -17,7 +17,7 @@ krwl-hof/
 │   ├── tools/        # Build tools
 │   └── event_manager.py
 ├── data/             # Data files (events, config, i18n)
-├── target/           # Build output + static assets
+├── public/           # Build output + static assets
 ├── tests/            # Test files
 ├── scripts/          # Utility scripts
 ├── docs/             # Documentation
@@ -27,10 +27,10 @@ krwl-hof/
 ## ✅ Changes Made
 
 ### 1. Directory Structure
-- ✅ Renamed `static/` → `target/` (industry standard for build output)
+- ✅ Renamed `public/` → `public/` (industry standard for build output)
 - ✅ Renamed `event-data/` → `data/` (clearer purpose)
 - ✅ Moved `config.json` → `data/config.json` (data belongs in data/)
-- ✅ Moved `assets/` content → `src/` (source) and `target/` (static assets)
+- ✅ Moved `assets/` content → `src/` (source) and `public/` (static assets)
 - ✅ Flattened `src/templates/components/` → `partials/` (KISS)
 - ✅ Merged `src-modules/` → `src/modules/` (standard naming)
 
@@ -63,14 +63,14 @@ src/
 ├── js/ (source code)
 └── components/ (templates)
 
-target/
+public/
 ├── leaflet/ (third-party)
 ├── lucide/ (third-party)
 └── markers/ (static assets)
 ```
 
 ### 4. Path Simplification
-- ✅ Removed `assets/lib/` nesting - libraries now in `target/` root
+- ✅ Removed `assets/lib/` nesting - libraries now in `public/` root
 - ✅ Removed `src/templates/components/` nesting - now `partials/`
 - ✅ Removed `src/css-modules/` - merged into `src/css/`
 - ✅ Maximum 2 levels deep everywhere
@@ -83,7 +83,7 @@ target/
 - ✅ Updated all file paths: `static` → `target`
 
 ### 6. GitHub Actions
-- ✅ Updated deploy workflow to use `target/` directory
+- ✅ Updated deploy workflow to use `public/` directory
 - ✅ Updated all CI/CD references
 
 ### 7. Documentation
@@ -101,14 +101,14 @@ target/
 | CSS files | 2 monolithic | 9 modular | Better organization |
 | JS files | 3 | 3 | Already modular ✓ |
 | Python modules location | Scattered | `src/modules/` | Organized |
-| Build artifacts | `static/` | `target/` | Industry standard |
+| Build artifacts | `public/` | `public/` | Industry standard |
 
 ## 🎓 Follows Best Practices From:
 
-- **Rust/Cargo**: `target/` for build output
-- **Maven/Gradle**: `target/` convention
+- **Rust/Cargo**: `public/` for build output
+- **Maven/Gradle**: `public/` convention
 - **Node.js/Webpack**: `src/` for source, modular CSS/JS
-- **Django/Flask**: `src/`, `static/`, `data/` separation
+- **Django/Flask**: `src/`, `public/`, `data/` separation
 - **Hugo/Jekyll**: Clear source vs output separation
 
 ## ✅ Benefits
@@ -135,7 +135,7 @@ If pulling these changes:
 # New paths:
 # ✅ src/css/
 # ✅ src/js/
-# ✅ target/
+# ✅ public/
 # ✅ data/
 # ✅ data/config.json
 # ✅ src/modules/
@@ -147,8 +147,8 @@ If pulling these changes:
 # Everything still works the same!
 python3 src/event_manager.py generate
 
-# Output goes to target/
-ls target/index.html
+# Output goes to public/
+ls public/index.html
 
 # Configuration in data/
 cat data/config.json

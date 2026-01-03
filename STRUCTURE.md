@@ -51,7 +51,7 @@ krwl-hof/
 | Templates | `layouts/` | `layouts/` | `_layouts/` | `_includes/` |
 | Content/Data | `content/` | `content/` | `_data/` | `_data/` |
 | Source Assets | `assets/` | `assets/` | `assets/` | `assets/` |
-| Static Files | `static/` | `static/` | `static/` | `static/` |
+| Static Files | `public/` | `public/` | `public/` | `public/` |
 | Build Output | `public/` | `public/` | `_site/` | `_site/` |
 | Generator Code | `src/` | (Go binary) | (Ruby gem) | (npm package) |
 
@@ -168,7 +168,7 @@ cd public && python3 -m http.server 8000
 - **Templates**: `layouts/`
 - **Source**: `assets/`
 - **Data**: `content/`
-- **Static**: `static/`
+- **Static**: `public/`
 - **Output**: `public/`
 - **Generator**: `src/`
 

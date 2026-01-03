@@ -49,7 +49,7 @@ krwl-hof/
 |------|----------|---------|
 | `layouts/` | `layouts/` | ✅ HTML templates |
 | `assets/` | `assets/` | ✅ Source CSS/JS |
-| `static/` | `static/` | ✅ Static files |
+| `public/` | `public/` | ✅ Static files |
 | `content/` | `content/` | ✅ Content files |
 | `public/` | `public/` | ✅ Build output |
 | `config.toml` | `config.json` | ✅ Configuration |
@@ -62,7 +62,7 @@ krwl-hof/
 |--------|----------|---------|
 | `_layouts/` | `layouts/` | ✅ HTML templates |
 | `assets/` | `assets/` | ✅ Source CSS/JS |
-| `static/` or `/` | `static/` | ✅ Static files |
+| `public/` or `/` | `public/` | ✅ Static files |
 | `_posts/` | `content/events/` | ✅ Content files |
 | `_site/` | `public/` | ✅ Build output |
 | `_config.yml` | `config.json` | ✅ Configuration |
@@ -75,7 +75,7 @@ krwl-hof/
 |------|----------|---------|
 | `_includes/` | `partials/` | ✅ Template partials |
 | `assets/` | `assets/` | ✅ Source CSS/JS |
-| `static/` | `static/` | ✅ Static files |
+| `public/` | `public/` | ✅ Static files |
 | `posts/` | `content/events/` | ✅ Content files |
 | `_site/` | `public/` | ✅ Build output |
 | `.eleventy.js` | `config.json` | ✅ Configuration |
@@ -138,9 +138,9 @@ assets/css/*.css → processed → public/index.html (inlined)
 assets/js/*.js   → processed → public/index.html (inlined)
 ```
 
-### `static/` - Static Files (Copied As-Is)
+### `public/` - Static Files (Copied As-Is)
 
-**Industry Standard**: Hugo's `static/`, Jekyll's root/static, 11ty's `static/`
+**Industry Standard**: Hugo's `public/`, Jekyll's root/static, 11ty's `public/`
 
 **Purpose**: Files copied to output without processing
 
@@ -158,8 +158,8 @@ assets/js/*.js   → processed → public/index.html (inlined)
 
 **Example**:
 ```
-static/favicon.svg → public/favicon.svg (copied)
-static/leaflet/    → public/leaflet/    (copied)
+assets/favicon.svg → public/favicon.svg (copied)
+lib/leaflet/    → public/leaflet/    (copied)
 ```
 
 ### `content/` - Content/Data Files
@@ -270,14 +270,14 @@ content/events/*.json → Load event data
 # 2. Load & INLINE assets (NOT copy)
 assets/css/*.css → Read → INLINE into <style>
 assets/js/*.js → Read → INLINE into <script>
-static/leaflet/leaflet.css → Read → INLINE into <style>
-static/leaflet/leaflet.js → Read → INLINE into <script>
+lib/leaflet/leaflet.css → Read → INLINE into <style>
+lib/leaflet/leaflet.js → Read → INLINE into <script>
 
 # 3. Apply templates
 layouts/index.html → Insert data & INLINED assets
 
 # 4. Convert markers to base64
-static/markers/*.svg → Convert to data URLs → INLINE
+assets/svg-markers/*.svg → Convert to data URLs → INLINE
 
 # 5. Generate SINGLE FILE output
 public/index.html → Self-contained HTML (zero external files)
@@ -356,7 +356,7 @@ public/index.html  ← Single self-contained file
 def load_stylesheet_resources(self) -> Dict[str, str]:
     """Load all CSS - will be INLINED, not linked"""
     return {
-        'leaflet_css': read_file('static/leaflet/leaflet.css'),  # INLINE
+        'leaflet_css': read_file('lib/leaflet/leaflet.css'),  # INLINE
         'app_css': read_file('assets/css/style.css')             # INLINE
     }
 
@@ -475,7 +475,7 @@ All SSGs deploy the build output directory:
 
 - [x] `layouts/` for templates (Hugo/Jekyll/11ty standard)
 - [x] `assets/` for source CSS/JS (Hugo/Jekyll/11ty standard)
-- [x] `static/` for static files (Hugo/Jekyll/11ty standard)
+- [x] `public/` for static files (Hugo/Jekyll/11ty standard)
 - [x] `content/` for data/content (Hugo/Jekyll/11ty standard)
 - [x] `public/` for build output (Hugo/Jekyll/11ty standard)
 - [x] `config.json` for configuration (SSG-standard pattern)

@@ -85,9 +85,10 @@ class SiteGenerator:
     def __init__(self, base_path):
         self.base_path = Path(base_path)
         self.src_path = self.base_path / 'src'  # Source code location
-        self.static_path = self.base_path / 'target'  # Build output + static assets
+        self.static_path = self.base_path / 'public'  # Build output directory
         self.data_path = self.base_path / 'data'  # Data files
-        self.dependencies_dir = self.static_path  # Libraries in static/
+        self.dependencies_dir = self.base_path / 'lib'  # Third-party libraries
+        self.assets_dir = self.base_path / 'assets'  # Source assets
         self.dependencies_dir.mkdir(parents=True, exist_ok=True)
     
     # ==================== Dependency Management ====================
@@ -433,11 +434,10 @@ class SiteGenerator:
         Returns:
             SVG content as string or data URL, or fallback empty SVG if file not found
         """
-        # Try assets directory first, then static, then assets/markers subdirectory
+        # Try assets directory first, then assets/svg-markers subdirectory
         search_paths = [
-            self.base_path / 'assets' / filename,
-            self.static_path / filename,
-            self.base_path / 'assets' / 'markers' / filename
+            self.assets_dir / filename,
+            self.assets_dir / 'svg-markers' / filename
         ]
         
         svg_path = None
@@ -577,7 +577,7 @@ class SiteGenerator:
             'marker-geolocation'    # User location marker
         ]
         
-        markers_dir = self.base_path / 'assets' / 'markers'
+        markers_dir = self.assets_dir / 'svg-markers'
         marker_map = {}
         
         if not markers_dir.exists():

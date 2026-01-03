@@ -84,14 +84,14 @@ DEPENDENCIES = {
 
 ```bash
 # Clean old files
-rm -rf static/leaflet/ static/lucide/
+rm -rf lib/leaflet/ lib/lucide/
 
 # Download new versions
 python3 src/event_manager.py libs
 
 # Verify download
-ls -lh static/leaflet/
-ls -lh static/lucide/
+ls -lh lib/leaflet/
+ls -lh lib/lucide/
 ```
 
 ### 5. Run Tests
@@ -219,8 +219,8 @@ git reset --hard HEAD~1
 
 # Option 3: Restore specific files
 git checkout HEAD~1 -- src/modules/site_generator.py
-git checkout HEAD~1 -- static/leaflet/
-git checkout HEAD~1 -- static/lucide/
+git checkout HEAD~1 -- lib/leaflet/
+git checkout HEAD~1 -- lib/lucide/
 
 # Rebuild
 python3 src/event_manager.py generate

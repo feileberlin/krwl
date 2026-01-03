@@ -5,7 +5,7 @@
 ## 🎯 Our Approach
 
 We use Lucide's UMD build with standard initialization:
-- **Library**: `static/lucide/lucide.min.js` - Official Lucide UMD build
+- **Library**: `lib/lucide/lucide.min.js` - Official Lucide UMD build
 - **Usage**: `assets/js/app.js` - Initialize icons with `lucide.createIcons()`
 - **Pattern**: HTML attributes `data-lucide="icon-name"` for declarative icons
 
@@ -100,7 +100,7 @@ This approach means:
 
 4. **Commit changes**:
    ```bash
-   git add src/modules/site_generator.py static/lucide/
+   git add src/modules/site_generator.py lib/lucide/
    git commit -m "chore: Update Lucide to vX.X.X"
    ```
 
@@ -248,12 +248,12 @@ console.log(window.lucide);  // Should show object
 **Fix 2**: Verify library loaded
 ```bash
 # Check if file exists and has content
-ls -lh static/lucide/lucide.min.js
+ls -lh lib/lucide/lucide.min.js
 ```
 
 **Fix 3**: Re-download library
 ```bash
-rm -rf static/lucide/
+rm -rf lib/lucide/
 python3 src/event_manager.py libs
 ```
 

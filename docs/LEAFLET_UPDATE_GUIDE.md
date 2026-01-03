@@ -5,7 +5,7 @@
 ## 🎯 Our Approach
 
 We follow Leaflet's official customization pattern:
-- **Core CSS**: `static/leaflet/leaflet.css` - Handles functionality (position, layout, mechanics)
+- **Core CSS**: `lib/leaflet/leaflet.css` - Handles functionality (position, layout, mechanics)
 - **Custom CSS**: `assets/css/leaflet-custom.css` - Handles theming (colors, shadows, borders)
 
 This separation means:
@@ -100,7 +100,7 @@ This separation means:
 
 4. **Commit changes**:
    ```bash
-   git add src/modules/site_generator.py static/leaflet/
+   git add src/modules/site_generator.py lib/leaflet/
    git commit -m "chore: Update Leaflet to vX.X.X"
    ```
 
@@ -177,7 +177,7 @@ After updating Leaflet, verify:
 **Fix**: Update selectors in `assets/css/leaflet-custom.css`
 ```bash
 # Check Leaflet's new structure
-vim static/leaflet/leaflet.css
+vim lib/leaflet/leaflet.css
 # Search for .leaflet-popup
 
 # Update our custom CSS accordingly

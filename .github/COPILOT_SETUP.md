@@ -108,10 +108,10 @@ When you use Copilot in this project, it automatically:
 - Static site generation workflow
 
 ✅ **Critical Rules**:
-- Never edit `static/index.html` (auto-generated)
+- Never edit `public/index.html` (auto-generated)
 - Always update `features.json` when adding features
 - Use `src/event_manager.py` as single entry point (never create `src/main.py`)
-- Edit source files in `assets/`, not `static/`
+- Edit source files in `assets/`, not `public/`
 
 ✅ **Workflows**:
 - Event scraping → pending queue → editorial review → publication
@@ -194,7 +194,7 @@ A: Run: python3 src/event_manager.py build production
 Q: Where do I add a new scraping source?
 A: Edit config.json, add to scraping.sources[] array
 
-Q: Can I edit static/index.html directly?
+Q: Can I edit public/index.html directly?
 A: No, it's auto-generated. Edit source files in assets/ instead.
 ```
 

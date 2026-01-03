@@ -295,7 +295,7 @@ python3 src/event_manager.py generate
 Test locally:
 
 ```bash
-cd static
+cd public
 python3 -m http.server 8000
 # Open http://localhost:8000
 ```

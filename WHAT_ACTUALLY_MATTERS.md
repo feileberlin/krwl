@@ -90,7 +90,7 @@ python3 src/tools/generate_design_tokens.py
 python3 src/event_manager.py generate
 
 # Test locally
-cd static && python3 -m http.server 8000
+cd public && python3 -m http.server 8000
 ```
 
 These commands should still work. If they don't, that's what needs fixing.
