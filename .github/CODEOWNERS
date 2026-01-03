@@ -1,0 +1,42 @@
+# CODEOWNERS - Defines code ownership for automatic review requests
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global owner - fallback for everything not matched below
+# Replace with your GitHub username or team
+* @feileberlin
+
+# Documentation - requires review for consistency
+*.md @feileberlin
+docs/ @feileberlin
+.github/*.md @feileberlin
+
+# Configuration files - critical for project behavior
+config*.json @feileberlin
+features.json @feileberlin
+.github/mcp/ @feileberlin
+
+# Backend Python code
+src/ @feileberlin
+tests/ @feileberlin
+requirements.txt @feileberlin
+
+# Frontend code
+assets/ @feileberlin
+static/js/ @feileberlin
+static/css/ @feileberlin
+
+# Build and deployment
+.github/workflows/ @feileberlin
+scripts/ @feileberlin
+
+# Critical files - must be reviewed carefully
+.github/copilot-instructions.md @feileberlin
+features.json @feileberlin
+src/event_manager.py @feileberlin
+
+# Auto-generated files (read-only, but tracked for review)
+# These should only change via proper build process
+static/index.html @feileberlin
+
+# Event data - requires editorial review
+event-data/ @feileberlin

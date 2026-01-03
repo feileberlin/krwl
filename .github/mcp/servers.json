@@ -44,6 +44,9 @@
   "settings": {
     "contextFiles": [
       ".github/copilot-instructions.md",
+      ".github/COPILOT_SETUP.md",
+      ".github/CODEOWNERS",
+      ".github/pull_request_template.md",
       "features.json",
       "README.md",
       "TESTING.md",

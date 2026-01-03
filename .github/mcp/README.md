@@ -21,6 +21,9 @@ The main MCP configuration file that defines:
 The following files are automatically provided as context to AI assistants:
 
 - `.github/copilot-instructions.md` - Project-specific Copilot instructions
+- `.github/COPILOT_SETUP.md` - Complete guide for setting up Copilot
+- `.github/CODEOWNERS` - Code ownership and review assignments
+- `.github/pull_request_template.md` - PR template with best practices checklist
 - `features.json` - Feature registry documenting all implemented features
 - `README.md` - Project overview and quick start
 - `TESTING.md` - Testing guidelines and procedures
