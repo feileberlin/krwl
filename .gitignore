@@ -83,3 +83,6 @@ PR_SUMMARY.md
 KISS_IMPLEMENTATION.md
 static/css/style.css.backup
 static/logo.svg
+
+# Build artifacts - dependencies are fetched at build time
+target/
