@@ -322,6 +322,259 @@
     ]
   },
   
+  "_comment_categories_section": "────────────────────────────────────────────────────────────────────────────────",
+  "_comment_categories_help": "EVENT CATEGORIES & MARKER MAPPING - Define categories and their associated markers",
+  "_comment_categories_usage": "Categories are used for filtering events and selecting marker icons",
+  
+  "categories": {
+    "_comment_config": "Configure which categories are available and which markers they use",
+    "_comment_markers": "Marker names should match files in assets/markers/ (without .svg extension)",
+    "_comment_fallback": "If a category is not listed, 'default' marker will be used",
+    
+    "mapping": {
+      "on-stage": {
+        "marker": "marker-on-stage",
+        "display_name": "On Stage",
+        "description": "Theater, performances, stage shows"
+      },
+      "performance": {
+        "marker": "marker-on-stage",
+        "display_name": "Performance",
+        "description": "Live performances"
+      },
+      "concert": {
+        "marker": "marker-music",
+        "display_name": "Concert",
+        "description": "Musical concerts"
+      },
+      "music": {
+        "marker": "marker-music",
+        "display_name": "Music",
+        "description": "Music events"
+      },
+      "opera": {
+        "marker": "marker-opera-house",
+        "display_name": "Opera",
+        "description": "Opera performances"
+      },
+      "theater": {
+        "marker": "marker-on-stage",
+        "display_name": "Theater",
+        "description": "Theater shows"
+      },
+      "pub-game": {
+        "marker": "marker-pub-games",
+        "display_name": "Pub Games",
+        "description": "Social games in pubs"
+      },
+      "pub": {
+        "marker": "marker-pub-games",
+        "display_name": "Pub Event",
+        "description": "Pub events"
+      },
+      "festival": {
+        "marker": "marker-festivals",
+        "display_name": "Festival",
+        "description": "Festivals and celebrations"
+      },
+      "celebration": {
+        "marker": "marker-festivals",
+        "display_name": "Celebration",
+        "description": "Celebration events"
+      },
+      "workshop": {
+        "marker": "marker-workshops",
+        "display_name": "Workshop",
+        "description": "Educational workshops"
+      },
+      "class": {
+        "marker": "marker-workshops",
+        "display_name": "Class",
+        "description": "Classes and courses"
+      },
+      "training": {
+        "marker": "marker-workshops",
+        "display_name": "Training",
+        "description": "Training sessions"
+      },
+      "lecture": {
+        "marker": "marker-school",
+        "display_name": "Lecture",
+        "description": "Lectures and talks"
+      },
+      "education": {
+        "marker": "marker-school",
+        "display_name": "Education",
+        "description": "Educational events"
+      },
+      "market": {
+        "marker": "marker-shopping",
+        "display_name": "Market",
+        "description": "Markets and bazaars"
+      },
+      "shopping": {
+        "marker": "marker-shopping",
+        "display_name": "Shopping",
+        "description": "Shopping events"
+      },
+      "sports": {
+        "marker": "marker-sports",
+        "display_name": "Sports",
+        "description": "Sports events"
+      },
+      "athletics": {
+        "marker": "marker-sports-field",
+        "display_name": "Athletics",
+        "description": "Athletic events"
+      },
+      "swimming": {
+        "marker": "marker-swimming",
+        "display_name": "Swimming",
+        "description": "Swimming events"
+      },
+      "community": {
+        "marker": "marker-community",
+        "display_name": "Community",
+        "description": "Community gatherings"
+      },
+      "social": {
+        "marker": "marker-community",
+        "display_name": "Social",
+        "description": "Social events"
+      },
+      "meetup": {
+        "marker": "marker-community",
+        "display_name": "Meetup",
+        "description": "Meetups and gatherings"
+      },
+      "arts": {
+        "marker": "marker-arts",
+        "display_name": "Arts",
+        "description": "Arts events"
+      },
+      "art": {
+        "marker": "marker-arts",
+        "display_name": "Art",
+        "description": "Art events"
+      },
+      "exhibition": {
+        "marker": "marker-museum",
+        "display_name": "Exhibition",
+        "description": "Exhibitions"
+      },
+      "museum": {
+        "marker": "marker-museum",
+        "display_name": "Museum",
+        "description": "Museum events"
+      },
+      "food": {
+        "marker": "marker-food",
+        "display_name": "Food",
+        "description": "Food events"
+      },
+      "food-drink": {
+        "marker": "marker-food",
+        "display_name": "Food & Drink",
+        "description": "Food and drink events"
+      },
+      "dining": {
+        "marker": "marker-food",
+        "display_name": "Dining",
+        "description": "Dining events"
+      },
+      "religious": {
+        "marker": "marker-church",
+        "display_name": "Religious",
+        "description": "Religious events"
+      },
+      "cultural": {
+        "marker": "marker-traditional-oceanic",
+        "display_name": "Cultural",
+        "description": "Cultural events"
+      },
+      "culture": {
+        "marker": "marker-traditional-oceanic",
+        "display_name": "Culture",
+        "description": "Cultural events"
+      },
+      "historical": {
+        "marker": "marker-castle",
+        "display_name": "Historical",
+        "description": "Historical events"
+      },
+      "heritage": {
+        "marker": "marker-monument",
+        "display_name": "Heritage",
+        "description": "Heritage events"
+      },
+      "monument": {
+        "marker": "marker-monument",
+        "display_name": "Monument",
+        "description": "Monument visits"
+      },
+      "landmark": {
+        "marker": "marker-tower",
+        "display_name": "Landmark",
+        "description": "Landmark visits"
+      },
+      "ruins": {
+        "marker": "marker-ruins",
+        "display_name": "Ruins",
+        "description": "Historical ruins"
+      },
+      "castle": {
+        "marker": "marker-castle",
+        "display_name": "Castle",
+        "description": "Castle visits"
+      },
+      "palace": {
+        "marker": "marker-palace",
+        "display_name": "Palace",
+        "description": "Palace visits"
+      },
+      "park": {
+        "marker": "marker-park",
+        "display_name": "Park",
+        "description": "Park events"
+      },
+      "nature": {
+        "marker": "marker-park",
+        "display_name": "Nature",
+        "description": "Nature events"
+      },
+      "civic": {
+        "marker": "marker-parliament",
+        "display_name": "Civic",
+        "description": "Civic events"
+      },
+      "government": {
+        "marker": "marker-parliament",
+        "display_name": "Government",
+        "description": "Government events"
+      },
+      "city-hall": {
+        "marker": "marker-mayors-office",
+        "display_name": "City Hall",
+        "description": "City hall events"
+      },
+      "library": {
+        "marker": "marker-library",
+        "display_name": "Library",
+        "description": "Library events"
+      },
+      "archive": {
+        "marker": "marker-national-archive",
+        "display_name": "Archive",
+        "description": "Archive visits"
+      },
+      "default": {
+        "marker": "marker-default",
+        "display_name": "Event",
+        "description": "General event"
+      }
+    }
+  },
+  
   "_comment_editor_section": "────────────────────────────────────────────────────────────────────────────────",
   "_comment_editor_identical": "EDITORIAL WORKFLOW - Same in all environments",
   
