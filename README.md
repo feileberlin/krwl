@@ -263,7 +263,8 @@ krwl-hof/
 │   ├── css/                          # Source stylesheets
 │   ├── js/                           # Source scripts
 │   ├── markers/                      # SVG marker icons
-│   └── lib/                          # Third-party libraries
+│   ├── leaflet/                      # Leaflet.js library
+│   └── lucide/                       # Lucide icons library
 ├── static/                           # Generated site (output)
 ├── event-data/                       # Event JSON files
 ├── tests/                            # Test suites

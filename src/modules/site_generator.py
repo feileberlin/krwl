@@ -82,7 +82,7 @@ class SiteGenerator:
         self.base_path = Path(base_path)
         self.static_path = self.base_path / 'static'
         self.assets_path = self.base_path / 'assets'
-        self.dependencies_dir = self.assets_path / 'lib'
+        self.dependencies_dir = self.assets_path  # Libraries now in assets root
         self.dependencies_dir.mkdir(parents=True, exist_ok=True)
     
     # ==================== Dependency Management ====================

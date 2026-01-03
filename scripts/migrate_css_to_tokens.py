@@ -17,12 +17,6 @@ from pathlib import Path
 def migrate_css_to_tokens(css_content: str, dry_run: bool = False) -> str:
     """Migrate CSS to use design tokens"""
     
-    # Mapping of old variables to new design tokens
-    replacements = {
-        # Remove old :root block and replace with design tokens
-        # We'll completely replace the :root section
-    }
-    
     lines = css_content.split('\n')
     output_lines = []
     in_root_block = False

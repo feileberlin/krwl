@@ -139,14 +139,12 @@ class DocValidator:
     def _check_code_blocks(self, lines: List[str]):
         """Check code blocks have language tags"""
         in_code_block = False
-        code_block_line = -1
         
         for i, line in enumerate(lines):
             if line.strip().startswith('```'):
                 if not in_code_block:
                     # Starting code block
                     in_code_block = True
-                    code_block_line = i
                     # Check if language is specified
                     if line.strip() == '```':
                         self.warnings.append(f"Line {i+1}: Code block missing language tag (use ```bash, ```python, etc.)")
