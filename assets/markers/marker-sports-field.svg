@@ -1,19 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
-  <!-- Terminal style sports field marker - goal/field shape -->
+  <!-- Lucide ticket marker - unified gyro shape -->
   
   <!-- Drop shadow -->
   <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
   
-  <!-- Stadium/field rectangular pin -->
-  <path d="M6 4 L26 4 L26 20 L18 20 L16 46 L14 20 L6 20 Z" 
+  <!-- STANDARD GYRO SHAPE (same for all) -->
+  <path d="M16 2 C9 2 3 8 3 15 C3 24 16 46 16 46 C16 46 29 24 29 15 C29 8 23 2 16 2 Z" 
         fill="none" stroke="#00ff00" stroke-width="2"/>
   
-  <!-- Playing field with center line -->
-  <rect x="9" y="7" width="14" height="10" fill="none" stroke="#00ff00" stroke-width="1.5"/>
-  <line x1="16" y1="7" x2="16" y2="17" stroke="#00ff00" stroke-width="1"/>
-  <circle cx="16" cy="12" r="2" fill="none" stroke="#00ff00" stroke-width="1"/>
-  
-  <!-- Goal posts -->
-  <path d="M10 8 L10 10 M22 8 L22 10" stroke="#00ff00" stroke-width="1.5"/>
-  <path d="M10 15 L10 17 M22 15 L22 17" stroke="#00ff00" stroke-width="1.5"/>
+  <!-- Lucide icon (scaled and positioned) -->
+  <g transform="translate(16, 15) scale(0.5)" stroke="#00ff00" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <g transform="translate(-12, -12)">
+<path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" />
+  <path d="M13 5v2" />
+  <path d="M13 17v2" />
+  <path d="M13 11v2" />
+    </g>
+  </g>
 </svg>

@@ -1,20 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
-  <!-- Terminal style pub-games marker - hexagon shape -->
+  <!-- Lucide beer marker - unified gyro shape -->
   
   <!-- Drop shadow -->
   <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
   
-  <!-- Hexagon pin shape -->
-  <path d="M10 8 L22 8 L26 15 L20 15 L16 46 L12 15 L6 15 Z" 
+  <!-- STANDARD GYRO SHAPE (same for all) -->
+  <path d="M16 2 C9 2 3 8 3 15 C3 24 16 46 16 46 C16 46 29 24 29 15 C29 8 23 2 16 2 Z" 
         fill="none" stroke="#00ff00" stroke-width="2"/>
   
-  <!-- Inner hexagon -->
-  <path d="M12 10 L20 10 L23 13 L20 16 L12 16 L9 13 Z" 
-        fill="none" stroke="#00ff00" stroke-width="1.5"/>
-  
-  <!-- Beer mug icon - minimalist -->
-  <rect x="14" y="11" width="4" height="4" fill="none" stroke="#00ff00" stroke-width="1"/>
-  <rect x="14" y="11.5" width="4" height="1.5" fill="#00ff00" opacity="0.3"/>
-  <line x1="18" y1="12" x2="19" y2="12" stroke="#00ff00" stroke-width="1"/>
-  <line x1="18" y1="14" x2="19" y2="14" stroke="#00ff00" stroke-width="1"/>
+  <!-- Lucide icon (scaled and positioned) -->
+  <g transform="translate(16, 15) scale(0.5)" stroke="#00ff00" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <g transform="translate(-12, -12)">
+<path d="M17 11h1a3 3 0 0 1 0 6h-1" />
+  <path d="M9 12v6" />
+  <path d="M13 12v6" />
+  <path d="M14 7.5c-1 0-1.44.5-3 .5s-2-.5-3-.5-1.72.5-2.5.5a2.5 2.5 0 0 1 0-5c.78 0 1.57.5 2.5.5S9.44 2 11 2s2 1.5 3 1.5 1.72-.5 2.5-.5a2.5 2.5 0 0 1 0 5c-.78 0-1.5-.5-2.5-.5Z" />
+  <path d="M5 8v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8" />
+    </g>
+  </g>
 </svg>

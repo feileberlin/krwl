@@ -1,16 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
-  <!-- Terminal style community marker - people/heart shape -->
+  <!-- Lucide users marker - unified gyro shape -->
   
   <!-- Drop shadow -->
   <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
   
-  <!-- Standard gyro shape -->
+  <!-- STANDARD GYRO SHAPE (same for all) -->
   <path d="M16 2 C9 2 3 8 3 15 C3 24 16 46 16 46 C16 46 29 24 29 15 C29 8 23 2 16 2 Z" 
         fill="none" stroke="#00ff00" stroke-width="2"/>
   
-  <!-- People icon - three figures -->
-  <circle cx="13" cy="12" r="1.5" fill="none" stroke="#00ff00" stroke-width="1"/>
-  <path d="M13 14 L13 17 M11 15 L15 15" stroke="#00ff00" stroke-width="1"/>
-  <circle cx="19" cy="12" r="1.5" fill="none" stroke="#00ff00" stroke-width="1"/>
-  <path d="M19 14 L19 17 M17 15 L21 15" stroke="#00ff00" stroke-width="1"/>
+  <!-- Lucide icon (scaled and positioned) -->
+  <g transform="translate(16, 15) scale(0.5)" stroke="#00ff00" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <g transform="translate(-12, -12)">
+<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+  <path d="M16 3.128a4 4 0 0 1 0 7.744" />
+  <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+  <circle cx="9" cy="7" r="4" />
+    </g>
+  </g>
 </svg>

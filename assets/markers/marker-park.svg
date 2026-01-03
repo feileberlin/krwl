@@ -1,19 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
-  <!-- Terminal style park/garden marker - tree shape -->
+  <!-- Lucide tree-pine marker - unified gyro shape -->
   
   <!-- Drop shadow -->
   <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
   
-  <!-- Tree crown pin shape -->
-  <path d="M16 4 L22 10 L20 10 L24 15 L22 15 L26 20 L18 20 L16 46 L14 20 L6 20 L10 15 L8 15 L12 10 L10 10 Z" 
+  <!-- STANDARD GYRO SHAPE (same for all) -->
+  <path d="M16 2 C9 2 3 8 3 15 C3 24 16 46 16 46 C16 46 29 24 29 15 C29 8 23 2 16 2 Z" 
         fill="none" stroke="#00ff00" stroke-width="2"/>
   
-  <!-- Inner tree crown -->
-  <circle cx="16" cy="10" r="3" fill="none" stroke="#00ff00" stroke-width="1.5"/>
-  <circle cx="13" cy="13" r="2" fill="none" stroke="#00ff00" stroke-width="1"/>
-  <circle cx="19" cy="13" r="2" fill="none" stroke="#00ff00" stroke-width="1"/>
-  <circle cx="16" cy="15" r="2.5" fill="none" stroke="#00ff00" stroke-width="1"/>
-  
-  <!-- Tree trunk -->
-  <rect x="15" y="17" width="2" height="3" fill="none" stroke="#00ff00" stroke-width="1"/>
+  <!-- Lucide icon (scaled and positioned) -->
+  <g transform="translate(16, 15) scale(0.5)" stroke="#00ff00" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <g transform="translate(-12, -12)">
+<path d="m17 14 3 3.3a1 1 0 0 1-.7 1.7H4.7a1 1 0 0 1-.7-1.7L7 14h-.3a1 1 0 0 1-.7-1.7L9 9h-.2A1 1 0 0 1 8 7.3L12 3l4 4.3a1 1 0 0 1-.8 1.7H15l3 3.3a1 1 0 0 1-.7 1.7H17Z" />
+  <path d="M12 22v-3" />
+    </g>
+  </g>
 </svg>

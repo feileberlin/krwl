@@ -1,16 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
-  <!-- Terminal style arts marker - palette shape -->
+  <!-- Lucide palette marker - unified gyro shape -->
   
   <!-- Drop shadow -->
   <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
   
-  <!-- Standard gyro shape -->
+  <!-- STANDARD GYRO SHAPE (same for all) -->
   <path d="M16 2 C9 2 3 8 3 15 C3 24 16 46 16 46 C16 46 29 24 29 15 C29 8 23 2 16 2 Z" 
         fill="none" stroke="#00ff00" stroke-width="2"/>
   
-  <!-- Palette icon -->
-  <ellipse cx="16" cy="14" rx="5" ry="4" fill="none" stroke="#00ff00" stroke-width="1.5"/>
-  <circle cx="14" cy="13" r="1" fill="#00ff00"/>
-  <circle cx="18" cy="13" r="1" fill="#00ff00"/>
-  <circle cx="16" cy="15.5" r="1" fill="#00ff00"/>
+  <!-- Lucide icon (scaled and positioned) -->
+  <g transform="translate(16, 15) scale(0.5)" stroke="#00ff00" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <g transform="translate(-12, -12)">
+<path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z" />
+  <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />
+  <circle cx="17.5" cy="10.5" r=".5" fill="currentColor" />
+  <circle cx="6.5" cy="12.5" r=".5" fill="currentColor" />
+  <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" />
+    </g>
+  </g>
 </svg>

@@ -1,15 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
-  <!-- Terminal style geolocation marker - unified gyro shape -->
+  <!-- Lucide locate marker - unified gyro shape -->
   
   <!-- Drop shadow -->
   <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
   
-  <!-- Standard gyro shape -->
+  <!-- STANDARD GYRO SHAPE (same for all) -->
   <path d="M16 2 C9 2 3 8 3 15 C3 24 16 46 16 46 C16 46 29 24 29 15 C29 8 23 2 16 2 Z" 
         fill="none" stroke="#00ff00" stroke-width="2"/>
   
-  <!-- Icon: Person silhouette -->
-  <circle cx="16" cy="12" r="2.5" fill="none" stroke="#00ff00" stroke-width="1.5"/>
-  <path d="M12 19 C12 16 14 15 16 15 C18 15 20 16 20 19" 
-        fill="none" stroke="#00ff00" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Lucide icon (scaled and positioned) -->
+  <g transform="translate(16, 15) scale(0.5)" stroke="#00ff00" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <g transform="translate(-12, -12)">
+<line x1="2" x2="5" y1="12" y2="12" />
+  <line x1="19" x2="22" y1="12" y2="12" />
+  <line x1="12" x2="12" y1="2" y2="5" />
+  <line x1="12" x2="12" y1="19" y2="22" />
+  <circle cx="12" cy="12" r="7" />
+    </g>
+  </g>
 </svg>

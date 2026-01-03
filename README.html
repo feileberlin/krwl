@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRWL HOF - Community Events Documentation</title>
+    
+<style>
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+    line-height: 1.6;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: #0d1117;
+    color: #c9d1d9;
+}
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    line-height: 1.25;
+    color: #FF69B4;
+}
+h1 { 
+    font-size: 2.5em; 
+    border-bottom: 2px solid #FF69B4; 
+    padding-bottom: 0.3em; 
+    text-align: center;
+    margin-bottom: 2rem;
+}
+h2 { 
+    font-size: 1.5em; 
+    border-bottom: 1px solid #21262d; 
+    padding-bottom: 0.3em; 
+}
+h3 { font-size: 1.25em; }
+a { 
+    color: #58a6ff; 
+    text-decoration: none; 
+}
+a:hover { 
+    text-decoration: underline; 
+}
+.hero {
+    text-align: center;
+    margin: 3rem 0;
+    padding: 2rem;
+    background: linear-gradient(135deg, #161b22 0%, #0d1117 100%);
+    border-radius: 12px;
+    border: 2px solid #FF69B4;
+}
+.hero h2 {
+    color: #FF69B4;
+    font-size: 2rem;
+    margin: 0 0 1rem 0;
+    border: none;
+}
+.hero p {
+    font-size: 1.2rem;
+    color: #c9d1d9;
+    margin: 0.5rem 0;
+}
+.nav {
+    background: #161b22;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+.nav a {
+    display: block;
+    padding: 1rem;
+    background: #21262d;
+    border-radius: 6px;
+    color: #58a6ff;
+    text-align: center;
+    font-weight: 600;
+    border: 1px solid #30363d;
+    transition: all 0.2s;
+}
+.nav a:hover {
+    background: #30363d;
+    border-color: #FF69B4;
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+.section {
+    background: #161b22;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    border-left: 4px solid #FF69B4;
+}
+.doc-list {
+    list-style: none;
+    padding: 0;
+}
+.doc-list li {
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    background: #0d1117;
+    border-radius: 4px;
+    border-left: 3px solid #30363d;
+}
+.doc-list li:hover {
+    border-left-color: #FF69B4;
+    background: #161b22;
+}
+.doc-list a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.doc-list .emoji {
+    font-size: 1.5em;
+}
+.footer {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid #30363d;
+    color: #8b949e;
+    font-size: 0.9em;
+    text-align: center;
+}
+code {
+    background: #161b22;
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 85%;
+    color: #79c0ff;
+}
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: #21262d;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    color: #8b949e;
+    margin: 0 0.25rem;
+}
+</style>
+
+</head>
+<body>
+    <h1>🎯 KRWL HOF Community Events</h1>
+    
+    <div class="hero">
+        <h2>📚 Documentation Center</h2>
+        <p>Mobile-first Progressive Web App for discovering community events</p>
+        <p><span class="badge">🗺️ Interactive Map</span> <span class="badge">📍 Geolocation</span> <span class="badge">🎨 Lucide Icons</span></p>
+    </div>
+    
+    <div class="section">
+        <h2>🚀 Quick Start</h2>
+        <div class="nav">
+            <a href="static/index.html">🗺️ Open Map App</a>
+            <a href="docs/README.html">📖 Full Documentation Index</a>
+            <a href="#main-docs">📄 Main Documents</a>
+            <a href="#markers">🎨 Marker Design</a>
+        </div>
+    </div>
+    
+    <div class="section" id="main-docs">
+        <h2>📄 Main Documentation</h2>
+        <ul class="doc-list">
+            <li>
+                <a href="docs/README_README.md.html">
+                    <span class="emoji">📖</span>
+                    <div>
+                        <strong>Main README</strong><br>
+                        <small>Complete project documentation and setup guide</small>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="docs/QUICK_REFERENCE_QUICK_REFERENCE.md.html">
+                    <span class="emoji">⚡</span>
+                    <div>
+                        <strong>Quick Reference</strong><br>
+                        <small>Fast access to common commands and workflows</small>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="docs/CHANGELOG_CHANGELOG.md.html">
+                    <span class="emoji">📝</span>
+                    <div>
+                        <strong>Changelog</strong><br>
+                        <small>Version history and release notes</small>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="section" id="markers">
+        <h2>🎨 Marker Icon System</h2>
+        <p>All map markers use <strong>Lucide icons</strong> wrapped in a unified gyro design with base64 embedding.</p>
+        <ul class="doc-list">
+            <li>
+                <a href="docs/assets_markers_LUCIDE_ICONS.md.html">
+                    <span class="emoji">🎨</span>
+                    <div>
+                        <strong>Lucide Icons Documentation</strong><br>
+                        <small>Complete icon mapping and implementation details</small>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="docs/MARKER_DESIGN_AUDIT.md.html">
+                    <span class="emoji">🔍</span>
+                    <div>
+                        <strong>Marker Design Audit</strong><br>
+                        <small>Analysis of marker design consistency</small>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="docs/MARKER_ICONS_RECOMMENDATION.md.html">
+                    <span class="emoji">💡</span>
+                    <div>
+                        <strong>Icon Library Recommendations</strong><br>
+                        <small>Comparison of free icon libraries</small>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="docs/assets_markers_UNIFIED_DESIGN.md.html">
+                    <span class="emoji">📐</span>
+                    <div>
+                        <strong>Unified Design System</strong><br>
+                        <small>Gyro marker shape specifications</small>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="section">
+        <h2>🛠️ Development</h2>
+        <ul class="doc-list">
+            <li>
+                <a href="docs/tests_README.md.html">
+                    <span class="emoji">✅</span>
+                    <div>
+                        <strong>Testing Documentation</strong><br>
+                        <small>Test suite and validation procedures</small>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="docs/scripts_README.md.html">
+                    <span class="emoji">⚙️</span>
+                    <div>
+                        <strong>Scripts Documentation</strong><br>
+                        <small>Build scripts and automation tools</small>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="docs/src_templates_README.md.html">
+                    <span class="emoji">📋</span>
+                    <div>
+                        <strong>Templates Documentation</strong><br>
+                        <small>HTML template system</small>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="section">
+        <h2>🔗 All Documentation Files</h2>
+        <p>Browse the complete <a href="docs/README.html">documentation index</a> for all available documents organized by category.</p>
+    </div>
+    
+    <div class="section">
+        <h2>ℹ️ About</h2>
+        <p><strong>KRWL HOF Community Events</strong> is a mobile-first Progressive Web App for discovering local events with:</p>
+        <ul>
+            <li>🗺️ Interactive Leaflet.js map with geolocation</li>
+            <li>🎨 29 Lucide icons as base64-embedded markers</li>
+            <li>📱 Mobile-first responsive design</li>
+            <li>🌐 Multilingual support (English/German)</li>
+            <li>⚙️ Configurable event categories</li>
+            <li>📦 Single self-contained HTML file</li>
+        </ul>
+    </div>
+    
+    <div class="footer">
+        <p><strong>KRWL HOF Community Events</strong> - Progressive Web App for discovering local events</p>
+        <p>📍 Built with Leaflet.js | 🎨 Icons by Lucide (ISC License) | 💖 Barbie Pink Theme</p>
+        <p><small>Last updated: 2026-01-03</small></p>
+    </div>
+</body>
+</html>

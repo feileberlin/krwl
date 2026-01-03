@@ -1,26 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
-  <!-- Terminal style monument/memorial marker - obelisk -->
+  <!-- Lucide pilcrow marker - unified gyro shape -->
   
   <!-- Drop shadow -->
   <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
   
-  <!-- Obelisk pin -->
-  <path d="M14 20 L16 2 L18 20 L16 46 Z" 
+  <!-- STANDARD GYRO SHAPE (same for all) -->
+  <path d="M16 2 C9 2 3 8 3 15 C3 24 16 46 16 46 C16 46 29 24 29 15 C29 8 23 2 16 2 Z" 
         fill="none" stroke="#00ff00" stroke-width="2"/>
   
-  <!-- Obelisk top (pyramid) -->
-  <path d="M13 4 L16 2 L19 4" 
-        fill="none" stroke="#00ff00" stroke-width="2"/>
-  
-  <!-- Obelisk body -->
-  <line x1="14" y1="5" x2="14" y2="18" stroke="#00ff00" stroke-width="2"/>
-  <line x1="18" y1="5" x2="18" y2="18" stroke="#00ff00" stroke-width="2"/>
-  
-  <!-- Base platform -->
-  <rect x="12" y="18" width="8" height="2" fill="none" stroke="#00ff00" stroke-width="1.5"/>
-  
-  <!-- Decorative bands -->
-  <line x1="14" y1="8" x2="18" y2="8" stroke="#00ff00" stroke-width="1"/>
-  <line x1="14" y1="12" x2="18" y2="12" stroke="#00ff00" stroke-width="1"/>
-  <line x1="14" y1="16" x2="18" y2="16" stroke="#00ff00" stroke-width="1"/>
+  <!-- Lucide icon (scaled and positioned) -->
+  <g transform="translate(16, 15) scale(0.5)" stroke="#00ff00" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <g transform="translate(-12, -12)">
+<path d="M13 4v16" />
+  <path d="M17 4v16" />
+  <path d="M19 4H9.5a4.5 4.5 0 0 0 0 9H13" />
+    </g>
+  </g>
 </svg>

@@ -1,27 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" width="32" height="48">
-  <!-- Terminal style ruins marker - broken columns -->
+  <!-- Lucide blocks marker - unified gyro shape -->
   
   <!-- Drop shadow -->
   <ellipse cx="16" cy="46" rx="6" ry="2" fill="#000" opacity="0.5"/>
   
-  <!-- Ruins pin - broken/irregular -->
-  <path d="M8 8 L10 6 L12 8 L14 6 L16 8 L18 6 L20 8 L22 6 L24 8 L24 18 L18 18 L16 46 L14 18 L8 18 Z" 
+  <!-- STANDARD GYRO SHAPE (same for all) -->
+  <path d="M16 2 C9 2 3 8 3 15 C3 24 16 46 16 46 C16 46 29 24 29 15 C29 8 23 2 16 2 Z" 
         fill="none" stroke="#00ff00" stroke-width="2"/>
   
-  <!-- Broken columns -->
-  <path d="M10 9 L10 16" stroke="#00ff00" stroke-width="1.5"/>
-  <path d="M14 8 L14 12" stroke="#00ff00" stroke-width="1.5"/>
-  <path d="M18 7 L18 14" stroke="#00ff00" stroke-width="1.5"/>
-  <path d="M22 9 L22 16" stroke="#00ff00" stroke-width="1.5"/>
-  
-  <!-- Broken capitals -->
-  <line x1="9" y1="9" x2="11" y2="9" stroke="#00ff00" stroke-width="1"/>
-  <line x1="13" y1="8" x2="15" y2="8" stroke="#00ff00" stroke-width="1"/>
-  <line x1="17" y1="7" x2="19" y2="7" stroke="#00ff00" stroke-width="1"/>
-  <line x1="21" y1="9" x2="23" y2="9" stroke="#00ff00" stroke-width="1"/>
-  
-  <!-- Rubble -->
-  <rect x="11" y="16" width="1" height="1" fill="#00ff00"/>
-  <rect x="15" y="17" width="1" height="1" fill="#00ff00"/>
-  <rect x="19" y="16" width="1" height="1" fill="#00ff00"/>
+  <!-- Lucide icon (scaled and positioned) -->
+  <g transform="translate(16, 15) scale(0.5)" stroke="#00ff00" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <g transform="translate(-12, -12)">
+<path d="M10 22V7a1 1 0 0 0-1-1H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5a1 1 0 0 0-1-1H2" />
+  <rect x="14" y="2" width="8" height="8" rx="1" />
+    </g>
+  </g>
 </svg>

@@ -21,6 +21,13 @@ from typing import Dict, List, Tuple
 from datetime import datetime
 import html
 
+# Import Lucide marker base64 map
+try:
+    from .lucide_markers import LUCIDE_MARKER_BASE64_MAP
+except ImportError:
+    # Fallback if lucide_markers module not available
+    LUCIDE_MARKER_BASE64_MAP = {}
+
 try:
     from .linter import Linter
 except ImportError:
@@ -47,6 +54,14 @@ DEPENDENCIES = {
             {"src": "images/marker-icon.png", "dest": "leaflet/images/marker-icon.png"},
             {"src": "images/marker-icon-2x.png", "dest": "leaflet/images/marker-icon-2x.png"},
             {"src": "images/marker-shadow.png", "dest": "leaflet/images/marker-shadow.png"}
+        ]
+    },
+    "lucide": {
+        "version": "0.562.0",
+        "base_url": "https://unpkg.com/lucide@{version}/dist",
+        "files": [
+            {"src": "umd/lucide.min.js", "dest": "lucide/lucide.min.js"},
+            {"src": "esm/lucide.js", "dest": "lucide/lucide.esm.js"}
         ]
     }
 }
@@ -216,8 +231,8 @@ class SiteGenerator:
         }
     
     def load_script_resources(self) -> Dict[str, str]:
-        """Load all JavaScript resources"""
-        return {
+        """Load all JavaScript resources including Lucide"""
+        scripts = {
             'leaflet_js': self.read_text_file(
                 self.dependencies_dir / 'leaflet' / 'leaflet.js'
             ),
@@ -231,6 +246,16 @@ class SiteGenerator:
                 self.assets_path / 'js' / 'app.js'
             )
         }
+        
+        # Load Lucide library if available
+        lucide_path = self.dependencies_dir / 'lucide' / 'lucide.min.js'
+        if lucide_path.exists():
+            scripts['lucide_js'] = self.read_text_file(lucide_path)
+        else:
+            # Provide empty stub if Lucide not available
+            scripts['lucide_js'] = '// Lucide not available'
+        
+        return scripts
     
     def load_translation_data(self) -> Tuple[Dict, Dict]:
         """Load translation files for all languages"""
@@ -243,8 +268,12 @@ class SiteGenerator:
     
     def ensure_dependencies_present(self) -> bool:
         """Ensure dependencies are available, fetch if missing"""
-        if not self.check_all_dependencies(quiet=True):
-            print("\n⚠️  Dependencies missing - fetching now...")
+        # Check only for critical Leaflet files (markers not critical for build)
+        leaflet_js = self.dependencies_dir / 'leaflet' / 'leaflet.js'
+        leaflet_css = self.dependencies_dir / 'leaflet' / 'leaflet.css'
+        
+        if not leaflet_js.exists() or not leaflet_css.exists():
+            print("\n⚠️  Critical dependencies missing - fetching now...")
             if not self.fetch_all_dependencies():
                 print("❌ Failed to fetch dependencies")
                 return False
@@ -326,6 +355,134 @@ class SiteGenerator:
     def read_logo_svg(self) -> str:
         """Read logo SVG content for inline use"""
         return self.inline_svg_file('logo.svg', as_data_url=False)
+    
+    def generate_lucide_marker_map(self) -> Dict[str, Dict[str, str]]:
+        """
+        Generate a map of Lucide icon names for marker generation.
+        
+        Instead of embedding SVG files, we provide Lucide icon names
+        that will be rendered client-side using the Lucide library.
+        
+        Returns:
+            Dictionary mapping marker names to Lucide icon names and settings
+            Example: {'marker-music': {'icon': 'music', 'color': '#00ff00'}}
+        """
+        # Icon mapping for our 29 required categories
+        lucide_icon_mapping = {
+            'marker-on-stage': {'icon': 'drama', 'label': 'Theater/Performance'},
+            'marker-music': {'icon': 'music', 'label': 'Concerts/Music'},
+            'marker-opera-house': {'icon': 'landmark', 'label': 'Opera/Theater'},
+            'marker-pub-games': {'icon': 'beer', 'label': 'Pubs/Social Games'},
+            'marker-festivals': {'icon': 'star', 'label': 'Festivals'},
+            'marker-workshops': {'icon': 'presentation', 'label': 'Workshops/Training'},
+            'marker-school': {'icon': 'graduation-cap', 'label': 'Education'},
+            'marker-shopping': {'icon': 'shopping-bag', 'label': 'Markets/Shopping'},
+            'marker-sports': {'icon': 'trophy', 'label': 'Sports'},
+            'marker-sports-field': {'icon': 'ticket', 'label': 'Sports Fields'},
+            'marker-swimming': {'icon': 'waves', 'label': 'Swimming'},
+            'marker-community': {'icon': 'users', 'label': 'Community'},
+            'marker-arts': {'icon': 'palette', 'label': 'Arts'},
+            'marker-museum': {'icon': 'landmark', 'label': 'Museums'},
+            'marker-food': {'icon': 'utensils', 'label': 'Food/Dining'},
+            'marker-church': {'icon': 'church', 'label': 'Religious'},
+            'marker-traditional-oceanic': {'icon': 'flame', 'label': 'Cultural/Traditional'},
+            'marker-castle': {'icon': 'castle', 'label': 'Castles'},
+            'marker-monument': {'icon': 'pilcrow', 'label': 'Monuments'},
+            'marker-tower': {'icon': 'triangle', 'label': 'Towers'},
+            'marker-ruins': {'icon': 'blocks', 'label': 'Ruins'},
+            'marker-palace': {'icon': 'crown', 'label': 'Palaces'},
+            'marker-park': {'icon': 'tree-pine', 'label': 'Parks/Nature'},
+            'marker-parliament': {'icon': 'landmark', 'label': 'Government'},
+            'marker-mayors-office': {'icon': 'building', 'label': 'City Hall'},
+            'marker-library': {'icon': 'book-open', 'label': 'Libraries'},
+            'marker-national-archive': {'icon': 'archive', 'label': 'Archives'},
+            'marker-default': {'icon': 'map-pin', 'label': 'Default/Fallback'},
+            'marker-geolocation': {'icon': 'locate', 'label': 'User Location'}
+        }
+        
+        # Add color and size settings
+        for marker_name in lucide_icon_mapping:
+            lucide_icon_mapping[marker_name]['color'] = '#00ff00'
+            lucide_icon_mapping[marker_name]['size'] = 24
+        
+        return lucide_icon_mapping
+    
+    def generate_marker_icon_map(self) -> Dict[str, str]:
+        """
+        Generate a map of marker icon names to base64 data URLs.
+        
+        Uses Lucide icons wrapped in gyro marker shape as the primary source.
+        Falls back to local SVG files if Lucide markers not available.
+        
+        Returns:
+            Dictionary mapping marker names (without .svg extension) to data URLs
+            Example: {'marker-on-stage': 'data:image/svg+xml;base64,...'}
+        """
+        # Try to use Lucide markers first (imported at module level)
+        if LUCIDE_MARKER_BASE64_MAP:
+            print(f"✅ Using {len(LUCIDE_MARKER_BASE64_MAP)} Lucide-based markers")
+            return LUCIDE_MARKER_BASE64_MAP.copy()
+        
+        # Fallback: Load from local SVG files
+        print("⚠️  Lucide markers not available, loading from SVG files...")
+        
+        # List of markers actually used in JavaScript getMarkerIconForCategory
+        # This should match the unique values in the iconNameMap in app.js
+        required_markers = [
+            'marker-on-stage',      # Performance & Entertainment
+            'marker-music',         # Concerts
+            'marker-opera-house',   # Opera
+            'marker-pub-games',     # Social & Games
+            'marker-festivals',     # Festivals & Celebrations
+            'marker-workshops',     # Educational & Skills
+            'marker-school',        # Lectures
+            'marker-shopping',      # Shopping & Markets
+            'marker-sports',        # Sports & Fitness
+            'marker-sports-field',  # Athletics
+            'marker-swimming',      # Swimming
+            'marker-community',     # Community & Social Services
+            'marker-arts',          # Arts & Culture
+            'marker-museum',        # Exhibitions
+            'marker-food',          # Food & Dining
+            'marker-church',        # Religious
+            'marker-traditional-oceanic',  # Cultural/Traditional
+            'marker-castle',        # Historical
+            'marker-monument',      # Heritage
+            'marker-tower',         # Landmarks
+            'marker-ruins',         # Ruins
+            'marker-palace',        # Palace
+            'marker-park',          # Parks & Nature
+            'marker-parliament',    # Government
+            'marker-mayors-office', # City Hall
+            'marker-library',       # Libraries
+            'marker-national-archive',  # Archives
+            'marker-default',       # Default fallback
+            'marker-geolocation'    # User location marker
+        ]
+        
+        markers_dir = self.base_path / 'assets' / 'markers'
+        marker_map = {}
+        
+        if not markers_dir.exists():
+            print(f"⚠️  Markers directory not found: {markers_dir}")
+            return marker_map
+        
+        # Only process markers in the required list
+        for marker_name in required_markers:
+            svg_file = markers_dir / f"{marker_name}.svg"
+            
+            if not svg_file.exists():
+                print(f"⚠️  Required marker not found: {marker_name}.svg")
+                continue
+            
+            # Generate base64 data URL
+            try:
+                data_url = self.inline_svg_file(svg_file.name, as_data_url=True)
+                marker_map[marker_name] = data_url
+            except Exception as e:
+                print(f"⚠️  Failed to process {marker_name}.svg: {e}")
+        
+        return marker_map
     
     def filter_and_sort_future_events(self, events: List[Dict]) -> List[Dict]:
         """Filter out past events and sort (running events first, then chronological)."""
@@ -454,7 +611,8 @@ class SiteGenerator:
         content_en: Dict,
         content_de: Dict,
         stylesheets: Dict[str, str],
-        scripts: Dict[str, str]
+        scripts: Dict[str, str],
+        marker_icons: Dict[str, str]
     ) -> str:
         """Build complete HTML structure using templates (KISS: simple .format())"""
         
@@ -472,12 +630,13 @@ class SiteGenerator:
         config_loader = self.load_template('config-loader.js')
         fetch_interceptor = self.load_template('fetch-interceptor.js')
         
-        # Prepare embedded data
+        # Prepare embedded data with Lucide markers
         embedded_data = f'''// Embed all configurations and data
 window.ALL_CONFIGS = {json.dumps(configs)};
 window.ALL_EVENTS = {json.dumps(events)};
 window.EMBEDDED_CONTENT_EN = {json.dumps(content_en)};
-window.EMBEDDED_CONTENT_DE = {json.dumps(content_de)};'''
+window.EMBEDDED_CONTENT_DE = {json.dumps(content_de)};
+window.MARKER_ICONS = {json.dumps(marker_icons)};'''
         
         # Use placeholder timestamp to avoid merge conflicts
         # Actual timestamp will be added during deployment if needed
@@ -513,6 +672,7 @@ window.EMBEDDED_CONTENT_DE = {json.dumps(content_de)};'''
             config_loader=config_loader,
             fetch_interceptor=fetch_interceptor,
             leaflet_js=scripts['leaflet_js'],
+            lucide_js=scripts.get('lucide_js', '// Lucide not available'),
             i18n_js=scripts['i18n_js'],
             time_drawer_js=scripts['time_drawer_js'],
             app_js=scripts['app_js']
@@ -563,10 +723,14 @@ window.EMBEDDED_CONTENT_DE = {json.dumps(content_de)};'''
         print("Loading translations...")
         content_en, content_de = self.load_translation_data()
         
+        print("Generating marker icon map...")
+        marker_icons = self.generate_marker_icon_map()
+        print(f"✅ Embedded {len(marker_icons)} Lucide marker icons as base64 data URLs")
+        
         print(f"Building HTML ({len(events)} total events)...")
         html = self.build_html_structure(
             configs, events, content_en, content_de,
-            stylesheets, scripts
+            stylesheets, scripts, marker_icons
         )
         
         # Lint the generated content

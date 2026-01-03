@@ -234,7 +234,9 @@ class EventsApp {
                         // Add user marker with custom geolocation icon
                         // Support customization from config or use default
                         const userMarkerConfig = this.config.map.user_location_marker || {};
-                        const userIconUrl = userMarkerConfig.icon || 'markers/marker-geolocation.svg';
+                        const userIconUrl = userMarkerConfig.icon || 
+                            (window.MARKER_ICONS && window.MARKER_ICONS['marker-geolocation']) ||
+                            'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI4IiBmaWxsPSIjNENBRjUwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjMiIGZpbGw9IiNmZmYiLz48L3N2Zz4=';
                         const userIconSize = userMarkerConfig.size || [32, 48];
                         const userIconAnchor = userMarkerConfig.anchor || [userIconSize[0] / 2, userIconSize[1]];
                         const userPopupAnchor = userMarkerConfig.popup_anchor || [0, -userIconSize[1]];
@@ -764,19 +766,128 @@ class EventsApp {
     }
     
     getMarkerIconForCategory(category) {
-        // Return SVG marker paths for different event categories
-        const iconMap = {
-            'on-stage': 'markers/marker-on-stage.svg',        // Diamond with microphone
-            'pub-game': 'markers/marker-pub-games.svg',       // Hexagon with beer mug
-            'festival': 'markers/marker-festivals.svg',       // Star with flag
-            'workshop': 'markers/marker-workshops.svg',       // Workshop icon
-            'market': 'markers/marker-shopping.svg',          // Shopping bag for markets
-            'sports': 'markers/marker-sports.svg',            // Sports icon
-            'community': 'markers/marker-community.svg',      // Community icon
-            'other': 'markers/marker-default.svg'             // Default teardrop pin
+        // Return base64 data URL for marker icons from embedded MARKER_ICONS
+        // Comprehensive mapping of event categories to marker icons
+        const iconNameMap = {
+            // Performance & Entertainment
+            'on-stage': 'marker-on-stage',
+            'performance': 'marker-on-stage',
+            'concert': 'marker-music',
+            'music': 'marker-music',
+            'opera': 'marker-opera-house',
+            'theater': 'marker-on-stage',
+            'theatre': 'marker-on-stage',
+            
+            // Social & Games
+            'pub-game': 'marker-pub-games',
+            'pub': 'marker-pub-games',
+            'bar': 'marker-pub-games',
+            'games': 'marker-pub-games',
+            
+            // Festivals & Celebrations
+            'festival': 'marker-festivals',
+            'celebration': 'marker-festivals',
+            'party': 'marker-festivals',
+            
+            // Educational & Skills
+            'workshop': 'marker-workshops',
+            'class': 'marker-workshops',
+            'training': 'marker-workshops',
+            'seminar': 'marker-workshops',
+            'course': 'marker-workshops',
+            'lecture': 'marker-school',
+            'education': 'marker-school',
+            
+            // Shopping & Markets
+            'market': 'marker-shopping',
+            'shopping': 'marker-shopping',
+            'farmers-market': 'marker-shopping',
+            'bazaar': 'marker-shopping',
+            
+            // Sports & Fitness
+            'sports': 'marker-sports',
+            'sport': 'marker-sports',
+            'fitness': 'marker-sports',
+            'athletics': 'marker-sports-field',
+            'swimming': 'marker-swimming',
+            'pool': 'marker-swimming',
+            
+            // Community & Social Services
+            'community': 'marker-community',
+            'social': 'marker-community',
+            'meetup': 'marker-community',
+            'gathering': 'marker-community',
+            'meeting': 'marker-community',
+            
+            // Arts & Culture
+            'arts': 'marker-arts',
+            'art': 'marker-arts',
+            'exhibition': 'marker-museum',
+            'gallery': 'marker-museum',
+            'museum': 'marker-museum',
+            
+            // Food & Dining
+            'food': 'marker-food',
+            'dining': 'marker-food',
+            'restaurant': 'marker-food',
+            'culinary': 'marker-food',
+            
+            // Cultural & Religious
+            'religious': 'marker-church',
+            'worship': 'marker-church',
+            'ceremony': 'marker-festivals',
+            'traditional': 'marker-traditional-oceanic',
+            'cultural': 'marker-traditional-oceanic',
+            
+            // Historical & Tourism
+            'historical': 'marker-castle',
+            'heritage': 'marker-monument',
+            'monument': 'marker-monument',
+            'landmark': 'marker-tower',
+            'ruins': 'marker-ruins',
+            'castle': 'marker-castle',
+            'palace': 'marker-palace',
+            
+            // Parks & Nature
+            'park': 'marker-park',
+            'nature': 'marker-park',
+            'outdoor': 'marker-park',
+            'garden': 'marker-park',
+            
+            // Government & Civic
+            'civic': 'marker-city-center',
+            'government': 'marker-parliament',
+            'political': 'marker-parliament',
+            'city-hall': 'marker-mayors-office',
+            
+            // Libraries & Archives
+            'library': 'marker-library',
+            'archive': 'marker-national-archive',
+            'books': 'marker-library',
+            
+            // Default fallback
+            'other': 'marker-default',
+            'general': 'marker-default',
+            'event': 'marker-default'
         };
         
-        return iconMap[category] || iconMap['other'];
+        const markerName = iconNameMap[category] || iconNameMap['other'];
+        
+        // Return base64 data URL from embedded MARKER_ICONS
+        if (window.MARKER_ICONS && window.MARKER_ICONS[markerName]) {
+            return window.MARKER_ICONS[markerName];
+        }
+        
+        // Fallback: try alternative marker names
+        const fallbackNames = ['marker-default', 'marker-community', 'marker-festivals'];
+        for (const name of fallbackNames) {
+            if (window.MARKER_ICONS && window.MARKER_ICONS[name]) {
+                return window.MARKER_ICONS[name];
+            }
+        }
+        
+        // Ultimate fallback: return a data URL for a simple SVG circle
+        return 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDMyIDQ4Ij48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxMiIgZmlsbD0iI0ZGNjlCNCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIiLz48cGF0aCBkPSJNMTYgMjhMMTYgNDQiIHN0cm9rZT0iI0ZGNjlCNCIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIi8+PC9zdmc+';
     }
     
     addEventMarker(event) {
