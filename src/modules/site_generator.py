@@ -63,11 +63,13 @@ DEPENDENCIES = {
         ]
     },
     "lucide": {
-        "version": "0.562.0",
-        "base_url": "https://unpkg.com/lucide@{version}/dist",
+        "version": "latest",
+        "base_url": "https://unpkg.com/lucide@{version}",
         "files": [
-            {"src": "umd/lucide.min.js", "dest": "lucide/lucide.min.js"},
-            {"src": "esm/lucide.js", "dest": "lucide/lucide.esm.js"}
+            # Development version (unminified UMD)
+            {"src": "/dist/umd/lucide.js", "dest": "lucide/lucide.js"},
+            # Production version (minified, default package export)
+            {"src": "", "dest": "lucide/lucide.min.js"}
         ]
     }
 }
@@ -110,7 +112,11 @@ class SiteGenerator:
         
         all_success = True
         for file_info in config['files']:
-            url = f"{base_url}/{file_info['src']}"
+            # Handle case where src is empty (use base_url directly)
+            if file_info['src']:
+                url = f"{base_url}{file_info['src']}"
+            else:
+                url = base_url
             dest = self.dependencies_dir / file_info['dest']
             if not self.fetch_file_from_url(url, dest):
                 all_success = False

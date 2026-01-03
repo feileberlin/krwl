@@ -59,6 +59,20 @@ Interactive mapping library for web applications.
 
 **Source:** https://unpkg.com/leaflet@1.9.4/dist/
 
+### Lucide Icons (latest)
+Beautiful, consistent open-source icon library.
+
+**Files:**
+- `lucide/lucide.js` - Lucide development version (unminified UMD)
+- `lucide/lucide.min.js` - Lucide production version (minified)
+
+**CDN URLs:**
+- Development: `https://unpkg.com/lucide@latest/dist/umd/lucide.js`
+- Production: `https://unpkg.com/lucide@latest`
+
+**License:** ISC  
+**Website:** https://lucide.dev/
+
 ## Why Local Hosting?
 
 1. **Better Performance**: No external CDN delays
