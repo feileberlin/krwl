@@ -746,6 +746,37 @@
       ],
       "test_method": "automated",
       "test_instructions": "1. Run unit tests: python3 tests/test_linter.py --verbose\n2. Generate site: python3 src/event_manager.py generate\n3. Verify linting output shows validation of:\n   - JavaScript (checks for eval(), console.log, bracket matching)\n   - CSS (checks for bracket matching, !important overuse)\n   - HTML (checks for doctype, lang attribute, required tags)\n   - SVG (checks for script tags, event handlers, security issues)\n   - Translations (checks for completeness, consistency between languages)\n   - Accessibility (checks for WCAG 2.1 Level AA compliance)\n4. Confirm build completes even with lint warnings (non-blocking)\n5. Review lint report for actionable issues"
+    },
+    {
+      "id": "markdown-html-builder",
+      "name": "Markdown to HTML Documentation Builder",
+      "description": "Automated build system that converts all Markdown documentation to styled HTML with GitHub-style dark theme and Barbie Pink accents. Organizes files into docs/ directory, generates navigation index, converts links, and adds syntax highlighting. Works offline with pure HTML/CSS.",
+      "category": "infrastructure",
+      "implemented": true,
+      "files": [
+        "scripts/build_markdown_docs.py",
+        "scripts/cleanup_old_docs.py",
+        "DOCUMENTATION_BUILD.md",
+        "DOCUMENTATION_BUILD.html",
+        "scripts/README.md",
+        "README.html",
+        "requirements.txt"
+      ],
+      "code_patterns": [
+        {
+          "file": "scripts/build_markdown_docs.py",
+          "pattern": "def convert_markdown_to_html|def generate_docs_index|def organize_files|markdown.Markdown",
+          "description": "Core conversion and organization functions"
+        },
+        {
+          "file": "scripts/build_markdown_docs.py",
+          "pattern": "#FF69B4|#0d1117|#c9d1d9|GitHub Dark Theme",
+          "description": "GitHub dark theme with Barbie Pink accents"
+        }
+      ],
+      "config_keys": [],
+      "test_method": "manual",
+      "test_instructions": "1. Install dependencies: pip install markdown>=3.5.0 Pygments>=2.17.0\n2. Build documentation: python3 scripts/build_markdown_docs.py --organize --verbose\n3. Verify all .md files converted to .html with:\n   - GitHub dark theme (#0d1117 background, #c9d1d9 text)\n   - Barbie Pink (#FF69B4) headings and accents\n   - Syntax highlighting in code blocks\n   - Navigation bar on every page\n4. Verify file organization:\n   - README.md/README.html stay in root\n   - DOCUMENTATION_BUILD.md/DOCUMENTATION_BUILD.html stay in root\n   - All other docs moved to docs/\n5. Verify docs/index.html generated with categorized navigation\n6. Test cleanup script: python3 scripts/cleanup_old_docs.py --dry-run\n7. Open docs/index.html in browser and verify:\n   - Works with file:// protocol (no server needed)\n   - Navigation links work\n   - All .md links converted to .html\n   - Mobile responsive design\n   - Syntax highlighting displays correctly"
     }
   ]
 }
