@@ -1,0 +1,74 @@
+{
+  "events": [
+    {
+      "id": "html_frankenpost_-3959068800383208116",
+      "title": "Kunst in Bayreuth - Werke der 1940er bis 1960er Jahre - aus den Sammlungen und Stiftungen im Kunstmuseum",
+      "description": "Donnerstag,01.01.2026,",
+      "location": {
+        "name": "Regionalzeitung",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-01T18:00:00",
+      "end_time": null,
+      "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
+      "source": "Frankenpost",
+      "scraped_at": "2026-01-01T13:27:18.685017",
+      "status": "published",
+      "published_at": "2026-01-01T13:42:00.700054"
+    },
+    {
+      "id": "html_frankenpost_4878466979842611893",
+      "title": "Ausstellung zum Fotowettbewerb: Zeig mir deine Lebenswerte Stadt (bis 7. Januar 2026)",
+      "description": "Donnerstag,01.01.2026,",
+      "location": {
+        "name": "Regionalzeitung",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-01T18:00:00",
+      "end_time": null,
+      "url": "https://event.frankenpost.de/detail.php?event_id=3202184",
+      "source": "Frankenpost",
+      "scraped_at": "2026-01-01T13:27:18.684482",
+      "status": "published",
+      "published_at": "2026-01-01T13:42:00.700226"
+    },
+    {
+      "id": "html_frankenpost_6710371282043762830",
+      "title": "F\u00fchrung durch die Wohnr\u00e4ume der Sommerresidenz der Markgr\u00e4fin Caroline",
+      "description": "01.Januar",
+      "location": {
+        "name": "Regionalzeitung",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-01T18:00:00",
+      "end_time": null,
+      "url": "https://event.frankenpost.de/detail.php?event_id=3185852",
+      "source": "Frankenpost",
+      "scraped_at": "2026-01-01T13:27:18.683791",
+      "status": "published",
+      "published_at": "2026-01-01T13:42:00.700343"
+    },
+    {
+      "id": "test_event_001",
+      "title": "Test Community Gathering",
+      "description": "A test event for approval flow testing",
+      "location": {
+        "name": "Test Venue Berlin",
+        "lat": 52.52,
+        "lon": 13.405
+      },
+      "start_time": "2026-01-15T19:00:00",
+      "end_time": null,
+      "url": "https://example.com/test-event",
+      "source": "manual_test",
+      "scraped_at": "2026-01-01T14:45:00",
+      "status": "published",
+      "published_at": "2026-01-01T14:45:54.237616"
+    }
+  ],
+  "last_updated": "2026-01-03T15:47:19.164009",
+  "pending_count": 6
+}

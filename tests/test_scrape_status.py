@@ -27,7 +27,7 @@ def test_scrape_status_file():
         from modules.scraper import EventScraper
         
         # Create event-data directory (correct data location)
-        event_data_dir = test_path / 'event-data'
+        event_data_dir = test_path / 'data'
         event_data_dir.mkdir(exist_ok=True)
         
         # Create initial files

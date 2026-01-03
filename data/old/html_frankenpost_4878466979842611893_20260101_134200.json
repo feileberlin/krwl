@@ -1,0 +1,20 @@
+{
+  "backed_up_at": "2026-01-01T13:42:00.700263",
+  "event": {
+    "id": "html_frankenpost_4878466979842611893",
+    "title": "Ausstellung zum Fotowettbewerb: Zeig mir deine Lebenswerte Stadt (bis 7. Januar 2026)",
+    "description": "Donnerstag,01.01.2026,",
+    "location": {
+      "name": "Regionalzeitung",
+      "lat": 50.3167,
+      "lon": 11.9167
+    },
+    "start_time": "2026-01-01T18:00:00",
+    "end_time": null,
+    "url": "https://event.frankenpost.de/detail.php?event_id=3202184",
+    "source": "Frankenpost",
+    "scraped_at": "2026-01-01T13:27:18.684482",
+    "status": "published",
+    "published_at": "2026-01-01T13:42:00.700226"
+  }
+}

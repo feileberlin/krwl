@@ -1,0 +1,226 @@
+{
+  "archived_events": [
+    {
+      "id": "example_1",
+      "title": "Early Morning Farmers Market",
+      "description": "Fresh local produce, baked goods, and handcrafted items. Get the best selection by arriving early!",
+      "location": {
+        "name": "Ludwigstra\u00dfe Hof",
+        "lat": 50.3175,
+        "lon": 11.9165
+      },
+      "start_time": "2025-12-09T05:30:00",
+      "end_time": "2025-12-09T09:00:00",
+      "url": "https://example.com/farmers-market",
+      "source": "manual",
+      "status": "archived",
+      "published_at": "2025-12-08T12:00:00",
+      "archived_at": "2025-12-29T08:46:33.553946"
+    },
+    {
+      "id": "example_2",
+      "title": "Community Garden Meetup",
+      "description": "Join us for our weekly community garden meetup. We'll be planting winter vegetables and discussing plans for the spring season. All skill levels welcome!",
+      "location": {
+        "name": "Theresienstein Park",
+        "lat": 50.32,
+        "lon": 11.91
+      },
+      "start_time": "2025-12-08T18:00:00",
+      "end_time": "2025-12-08T20:00:00",
+      "url": "https://example.com/garden-meetup",
+      "source": "manual",
+      "status": "archived",
+      "published_at": "2025-12-08T12:00:00",
+      "archived_at": "2025-12-29T08:46:33.553946"
+    },
+    {
+      "id": "example_3",
+      "title": "Open Mic Night at Galeriehaus",
+      "description": "Monthly open mic night featuring local musicians, poets, and performers. Sign up starts at 7 PM, performances begin at 8 PM. Free entry, donations appreciated.",
+      "location": {
+        "name": "Galeriehaus Hof",
+        "lat": 50.3167,
+        "lon": 11.918
+      },
+      "start_time": "2025-12-08T19:00:00",
+      "end_time": "2025-12-08T23:00:00",
+      "url": "https://example.com/open-mic",
+      "source": "manual",
+      "status": "archived",
+      "published_at": "2025-12-08T12:00:00",
+      "archived_at": "2025-12-29T08:46:33.553946"
+    },
+    {
+      "id": "example_4",
+      "title": "Late Night Jazz Session",
+      "description": "Experience smooth jazz in an intimate setting. Local and visiting musicians perform until the early hours.",
+      "location": {
+        "name": "Brauerei Meinel",
+        "lat": 50.319,
+        "lon": 11.915
+      },
+      "start_time": "2025-12-08T22:00:00",
+      "end_time": "2025-12-09T02:00:00",
+      "url": "https://example.com/jazz-night",
+      "source": "manual",
+      "status": "archived",
+      "published_at": "2025-12-08T12:00:00",
+      "archived_at": "2025-12-29T08:46:33.553946"
+    },
+    {
+      "id": "example_5",
+      "title": "Neighborhood Book Club",
+      "description": "This month we're discussing 'The Midnight Library' by Matt Haig. Coffee and snacks provided. New members always welcome!",
+      "location": {
+        "name": "Stadtbibliothek Hof",
+        "lat": 50.315,
+        "lon": 11.917
+      },
+      "start_time": "2025-12-09T17:30:00",
+      "end_time": "2025-12-09T19:00:00",
+      "url": "https://example.com/book-club",
+      "source": "manual",
+      "status": "archived",
+      "published_at": "2025-12-08T12:00:00",
+      "archived_at": "2025-12-29T08:46:33.553946"
+    },
+    {
+      "id": "example_6",
+      "title": "Morning Yoga in the Park",
+      "description": "Start your day with a free outdoor yoga session suitable for all levels. Bring your own mat and water. Weather permitting.",
+      "location": {
+        "name": "B\u00fcrgerpark Theresienstein",
+        "lat": 50.321,
+        "lon": 11.912
+      },
+      "start_time": "2025-12-09T07:00:00",
+      "end_time": "2025-12-09T08:00:00",
+      "url": "https://example.com/morning-yoga",
+      "source": "manual",
+      "status": "archived",
+      "published_at": "2025-12-08T12:00:00",
+      "archived_at": "2025-12-29T08:46:33.553946"
+    },
+    {
+      "id": "example_7",
+      "title": "Sunrise Running Group",
+      "description": "Join fellow runners for a refreshing morning run through the city. All paces welcome. Meet before sunrise!",
+      "location": {
+        "name": "Freiheitshalle Hof",
+        "lat": 50.3155,
+        "lon": 11.9185
+      },
+      "start_time": "2025-12-09T05:45:00",
+      "end_time": "2025-12-09T06:45:00",
+      "url": "https://example.com/running-group",
+      "source": "manual",
+      "status": "archived",
+      "published_at": "2025-12-08T12:00:00",
+      "archived_at": "2025-12-29T08:46:33.553946"
+    },
+    {
+      "id": "example_8",
+      "title": "Tech Skills Workshop: Web Development Basics",
+      "description": "Learn HTML, CSS, and JavaScript basics in this beginner-friendly workshop. Laptops will be provided if you don't have one. Limited spots available.",
+      "location": {
+        "name": "VHS Hofer Land",
+        "lat": 50.318,
+        "lon": 11.92
+      },
+      "start_time": "2025-12-09T14:00:00",
+      "end_time": "2025-12-09T17:00:00",
+      "url": "https://example.com/tech-workshop",
+      "source": "manual",
+      "status": "archived",
+      "published_at": "2025-12-08T12:00:00",
+      "archived_at": "2025-12-29T08:46:33.553946"
+    },
+    {
+      "id": "example_9",
+      "title": "Midnight Movie Marathon",
+      "description": "Classic horror films shown back-to-back. Starts at midnight, runs until dawn. Popcorn and drinks available.",
+      "location": {
+        "name": "DiePelle Theater",
+        "lat": 50.3165,
+        "lon": 11.9175
+      },
+      "start_time": "2025-12-09T00:00:00",
+      "end_time": "2025-12-09T06:00:00",
+      "url": "https://example.com/movie-marathon",
+      "source": "manual",
+      "status": "archived",
+      "published_at": "2025-12-08T12:00:00",
+      "archived_at": "2025-12-29T08:46:33.553946"
+    },
+    {
+      "id": "example_10",
+      "title": "Afternoon Tea & Art Discussion",
+      "description": "Relax with afternoon tea while discussing contemporary art. This week featuring local artist exhibitions.",
+      "location": {
+        "name": "Kunstkaufhaus Hof",
+        "lat": 50.316,
+        "lon": 11.919
+      },
+      "start_time": "2025-12-09T15:00:00",
+      "end_time": "2025-12-09T17:00:00",
+      "url": "https://example.com/tea-art",
+      "source": "manual",
+      "status": "archived",
+      "published_at": "2025-12-08T12:00:00",
+      "archived_at": "2025-12-29T08:46:33.553946"
+    },
+    {
+      "id": "example_11",
+      "title": "Pre-Dawn Meditation Session",
+      "description": "Guided meditation session in peaceful surroundings. Experience tranquility before the city wakes up.",
+      "location": {
+        "name": "Theresienstein Park",
+        "lat": 50.3205,
+        "lon": 11.911
+      },
+      "start_time": "2025-12-09T05:00:00",
+      "end_time": "2025-12-09T06:00:00",
+      "url": "https://example.com/meditation",
+      "source": "manual",
+      "status": "archived",
+      "published_at": "2025-12-08T12:00:00",
+      "archived_at": "2025-12-29T08:46:33.553946"
+    },
+    {
+      "id": "example_12",
+      "title": "Evening Punk Rock Show",
+      "description": "Local punk bands and special guests. Doors open at 8 PM, first band at 9 PM. All ages welcome.",
+      "location": {
+        "name": "Kunstkaufhaus Hof",
+        "lat": 50.316,
+        "lon": 11.919
+      },
+      "start_time": "2025-12-08T20:00:00",
+      "end_time": "2025-12-09T01:00:00",
+      "url": "https://example.com/punk-show",
+      "source": "manual",
+      "status": "archived",
+      "published_at": "2025-12-08T12:00:00",
+      "archived_at": "2025-12-29T08:46:33.553946"
+    },
+    {
+      "id": "demo_just_ended",
+      "title": "[DEMO] Demo Event 9",
+      "description": "Event that just ended. Event that just ended",
+      "location": {
+        "name": "Demo Location Hof",
+        "lat": 50.3247,
+        "lon": 11.9247
+      },
+      "start_time": "2025-12-29T19:44:46",
+      "end_time": "2025-12-29T21:44:46",
+      "url": "https://example.com/demo",
+      "source": "demo",
+      "status": "archived",
+      "published_at": "2025-12-29T21:54:46",
+      "archived_at": "2025-12-29T21:55:01.561449"
+    }
+  ],
+  "last_updated": "2025-12-29T21:55:01.561449"
+}

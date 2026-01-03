@@ -1,0 +1,20 @@
+{
+  "backed_up_at": "2026-01-01T13:42:00.700373",
+  "event": {
+    "id": "html_frankenpost_6710371282043762830",
+    "title": "F\u00fchrung durch die Wohnr\u00e4ume der Sommerresidenz der Markgr\u00e4fin Caroline",
+    "description": "01.Januar",
+    "location": {
+      "name": "Regionalzeitung",
+      "lat": 50.3167,
+      "lon": 11.9167
+    },
+    "start_time": "2026-01-01T18:00:00",
+    "end_time": null,
+    "url": "https://event.frankenpost.de/detail.php?event_id=3185852",
+    "source": "Frankenpost",
+    "scraped_at": "2026-01-01T13:27:18.683791",
+    "status": "published",
+    "published_at": "2026-01-01T13:42:00.700343"
+  }
+}

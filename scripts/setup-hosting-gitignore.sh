@@ -91,8 +91,8 @@ echo ""
 echo "Step 4: Creating production-only directories..."
 mkdir -p logs
 mkdir -p backups
-mkdir -p event-data/backups
-mkdir -p event-data/old
+mkdir -p data/backups
+mkdir -p data/old
 mkdir -p ssl
 mkdir -p cache
 echo "✅ Created production directories"

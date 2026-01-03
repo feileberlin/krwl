@@ -1,0 +1,15 @@
+{
+  "rejected_events": [
+    {
+      "title": "Another Test Event to Reject",
+      "source": "manual_test",
+      "rejected_at": "2026-01-01T14:46:01.951762"
+    },
+    {
+      "title": "AUCHEVENTMELDERWERDEN?",
+      "source": "Frankenpost",
+      "rejected_at": "2026-01-01T15:26:30.310079"
+    }
+  ],
+  "last_updated": "2026-01-01T15:26:30.310093"
+}

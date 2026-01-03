@@ -291,18 +291,18 @@ class SiteGenerator:
             return f.read()
     
     def load_all_events(self) -> List[Dict]:
-        """Load all event data (real + demo) from event-data directory"""
+        """Load all event data (real + demo) from data directory"""
         events = []
-        event_data_path = self.base_path / 'event-data'
+        data_path = self.base_path / 'data'
         
         # Real events
-        events_file = event_data_path / 'events.json'
+        events_file = data_path / 'events.json'
         if events_file.exists():
             with open(events_file, 'r') as f:
                 events.extend(json.load(f).get('events', []))
         
         # Demo events (always include - config determines if they're shown)
-        demo_file = event_data_path / 'events.demo.json'
+        demo_file = data_path / 'events.demo.json'
         if demo_file.exists():
             with open(demo_file, 'r') as f:
                 events.extend(json.load(f).get('events', []))
@@ -376,10 +376,10 @@ class SiteGenerator:
     
     def load_translation_data(self) -> Tuple[Dict, Dict]:
         """Load translation files for all languages"""
-        event_data_path = self.base_path / 'event-data'
-        with open(event_data_path / 'content.json', 'r') as f:
+        data_path = self.base_path / 'data' / 'i18n'
+        with open(data_path / 'content.json', 'r') as f:
             content_en = json.load(f)
-        with open(event_data_path / 'content.de.json', 'r') as f:
+        with open(data_path / 'content.de.json', 'r') as f:
             content_de = json.load(f)
         return content_en, content_de
     
@@ -936,7 +936,7 @@ window.MARKER_ICONS = {json.dumps(marker_icons, ensure_ascii=False)};'''
   - Design tokens: data/config.json (design section)
   - Styles: assets/css/
   - Scripts: assets/js/
-  - Events: event-data/
+  - Events: data/
 -->'''
         
         # Load design tokens CSS

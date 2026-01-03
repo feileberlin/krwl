@@ -1,0 +1,229 @@
+{
+  "locale": "de",
+  "app": {
+    "title": "KRWL HOF Community-Veranstaltungen",
+    "tagline": "Entdecke Community-Veranstaltungen in deiner Nähe"
+  },
+  "filters": {
+    "event_count": {
+      "singular": "{count} Veranstaltung",
+      "plural": "{count} Veranstaltungen",
+      "none": "Keine Veranstaltungen"
+    },
+    "event_word": {
+      "singular": "veranstaltung",
+      "plural": "veranstaltungen"
+    },
+    "categories": {
+      "all": "veranstaltungen",
+      "music": "musik",
+      "sports": "sport",
+      "arts": "kunst & kultur",
+      "food": "essen & trinken",
+      "festivals": "festivals",
+      "workshops": "workshops & kurse",
+      "community": "gemeinschaft & soziales"
+    },
+    "categories_singular": {
+      "festivals": "festival"
+    },
+    "time_ranges": {
+      "sunrise": "bis sonnenaufgang",
+      "sunday": "bis sonntag zur primetime",
+      "full-moon": "bis zum nächsten vollmond"
+    },
+    "distances": {
+      "1.25": "maximal 15 minuten zu fuß",
+      "3.33": "10 minuten maximalentfernung mit dem fahrrad",
+      "11.25": "45 minuten maximalentfernung mit öffentlichen verkehrsmitteln"
+    },
+    "locations": {
+      "geolocation": "von hier",
+      "prefix": "von"
+    },
+    "predefined_locations": {
+      "location.no1": "Hof Hauptbahnhof",
+      "location.no2": "Hof Rathaus"
+    }
+  },
+  "burger_menu": {
+    "actions": {
+      "bookmark": {
+        "icon": "⭐",
+        "label": "merken",
+        "label_active": "entfernen",
+        "aria_label": "Diese Veranstaltung merken"
+      },
+      "copy": {
+        "icon": "📋",
+        "label": "daten_kopieren",
+        "label_success": "kopiert!",
+        "aria_label": "Veranstaltungsdetails kopieren"
+      },
+      "share": {
+        "icon": "📤",
+        "label": "teilen",
+        "label_success": "geteilt!",
+        "aria_label": "Diese Veranstaltung teilen"
+      },
+      "url": {
+        "icon": "🔗",
+        "label": "url_öffnen",
+        "aria_label": "Veranstaltungs-URL öffnen"
+      },
+      "navigate": {
+        "icon": "🧭",
+        "label": "navigation",
+        "aria_label": "Route anzeigen"
+      },
+      "calendar": {
+        "icon": "📅",
+        "label": "zum_kalender",
+        "aria_label": "Zum Kalender hinzufügen"
+      },
+      "views": {
+        "icon": "👁️",
+        "label": "aufrufe: ",
+        "aria_label": "Aufrufanzahl"
+      },
+      "exit": {
+        "icon": "✕",
+        "label": "schließen",
+        "aria_label": "Menü schließen"
+      }
+    }
+  },
+  "event_detail": {
+    "no_description": "Keine Beschreibung verfügbar.",
+    "distance_unknown": "Unbekannt",
+    "distance_format": "{distance} km entfernt",
+    "location_label": "Ort:",
+    "time_label": "Zeit:",
+    "distance_label": "Entfernung:"
+  },
+  "time": {
+    "today": "Heute",
+    "tomorrow": "Morgen"
+  },
+  "messages": {
+    "geolocation": {
+      "denied": "Standortzugriff verweigert",
+      "unavailable": "Standortdienst nicht verfügbar",
+      "timeout": "Standortabfrage überschritten",
+      "error": "Fehler beim Abrufen des Standorts"
+    },
+    "events": {
+      "loading": "Lade Veranstaltungen...",
+      "no_events": "Keine Veranstaltungen gefunden, die deinen Filtern entsprechen",
+      "error": "Fehler beim Laden der Veranstaltungen"
+    },
+    "share": {
+      "cancelled": "Teilen abgebrochen",
+      "not_supported": "Teilen wird nicht unterstützt",
+      "success": "Erfolgreich geteilt"
+    },
+    "copy": {
+      "success": "In Zwischenablage kopiert",
+      "error": "Kopieren fehlgeschlagen"
+    },
+    "library": {
+      "leaflet_error": "Kartenbibliothek konnte nicht geladen werden. Bitte überprüfe deine Internetverbindung und lade die Seite neu."
+    }
+  },
+  "accessibility": {
+    "screen_reader": {
+      "welcome": "Willkommen bei KRWL HOF Community-Veranstaltungen. Dies ist eine interaktive Vollbild-Kartenoberfläche.",
+      "map_description": "Veranstaltungsfilter befinden sich oben auf der Karte. Klicke auf Kartenmarkierungen, um Veranstaltungsdetails anzuzeigen.",
+      "marker_info": "Alle Veranstaltungen werden als Markierungen auf der Karte mit Zeitangaben angezeigt. Es ist keine separate Navigation erforderlich.",
+      "keyboard_nav": "Tastaturnavigation: Verwende die Pfeiltasten, um durch Veranstaltungen zu navigieren, Eingabetaste oder Leertaste zum Öffnen von Details, Escape zum Schließen."
+    },
+    "announcements": {
+      "filters_changed": "Filter aktualisiert. Zeige {count} Veranstaltungen.",
+      "event_opened": "Veranstaltungsdetails geöffnet: {title}",
+      "event_closed": "Veranstaltungsdetails geschlossen"
+    },
+    "labels": {
+      "skip_to_map": "Zur Karte springen",
+      "filter_heading": "Veranstaltungen filtern",
+      "event_count_display": "Veranstaltungsanzahl-Anzeige",
+      "category_filter": "Nach Veranstaltungskategorie filtern",
+      "time_filter": "Nach Zeitraum filtern",
+      "distance_filter": "Nach Entfernung vom Standort filtern",
+      "location_selector": "Referenzstandort auswählen",
+      "imprint_link": "Impressum und rechtliche Informationen anzeigen",
+      "map_main": "Interaktive Karte zeigt Community-Veranstaltungen in deiner Nähe",
+      "close_detail": "Veranstaltungsdetails schließen",
+      "event_dialog": "Veranstaltungsdetails"
+    }
+  },
+  "noscript": {
+    "heading": "KRWL HOF Community-Veranstaltungen",
+    "warning": "⚠️ JavaScript ist deaktiviert. Zeige statische Veranstaltungsliste.",
+    "info": "Aktiviere JavaScript für die interaktive Kartenerfahrung mit Filtern und Geolokalisierung.",
+    "upcoming_events": "Kommende Veranstaltungen",
+    "loading": "Lade Veranstaltungen...",
+    "no_events": "Keine kommenden Veranstaltungen gefunden.",
+    "footer": "Für die beste Erfahrung aktiviere bitte JavaScript, um auf die interaktive Karte zuzugreifen.",
+    "happening_now": "LÄUFT JETZT",
+    "view_details": "Veranstaltungsdetails ansehen →"
+  },
+  "event_list": {
+    "date_format": "{date}",
+    "time_format": "{time}",
+    "location_format": "📍 {location}",
+    "actions": {
+      "view": "ansehen",
+      "navigate": "navigation",
+      "copy": "kopieren",
+      "share": "teilen",
+      "copied": "✓ kopiert!",
+      "failed": "✗ fehlgeschlagen"
+    }
+  },
+  "calendar": {
+    "title": "{event_title}",
+    "description": "{event_description}",
+    "location": "{venue_name}",
+    "filename": "veranstaltung-{event_id}.ics"
+  },
+  "map": {
+    "user_location_popup": "Du bist hier",
+    "attribution": "Kartendaten © OpenStreetMap-Mitwirkende",
+    "zoom_in": "Vergrößern",
+    "zoom_out": "Verkleinern"
+  },
+  "imprint": {
+    "title": "KRWL HOF Projektstandort",
+    "operator": {
+      "name": "KRWL HOF Community Events",
+      "type": "Gemeinschaftsprojekt"
+    },
+    "address": {
+      "city": "Hof",
+      "postal_code": "95028",
+      "state": "Bayern",
+      "country": "Deutschland"
+    },
+    "contact": {
+      "website": "Webseite",
+      "github": "GitHub"
+    },
+    "responsible": {
+      "label": "Verantwortlich",
+      "role": "Projektbetreuer"
+    },
+    "legal": {
+      "disclaimer": "Alle Veranstaltungsinformationen werden aus öffentlichen Quellen gesammelt. Wir übernehmen keine Gewähr für Richtigkeit oder Vollständigkeit. Bitte überprüfen Sie Details bei den Veranstaltern.",
+      "privacy_policy": "Diese Anwendung verwendet Browser-Geolokalisierung mit Ihrer ausdrücklichen Erlaubnis. Standortdaten werden lokal verarbeitet und nicht an einen Server übermittelt. Veranstaltungslesezeichen werden im Browser-localStorage gespeichert.",
+      "data_sources": "Veranstaltungsdaten werden aus öffentlichen Quellen aggregiert, einschließlich Stadtwebsites, Kultureinrichtungen und Community-Veranstaltungskalendern. Siehe Scraping-Konfiguration für vollständige Quellenliste.",
+      "license": "Open-Source-Projekt - Siehe GitHub-Repository für Lizenzdetails",
+      "copyright": "© 2024 KRWL HOF Community. Kartendaten © OpenStreetMap-Mitwirkende."
+    },
+    "technical": {
+      "label": "Technisch",
+      "hosting": "Hosting",
+      "domain": "Domain",
+      "open_source": "Open-Source-Projekt"
+    }
+  }
+}
