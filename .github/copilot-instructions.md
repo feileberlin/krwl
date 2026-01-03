@@ -125,6 +125,16 @@ krwl-hof/
 │   ├── manifest.json       # PWA manifest
 │   └── ...                 # Other assets (icons, favicon, etc.)
 │
+├── layouts/
+│   └── components/         # HTML component templates
+│       ├── html-head.html
+│       ├── html-body-open.html
+│       ├── html-body-close.html
+│       ├── map-main.html
+│       ├── dashboard-aside.html
+│       ├── filter-nav.html
+│       └── noscript-content.html
+│
 ├── static/
 │   ├── index.html          # 🚫 AUTO-GENERATED (do not edit directly)
 │   ├── css/                # CSS files (created during build, sourced from assets/)
@@ -389,10 +399,11 @@ Before submitting PR:
 - `static/index.html` - Single-file HTML with everything inlined
 
 ### To modify the HTML:
-1. Edit source CSS/JS files: `static/css/style.css`, `static/js/app.js`, `static/js/i18n.js`
-2. Or edit templates in `src/modules/site_generator.py` (for advanced changes)
-3. Run: `python3 src/event_manager.py build production` (or `development`)
-4. Commit both source changes AND generated `static/index.html`
+1. Edit component templates in `layouts/components/` directory
+2. Edit source CSS/JS files: `assets/css/style.css`, `assets/js/app.js`, `assets/js/i18n.js`
+3. For advanced changes, edit `src/modules/site_generator.py` build logic
+4. Run: `python3 src/event_manager.py build production` (or `development`)
+5. Commit both source changes AND generated `static/index.html` or `target/index.html`
 
 ## Build and Test Instructions
 

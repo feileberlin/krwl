@@ -20,10 +20,9 @@ The application uses a strict 4-layer z-index architecture:
 **KISS Principle Applied: Flat is better than nested!**
 
 ```
-src/templates/components/
+layouts/components/
 ├── README.md                          # This file
 ├── variables-reference.md             # CSS variable documentation
-├── generate_design_tokens.py          # Token generator script
 ├── design-tokens.css                  # Generated CSS (auto-created)
 ├── html-head.html                     # <head> with meta, title, styles
 ├── html-body-open.html                # <body> opening + noscript
@@ -78,8 +77,8 @@ Contains closing scripts and tags:
 
 **Template Variables:**
 - `{embedded_data}` - Embedded JSON data
-- `{config_loader}` - Runtime config loader
-- `{fetch_interceptor}` - Fetch API interceptor
+- `{config_loader}` - Legacy placeholder (not currently used)
+- `{fetch_interceptor}` - Legacy placeholder (not currently used)
 - `{leaflet_js}` - Leaflet.js library
 - `{lucide_js}` - Lucide icons library
 - `{i18n_js}` - Internationalization module
