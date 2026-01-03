@@ -10,8 +10,8 @@ Successfully implemented a complete component-based templating system with centr
 - **File**: `config.json` (design section at top)
 - **Tokens**: 70 CSS custom properties
 - **Categories**: colors, typography, spacing, z-index, shadows, borders, transitions, branding
-- **Generator**: `src/templates/components/generate_design_tokens.py`
-- **Output**: `src/templates/components/design-tokens.css` (auto-generated)
+- **Generator**: `src/tools/generate_design_tokens.py`
+- **Output**: `layouts/components/design-tokens.css` (auto-generated)
 
 ### 2. Component-Based Templating
 - **Structure**: Flat directory (KISS principle - no nested folders)
@@ -96,7 +96,7 @@ Successfully implemented a complete component-based templating system with centr
 vim config.json  # Edit "design" section
 
 # 2. Generate CSS
-python3 src/templates/components/generate_design_tokens.py
+python3 src/tools/generate_design_tokens.py
 
 # 3. Rebuild site
 python3 src/event_manager.py generate
@@ -134,8 +134,8 @@ python3 -m pytest tests/ -v
 - `docs/KISS_IMPROVEMENTS.md` - Simplifications made
 
 ### For Developers
-- `src/templates/components/README.md` - Component system guide
-- `src/templates/components/variables-reference.md` - CSS tokens reference
+- `layouts/components/README.md` - Component system guide
+- `layouts/components/variables-reference.md` - CSS tokens reference
 - `.github/DOCUMENTATION_STANDARD.md` - Documentation standard
 - `tests/README.md` - Testing guide
 - `scripts/README.md` - Scripts guide

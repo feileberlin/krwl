@@ -25,7 +25,7 @@ src/templates/components/
 
 **After:**
 ```
-src/templates/components/
+layouts/components/
 ├── html-head.html
 ├── html-body-open.html
 ├── html-body-close.html
@@ -177,7 +177,7 @@ Additional KISS opportunities identified:
 
 - `.github/DOCUMENTATION_STANDARD.md` - Documentation standard
 - `scripts/validate_docs.py` - Documentation validator
-- `src/templates/components/README.md` - Component system docs
+- `layouts/components/README.md` - Component system docs
 
 ---
 

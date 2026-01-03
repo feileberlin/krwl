@@ -31,7 +31,7 @@ krwl-hof/
 - ✅ Renamed `event-data/` → `data/` (clearer purpose)
 - ✅ Moved `config.json` → `data/config.json` (data belongs in data/)
 - ✅ Moved `assets/` content → `src/` (source) and `target/` (static assets)
-- ✅ Flattened `src/templates/components/` → `src/components/` (KISS)
+- ✅ Flattened `src/templates/components/` → `layouts/components/` (KISS)
 - ✅ Merged `src-modules/` → `src/modules/` (standard naming)
 
 ### 2. CSS Modularization
@@ -71,7 +71,7 @@ target/
 
 ### 4. Path Simplification
 - ✅ Removed `assets/lib/` nesting - libraries now in `target/` root
-- ✅ Removed `src/templates/components/` nesting - now `src/components/`
+- ✅ Removed `src/templates/components/` nesting - now `layouts/components/`
 - ✅ Removed `src/css-modules/` - merged into `src/css/`
 - ✅ Maximum 2 levels deep everywhere
 

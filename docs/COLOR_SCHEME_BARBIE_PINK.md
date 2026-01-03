@@ -203,7 +203,7 @@ vim config.json
 # Update design.colors section with original hex codes
 
 # Regenerate CSS tokens
-python3 src/templates/components/generate_design_tokens.py
+python3 src/tools/generate_design_tokens.py
 
 # Rebuild site
 python3 src/event_manager.py generate
@@ -211,8 +211,8 @@ python3 src/event_manager.py generate
 
 ## 📚 Related Documentation
 
-- [Design Tokens](../templates/components/variables-reference.md) - Current design token system
-- [Component System](../templates/components/README.md) - How tokens are used
+- [Design Tokens](../layouts/components/variables-reference.md) - Current design token system
+- [Component System](../layouts/components/README.md) - How tokens are used
 - [Instant Rebranding](../KISS_IMPROVEMENTS.md) - How to rebrand the entire site
 
 ## 🎨 Design Philosophy

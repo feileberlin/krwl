@@ -4,12 +4,12 @@
 
 ### 1. Design Token System
 - **File**: `config.json` - Added `design` section at top with 70 CSS custom properties
-- **Generator**: `src/templates/components/generate_design_tokens.py` - Converts tokens to CSS
-- **Output**: `src/templates/components/design-tokens.css` - Generated tokens
+- **Generator**: `src/tools/generate_design_tokens.py` - Converts tokens to CSS
+- **Output**: `layouts/components/design-tokens.css` - Generated tokens
 - **Status**: ✅ Working perfectly, production-ready
 
 ### 2. Component-Based Templates
-- **Location**: `src/templates/components/` - 8 modular HTML components
+- **Location**: `layouts/components/` - 8 modular HTML components
 - **Files**: html-head.html, html-body-open.html, html-body-close.html, map-main.html, dashboard-aside.html, filter-nav.html, noscript-content.html, variables-reference.md
 - **Integration**: Site generator loads and assembles them
 - **Status**: ✅ Working perfectly, fully documented
@@ -84,7 +84,7 @@
 
 ```bash
 # Generate design tokens
-python3 src/templates/components/generate_design_tokens.py
+python3 src/tools/generate_design_tokens.py
 
 # Build site
 python3 src/event_manager.py generate

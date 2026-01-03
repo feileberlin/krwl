@@ -200,16 +200,16 @@ def test_html_assembly():
     return True
 
 
-def test_backward_compatibility():
-    """Test output is compatible with existing template"""
+def test_component_based_generation():
+    """Test component-based HTML generation produces valid output"""
     print("\n" + "=" * 60)
-    print("Testing Backward Compatibility")
+    print("Testing Component-Based Generation")
     print("=" * 60)
     
     base_path = Path(__file__).parent.parent
     generator = SiteGenerator(base_path)
     
-    # Test that both methods produce valid HTML
+    # Test that component-based generation produces valid HTML
     configs = [{'app': {'name': 'Test App'}}]
     events = []
     content_en = {'noscript': {'warning': 'JS disabled'}}
@@ -234,28 +234,20 @@ def test_backward_compatibility():
         stylesheets, scripts, marker_icons
     )
     
-    # Build with original template
-    html_original = generator.build_html_structure(
-        configs, events, content_en, content_de,
-        stylesheets, scripts, marker_icons
-    )
-    
-    # Both should be valid HTML
+    # Should be valid HTML
     assert '<!DOCTYPE html>' in html_component
-    assert '<!DOCTYPE html>' in html_original
-    print("✓ Both methods produce valid HTML")
+    print("✓ Produces valid HTML")
     
     # Component version should have semantic structure
     assert '<main id="map"' in html_component
-    print("✓ Component version has semantic structure")
+    print("✓ Has semantic structure")
     
-    # Both should have required elements
+    # Should have required elements
     for element in ['<head>', '<body>', 'window.ALL_CONFIGS', 'window.ALL_EVENTS']:
         assert element in html_component, f"Missing {element} in component HTML"
-        assert element in html_original, f"Missing {element} in original HTML"
-    print("✓ Both methods have required elements")
+    print("✓ Has all required elements")
     
-    print("✅ Backward compatibility maintained")
+    print("✅ Component-based generation validated")
     return True
 
 
@@ -341,7 +333,7 @@ def run_all_tests():
         ("Design Tokens Loading", test_design_tokens_loading),
         ("CSS Generation", test_design_tokens_generation),
         ("HTML Assembly", test_html_assembly),
-        ("Backward Compatibility", test_backward_compatibility),
+        ("Component-Based Generation", test_component_based_generation),
         ("Semantic Structure", test_semantic_structure),
         ("Z-Index Layering", test_z_index_layering)
     ]

@@ -89,7 +89,7 @@ All modules use CSS custom properties from `design-tokens.css`:
 - `var(--color-text-primary)` - Light text
 - And more...
 
-See `src/templates/components/variables-reference.md` for complete token reference.
+See `layouts/components/variables-reference.md` for complete token reference.
 
 ## 📝 Adding New Modules
 

@@ -147,7 +147,7 @@ When you update design tokens in `config.json`:
 
 ```bash
 # Regenerate CSS custom properties
-python3 src/templates/components/generate_design_tokens.py
+python3 src/tools/generate_design_tokens.py
 
 # Rebuild the site
 python3 src/event_manager.py generate
@@ -166,6 +166,6 @@ For older browsers, consider using a fallback or polyfill.
 ## Related Files
 
 - `config.json` - Design token definitions
-- `src/templates/components/generate_design_tokens.py` - Token generator
-- `src/templates/components/design-tokens.css` - Generated CSS output
+- `src/tools/generate_design_tokens.py` - Token generator
+- `layouts/components/design-tokens.css` - Generated CSS output
 - `assets/css/style.css` - Main stylesheet using tokens

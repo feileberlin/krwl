@@ -277,7 +277,7 @@ Open `config.json` and modify the `design` section at the top:
 Run the token generator:
 
 ```bash
-python3 src/templates/components/generate_design_tokens.py
+python3 src/tools/generate_design_tokens.py
 ```
 
 This reads the design section and outputs `design-tokens.css`.
@@ -303,7 +303,7 @@ python3 -m http.server 8000
 Deploy:
 
 ```bash
-git add config.json src/templates/ static/
+git add config.json layouts/ static/
 git commit -m "🎨 Rebrand with new design tokens"
 git push
 ```
@@ -398,12 +398,12 @@ result = linter.lint_semantic_structure(html)
 
 1. Check if CSS was generated:
    ```bash
-   ls -la src/templates/components/design-tokens.css
+   ls -la layouts/components/design-tokens.css
    ```
 
 2. Regenerate tokens:
    ```bash
-   python3 src/templates/components/generate_design_tokens.py
+   python3 src/tools/generate_design_tokens.py
    ```
 
 3. Rebuild site:
@@ -415,7 +415,7 @@ result = linter.lint_semantic_structure(html)
 
 1. Verify all component files exist:
    ```bash
-   find src/templates/components -name "*.html"
+   find layouts/components -name "*.html"
    ```
 
 2. Check site generator logs for errors
