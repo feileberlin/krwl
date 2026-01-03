@@ -108,7 +108,7 @@ class SiteGenerator:
             logger.info("Fetching dependency", extra={
                 'url': url,
                 'destination': str(destination),
-                'filename': destination.name
+                'file_name': destination.name
             })
             
             with urllib.request.urlopen(url, timeout=30) as response:
@@ -119,7 +119,7 @@ class SiteGenerator:
             
             print(f"✓ ({len(content) / 1024:.1f} KB)")
             logger.debug("Successfully fetched dependency", extra={
-                'filename': destination.name,
+                'file_name': destination.name,
                 'size_bytes': len(content),
                 'size_kb': len(content) / 1024
             })
