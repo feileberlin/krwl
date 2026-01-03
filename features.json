@@ -545,7 +545,10 @@
       "category": "infrastructure",
       "implemented": true,
       "files": [
-        ".github/copilot-instructions.md"
+        ".github/copilot-instructions.md",
+        ".github/COPILOT_SETUP.md",
+        ".github/CODEOWNERS",
+        ".github/pull_request_template.md"
       ],
       "test_method": "check_files_exist"
     },
