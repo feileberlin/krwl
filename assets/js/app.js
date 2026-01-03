@@ -29,8 +29,9 @@ class EventsApp {
     }
     
     async init() {
-        // Load configuration
-        await this.loadConfig();
+        // Load configuration from embedded window.APP_CONFIG (set by backend during site generation)
+        // Note: config.json is backend-only and NOT fetched by frontend
+        this.config = window.APP_CONFIG || this.getDefaultConfig();
         
         this.log('App initialized', 'Config:', this.config);
         
@@ -272,24 +273,26 @@ class EventsApp {
     }
 
     
-    async loadConfig() {
-        try {
-            const response = await fetch('config.json');
-            this.config = await response.json();
-        } catch (error) {
-            console.error('Error loading config:', error);
-            // Use defaults
-            this.config = {
-                map: {
-                    default_center: { lat: 52.52, lon: 13.405 },
-                    default_zoom: 13
-                },
-                filtering: {
-                    max_distance_km: 5.0,
-                    show_until: "next_sunrise"
-                }
-            };
-        }
+    getDefaultConfig() {
+        // Fallback config if window.APP_CONFIG is not available
+        // This should never happen in production (set by site_generator.py)
+        console.warn('window.APP_CONFIG not found, using fallback defaults');
+        return {
+            debug: false,
+            app: {
+                environment: 'unknown'
+            },
+            map: {
+                default_center: { lat: 50.3167, lon: 11.9167 },
+                default_zoom: 13,
+                tile_provider: 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            },
+            data: {
+                source: 'real',
+                sources: {}
+            }
+        };
     }
     
     initMap() {

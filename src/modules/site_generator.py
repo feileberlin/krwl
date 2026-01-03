@@ -322,10 +322,10 @@ class SiteGenerator:
                 self.dependencies_dir / 'leaflet' / 'leaflet.css'
             ),
             'app_css': self.read_text_file(
-                self.base_path / "src" / 'css' / 'style.css'
+                self.base_path / "assets" / 'css' / 'style.css'
             ),
             'time_drawer_css': self.read_text_file(
-                self.base_path / "src" / 'css' / 'time-drawer.css'
+                self.base_path / "assets" / 'css' / 'time-drawer.css'
             )
         }
     
@@ -336,13 +336,13 @@ class SiteGenerator:
                 self.dependencies_dir / 'leaflet' / 'leaflet.js'
             ),
             'i18n_js': self.read_text_file(
-                self.base_path / "src" / 'js' / 'i18n.js'
+                self.base_path / "assets" / 'js' / 'i18n.js'
             ),
             'time_drawer_js': self.read_text_file(
-                self.base_path / "src" / 'js' / 'time-drawer.js'
+                self.base_path / "assets" / 'js' / 'time-drawer.js'
             ),
             'app_js': self.read_text_file(
-                self.base_path / "src" / 'js' / 'app.js'
+                self.base_path / "assets" / 'js' / 'app.js'
             )
         }
         
@@ -868,17 +868,29 @@ class SiteGenerator:
         # Build noscript HTML
         noscript_html = self.build_noscript_html(events, content_en, app_name)
         
-        # Load JavaScript templates
-        config_loader = self.load_template('config-loader.js')
-        fetch_interceptor = self.load_template('fetch-interceptor.js')
+        # Extract minimal runtime config for frontend (backend config.json is not fetched by frontend)
+        primary_config = configs[0] if configs else {}
+        runtime_config = {
+            'debug': primary_config.get('debug', False),
+            'app': {
+                'environment': primary_config.get('app', {}).get('environment', 'unknown')
+            },
+            'map': primary_config.get('map', {}),
+            'data': {
+                'source': primary_config.get('data', {}).get('source', 'real'),
+                'sources': primary_config.get('data', {}).get('sources', {})
+            }
+        }
         
-        # Prepare embedded data
-        embedded_data = f'''// Embed all configurations and data
-window.ALL_CONFIGS = {json.dumps(configs)};
-window.ALL_EVENTS = {json.dumps(events)};
-window.EMBEDDED_CONTENT_EN = {json.dumps(content_en)};
-window.EMBEDDED_CONTENT_DE = {json.dumps(content_de)};
-window.MARKER_ICONS = {json.dumps(marker_icons)};'''
+        # Prepare embedded data for frontend
+        # All data is embedded by backend - frontend does NOT fetch config.json or events
+        embedded_data = f'''// Data embedded by backend (site_generator.py) - frontend does NOT fetch files
+// config.json is backend-only, frontend uses this minimal runtime config
+window.APP_CONFIG = {json.dumps(runtime_config, ensure_ascii=False)};
+window.__INLINE_EVENTS_DATA__ = {{ "events": {json.dumps(events, ensure_ascii=False)} }};
+window.EMBEDDED_CONTENT_EN = {json.dumps(content_en, ensure_ascii=False)};
+window.EMBEDDED_CONTENT_DE = {json.dumps(content_de, ensure_ascii=False)};
+window.MARKER_ICONS = {json.dumps(marker_icons, ensure_ascii=False)};'''
         
         # Generate timestamp placeholder
         generated_at = 'BUILD_TIMESTAMP_PLACEHOLDER'
@@ -983,18 +995,33 @@ window.MARKER_ICONS = {json.dumps(marker_icons)};'''
         # Build noscript HTML
         noscript_html = self.build_noscript_html(events, content_en, app_name)
         
+        # Extract minimal runtime config for frontend (backend config.json is not fetched by frontend)
+        runtime_config = {
+            'debug': primary_config.get('debug', False),
+            'app': {
+                'environment': primary_config.get('app', {}).get('environment', 'unknown')
+            },
+            'map': primary_config.get('map', {}),
+            'data': {
+                'source': primary_config.get('data', {}).get('source', 'real'),
+                'sources': primary_config.get('data', {}).get('sources', {})
+            }
+        }
+        
         # Load template files
         html_template = self.load_template('index.html')
         config_loader = self.load_template('config-loader.js')
         fetch_interceptor = self.load_template('fetch-interceptor.js')
         
         # Prepare embedded data with Lucide markers
-        embedded_data = f'''// Embed all configurations and data
-window.ALL_CONFIGS = {json.dumps(configs)};
-window.ALL_EVENTS = {json.dumps(events)};
-window.EMBEDDED_CONTENT_EN = {json.dumps(content_en)};
-window.EMBEDDED_CONTENT_DE = {json.dumps(content_de)};
-window.MARKER_ICONS = {json.dumps(marker_icons)};'''
+        # All data is embedded by backend - frontend does NOT fetch config.json or events
+        embedded_data = f'''// Data embedded by backend (site_generator.py) - frontend does NOT fetch files
+// config.json is backend-only, frontend uses this minimal runtime config
+window.APP_CONFIG = {json.dumps(runtime_config, ensure_ascii=False)};
+window.__INLINE_EVENTS_DATA__ = {{ "events": {json.dumps(events, ensure_ascii=False)} }};
+window.EMBEDDED_CONTENT_EN = {json.dumps(content_en, ensure_ascii=False)};
+window.EMBEDDED_CONTENT_DE = {json.dumps(content_de, ensure_ascii=False)};
+window.MARKER_ICONS = {json.dumps(marker_icons, ensure_ascii=False)};'''
         
         # Use placeholder timestamp to avoid merge conflicts
         # Actual timestamp will be added during deployment if needed
@@ -1173,13 +1200,15 @@ window.MARKER_ICONS = {json.dumps(marker_icons)};'''
     
     def find_events_data_position(self, html: str) -> Tuple[int, int]:
         """Find position of events data in HTML"""
-        marker = 'window.ALL_EVENTS = '
+        marker = 'window.__INLINE_EVENTS_DATA__ = '
         start = html.find(marker)
         if start == -1:
             return -1, -1
         
         start += len(marker)
-        end = html.find('];', start)
+        end = html.find('};', start)
+        if end != -1:
+            end += 1  # Include the closing }
         return start, end
     
     def update_events_data(self) -> bool:

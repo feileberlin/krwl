@@ -158,25 +158,45 @@ def load_config(base_path):
         print(f"🚀 Environment auto-detected: {env_name}")
     
     # Apply environment-specific overrides
+    # These values are HARDCODED based on environment - not read from config.json
+    # This prevents confusion from config.json values that would be silently ignored
     if env_is_dev:
         # Development mode: Optimized for local testing and debugging
         config['debug'] = True
         config['data']['source'] = 'both'  # Include demo events for testing
+        
+        # Create watermark field if it doesn't exist
+        if 'watermark' not in config:
+            config['watermark'] = {}
         config['watermark']['text'] = 'DEV'
+        
         config['app']['environment'] = 'development'
         # Add [DEV] suffix if not already present
         if '[DEV]' not in config['app']['name']:
             config['app']['name'] = config['app']['name'] + ' [DEV]'
+        
+        # Create performance fields if they don't exist
+        if 'performance' not in config:
+            config['performance'] = {}
         config['performance']['cache_enabled'] = False  # Fresh data each time
         config['performance']['prefetch_events'] = False  # On-demand loading
     else:
         # Production/CI mode
         config['debug'] = False
         config['data']['source'] = 'real'  # Real events only
+        
+        # Create watermark field if it doesn't exist
+        if 'watermark' not in config:
+            config['watermark'] = {}
         config['watermark']['text'] = 'PRODUCTION'
+        
         config['app']['environment'] = env_name
         # Remove [DEV] suffix if present
         config['app']['name'] = config['app']['name'].replace(' [DEV]', '')
+        
+        # Create performance fields if they don't exist
+        if 'performance' not in config:
+            config['performance'] = {}
         config['performance']['cache_enabled'] = True  # Enable caching
         config['performance']['prefetch_events'] = True  # Preload for speed
     

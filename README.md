@@ -1,158 +1,295 @@
 # KRWL HOF Community Events
 
-> Mobile-first Progressive Web App for discovering local community events with interactive geolocation filtering
+> Community events scraper and viewer with geolocation filtering
 
-[![PWA Ready](https://img.shields.io/badge/PWA-Ready-success)](https://web.dev/progressive-web-apps/)
-[![Accessibility](https://img.shields.io/badge/A11y-WCAG_2.1_AA-blue)](https://www.w3.org/WAI/WCAG21/quickref/)
+**🌐 Live Site: [https://krwl.in](https://krwl.in)**
+
+[![PWA Ready](https://img.shields.io/badge/PWA-Ready-success)](https://web.dev/progressive-web_apps/)
+[![Accessibility](https://img.shields.io/badge/A11y-Compliant-blue)](https://www.w3.org/WAI/WCAG21/quickref/)
 [![Mobile First](https://img.shields.io/badge/Mobile-First-orange)](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps)
 
-🌐 **Live Site**: [https://krwl.in](https://krwl.in)
+## 🎯 What is This?
 
-## 🎯 Overview
+A **grassroots, mobile-first** Progressive Web App (PWA) for discovering local community events in Hof and surrounding region (Bavaria, Germany). Built by and for the local community - from punk concerts to farmers markets, from Off-Theater to VHS courses.
 
-KRWL HOF is a grassroots, mobile-first Progressive Web App (PWA) for discovering local community events in Hof and the surrounding region (Bavaria, Germany). Built by and for the local community, it aggregates events from multiple sources—from punk concerts to farmers markets, from Off-Theater performances to VHS courses.
+**Visit the live app at [krwl.in](https://krwl.in)** to see events on an interactive map!
 
-The app features an interactive map with geolocation filtering, showing events within walking distance that are happening soon. It's installable as a native app on mobile and desktop, works offline, and is fully accessible.
+### ✨ Features
 
-## 📦 Features
+- 📱 **PWA**: Installable as native app on mobile and desktop
+- 🗺️ **Interactive Map**: Leaflet.js with event markers and clustering
+- 📍 **Geolocation Filtering**: Shows events within 5.0km radius
+- 🌅 **Time-based Filtering**: Shows events until next_sunrise
+- 🌐 **Bilingual**: English and German (i18n support)
+- ♿ **Accessible**: WCAG 2.1 Level AA compliant
+- 📱 **Responsive**: Mobile-first design, works on all screen sizes
+- 🔄 **Auto-scraping**: Configurable event sources with automatic updates
 
-### 🗺️ Interactive Map
-- Leaflet.js-based interactive map
-- Custom Lucide icon markers for 29 event categories
-- Click markers to see event details
-- Responsive design works on all screen sizes
+## 🚀 Quick Start for Developers
 
-### 📍 Smart Filtering
-- **Geolocation**: Shows events within 5km radius
-- **Time-based**: Shows events until next sunrise
-- **Distance**: Configurable radius filter
-- **Categories**: Filter by event type (29 categories supported)
+Want to run it locally or contribute?
 
-### 📱 Progressive Web App
-- Installable on mobile and desktop
-- Works offline (manifest.json)
-- Mobile-first responsive design
-- WCAG 2.1 Level AA accessible
+### Prerequisites
+- Python 3.x
+- Modern web browser
+- Internet connection (for Leaflet.js CDN)
 
-### 🌐 Internationalization
-- English and German translations
-- Runtime language switching
-- Extensible i18n system
-
-### 🔄 Auto-Scraping
-- Configurable event sources
-- Automated scraping via GitHub Actions
-- Editorial workflow for quality control
-- Support for RSS, HTML, and API sources
-
-## 🚀 Quick Start
-
-### For End Users
-
-Visit [https://krwl.in](https://krwl.in) to use the app!
-
-**Install as PWA:**
-1. Open krwl.in in your mobile browser
-2. Tap "Add to Home Screen" (iOS) or "Install" (Android)
-3. Launch from your home screen like a native app
-
-### For Developers
+### Setup
 
 ```bash
-# Clone repository
+# Clone the repository
 git clone https://github.com/feileberlin/krwl-hof.git
 cd krwl-hof
 
 # Install Python dependencies
 pip install -r requirements.txt
 
-# Download frontend libraries
-python3 src/event_manager.py libs
+# Download frontend libraries (Leaflet.js)
+python3 src/event_manager.py dependencies fetch
 
-# Generate static site
-python3 src/event_manager.py generate
-
-# Run local server
+# Run locally
 cd static
 python3 -m http.server 8000
-
-# Open http://localhost:8000
 ```
 
-## 📚 Documentation
+Open http://localhost:8000 in your browser
 
-### Core Documentation
-- [Features Registry](features.json) - Complete feature list with implementation details
-- [Quick Reference](docs/QUICK_REFERENCE.md) - Common commands and workflows
-- [KISS Improvements](docs/KISS_IMPROVEMENTS.md) - Simplifications and KISS principles
-- [Changelog](docs/CHANGELOG.md) - Version history and updates
+## 📚 Documentation Philosophy
 
-### Developer Guides
-- [Component System](src/templates/components/README.md) - Component-based templating
-- [CSS Variables](src/templates/components/variables-reference.md) - Design token reference
-- [Testing Guide](tests/README.md) - Running and writing tests
-- [Scripts Guide](scripts/README.md) - Available utility scripts
-- [Documentation Standard](.github/DOCUMENTATION_STANDARD.md) - How to write docs
+**Keep It Simple, Stupid (KISS)**
 
-### Setup Guides
-- [Dev Container](.devcontainer/README.md) - VSCode dev container setup
+All documentation lives in:
+1. **Code comments** - In the source files where the logic lives
+2. **CLI --help** - Every script has comprehensive help text
+3. **TUI hints** - Contextual tooltips in the interactive interface
+4. **This README** - One consolidated guide (you're reading it!)
 
-## 🔧 Configuration
-
-### Environment Auto-Detection
-
-The app automatically detects its environment:
-- **Development**: Debug mode, demo events, DEV watermark
-- **CI/Production**: Optimized mode, real events only
-- **Supported Platforms**: GitHub Pages, Vercel, Netlify, Heroku, Railway, Render, Fly.io, Google Cloud Run, AWS
-
-No manual configuration needed—just deploy!
-
-### Design Tokens
-
-Instant rebranding via `config.json`:
-
-```bash
-# Edit design section in config.json
-vim config.json
-
-# Generate CSS custom properties
-python3 src/templates/components/generate_design_tokens.py
-
-# Rebuild site
-python3 src/event_manager.py generate
-
-# Deploy
-git commit -am "🎨 Rebrand" && git push
-```
-
-See [Component System](src/templates/components/README.md) for details.
+No complex documentation systems. No wiki syncing. No auto-generated multi-file docs. Just code comments, CLI help, and this README.
 
 ## 🛠️ CLI Usage
 
-### Interactive TUI
+### Event Manager (Main Interface)
+
+The primary tool for managing events:
 
 ```bash
-# Launch text-based UI
-python3 src/event_manager.py
+python3 src/event_manager.py              # Launch interactive TUI
+python3 src/event_manager.py --help       # Show all commands
 ```
 
-### Event Management
+#### Full CLI Help
+
+```
+
+KRWL HOF Community Events Manager
+==================================
+
+A modular Python TUI for managing community events with geolocation
+and sunrise filtering.
+
+USAGE:
+    python3 event_manager.py [COMMAND] [OPTIONS]
+
+COMMANDS:
+    (no command)              Launch interactive TUI (default)
+    setup                     Show detailed setup instructions for your own site
+    scrape                    Scrape events from configured sources
+    review                    Review pending events interactively
+    publish EVENT_ID          Publish a specific pending event
+    reject EVENT_ID           Reject a specific pending event
+    bulk-publish IDS          Bulk publish pending events (comma-separated IDs/patterns)
+    bulk-reject IDS           Bulk reject pending events (comma-separated IDs/patterns)
+    list                      List all published events
+    list-pending              List all pending events
+    
+    generate                  Generate static site with inlined HTML
+                              - Ensures dependencies (Leaflet.js)
+                              - Loads all resources (CSS, JS, events, translations)
+                              - Builds HTML from templates with inlined assets
+                              - Lints and validates content
+                              - Outputs: static/index.html (self-contained)
+    update                    Update events data in existing site (fast)
+    dependencies fetch        Fetch third-party dependencies
+    dependencies check        Check if dependencies are present
+    
+    archive                   Archive past events to archived_events.json
+    load-examples             Load example data for development
+    clear-data                Clear all event data
+    
+OPTIONS:
+    -h, --help               Show this help message
+    -v, --version            Show version information
+    -c, --config PATH        Use custom config file
+    
+EXAMPLES:
+    # Launch interactive TUI
+    python3 event_manager.py
+    
+    # Generate static site (runtime-configurable)
+    python3 event_manager.py generate
+    
+    # Fast content update
+    python3 event_manager.py update
+    
+    # Fetch dependencies
+    python3 event_manager.py dependencies fetch
+    
+    # Check dependencies
+    python3 event_manager.py dependencies check
+    
+    # Scrape events from sources
+    python3 event_manager.py scrape
+    
+    # List all published events
+    python3 event_manager.py list
+    
+    # Publish a single event
+    python3 event_manager.py publish pending_1
+    
+    # Bulk publish using wildcards
+    python3 event_manager.py bulk-publish "pending_*"
+    
+    # Load example data for testing
+    python3 event_manager.py load-examples
+    
+    # Get help
+    python3 event_manager.py --help
+
+WILDCARD PATTERNS:
+    Bulk operations support Unix-style wildcards:
+    *       Matches any characters (including none)
+    ?       Matches exactly one character
+    [seq]   Matches any character in seq
+    [!seq]  Matches any character not in seq
+    
+    Examples:
+    pending_*              Match all events with IDs starting with 'pending_'
+    html_frankenpost_*     Match all events from the Frankenpost source
+    *AUCHEVENT*            Match any event with 'AUCHEVENT' in the ID
+    pending_[1-3]          Match pending_1, pending_2, pending_3
+    
+DOCUMENTATION:
+    Full documentation available in README.txt or via the TUI
+    (Main Menu → View Documentation)
+
+For more information, visit:
+    https://github.com/feileberlin/krwl-hof
+
+
+```
+
+## ⚙️ Configuration
+
+All configuration lives in `config.json`:
+
+```json
+{
+  "app": {
+    "name": "KRWL HOF Community Events",
+    "description": "Community events scraper and viewer with geolocation filtering"
+  },
+  "map": {
+    "default_center": {"lat": 50.3167, "lon": 11.9167},
+    "default_zoom": 13
+  },
+  "filtering": {
+    "max_distance_km": 5.0,
+    "show_until": "next_sunrise"
+  },
+  "scraping": {
+    "schedule": {"timezone": "Europe/Berlin", "times": ["04:00", "16:00"], "_comment_schedule_usage": "Only active in CI/production environments for automated scraping"},
+    "sources": [...12 configured sources]
+  }
+}
+```
+
+### What You Can Customize
+
+- **App name/description**: `config.app.*`
+- **Map center and zoom**: `config.map.*`
+- **Distance filter**: `config.filtering.max_distance_km`
+- **Time filter**: `config.filtering.show_until`
+- **Scraping schedule**: `config.scraping.schedule`
+- **Event sources**: `config.scraping.sources[]` (RSS, HTML, API)
+- **Editor settings**: `config.editor.*`
+
+## 🧪 Testing
+
+Run tests before committing:
 
 ```bash
-# Scrape events from configured sources
+# Feature verification
+python3 scripts/verify_features.py --verbose
+
+# Event schema validation
+python3 tests/test_event_schema.py --verbose
+
+# Scraper tests
+python3 tests/test_scraper.py --verbose
+
+# Filter tests
+python3 tests/test_filters.py --verbose
+
+# Translation tests
+python3 tests/test_translations.py --verbose
+
+# KISS principle compliance
+python3 scripts/check_kiss.py --verbose
+```
+
+## 📝 Project Structure
+
+```
+krwl-hof/
+├── config.json          # Unified configuration (auto-detects environment)
+├── static/              # Only index.html
+│   └── index.html       # Main app (auto-generated, DO NOT EDIT)
+├── assets/              # Frontend assets (CSS, JS, libraries, icons)
+│   ├── css/             # Stylesheets
+│   ├── js/              # JavaScript modules
+│   ├── lib/             # Third-party libraries (Leaflet.js)
+│   ├── markers/         # Event marker SVG icons
+│   ├── manifest.json    # PWA manifest
+│   └── *.svg            # App icons (favicon, PWA icons, logo)
+├── event-data/                # Event and translation data
+│   ├── events.json      # Published events
+│   ├── pending_events.json  # Events awaiting approval
+│   ├── rejected_events.json # Rejected events
+│   ├── archived_events.json # Past events
+│   ├── events.demo.json # Demo events for testing
+│   ├── content.json     # English translations
+│   ├── content.de.json  # German translations
+│   └── old/             # Historical event archives
+├── src/                 # Python backend
+│   ├── event_manager.py # Main CLI/TUI entry point
+│   └── modules/         # Modular components
+├── scripts/             # Utility scripts
+├── tests/               # Test suite
+└── README.md            # This file (auto-generated)
+```
+
+## 🔄 Workflow
+
+### 1. Scraping Events
+
+```bash
+# Scrape from configured sources
 python3 src/event_manager.py scrape
 
-# List all published events
-python3 src/event_manager.py list
+# Or interactively
+python3 src/event_manager.py  # Option 1: Scrape New Events
+```
 
-# List pending events (awaiting approval)
-python3 src/event_manager.py list-pending
+Scraped events go to `static/pending_events.json` for editorial review.
 
-# Approve a pending event
+### 2. Editorial Review
+
+```bash
+# Review pending events interactively
+python3 src/event_manager.py review
+
+# Or approve/reject specific events
 python3 src/event_manager.py publish EVENT_ID
-
-# Reject a pending event
 python3 src/event_manager.py reject EVENT_ID
 
 # Bulk operations (supports wildcards)
@@ -160,219 +297,255 @@ python3 src/event_manager.py bulk-publish "pending_*"
 python3 src/event_manager.py bulk-reject "pending_*"
 ```
 
-### Site Generation
+Approved events move to `data/events.json` and appear on the map.
+
+### 3. Static Site Generation
 
 ```bash
-# Full site generation (with linting)
+# Generate complete static site
 python3 src/event_manager.py generate
 
 # Fast event update (no full rebuild)
 python3 src/event_manager.py update
-
-# Download/update dependencies
-python3 src/event_manager.py libs
-
-# Verify dependencies
-python3 src/event_manager.py libs verify
 ```
 
-### Data Management
+Output: `static/index.html` (single-file HTML with everything inlined)
+
+## 🕷️ Adding Event Sources
+
+Edit `config.json`:
+
+```json
+{
+  "scraping": {
+    "sources": [
+      {
+        "name": "Your Event Source",
+        "url": "https://example.com/events",
+        "type": "rss",  // or "html", "api"
+        "enabled": true,
+        "notes": "Description of the source"
+      }
+    ]
+  }
+}
+```
+
+Test the scraper:
+```bash
+python3 src/event_manager.py scrape
+python3 tests/test_scraper.py --verbose
+```
+
+## 🌐 Internationalization (i18n)
+
+The app supports English and German:
+
+- `data/content.json` - English translations
+- `static/content.de.json` - German translations
+
+Add translations using the key path format:
+```json
+{
+  "section": {
+    "key": "Translation text"
+  }
+}
+```
+
+In code: `i18n.t('section.key')`
+
+## 🧪 Advanced Features
+
+### Dynamic Event Templates with Relative Times
+
+The app supports **dynamic event templates** with relative time specifications. This feature allows demo events to always display accurate relative times like "happening now" or "starting in 5 minutes" on every page reload, without requiring manual timestamp updates.
+
+#### How It Works
+
+Demo events can include a `relative_time` field that specifies how to calculate actual timestamps dynamically:
+
+```json
+{
+  "id": "demo_happening_now",
+  "title": "[DEMO] Event Happening Now",
+  "relative_time": {
+    "type": "offset",
+    "minutes": -30,
+    "duration_hours": 2
+  }
+}
+```
+
+When the app loads, the `processTemplateEvents()` method in `assets/js/app.js` detects events with `relative_time` specifications and calculates actual timestamps based on the current browser time.
+
+#### Relative Time Specifications
+
+**Type 1: Offset (Relative to Current Time)**
+
+Events that occur relative to the current moment:
+
+```json
+{
+  "type": "offset",
+  "hours": 1,           // Optional: hours offset from now
+  "minutes": 5,         // Optional: minutes offset from now
+  "duration_hours": 2,  // Event duration in hours
+  "timezone_offset": 0  // Optional: timezone offset for testing
+}
+```
+
+Examples:
+- `{"type": "offset", "minutes": -30, "duration_hours": 2}` - Started 30 minutes ago
+- `{"type": "offset", "minutes": 5, "duration_hours": 2}` - Starts in 5 minutes
+- `{"type": "offset", "hours": 1, "duration_hours": 3}` - Starts in 1 hour, lasts 3 hours
+
+**Type 2: Sunrise Relative (Relative to Next Sunrise)**
+
+Events that occur relative to the next sunrise (simplified as 6:00 AM):
+
+```json
+{
+  "type": "sunrise_relative",
+  "start_offset_hours": -2,    // Optional: hours offset for start time
+  "start_offset_minutes": 0,   // Optional: minutes offset for start time
+  "end_offset_hours": 0,       // Optional: hours offset for end time
+  "end_offset_minutes": -5     // Optional: minutes offset for end time
+}
+```
+
+Examples:
+- `{"type": "sunrise_relative", "end_offset_minutes": -5, "start_offset_hours": -2}` - Ends 5 minutes before sunrise
+- `{"type": "sunrise_relative", "start_offset_hours": -2, "end_offset_hours": 1}` - Starts 2 hours before sunrise, ends 1 hour after
+
+#### Generating Demo Events
+
+Run the demo event generator script:
 
 ```bash
-# Archive past events
-python3 src/event_manager.py archive
-
-# Load example data (development)
-python3 src/event_manager.py load-examples
-
-# Clear all event data
-python3 src/event_manager.py clear-data
+python3 scripts/generate_demo_events.py > event-data/events.demo.json
 ```
 
-## 🧪 Testing
+This creates template events with `relative_time` specifications. See inline comments in `scripts/generate_demo_events.py` for implementation details.
 
-### Run Tests
+#### Benefits
+
+- **Always Fresh**: Demo events always show accurate relative times
+- **Filter Testing**: Test time-based filters (sunrise, 6h, 12h) with realistic data
+- **Timezone Testing**: Verify international time handling
+- **No Maintenance**: No need to manually update demo event timestamps
+- **Backward Compatible**: Real events without `relative_time` work unchanged
+
+For technical implementation details, see inline comments in:
+- `scripts/generate_demo_events.py` - Template generation logic
+- `assets/js/app.js` - `processTemplateEvents()` method
+
+### Screenshot Generation
+
+The app includes a **ready signal** that indicates when the page is fully loaded and ready for screenshot capture. This solves the problem of screenshots being taken before the map and event data have finished loading.
+
+#### The Ready Signal
+
+When ready, the app:
+1. Sets a body attribute: `<body data-app-ready="true">`
+2. Dispatches a custom event on the `window` object with metadata
+
+#### Quick Usage Example (Playwright)
+
+```python
+from playwright.sync_api import sync_playwright
+
+with sync_playwright() as p:
+    browser = p.chromium.launch()
+    page = browser.new_page()
+    
+    # Set viewport for desired screenshot size
+    page.set_viewport_size({"width": 1280, "height": 800})
+    
+    # Navigate to the page
+    page.goto('http://localhost:8000')
+    
+    # Wait for app to be ready (max 30 seconds)
+    page.wait_for_selector('body[data-app-ready="true"]', timeout=30000)
+    
+    # Optional: Wait a bit more for map tiles to fully render
+    page.wait_for_timeout(2000)
+    
+    # Take screenshot
+    page.screenshot(path='screenshot.png', full_page=True)
+    
+    browser.close()
+```
+
+#### Complete Screenshot Script
+
+For a full example that generates both mobile and desktop screenshots, see `scripts/generate_screenshots.py`:
 
 ```bash
-# All tests
-python3 -m pytest tests/ -v
-
-# Specific test suites
-python3 tests/test_components.py          # Component system
-python3 tests/test_scraper.py             # Event scraping
-python3 tests/test_filters.py             # Event filtering
-python3 tests/test_event_schema.py        # Event validation
-python3 tests/test_translations.py        # i18n
-python3 tests/test_linter.py              # Code linting
-
-# Validate documentation
-python3 scripts/validate_docs.py --verbose
+# Generate PWA screenshots
+python3 scripts/generate_screenshots.py
 ```
 
-### Code Quality
+This generates:
+- `assets/screenshot-mobile.png` (640×1136)
+- `assets/screenshot-desktop.png` (1280×800)
 
-```bash
-# Lint all code
-python3 src-modules/linter.py
+#### Recommended Screenshot Sizes
 
-# Check KISS compliance
-python3 src-modules/kiss_checker.py
+For PWA manifest compliance:
+- **Mobile**: 640×1136 (narrow form factor)
+- **Desktop**: 1280×800 (wide form factor)
 
-# Verify features registry
-python3 src-modules/feature_verifier.py --verbose
-```
-
-## 🏗️ Architecture
-
-### Tech Stack
-
-**Backend:**
-- Python 3.x (standard library preferred)
-- Modular CLI and TUI
-- BeautifulSoup4 for HTML scraping
-- Feedparser for RSS feeds
-
-**Frontend:**
-- Vanilla JavaScript (no frameworks)
-- Leaflet.js for maps
-- Lucide icons
-- CSS custom properties for theming
-
-**Build:**
-- Static site generation (single HTML file)
-- All assets inlined
-- Component-based templating
-- Design token system
-
-### Project Structure
-
-```text
-krwl-hof/
-├── src/
-│   ├── event_manager.py              # Main CLI entry point
-│   └── templates/
-│       ├── index.html                # Main template
-│       └── components/               # Modular components
-├── src-modules/                      # Core modules (flat)
-│   ├── scraper.py                    # Event scraping
-│   ├── editor.py                     # Editorial workflow
-│   ├── site_generator.py             # HTML generation
-│   ├── linter.py                     # Code validation
-│   └── utils.py                      # Utilities
-├── assets/
-│   ├── css/                          # Source stylesheets (modular)
-│   ├── js/                           # Source scripts
-│   ├── markers/                      # SVG marker icons
-│   ├── leaflet/                      # Leaflet.js library
-│   └── lucide/                       # Lucide icons library
-├── target/                           # Generated site (output)
-├── event-data/                       # Event JSON files
-├── tests/                            # Test suites
-├── scripts/                          # Utility scripts
-├── docs/                             # Additional documentation
-└── config.json                       # Main configuration
-```
+For technical implementation details and other automation tools (Puppeteer, Selenium), see inline comments in:
+- `assets/js/app.js` - `markAppAsReady()` method
+- `scripts/generate_screenshots.py` - Complete implementation
 
 ## 🤝 Contributing
 
-### Before Contributing
+We welcome contributions! Found a bug? Know a venue that should be included? Want to improve the UI?
 
-1. Read [Documentation Standard](.github/DOCUMENTATION_STANDARD.md)
-2. Check [Features Registry](features.json) for existing features
-3. Run tests before submitting PR
-4. Follow KISS principles (see [KISS Improvements](docs/KISS_IMPROVEMENTS.md))
+### Guidelines
 
-### Adding Features
+1. **KISS Principle**: Keep it simple. Avoid over-engineering.
+2. **Mobile First**: Always test on mobile viewport sizes.
+3. **Accessibility**: Maintain WCAG 2.1 Level AA compliance.
+4. **Test Before Commit**: Run the test suite.
+5. **No Frameworks**: Vanilla JavaScript only (Leaflet.js is the only external library).
 
-```bash
-# Implement feature (add code and tests)
+### Process
 
-# Update features.json
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests: `python3 tests/test_scraper.py --verbose`
+5. Submit a pull request
 
-# Validate
-python3 src-modules/feature_verifier.py --verbose
+Questions? Open an issue!
 
-# Run tests
-python3 -m pytest tests/ -v
+## 🔐 Security
 
-# Submit PR
-```
+- **No secrets in code**: Use environment variables or config files (gitignored)
+- **Input validation**: Always sanitize user input and scraped data
+- **XSS protection**: Escape HTML when displaying user-generated content
+- **HTTPS**: Production uses HTTPS (GitHub Pages enforces this)
 
-### Code Style
-
-- **Python**: PEP 8, standard library preferred
-- **JavaScript**: ES6+, vanilla only (no frameworks)
-- **CSS**: Mobile-first, use CSS custom properties
-- **Documentation**: Follow the standard, use emojis for headers
-
-## ❓ Troubleshooting
-
-### Site won't generate
-
-```bash
-# Check dependencies
-python3 src/event_manager.py libs verify
-
-# Download if missing
-python3 src/event_manager.py libs
-
-# Try generating again
-python3 src/event_manager.py generate
-```
-
-### Tests failing
-
-```bash
-# Check if you're in the right directory
-pwd  # Should be project root
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run specific test with verbose output
-python3 tests/test_*.py --verbose
-```
-
-### Map not loading
-
-1. Check browser console for errors
-2. Verify `target/index.html` exists
-3. Ensure Leaflet.js is downloaded (`libs` command)
-4. Try clearing browser cache
-
-### Events not showing
-
-1. Check `event-data/events.json` has events
-2. Verify events are not in the past
-3. Check filter settings (distance, time)
-4. Try the "Load Examples" command for test data
-
-## 📖 Resources
-
-### External Documentation
-- [Leaflet.js Documentation](https://leafletjs.com/reference.html)
-- [Lucide Icons](https://lucide.dev/)
-- [Progressive Web Apps](https://web.dev/progressive-web-apps/)
-- [WCAG 2.1 Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
-
-### Related Projects
-- [Event Scraping Tools](https://github.com/topics/event-scraping)
-- [Geolocation APIs](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API)
+Found a security issue? Please report it privately via GitHub Security Advisories.
 
 ## 📄 License
 
-See LICENSE file for details.
+[Add your license information here]
 
 ## 🙏 Acknowledgments
 
-- **Leaflet.js** - Interactive maps library
-- **Lucide** - Beautiful open-source icons
-- **OpenStreetMap** - Map data contributors
-- **CartoDB** - Dark map tile provider
-- **GitHub** - Hosting and CI/CD platform
+Built with love for the Hof community. Special thanks to all the local venues and organizations sharing their event information.
+
+## 🔗 Links
+
+- **Live App**: [krwl.in](https://krwl.in)
+- **GitHub Repository**: [github.com/feileberlin/krwl-hof](https://github.com/feileberlin/krwl-hof)
+- **Report Issues**: [GitHub Issues](https://github.com/feileberlin/krwl-hof/issues)
 
 ---
 
-**Built with 💖 in Hof, Bavaria**
-
-For questions or issues, please [open an issue](https://github.com/feileberlin/krwl-hof/issues) on GitHub.
+*Last updated: 2026-01-03 17:05:54*  
+*Auto-generated by `scripts/generate_readme.py` • Documentation philosophy: Code comments + CLI help + TUI hints + README*

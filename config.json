@@ -89,14 +89,21 @@
   "_comment_kiss": "KEEP IT SIMPLE: Change this ONE line to switch environments completely!",
   "_comment_separator": "═══════════════════════════════════════════════════════════════════════════════",
   
-  "environment": "development",
+  "environment": "auto",
   
   "_comment_environment_detection": "═══════════════════════════════════════════════════════════════════════════════",
-  "_comment_auto_behavior": "AUTO-DETECTION (when environment='auto') - Smart defaults that change based on environment",
+  "_comment_auto_behavior": "AUTO-DETECTION (when environment='auto') - Behavior changes based on detected environment",
   "_comment_detection_logic": "Environment is detected automatically using Python os.environ checks:",
   "_comment_detection_1": "  • Local Development: NOT in CI and NOT in production (default for developers)",
   "_comment_detection_2": "  • CI: GitHub Actions, GitLab CI, Travis, CircleCI, Jenkins, etc.",
   "_comment_detection_3": "  • Production: Vercel, Netlify, Heroku, Railway, Render, Fly.io, Google Cloud Run, AWS",
+  "_comment_hardcoded": "HARDCODED BEHAVIOR - These settings are NOT in config.json, they're hardcoded in src/modules/utils.py:",
+  "_comment_hardcoded_1": "  • debug: true (dev) / false (prod/ci)",
+  "_comment_hardcoded_2": "  • watermark.text: 'DEV' (dev) / 'PRODUCTION' (prod/ci)",
+  "_comment_hardcoded_3": "  • data.source: 'both' (dev) / 'real' (prod/ci)",
+  "_comment_hardcoded_4": "  • performance.cache_enabled: false (dev) / true (prod/ci)",
+  "_comment_hardcoded_5": "  • performance.prefetch_events: false (dev) / true (prod/ci)",
+  "_comment_why": "WHY HARDCODED? To avoid confusion - these values are always overridden, so putting them in config creates false expectations",
   "_comment_no_manual_config": "NO MANUAL SWITCHING NEEDED - Just run the code and it adapts automatically!",
   "_comment_hosting_support": "WORKS WITH: GitHub Pages, Vercel, Netlify, Heroku, Railway, Render, Fly.io, Google Cloud, AWS, and more!",
   "_comment_separator_2": "═══════════════════════════════════════════════════════════════════════════════",
@@ -109,24 +116,8 @@
     "_comment_environment": "This field is overridden at runtime based on actual environment detection"
   },
   
-  "debug": false,
-  "_comment_debug": "Auto-detected: true in development (local), false in CI/production. Enables verbose logging and debug features.",
-  
-  "watermark": {
-    "text": "PRODUCTION"
-  },
-  
-  "performance": {
-    "cache_enabled": true,
-    "_comment_cache_enabled": "Auto-detected: false in development (fresh data), true in CI/production (performance).",
-    "prefetch_events": true,
-    "_comment_prefetch_events": "Auto-detected: false in development (on-demand loading), true in CI/production (preload for speed)."
-  },
-  
   "data": {
-    "source": "real",
-    "_comment_source": "Auto-detected: 'both' in development (real+demo events for testing), 'real' in CI/production (real events only).",
-    "_comment_sources_explanation": "The 'source' field above determines which data source(s) to load. The sources below define what each option means:",
+    "_comment_sources_explanation": "Data sources define what each source type loads. The actual source selection (real/both) is hardcoded based on environment.",
     "sources": {
       "real": {
         "url": "events.json",
