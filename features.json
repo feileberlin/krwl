@@ -547,6 +547,7 @@
       "files": [
         ".github/copilot-instructions.md",
         ".github/COPILOT_SETUP.md",
+        ".github/COPILOT_QUICK_REF.md",
         ".github/CODEOWNERS",
         ".github/pull_request_template.md"
       ],
