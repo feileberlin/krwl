@@ -204,6 +204,9 @@ def update_pending_count_in_events(base_path):
     """
     Update the pending_count field in events.json
     This allows the frontend to read pending count from the same file it already loads
+    
+    Note: This does NOT update the last_updated timestamp since it's only metadata,
+    not a change to the actual events data.
     """
     pending_data = load_pending_events(base_path)
     events_data = load_events(base_path)
@@ -211,8 +214,10 @@ def update_pending_count_in_events(base_path):
     # Add or update pending_count field
     events_data['pending_count'] = len(pending_data.get('pending_events', []))
     
-    # Save back to events.json
-    save_events(base_path, events_data)
+    # Save back to events.json WITHOUT updating timestamp
+    events_path = base_path / 'event-data' / 'events.json'
+    with open(events_path, 'w') as f:
+        json.dump(events_data, f, indent=2)
 
 
 def load_pending_events(base_path):

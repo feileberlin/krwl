@@ -2,9 +2,16 @@ name: Automated Event Scraping
 
 on:
   schedule:
-    # Run twice daily at 4:00 AM and 4:00 PM UTC
-    - cron: '0 4 * * *'   # 4:00 AM UTC
-    - cron: '0 16 * * *'  # 4:00 PM UTC
+    # Schedule is configured in config.json under scraping.schedule
+    # Default: 4:00 AM and 4:00 PM Europe/Berlin time
+    # Cron uses UTC, so Berlin times are converted:
+    # - 04:00 Berlin (CET/UTC+1 winter) = 03:00 UTC
+    # - 04:00 Berlin (CEST/UTC+2 summer) = 02:00 UTC  
+    # - 16:00 Berlin (CET/UTC+1 winter) = 15:00 UTC
+    # - 16:00 Berlin (CEST/UTC+2 summer) = 14:00 UTC
+    # Using winter time (CET) as baseline:
+    - cron: '0 3 * * *'   # 4:00 AM Berlin time (CET)
+    - cron: '0 15 * * *'  # 4:00 PM Berlin time (CET)
   workflow_dispatch:  # Allow manual trigger
 
 permissions:
@@ -74,19 +81,7 @@ jobs:
           git commit -m "chore: automated event scraping - $TIMESTAMP"
           git push
           echo "✓ Changes committed and pushed"
-      
-      - name: Trigger deployment workflow
-        if: steps.check_changes.outputs.changes_detected == 'true'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'update-events-data.yml',
-              ref: 'main'
-            });
-            console.log('✓ Deployment workflow triggered');
+          echo "ℹ Note: Events are in pending queue awaiting editorial review"
       
       - name: Generate summary
         run: |
