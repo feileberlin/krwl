@@ -12,59 +12,61 @@ This document preserves the original Barbie Pink monochromatic color palette tha
 
 **Barbie Red/Pink**: `#FF69B4` (RGB: 255, 105, 180)
 
+![#FF69B4](https://via.placeholder.com/400x50/FF69B4/FFFFFF?text=Barbie+Red+%23FF69B4)
+
 This is the signature color of the KRWL HOF brand - a vibrant pink that combines energy and approachability.
 
 ### Tints (Barbie Red + White)
 
 Tints are created by mixing the base color with white, creating lighter, softer versions:
 
-| Name | Hex Code | Mix Ratio | Usage |
-|------|----------|-----------|-------|
-| Lightest | `#FFE5F3` | 10% red, 90% white | Subtle backgrounds, hover states |
-| Light | `#FFCCEB` | 30% red, 70% white | Light accents, borders |
-| Medium | `#FFB3DF` | 50% red, 50% white | Secondary highlights |
+| Name | Hex Code | Color | Mix Ratio | Usage |
+|------|----------|-------|-----------|-------|
+| Lightest | `#FFE5F3` | ![#FFE5F3](https://via.placeholder.com/80x30/FFE5F3/000000?text=+) | 10% red, 90% white | Subtle backgrounds, hover states |
+| Light | `#FFCCEB` | ![#FFCCEB](https://via.placeholder.com/80x30/FFCCEB/000000?text=+) | 30% red, 70% white | Light accents, borders |
+| Medium | `#FFB3DF` | ![#FFB3DF](https://via.placeholder.com/80x30/FFB3DF/000000?text=+) | 50% red, 50% white | Secondary highlights |
 
 ### Pure
 
-| Name | Hex Code | Usage |
-|------|----------|-------|
-| Barbie Red | `#FF69B4` | Primary brand color, CTAs, active states |
+| Name | Hex Code | Color | Usage |
+|------|----------|-------|-------|
+| Barbie Red | `#FF69B4` | ![#FF69B4](https://via.placeholder.com/80x30/FF69B4/FFFFFF?text=+) | Primary brand color, CTAs, active states |
 
 ### Tones (Barbie Red + Grey)
 
 Tones are created by mixing the base color with grey, creating muted versions:
 
-| Name | Hex Code | Mix Ratio | Usage |
-|------|----------|-----------|-------|
-| Light Tone | `#D689B8` | Red + light grey | Muted accents |
-| Medium Tone | `#B05F8E` | Red + medium grey | Subdued highlights |
-| Dark Tone | `#8A4A70` | Red + dark grey | Deep accents |
+| Name | Hex Code | Color | Mix Ratio | Usage |
+|------|----------|-------|-----------|-------|
+| Light Tone | `#D689B8` | ![#D689B8](https://via.placeholder.com/80x30/D689B8/000000?text=+) | Red + light grey | Muted accents |
+| Medium Tone | `#B05F8E` | ![#B05F8E](https://via.placeholder.com/80x30/B05F8E/FFFFFF?text=+) | Red + medium grey | Subdued highlights |
+| Dark Tone | `#8A4A70` | ![#8A4A70](https://via.placeholder.com/80x30/8A4A70/FFFFFF?text=+) | Red + dark grey | Deep accents |
 
 ### Shades (Barbie Red + Black)
 
 Shades are created by mixing the base color with black, creating darker versions:
 
-| Name | Hex Code | Mix Ratio | Usage |
-|------|----------|-----------|-------|
-| Light Shade | `#BF5087` | 75% red, 25% black | Dark accents |
-| Medium Shade | `#80355A` | 50% red, 50% black | Deep backgrounds |
-| Dark Shade | `#401B2D` | 25% red, 75% black | Very dark backgrounds |
-| Darkest | `#200D16` | 10% red, 90% black | Nearly black with hint of warmth |
+| Name | Hex Code | Color | Mix Ratio | Usage |
+|------|----------|-------|-----------|-------|
+| Light Shade | `#BF5087` | ![#BF5087](https://via.placeholder.com/80x30/BF5087/FFFFFF?text=+) | 75% red, 25% black | Dark accents |
+| Medium Shade | `#80355A` | ![#80355A](https://via.placeholder.com/80x30/80355A/FFFFFF?text=+) | 50% red, 50% black | Deep backgrounds |
+| Dark Shade | `#401B2D` | ![#401B2D](https://via.placeholder.com/80x30/401B2D/FFFFFF?text=+) | 25% red, 75% black | Very dark backgrounds |
+| Darkest | `#200D16` | ![#200D16](https://via.placeholder.com/80x30/200D16/FFFFFF?text=+) | 10% red, 90% black | Nearly black with hint of warmth |
 
 ### Neutrals (Blacks & Greys)
 
 Supporting neutral colors for backgrounds and text:
 
-| Name | Hex Code | Usage |
-|------|----------|-------|
-| Pure Black | `#000000` | Maximum contrast |
-| Near Black | `#0D0D0D` | Almost black |
-| Dark Grey | `#1a1a1a` | Primary dark background |
-| Medium Dark | `#2a2a2a` | Secondary dark background |
-| Medium Grey | `#3a3a3a` | Tertiary background |
-| Light Grey | `#555555` | Muted text, borders |
-| Lighter Grey | `#888888` | Secondary text |
-| White | `#ffffff` | Primary text on dark backgrounds |
+| Name | Hex Code | Color | Usage |
+|------|----------|-------|-------|
+| Pure Black | `#000000` | ![#000000](https://via.placeholder.com/80x30/000000/FFFFFF?text=+) | Maximum contrast |
+| Near Black | `#0D0D0D` | ![#0D0D0D](https://via.placeholder.com/80x30/0D0D0D/FFFFFF?text=+) | Almost black |
+| Dark Grey | `#1a1a1a` | ![#1a1a1a](https://via.placeholder.com/80x30/1a1a1a/FFFFFF?text=+) | Primary dark background |
+| Medium Dark | `#2a2a2a` | ![#2a2a2a](https://via.placeholder.com/80x30/2a2a2a/FFFFFF?text=+) | Secondary dark background |
+| Medium Grey | `#3a3a3a` | ![#3a3a3a](https://via.placeholder.com/80x30/3a3a3a/FFFFFF?text=+) | Tertiary background |
+| Light Grey | `#555555` | ![#555555](https://via.placeholder.com/80x30/555555/FFFFFF?text=+) | Muted text, borders |
+| Lighter Grey | `#888888` | ![#888888](https://via.placeholder.com/80x30/888888/FFFFFF?text=+) | Secondary text |
+| White | `#ffffff` | ![#ffffff](https://via.placeholder.com/80x30/ffffff/000000?text=+) | Primary text on dark backgrounds |
 
 ## 🎨 Design Token Mapping
 
