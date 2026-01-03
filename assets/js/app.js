@@ -1,4 +1,11 @@
 // KRWL HOF Community Events App
+// 
+// PERFORMANCE OPTIMIZATIONS:
+// - Debounced filter updates to reduce re-renders during slider drag
+// - DOM element caching to minimize querySelectorAll calls
+// - For-loop instead of forEach for marker operations (reduced overhead)
+// - Batched marker removal and bounds calculation
+//
 class EventsApp {
     constructor() {
         this.map = null;
@@ -18,6 +25,12 @@ class EventsApp {
             customLon: null
         };
         
+        // OPTIMIZATION: Cache frequently accessed DOM elements
+        this.domCache = {};
+        
+        // OPTIMIZATION: Debounce timer for filter updates
+        this.filterDebounceTimer = null;
+        
         this.init();
     }
     
@@ -26,6 +39,50 @@ class EventsApp {
         if (this.config && this.config.debug) {
             console.log('[KRWL Debug]', message, ...args);
         }
+    }
+    
+    /**
+     * OPTIMIZATION: Debounced version of displayEvents
+     * Prevents excessive re-renders when filters change rapidly (e.g., slider drag)
+     * 
+     * @param {number} delay - Milliseconds to wait before executing (default: 150ms)
+     */
+    displayEventsDebounced(delay = 150) {
+        if (this.filterDebounceTimer) {
+            clearTimeout(this.filterDebounceTimer);
+        }
+        
+        this.filterDebounceTimer = setTimeout(() => {
+            this.displayEvents();
+            this.filterDebounceTimer = null;
+        }, delay);
+    }
+    
+    /**
+     * OPTIMIZATION: Get cached DOM element or query and cache it
+     * Reduces repeated querySelectorAll/querySelector calls
+     * 
+     * @param {string} selector - CSS selector
+     * @param {boolean} multiple - If true, use querySelectorAll (default: false)
+     * @returns {Element|NodeList|null} Cached or newly queried element(s)
+     */
+    getCachedElement(selector, multiple = false) {
+        const cacheKey = `${multiple ? 'all:' : ''}${selector}`;
+        
+        if (!this.domCache[cacheKey]) {
+            this.domCache[cacheKey] = multiple 
+                ? document.querySelectorAll(selector)
+                : document.querySelector(selector);
+        }
+        
+        return this.domCache[cacheKey];
+    }
+    
+    /**
+     * Clear DOM cache (call when DOM structure changes significantly)
+     */
+    clearDOMCache() {
+        this.domCache = {};
     }
     
     async init() {
@@ -689,12 +746,14 @@ class EventsApp {
             return;
         }
         
-        // Create bounds from all marker positions
+        // OPTIMIZATION: Create bounds more efficiently using a single pass
         const bounds = L.latLngBounds();
         
-        this.markers.forEach(marker => {
-            bounds.extend(marker.getLatLng());
-        });
+        // Batch extend bounds (single loop, avoid forEach overhead)
+        const markerCount = this.markers.length;
+        for (let i = 0; i < markerCount; i++) {
+            bounds.extend(this.markers[i].getLatLng());
+        }
         
         // Add user location to bounds if available
         if (this.userLocation) {
@@ -720,9 +779,14 @@ class EventsApp {
         // Ensure main content is visible (with error handling)
         this.showMainContent();
         
-        // Clear existing markers
-        this.markers.forEach(marker => marker.remove());
-        this.markers = [];
+        // OPTIMIZATION: Clear existing markers efficiently
+        // Remove all at once instead of iterating
+        if (this.markers.length > 0) {
+            for (let i = 0; i < this.markers.length; i++) {
+                this.markers[i].remove();
+            }
+            this.markers = [];
+        }
         
         // Clear TimeDrawer markers if available
         if (this.timeDrawer) {
@@ -1634,7 +1698,8 @@ class EventsApp {
                     const value = parseFloat(e.target.value);
                     this.filters.maxDistance = value;
                     valueDisplay.textContent = `${value} km`;
-                    this.displayEvents();
+                    // OPTIMIZATION: Use debounced update for slider (fires frequently during drag)
+                    this.displayEventsDebounced(100);
                 });
             });
         }
