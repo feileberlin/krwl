@@ -94,11 +94,6 @@ body {
     position: relative;
 }
 
-/* Header is removed from UI but styles kept for backwards compatibility */
-header {
-    display: none;
-}
-
 #map {
     position: fixed;
     top: 0;
@@ -194,7 +189,7 @@ header {
     text-align: center;
 }
 
-/* Filter logo - now clickable */
+/* Filter logo button */
 #event-filter-bar .filter-bar-logo {
     display: inline-flex;
     align-items: center;
@@ -204,6 +199,9 @@ header {
     padding: 0.2rem;
     border-radius: 4px;
     transition: all 0.2s;
+    background: none;
+    border: none;
+    color: inherit;
 }
 
 #event-filter-bar .filter-bar-logo:hover {
@@ -444,6 +442,23 @@ header {
     color: var(--accent-hover);
     text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
     transform: translateX(3px);
+}
+
+/* Environment and debug mode state classes */
+.env-dev {
+    color: #FFB3DF;
+}
+
+.env-production {
+    color: #4CAF50;
+}
+
+.debug-enabled {
+    color: #FFB3DF;
+}
+
+.debug-disabled {
+    color: #888;
 }
 
 /* Mobile optimizations */

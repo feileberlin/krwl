@@ -52,7 +52,10 @@ def test_dashboard_implementation():
     
     # Test 2: Old watermark functions removed
     print("Test 2: Old watermark functions removed")
-    if 'updateWatermark' not in app_js and 'environment-badge' not in app_js:
+    watermark_func_pattern = re.compile(r'\bfunction\s+updateWatermark\s*\(|\bupdateWatermark\s*\(')
+    has_old_watermark_function = bool(watermark_func_pattern.search(app_js))
+    has_old_watermark_reference = 'environment-badge' in app_js
+    if not has_old_watermark_function and not has_old_watermark_reference:
         print("✓ PASS: Old watermark functions removed")
         tests_passed += 1
     else:

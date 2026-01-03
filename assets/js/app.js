@@ -165,11 +165,12 @@ class EventsApp {
         if (debugEnvironment) {
             const environment = this.config?.watermark?.text || this.config?.app?.environment || 'UNKNOWN';
             debugEnvironment.textContent = environment.toUpperCase();
-            // Add color coding based on environment
+            // Add color coding based on environment using CSS classes
+            debugEnvironment.className = ''; // Clear existing classes
             if (environment.toLowerCase().includes('dev')) {
-                debugEnvironment.style.color = '#FFB3DF'; // Lighter pink for dev
+                debugEnvironment.classList.add('env-dev');
             } else if (environment.toLowerCase().includes('production')) {
-                debugEnvironment.style.color = '#4CAF50'; // Green for production
+                debugEnvironment.classList.add('env-production');
             }
         }
         
@@ -187,7 +188,13 @@ class EventsApp {
         if (debugMode) {
             const debugEnabled = this.config?.debug || false;
             debugMode.textContent = debugEnabled ? 'Enabled' : 'Disabled';
-            debugMode.style.color = debugEnabled ? '#FFB3DF' : '#888';
+            // Use CSS classes instead of inline styles
+            debugMode.className = ''; // Clear existing classes
+            if (debugEnabled) {
+                debugMode.classList.add('debug-enabled');
+            } else {
+                debugMode.classList.add('debug-disabled');
+            }
         }
     }
     
@@ -658,13 +665,14 @@ class EventsApp {
     }
     
     updateFilterDescription(count) {
-        // Filter Bar Structure:
-        // #event-filter-bar - Main container for all filter controls
-        //   .filter-bar-logo - Logo/icon for visual identity
-        //   #filter-bar-event-count - Shows "X events" with category
-        //   #filter-bar-time-range - Time filter (sunrise, 6h, 12h, etc.)
-        //   #filter-bar-distance - Distance filter (km radius)
-        //   #filter-bar-location - Location source (here/custom)
+        // Filter Bar Structure (Semantic Header):
+        // <header id="event-filter-bar"> - Page header/banner with filters
+        //   <button .filter-bar-logo> - Project menu button
+        //   <div role="status"> - Live region for event count updates
+        //     #filter-bar-event-count - Shows "X events" with category
+        //   #filter-bar-time-range - Time filter button (sunrise, 6h, 12h, etc.)
+        //   #filter-bar-distance - Distance filter button (km radius)
+        //   #filter-bar-location - Location filter button (here/custom)
         
         // Update individual parts of the filter sentence
         const eventCountCategoryText = document.getElementById('filter-bar-event-count');
@@ -1217,24 +1225,63 @@ class EventsApp {
     }
     
     setupEventListeners() {
-        // Dashboard menu
+        // Dashboard menu with focus management
         const dashboardLogo = document.getElementById('filter-bar-logo');
         const dashboardMenu = document.getElementById('dashboard-menu');
         const closeDashboard = document.getElementById('close-dashboard');
         
+        // Store last focused element and focus trap function in class properties for ESC handler access
+        this.dashboardLastFocusedElement = null;
+        
+        // Focus trap helper
+        this.dashboardTrapFocus = (e) => {
+            if (e.key !== 'Tab') return;
+            if (dashboardMenu.classList.contains('hidden')) return;
+            
+            const focusableElements = dashboardMenu.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            const firstElement = focusableElements[0];
+            const lastElement = focusableElements[focusableElements.length - 1];
+            
+            if (e.shiftKey && document.activeElement === firstElement) {
+                e.preventDefault();
+                lastElement.focus();
+            } else if (!e.shiftKey && document.activeElement === lastElement) {
+                e.preventDefault();
+                firstElement.focus();
+            }
+        };
+        
         if (dashboardLogo && dashboardMenu) {
             // Open dashboard on logo click
             dashboardLogo.addEventListener('click', () => {
+                this.dashboardLastFocusedElement = document.activeElement;
                 dashboardMenu.classList.remove('hidden');
+                dashboardLogo.setAttribute('aria-expanded', 'true');
                 this.updateDashboard(); // Refresh data when opening
+                // Move focus to close button
+                if (closeDashboard) {
+                    closeDashboard.focus();
+                }
+                // Add focus trap
+                document.addEventListener('keydown', this.dashboardTrapFocus);
             });
             
             // Open dashboard on Enter/Space key
             dashboardLogo.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
+                    this.dashboardLastFocusedElement = document.activeElement;
                     dashboardMenu.classList.remove('hidden');
+                    dashboardLogo.setAttribute('aria-expanded', 'true');
                     this.updateDashboard();
+                    // Move focus to close button
+                    if (closeDashboard) {
+                        closeDashboard.focus();
+                    }
+                    // Add focus trap
+                    document.addEventListener('keydown', this.dashboardTrapFocus);
                 }
             });
         }
@@ -1243,14 +1290,32 @@ class EventsApp {
             // Close dashboard on close button
             closeDashboard.addEventListener('click', () => {
                 dashboardMenu.classList.add('hidden');
+                if (dashboardLogo) {
+                    dashboardLogo.setAttribute('aria-expanded', 'false');
+                }
+                // Remove focus trap
+                document.removeEventListener('keydown', this.dashboardTrapFocus);
+                // Return focus to logo
+                if (this.dashboardLastFocusedElement) {
+                    this.dashboardLastFocusedElement.focus();
+                }
             });
         }
         
         if (dashboardMenu) {
-            // Close dashboard on background click
+            // Close dashboard on background click (more reliable detection)
             dashboardMenu.addEventListener('click', (e) => {
-                if (e.target.id === 'dashboard-menu') {
+                if (e.target === e.currentTarget) {
                     dashboardMenu.classList.add('hidden');
+                    if (dashboardLogo) {
+                        dashboardLogo.setAttribute('aria-expanded', 'false');
+                    }
+                    // Remove focus trap
+                    document.removeEventListener('keydown', this.dashboardTrapFocus);
+                    // Return focus to logo
+                    if (this.dashboardLastFocusedElement) {
+                        this.dashboardLastFocusedElement.focus();
+                    }
                 }
             });
         }
@@ -1585,6 +1650,7 @@ class EventsApp {
         document.addEventListener('keydown', (e) => {
             const eventDetail = document.getElementById('event-detail');
             const dashboardMenu = document.getElementById('dashboard-menu');
+            const dashboardLogo = document.getElementById('filter-bar-logo');
             
             // ESC: Close event detail popup, dashboard, and dropdowns
             if (e.key === 'Escape') {
@@ -1593,6 +1659,17 @@ class EventsApp {
                     e.preventDefault();
                 } else if (dashboardMenu && !dashboardMenu.classList.contains('hidden')) {
                     dashboardMenu.classList.add('hidden');
+                    if (dashboardLogo) {
+                        dashboardLogo.setAttribute('aria-expanded', 'false');
+                    }
+                    // Remove focus trap
+                    if (this.dashboardTrapFocus) {
+                        document.removeEventListener('keydown', this.dashboardTrapFocus);
+                    }
+                    // Return focus to logo
+                    if (this.dashboardLastFocusedElement) {
+                        this.dashboardLastFocusedElement.focus();
+                    }
                     e.preventDefault();
                 }
                 hideAllDropdowns();

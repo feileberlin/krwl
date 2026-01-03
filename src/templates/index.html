@@ -16,13 +16,15 @@
 {noscript_html}
 </noscript>
 <div id="main-content" style="display:none">
-<div id="event-filter-bar">
-<span id="filter-bar-logo" class="filter-bar-logo" role="button" tabindex="0" aria-label="Open dashboard menu">{logo_svg}</span>
-<span id="filter-bar-event-count" class="filter-bar-item">0 events</span>
-<span id="filter-bar-time-range" class="filter-bar-item">till sunrise</span>
-<span id="filter-bar-distance" class="filter-bar-item">within 5 km</span>
-<span id="filter-bar-location" class="filter-bar-item">from here</span>
+<header id="event-filter-bar" role="banner" aria-label="Page header with project menu and event filters">
+<button id="filter-bar-logo" class="filter-bar-logo" aria-label="Project menu" aria-haspopup="dialog" aria-expanded="false">{logo_svg}</button>
+<div role="status" aria-live="polite" aria-atomic="true">
+<span id="filter-bar-event-count" class="filter-bar-item" aria-label="Event count">0 events</span>
 </div>
+<span id="filter-bar-time-range" class="filter-bar-item" role="button" tabindex="0" aria-label="Time filter">till sunrise</span>
+<span id="filter-bar-distance" class="filter-bar-item" role="button" tabindex="0" aria-label="Distance filter">within 5 km</span>
+<span id="filter-bar-location" class="filter-bar-item" role="button" tabindex="0" aria-label="Location filter">from here</span>
+</header>
 <div id="map"></div>
 <div id="event-detail" class="hidden">
 <div class="detail-content">
@@ -35,10 +37,10 @@
 <a id="detail-link" href="#" target="_blank">View Details</a>
 </div>
 </div>
-<div id="dashboard-menu" class="hidden">
+<div id="dashboard-menu" class="hidden" role="dialog" aria-modal="true" aria-labelledby="dashboard-title">
 <div class="dashboard-content">
-<button id="close-dashboard">&times;</button>
-<h2>KRWL HOF Dashboard</h2>
+<button id="close-dashboard" aria-label="Close project menu">&times;</button>
+<h2 id="dashboard-title">Project Menu</h2>
 <div class="dashboard-section">
 <h3>📖 About</h3>
 <p>KRWL HOF Community Events is a mobile-first Progressive Web App for discovering community events with interactive map visualization.</p>
