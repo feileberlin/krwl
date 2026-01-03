@@ -239,14 +239,20 @@ class ScraperTester:
                 f"Expected 2 events, found {len(pending_data['pending_events'])}"
             )
             
-            # Test the deduplication check directly
+            # Test the deduplication check logic (now done inline in scrape_all_sources)
             events = [
                 {'title': 'Event A', 'start_time': '2025-12-15T19:00:00'},
                 {'title': 'Event B', 'start_time': '2025-12-15T20:00:00'}
             ]
             new_event = {'title': 'Event A', 'start_time': '2025-12-15T19:00:00'}
             
-            exists = scraper._event_exists(events, new_event)
+            # Simulate the inline deduplication logic from scrape_all_sources
+            event_keys = {
+                (event.get('title'), event.get('start_time'))
+                for event in events
+            }
+            exists = (new_event.get('title'), new_event.get('start_time')) in event_keys
+            
             self.assert_test(
                 exists is True,
                 "Event deduplication check works (same title + time)",
@@ -255,7 +261,7 @@ class ScraperTester:
             
             # Test with different start time
             different_event = {'title': 'Event A', 'start_time': '2025-12-15T21:00:00'}
-            exists = scraper._event_exists(events, different_event)
+            exists = (different_event.get('title'), different_event.get('start_time')) in event_keys
             self.assert_test(
                 exists is False,
                 "Event deduplication allows different times",

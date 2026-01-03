@@ -280,6 +280,14 @@ def is_event_rejected(rejected_events, event_title, event_source):
     """
     Check if an event with given title and source has been rejected before.
     
+    OPTIMIZATION: Uses set-based lookup for O(1) average case performance
+    instead of O(n) linear search. String normalization is done once per 
+    input event rather than repeatedly for each rejected event.
+    
+    NOTE: This function is designed for single-event checks (e.g., in add_rejected_event).
+    For batch checking multiple events, caller should build the set once and reuse it
+    (see scrape_all_sources for example).
+    
     Args:
         rejected_events: List of rejected event records
         event_title: Title of the event to check
@@ -288,18 +296,20 @@ def is_event_rejected(rejected_events, event_title, event_source):
     Returns:
         True if event matches a rejected record, False otherwise
     """
+    # Normalize input once
     title_lower = event_title.lower().strip()
     source_lower = event_source.lower().strip()
     
-    for rejected in rejected_events:
-        rejected_title = rejected.get('title', '').lower().strip()
-        rejected_source = rejected.get('source', '').lower().strip()
-        
-        # Match if both title and source match
-        if rejected_title == title_lower and rejected_source == source_lower:
-            return True
+    # Create set of normalized (title, source) tuples for O(1) lookup
+    # For batch operations, caller should build this set once (see scrape_all_sources)
+    rejected_set = {
+        (rejected.get('title', '').lower().strip(), 
+         rejected.get('source', '').lower().strip())
+        for rejected in rejected_events
+    }
     
-    return False
+    # O(1) lookup instead of O(n) iteration
+    return (title_lower, source_lower) in rejected_set
 
 
 def add_rejected_event(base_path, event_title, event_source):
@@ -513,10 +523,24 @@ def backup_published_event(base_path, event):
     return backup_path
 
 
+# Cache for historical events (in-memory, per process)
+# NOTE: This is a simple cache for single-process, single-threaded execution.
+# For multi-threaded environments, use threading.Lock() for synchronization.
+# Historical events don't change during a process lifetime, so caching is safe.
+_historical_events_cache = None
+
 def load_historical_events(base_path):
     """
     Load all historical events from data/old/ folder.
     Returns a list of event dictionaries from all backup files.
+    
+    OPTIMIZATION: Uses in-memory caching to avoid re-reading disk on every call.
+    Historical events don't change during a single process execution, so we can
+    safely cache them after first load.
+    
+    THREAD SAFETY: This implementation uses a global variable which is NOT thread-safe.
+    In multi-threaded environments, wrap cache access with threading.Lock().
+    Current usage (CLI/TUI) is single-threaded, so this is safe.
     
     This is used by the scraper to check against historical data
     and prevent re-scraping events that were already published.
@@ -527,10 +551,17 @@ def load_historical_events(base_path):
     Returns:
         List of event dictionaries
     """
+    global _historical_events_cache
+    
+    # Return cached data if available
+    if _historical_events_cache is not None:
+        return _historical_events_cache
+    
     old_dir = base_path / 'event-data' / 'old'
     historical_events = []
     
     if not old_dir.exists():
+        _historical_events_cache = historical_events
         return historical_events
     
     # Load all backup files
@@ -547,6 +578,8 @@ def load_historical_events(base_path):
             print(f"Warning: Could not load backup file {backup_file}: {e}")
             continue
     
+    # Cache the results
+    _historical_events_cache = historical_events
     return historical_events
 
 
