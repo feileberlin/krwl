@@ -4,20 +4,20 @@
     <!-- Main megaphone cone -->
     <path d="M 4,10 L 4,10 L 14,5 L 14,15 Z" 
           fill="none" 
-          stroke="#ffffff" 
+          stroke="#FF69B4" 
           stroke-width="1.5" 
           stroke-linejoin="round"/>
     
     <!-- Bell/opening of megaphone -->
     <ellipse cx="14" cy="10" rx="1.5" ry="5.5" 
              fill="none" 
-             stroke="#ffffff" 
+             stroke="#FF69B4" 
              stroke-width="1.5"/>
     
     <!-- Handle -->
     <path d="M 4,12 L 4,15 L 5.5,16 L 5.5,12.5" 
           fill="none" 
-          stroke="#ffffff" 
+          stroke="#FF69B4" 
           stroke-width="1.5" 
           stroke-linecap="round" 
           stroke-linejoin="round"/>
@@ -25,19 +25,19 @@
     <!-- Sound waves -->
     <path d="M 16,7 Q 17.5,7 18,8.5" 
           fill="none" 
-          stroke="#ffffff" 
+          stroke="#FF69B4" 
           stroke-width="1" 
           stroke-linecap="round" 
           opacity="0.8"/>
     <path d="M 16,10 Q 17.5,10 18.5,10" 
           fill="none" 
-          stroke="#ffffff" 
+          stroke="#FF69B4" 
           stroke-width="1" 
           stroke-linecap="round" 
           opacity="0.8"/>
     <path d="M 16,13 Q 17.5,13 18,11.5" 
           fill="none" 
-          stroke="#ffffff" 
+          stroke="#FF69B4" 
           stroke-width="1" 
           stroke-linecap="round" 
           opacity="0.8"/>

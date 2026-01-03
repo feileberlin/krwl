@@ -479,9 +479,9 @@ window.ALL_EVENTS = {json.dumps(events)};
 window.EMBEDDED_CONTENT_EN = {json.dumps(content_en)};
 window.EMBEDDED_CONTENT_DE = {json.dumps(content_de)};'''
         
-        # Generate timestamp for output
-        from datetime import datetime
-        generated_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')
+        # Use placeholder timestamp to avoid merge conflicts
+        # Actual timestamp will be added during deployment if needed
+        generated_at = 'BUILD_TIMESTAMP_PLACEHOLDER'
         
         # Create comment for generated file
         generated_comment = f'''<!--
