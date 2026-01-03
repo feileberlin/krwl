@@ -194,18 +194,37 @@ header {
     text-align: center;
 }
 
-/* Filter logo */
+/* Filter logo - now clickable */
 #event-filter-bar .filter-bar-logo {
     display: inline-flex;
     align-items: center;
     margin-right: 0.5rem;
     vertical-align: middle;
+    cursor: pointer;
+    padding: 0.2rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+#event-filter-bar .filter-bar-logo:hover {
+    background: rgba(255, 105, 180, 0.2);
+    transform: scale(1.1);
+}
+
+#event-filter-bar .filter-bar-logo:focus {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
 }
 
 #event-filter-bar .filter-bar-logo svg {
     width: 20px;
     height: 20px;
     filter: drop-shadow(0 0 5px rgba(255, 105, 180, 0.6));
+    transition: filter 0.2s;
+}
+
+#event-filter-bar .filter-bar-logo:hover svg {
+    filter: drop-shadow(0 0 8px rgba(255, 105, 180, 1));
 }
 
 /* Filter dropdowns */
@@ -312,23 +331,168 @@ header {
     display: none;
 }
 
-#environment-badge {
-    position: absolute;
-    bottom: 0;
+/* Dashboard menu modal */
+#dashboard-menu {
+    position: fixed;
+    top: 0;
     left: 0;
-    padding: 0.5rem 1rem;
-    background: var(--barbie-shade-darkest);
-    backdrop-filter: blur(10px);
-    border-radius: 8px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    text-transform: uppercase;
-    font-family: 'Courier New', monospace;
-    color: var(--barbie-tone-light);
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
-    z-index: 1002;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 1rem;
+}
+
+#dashboard-menu.hidden {
+    display: none;
+}
+
+.dashboard-content {
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 1.5rem;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    border: 2px solid var(--border-primary);
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+}
+
+#close-dashboard {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.8rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+    padding: 0.5rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#close-dashboard:hover {
+    color: var(--accent-primary);
+}
+
+.dashboard-content h2 {
+    margin-bottom: 1rem;
+    color: var(--accent-primary);
+    text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
+    font-size: 1.5rem;
+    padding-right: 2.5rem;
+}
+
+.dashboard-section {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 105, 180, 0.2);
+}
+
+.dashboard-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.dashboard-section h3 {
+    color: var(--accent-primary);
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-section p {
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.dashboard-section strong {
+    color: var(--text-primary);
+}
+
+.dashboard-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dashboard-links li {
+    margin-bottom: 0.4rem;
+}
+
+.dashboard-links a {
+    color: var(--accent-primary);
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-block;
+    font-size: 0.9rem;
+}
+
+.dashboard-links a:hover {
+    color: var(--accent-hover);
+    text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+    transform: translateX(3px);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    #dashboard-menu {
+        padding: 0.5rem;
+    }
+    
+    .dashboard-content {
+        padding: 1rem;
+        border-radius: 8px;
+        max-height: 95vh;
+    }
+    
+    .dashboard-content h2 {
+        font-size: 1.3rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .dashboard-section {
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+    
+    .dashboard-section h3 {
+        font-size: 0.95rem;
+    }
+    
+    .dashboard-section p {
+        font-size: 0.85rem;
+    }
+    
+    .dashboard-links a {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-content {
+        padding: 0.75rem;
+    }
+    
+    .dashboard-content h2 {
+        font-size: 1.2rem;
+    }
+    
+    .dashboard-section h3 {
+        font-size: 0.9rem;
+    }
 }
 
 #event-list {

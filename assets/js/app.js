@@ -34,9 +34,6 @@ class EventsApp {
         
         this.log('App initialized', 'Config:', this.config);
         
-        // Display environment watermark
-        this.updateWatermark();
-        
         // Show main content early with error handling
         this.showMainContent();
         
@@ -158,31 +155,40 @@ class EventsApp {
         }
     }
     
-    updateWatermark() {
-        const watermark = document.getElementById('environment-badge');
-        if (!watermark) return;
+    updateDashboard() {
+        // Update dashboard debug info with current state
+        const debugEnvironment = document.getElementById('debug-environment');
+        const debugEventCount = document.getElementById('debug-event-count');
+        const debugDataSource = document.getElementById('debug-data-source');
+        const debugMode = document.getElementById('debug-mode');
         
-        // Get environment from config
-        const environment = this.config?.watermark?.text || this.config?.app?.environment || 'UNKNOWN';
-        
-        // Get event stats
-        const totalEvents = this.events.length;
-        const visibleEvents = this.filterEvents().length;
-        
-        // Determine localized word for "event(s)" using i18n with fallback
-        const isSingular = visibleEvents === 1;
-        let eventWord = isSingular ? 'event' : 'events';
-        if (window.i18n && typeof window.i18n.t === 'function') {
-            const eventWordKey = isSingular ? 'filters.event_word.singular' : 'filters.event_word.plural';
-            const translated = window.i18n.t(eventWordKey);
-            // Only use translation if it's not the key itself (which means it wasn't found)
-            if (translated && translated !== eventWordKey) {
-                eventWord = translated;
+        if (debugEnvironment) {
+            const environment = this.config?.watermark?.text || this.config?.app?.environment || 'UNKNOWN';
+            debugEnvironment.textContent = environment.toUpperCase();
+            // Add color coding based on environment
+            if (environment.toLowerCase().includes('dev')) {
+                debugEnvironment.style.color = '#FFB3DF'; // Lighter pink for dev
+            } else if (environment.toLowerCase().includes('production')) {
+                debugEnvironment.style.color = '#4CAF50'; // Green for production
             }
         }
         
-        // Simple format: "DEV | 5/10 events" (with localized event word)
-        watermark.textContent = `${environment.toUpperCase()} | ${visibleEvents}/${totalEvents} ${eventWord}`;
+        if (debugEventCount) {
+            const totalEvents = this.events.length;
+            const visibleEvents = this.filterEvents().length;
+            debugEventCount.textContent = `${visibleEvents}/${totalEvents}`;
+        }
+        
+        if (debugDataSource) {
+            const dataSource = this.config?.data?.source || 'unknown';
+            debugDataSource.textContent = dataSource;
+        }
+        
+        if (debugMode) {
+            const debugEnabled = this.config?.debug || false;
+            debugMode.textContent = debugEnabled ? 'Enabled' : 'Disabled';
+            debugMode.style.color = debugEnabled ? '#FFB3DF' : '#888';
+        }
     }
     
     async loadConfig() {
@@ -338,8 +344,8 @@ class EventsApp {
             // Process template events with relative times
             this.events = this.processTemplateEvents(allEvents);
             
-            // Update watermark with event count
-            this.updateWatermark();
+            // Update dashboard with event count
+            this.updateDashboard();
         } catch (error) {
             console.error('Error loading events:', error);
             this.events = [];
@@ -610,8 +616,8 @@ class EventsApp {
         // Update count with descriptive sentence
         this.updateFilterDescription(filteredEvents.length);
         
-        // Update watermark with event stats
-        this.updateWatermark();
+        // Update dashboard with event stats
+        this.updateDashboard();
         
         // Ensure main content is visible (with error handling)
         this.showMainContent();
@@ -1211,6 +1217,44 @@ class EventsApp {
     }
     
     setupEventListeners() {
+        // Dashboard menu
+        const dashboardLogo = document.getElementById('filter-bar-logo');
+        const dashboardMenu = document.getElementById('dashboard-menu');
+        const closeDashboard = document.getElementById('close-dashboard');
+        
+        if (dashboardLogo && dashboardMenu) {
+            // Open dashboard on logo click
+            dashboardLogo.addEventListener('click', () => {
+                dashboardMenu.classList.remove('hidden');
+                this.updateDashboard(); // Refresh data when opening
+            });
+            
+            // Open dashboard on Enter/Space key
+            dashboardLogo.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    dashboardMenu.classList.remove('hidden');
+                    this.updateDashboard();
+                }
+            });
+        }
+        
+        if (closeDashboard && dashboardMenu) {
+            // Close dashboard on close button
+            closeDashboard.addEventListener('click', () => {
+                dashboardMenu.classList.add('hidden');
+            });
+        }
+        
+        if (dashboardMenu) {
+            // Close dashboard on background click
+            dashboardMenu.addEventListener('click', (e) => {
+                if (e.target.id === 'dashboard-menu') {
+                    dashboardMenu.classList.add('hidden');
+                }
+            });
+        }
+        
         // Custom dropdown helper class
         class CustomDropdown {
             constructor(triggerEl, items, currentValue, onSelect, app) {
@@ -1540,11 +1584,15 @@ class EventsApp {
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             const eventDetail = document.getElementById('event-detail');
+            const dashboardMenu = document.getElementById('dashboard-menu');
             
-            // ESC: Close event detail popup and dropdowns
+            // ESC: Close event detail popup, dashboard, and dropdowns
             if (e.key === 'Escape') {
                 if (eventDetail && !eventDetail.classList.contains('hidden')) {
                     eventDetail.classList.add('hidden');
+                    e.preventDefault();
+                } else if (dashboardMenu && !dashboardMenu.classList.contains('hidden')) {
+                    dashboardMenu.classList.add('hidden');
                     e.preventDefault();
                 }
                 hideAllDropdowns();
