@@ -1,4 +1,86 @@
 {
+  "_comment_design_system": "═══════════════════════════════════════════════════════════════════════════════",
+  "_comment_design_intro": "🎨 DESIGN SYSTEM - Centralized design tokens for instant rebranding",
+  "_comment_design_usage": "Edit colors, fonts, spacing here and regenerate to rebrand the entire app!",
+  "_comment_design_command": "Run: python3 src/templates/components/generate_design_tokens.py",
+  "_comment_design_separator": "═══════════════════════════════════════════════════════════════════════════════",
+  
+  "design": {
+    "colors": {
+      "primary": "#FF69B4",
+      "primary_hover": "#ff4da6",
+      "bg_primary": "#0d1117",
+      "bg_secondary": "#161b22",
+      "bg_tertiary": "#21262d",
+      "text_primary": "#c9d1d9",
+      "text_secondary": "#8b949e",
+      "text_tertiary": "#6e7681",
+      "border_primary": "#30363d",
+      "border_secondary": "#21262d",
+      "accent": "#58a6ff",
+      "success": "#3fb950",
+      "warning": "#d29922",
+      "error": "#f85149"
+    },
+    "typography": {
+      "font_family_base": "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif",
+      "font_family_mono": "'Monaco', 'Courier New', monospace",
+      "font_size_base": "16px",
+      "font_size_small": "14px",
+      "font_size_large": "18px",
+      "line_height_base": "1.6",
+      "line_height_tight": "1.25"
+    },
+    "spacing": {
+      "unit": "8px",
+      "xs": "4px",
+      "sm": "8px",
+      "md": "16px",
+      "lg": "24px",
+      "xl": "32px",
+      "xxl": "48px"
+    },
+    "z_index": {
+      "_comment": "4-layer system: map < event popups < UI controls < modals",
+      "layer_1_map": 0,
+      "layer_2_event_popups": 1000,
+      "layer_2_leaflet_popup": 700,
+      "layer_2_leaflet_tooltip": 650,
+      "layer_3_ui": 1500,
+      "layer_3_filter_bar": 1500,
+      "layer_3_dashboard": 1600,
+      "layer_3_time_drawer": 1600,
+      "layer_4_modals": 2000,
+      "layer_4_dashboard_expanded": 2000,
+      "layer_4_alerts": 2100
+    },
+    "shadows": {
+      "small": "0 2px 4px rgba(0, 0, 0, 0.3)",
+      "medium": "0 4px 12px rgba(0, 0, 0, 0.4)",
+      "large": "0 8px 24px rgba(0, 0, 0, 0.5)",
+      "glow_primary": "0 0 10px rgba(255, 105, 180, 0.3)"
+    },
+    "borders": {
+      "radius_small": "4px",
+      "radius_medium": "6px",
+      "radius_large": "8px",
+      "radius_xl": "12px",
+      "width_thin": "1px",
+      "width_medium": "2px",
+      "width_thick": "4px"
+    },
+    "transitions": {
+      "fast": "0.1s ease-out",
+      "normal": "0.2s ease-out",
+      "slow": "0.3s ease-out"
+    },
+    "branding": {
+      "app_name": "KRWL HOF Community Events",
+      "tagline": "Discover local events near you",
+      "footer_text": "Built with Leaflet.js | Icons by Lucide | 💖 Barbie Pink Theme"
+    }
+  },
+  
   "_comment_environment_override": "═══════════════════════════════════════════════════════════════════════════════",
   "_comment_override_help": "ENVIRONMENT OVERRIDE - Set to force a specific environment, bypassing auto-detection",
   "_comment_override_values": "  • 'development' - Force dev mode (debug=true, demo events, DEV watermark)",
