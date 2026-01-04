@@ -584,24 +584,43 @@ body {
 
 /* Git commit stamp - Prominent display (normal size, stamp-like) */
 .debug-git-stamp {
-    background: linear-gradient(135deg, rgba(255, 105, 180, 0.15), rgba(255, 105, 180, 0.05));
-    border: 2px solid rgba(255, 105, 180, 0.3);
+    background: linear-gradient(135deg, rgba(255, 105, 180, 0.2), rgba(255, 105, 180, 0.1));
+    border: 2px dashed #FF69B4;
     border-radius: 8px;
     padding: 1rem;
     margin-bottom: 1rem;
     font-family: 'Monaco', 'Courier New', monospace;
+    position: relative;
+}
+
+/* Stamp-like appearance */
+.debug-git-stamp::before {
+    content: '★ COMMIT STAMP ★';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-2deg);
+    background: #FF69B4;
+    color: #0d1117;
+    padding: 2px 12px;
+    border-radius: 12px;
+    font-size: 0.7em;
+    font-weight: bold;
+    letter-spacing: 0.1em;
 }
 
 .debug-git-hash {
-    font-size: 1em; /* Normal size to match terminal style */
+    font-size: 1.2em;
     font-weight: bold;
     color: #FF69B4;
     margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
 }
 
 .debug-git-icon {
@@ -617,80 +636,125 @@ body {
 }
 
 .debug-git-details {
-    font-size: 0.9em;
-    color: #c9d1d9;
+    font-size: 0.85em;
+    color: #FFB3DF;
     line-height: 1.6;
 }
 
 .debug-git-details strong {
-    color: #FFB3DF;
+    color: #FF69B4;
+    text-transform: uppercase;
+    font-size: 0.9em;
 }
 
 .debug-commit-message {
     font-style: italic;
-    color: #8b949e;
+    color: #FFB3DF;
     margin-top: 0.25rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    border-left: 3px solid #FF69B4;
+    padding-left: 0.5rem;
 }
 
-/* Unix top-style debug output */
+/* Unix top-style debug output - Barbie Edition */
 .debug-top-style {
     font-family: 'Monaco', 'Courier New', monospace;
     font-size: 0.85em;
-    background: #0d1117;
-    border: 1px solid #30363d;
+    background: linear-gradient(180deg, #1a0a12 0%, #0d1117 100%);
+    border: 2px solid #FF69B4;
     border-radius: 4px;
     padding: 0.75rem;
-    color: #c9d1d9;
+    color: #FFB3DF;
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.3), inset 0 0 30px rgba(255, 105, 180, 0.1);
 }
 
 .debug-top-header {
-    color: #FFB3DF;
+    color: #FF69B4;
     font-weight: bold;
-    border-bottom: 1px solid #30363d;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid #FF69B4;
     padding-bottom: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+    text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+    background: linear-gradient(90deg, rgba(255, 105, 180, 0.1), transparent);
+    padding: 0.5rem;
+    margin: -0.75rem -0.75rem 0.75rem -0.75rem;
 }
 
 .debug-top-section {
     margin-bottom: 0.5rem;
-    line-height: 1.6;
+    line-height: 1.8;
+    padding: 0.25rem 0.5rem;
+    transition: background 0.2s;
+}
+
+.debug-top-section:hover {
+    background: rgba(255, 105, 180, 0.1);
+    border-left: 3px solid #FF69B4;
+    margin-left: -0.5rem;
+    padding-left: calc(0.5rem - 3px);
 }
 
 .debug-top-section strong {
-    color: #58a6ff;
+    color: #FF69B4;
     display: inline-block;
-    min-width: 140px;
+    min-width: 150px;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    letter-spacing: 0.05em;
 }
 
 .debug-top-total {
-    color: #8b949e;
+    color: #D689B8;
     font-size: 0.9em;
+    margin-left: 0.5rem;
 }
 
 .debug-env-badge {
     display: inline-block;
-    padding: 2px 8px;
+    padding: 3px 10px;
     border-radius: 3px;
     font-weight: bold;
-    font-size: 0.9em;
+    font-size: 0.95em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 1px solid;
+    animation: badge-pulse 2s ease-in-out infinite;
+}
+
+@keyframes badge-pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.9;
+        transform: scale(1.02);
+    }
 }
 
 .debug-env-badge.env-dev {
-    background: rgba(255, 179, 223, 0.2);
-    border: 1px solid #FFB3DF;
+    background: linear-gradient(135deg, rgba(255, 179, 223, 0.3), rgba(255, 105, 180, 0.2));
+    border-color: #FFB3DF;
+    color: #FFB3DF;
+    box-shadow: 0 0 10px rgba(255, 179, 223, 0.3);
 }
 
 .debug-env-badge.env-production {
-    background: rgba(76, 175, 80, 0.2);
-    border: 1px solid #4CAF50;
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.3), rgba(56, 142, 60, 0.2));
+    border-color: #4CAF50;
+    color: #4CAF50;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
 }
 
 .debug-env-badge.env-ci {
-    background: rgba(88, 166, 255, 0.2);
-    border: 1px solid #58a6ff;
+    background: linear-gradient(135deg, rgba(88, 166, 255, 0.3), rgba(68, 138, 204, 0.2));
+    border-color: #58a6ff;
+    color: #58a6ff;
+    box-shadow: 0 0 10px rgba(88, 166, 255, 0.3);
 }
 
 .debug-size-list {
@@ -702,12 +766,41 @@ body {
 
 .debug-size-list li {
     margin-bottom: 0.25rem;
-    color: #8b949e;
+    color: #D689B8;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.debug-size-list li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: #FF69B4;
 }
 
 .debug-size-details {
     margin-top: 0.25rem;
 }
+
+/* Barbie-themed value highlights */
+#debug-event-counts-published,
+#debug-event-counts-pending,
+#debug-event-counts-archived,
+#debug-event-counts-total {
+    color: #FF69B4;
+    font-weight: bold;
+}
+
+#debug-caching.cache-enabled {
+    color: #4CAF50;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+#debug-caching.cache-disabled {
+    color: #8b949e;
+}
+
 
 
 /* Mobile optimizations */
