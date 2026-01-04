@@ -4,8 +4,8 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: var(--app-width);
+    height: var(--app-height);
     z-index: 1;
     background: var(--barbie-shade-darkest);
 }

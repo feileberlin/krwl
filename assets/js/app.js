@@ -33,6 +33,17 @@ class EventsApp {
         // OPTIMIZATION: Debounce delay constant for slider interactions (milliseconds)
         this.SLIDER_DEBOUNCE_DELAY = 100;
         
+        // VIEWPORT: Delay for orientation change to complete before updating dimensions (milliseconds)
+        this.ORIENTATION_CHANGE_DELAY = 100;
+        
+        // ANIMATION: Dashboard expansion animation duration (milliseconds)
+        // Must match CSS transition duration in filters.css
+        this.DASHBOARD_EXPANSION_DURATION = 500;
+        
+        // ANIMATION: Dashboard fade-in duration (milliseconds)
+        // Must match CSS transition duration in dashboard.css
+        this.DASHBOARD_FADE_DURATION = 300;
+        
         this.init();
     }
     
@@ -453,6 +464,41 @@ class EventsApp {
         L.tileLayer(this.config.map.tile_provider, {
             attribution: this.config.map.attribution
         }).addTo(this.map);
+        
+        // Leaflet Best Practice: Disable map interactions on UI overlays
+        // This prevents clicks on filter bar and dashboard from affecting the map
+        this.setupLeafletEventPrevention();
+    }
+    
+    /**
+     * Setup Leaflet-specific event prevention on UI overlays
+     * 
+     * Follows Leaflet best practices for preventing map interactions
+     * when clicking/scrolling on UI elements that overlay the map.
+     * 
+     * See: https://leafletjs.com/reference.html#domevent
+     */
+    setupLeafletEventPrevention() {
+        if (typeof L === 'undefined' || !L.DomEvent) {
+            this.log('Leaflet DomEvent not available, skipping event prevention');
+            return;
+        }
+        
+        // Prevent map interactions on filter bar
+        const filterBar = document.getElementById('event-filter-bar');
+        if (filterBar) {
+            L.DomEvent.disableClickPropagation(filterBar);
+            L.DomEvent.disableScrollPropagation(filterBar);
+            this.log('Leaflet event prevention enabled for filter bar');
+        }
+        
+        // Prevent map interactions on dashboard
+        const dashboard = document.getElementById('dashboard-menu');
+        if (dashboard) {
+            L.DomEvent.disableClickPropagation(dashboard);
+            L.DomEvent.disableScrollPropagation(dashboard);
+            this.log('Leaflet event prevention enabled for dashboard');
+        }
     }
     
     getUserLocation() {
@@ -1477,34 +1523,126 @@ class EventsApp {
         };
         
         if (dashboardLogo && dashboardMenu) {
-            // Open dashboard on logo click
-            dashboardLogo.addEventListener('click', () => {
+            // Open dashboard on logo click with animation
+            dashboardLogo.addEventListener('click', async () => {
                 this.dashboardLastFocusedElement = document.activeElement;
+                
+                // Get filter bar element for animation
+                const filterBar = document.getElementById('event-filter-bar');
+                
+                // Step 1: Expand filter bar (triggers CSS transition)
+                if (filterBar) {
+                    filterBar.classList.add('dashboard-opening');
+                    
+                    // Step 2: Wait for expansion to complete using transitionend event
+                    await new Promise(resolve => {
+                        const handleTransitionEnd = (e) => {
+                            // Only resolve when the filter bar's transition ends (not child elements)
+                            if (e.target === filterBar) {
+                                filterBar.removeEventListener('transitionend', handleTransitionEnd);
+                                resolve();
+                            }
+                        };
+                        filterBar.addEventListener('transitionend', handleTransitionEnd);
+                        
+                        // Fallback timeout in case transitionend doesn't fire
+                        setTimeout(resolve, this.DASHBOARD_EXPANSION_DURATION + 100);
+                    });
+                }
+                
+                // Step 3: Show dashboard and remove hidden class
                 dashboardMenu.classList.remove('hidden');
                 dashboardMenu.classList.add('visible');
                 dashboardLogo.setAttribute('aria-expanded', 'true');
                 this.updateDashboard(); // Refresh data when opening
-                // Move focus to close button
-                if (closeDashboard) {
-                    closeDashboard.focus();
-                }
+                
+                // Move focus to close button after fade-in using transitionend
+                const handleDashboardTransitionEnd = (e) => {
+                    if (e.target === dashboardMenu || e.target.classList.contains('dashboard-content')) {
+                        dashboardMenu.removeEventListener('transitionend', handleDashboardTransitionEnd);
+                        if (closeDashboard) {
+                            closeDashboard.focus();
+                        }
+                        // Leaflet Best Practice: Invalidate map size after UI changes
+                        if (this.map) {
+                            this.map.invalidateSize({ animate: false });
+                        }
+                    }
+                };
+                dashboardMenu.addEventListener('transitionend', handleDashboardTransitionEnd);
+                
+                // Fallback timeout
+                setTimeout(() => {
+                    dashboardMenu.removeEventListener('transitionend', handleDashboardTransitionEnd);
+                    if (closeDashboard && document.activeElement !== closeDashboard) {
+                        closeDashboard.focus();
+                    }
+                    if (this.map) {
+                        this.map.invalidateSize({ animate: false });
+                    }
+                }, this.DASHBOARD_FADE_DURATION + 100);
+                
                 // Add focus trap
                 document.addEventListener('keydown', this.dashboardTrapFocus);
             });
             
             // Open dashboard on Enter/Space key
-            dashboardLogo.addEventListener('keydown', (e) => {
+            dashboardLogo.addEventListener('keydown', async (e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
                     this.dashboardLastFocusedElement = document.activeElement;
+                    
+                    // Get filter bar element for animation
+                    const filterBar = document.getElementById('event-filter-bar');
+                    
+                    // Step 1: Expand filter bar
+                    if (filterBar) {
+                        filterBar.classList.add('dashboard-opening');
+                        
+                        // Step 2: Wait for expansion using transitionend event
+                        await new Promise(resolve => {
+                            const handleTransitionEnd = (e) => {
+                                if (e.target === filterBar) {
+                                    filterBar.removeEventListener('transitionend', handleTransitionEnd);
+                                    resolve();
+                                }
+                            };
+                            filterBar.addEventListener('transitionend', handleTransitionEnd);
+                            
+                            // Fallback timeout
+                            setTimeout(resolve, this.DASHBOARD_EXPANSION_DURATION + 100);
+                        });
+                    }
+                    
+                    // Step 3: Show dashboard
                     dashboardMenu.classList.remove('hidden');
                     dashboardMenu.classList.add('visible');
                     dashboardLogo.setAttribute('aria-expanded', 'true');
                     this.updateDashboard();
-                    // Move focus to close button
-                    if (closeDashboard) {
-                        closeDashboard.focus();
-                    }
+                    
+                    // Move focus after fade-in using transitionend
+                    const handleDashboardTransitionEnd = (e) => {
+                        if (e.target === dashboardMenu || e.target.classList.contains('dashboard-content')) {
+                            dashboardMenu.removeEventListener('transitionend', handleDashboardTransitionEnd);
+                            if (closeDashboard) {
+                                closeDashboard.focus();
+                            }
+                        }
+                    };
+                    dashboardMenu.addEventListener('transitionend', handleDashboardTransitionEnd);
+                    
+                    // Fallback timeout
+                    setTimeout(() => {
+                        dashboardMenu.removeEventListener('transitionend', handleDashboardTransitionEnd);
+                        if (closeDashboard && document.activeElement !== closeDashboard) {
+                            closeDashboard.focus();
+                        }
+                        // Leaflet Best Practice: Invalidate map size after UI changes
+                        if (this.map) {
+                            this.map.invalidateSize({ animate: false });
+                        }
+                    }, this.DASHBOARD_FADE_DURATION + 100);
+                    
                     // Add focus trap
                     document.addEventListener('keydown', this.dashboardTrapFocus);
                 }
@@ -1516,14 +1654,45 @@ class EventsApp {
             closeDashboard.addEventListener('click', () => {
                 dashboardMenu.classList.remove('visible');
                 dashboardMenu.classList.add('hidden');
+                
+                // Step 4: Collapse filter bar
+                if (filterBar) {
+                    filterBar.classList.remove('dashboard-opening');
+                }
+                
                 if (dashboardLogo) {
                     dashboardLogo.setAttribute('aria-expanded', 'false');
                 }
+                
                 // Remove focus trap
                 document.removeEventListener('keydown', this.dashboardTrapFocus);
-                // Return focus to logo
-                if (this.dashboardLastFocusedElement) {
-                    this.dashboardLastFocusedElement.focus();
+                
+                // Return focus to logo after collapse animation using transitionend
+                if (filterBar) {
+                    const handleCollapseEnd = (e) => {
+                        if (e.target === filterBar) {
+                            filterBar.removeEventListener('transitionend', handleCollapseEnd);
+                            if (this.dashboardLastFocusedElement) {
+                                this.dashboardLastFocusedElement.focus();
+                            }
+                            // Leaflet Best Practice: Invalidate map size after UI changes
+                            if (this.map) {
+                                this.map.invalidateSize({ animate: false });
+                            }
+                        }
+                    };
+                    filterBar.addEventListener('transitionend', handleCollapseEnd);
+                    
+                    // Fallback timeout
+                    setTimeout(() => {
+                        filterBar.removeEventListener('transitionend', handleCollapseEnd);
+                        if (this.dashboardLastFocusedElement && document.activeElement !== this.dashboardLastFocusedElement) {
+                            this.dashboardLastFocusedElement.focus();
+                        }
+                        if (this.map) {
+                            this.map.invalidateSize({ animate: false });
+                        }
+                    }, this.DASHBOARD_EXPANSION_DURATION + 100);
                 }
             });
         }
@@ -1537,14 +1706,41 @@ class EventsApp {
                 if (dashboardContent && !dashboardContent.contains(e.target)) {
                     dashboardMenu.classList.remove('visible');
                     dashboardMenu.classList.add('hidden');
+                    
+                    // Collapse filter bar
+                    if (filterBar) {
+                        filterBar.classList.remove('dashboard-opening');
+                    }
+                    
                     if (dashboardLogo) {
                         dashboardLogo.setAttribute('aria-expanded', 'false');
                     }
+                    
                     // Remove focus trap
                     document.removeEventListener('keydown', this.dashboardTrapFocus);
-                    // Return focus to logo
-                    if (this.dashboardLastFocusedElement) {
-                        this.dashboardLastFocusedElement.focus();
+                    
+                    // Return focus after collapse using transitionend
+                    if (filterBar) {
+                        const handleCollapseEnd = (e) => {
+                            if (e.target === filterBar) {
+                                filterBar.removeEventListener('transitionend', handleCollapseEnd);
+                                if (this.dashboardLastFocusedElement) {
+                                    this.dashboardLastFocusedElement.focus();
+                                }
+                            }
+                        };
+                        filterBar.addEventListener('transitionend', handleCollapseEnd);
+                        
+                        setTimeout(() => {
+                            filterBar.removeEventListener('transitionend', handleCollapseEnd);
+                            if (this.dashboardLastFocusedElement && document.activeElement !== this.dashboardLastFocusedElement) {
+                                this.dashboardLastFocusedElement.focus();
+                            }
+                            // Leaflet Best Practice: Invalidate map size after UI changes
+                            if (this.map) {
+                                this.map.invalidateSize({ animate: false });
+                            }
+                        }, this.DASHBOARD_EXPANSION_DURATION + 100);
                     }
                 }
             });
@@ -1895,14 +2091,32 @@ class EventsApp {
                     if (dashboardLogo) {
                         dashboardLogo.setAttribute('aria-expanded', 'false');
                     }
+                    
                     // Remove focus trap
                     if (this.dashboardTrapFocus) {
                         document.removeEventListener('keydown', this.dashboardTrapFocus);
                     }
-                    // Return focus to logo
-                    if (this.dashboardLastFocusedElement) {
-                        this.dashboardLastFocusedElement.focus();
+                    
+                    // Return focus after collapse using transitionend
+                    if (filterBar) {
+                        const handleCollapse = (event) => {
+                            if (event.target === filterBar) {
+                                filterBar.removeEventListener('transitionend', handleCollapse);
+                                if (this.dashboardLastFocusedElement) {
+                                    this.dashboardLastFocusedElement.focus();
+                                }
+                            }
+                        };
+                        filterBar.addEventListener('transitionend', handleCollapse);
+                        
+                        setTimeout(() => {
+                            filterBar.removeEventListener('transitionend', handleCollapse);
+                            if (this.dashboardLastFocusedElement && document.activeElement !== this.dashboardLastFocusedElement) {
+                                this.dashboardLastFocusedElement.focus();
+                            }
+                        }, this.DASHBOARD_FADE_DURATION + this.DASHBOARD_EXPANSION_DURATION + 100);
                     }
+                    
                     e.preventDefault();
                 }
                 hideAllDropdowns();
@@ -1954,6 +2168,47 @@ class EventsApp {
                 e.preventDefault();
             }
         });
+        
+        // Viewport resize handler for responsive layer scaling
+        // Updates CSS custom properties so all layers follow layer 1 (map) behavior
+        this.updateViewportDimensions();
+        
+        // Listen for resize and orientation changes
+        window.addEventListener('resize', () => this.updateViewportDimensions());
+        window.addEventListener('orientationchange', () => {
+            // Delay update to allow orientation to complete
+            setTimeout(() => this.updateViewportDimensions(), this.ORIENTATION_CHANGE_DELAY);
+        });
+    }
+    
+    /**
+     * Update viewport dimensions in CSS custom properties
+     * This ensures all fixed-position layers scale consistently with layer 1 (map)
+     * 
+     * PROGRESSIVE ENHANCEMENT:
+     * - Without this function: Falls back to dvh/dvw (modern) or vh/vw (legacy)
+     * - With this function: Uses exact pixel dimensions for perfect accuracy
+     * 
+     * Handles:
+     * - Window resize
+     * - Mobile browser address bar show/hide
+     * - Orientation changes
+     * - Keyboard appearance on mobile
+     */
+    updateViewportDimensions() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        
+        // Update CSS custom properties
+        document.documentElement.style.setProperty('--app-width', `${width}px`);
+        document.documentElement.style.setProperty('--app-height', `${height}px`);
+        
+        this.log(`Viewport updated: ${width}x${height}`);
+        
+        // Invalidate map size if it exists (Leaflet needs to recalculate)
+        if (this.map) {
+            this.map.invalidateSize();
+        }
     }
 }
 

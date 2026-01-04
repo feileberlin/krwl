@@ -13,10 +13,18 @@
     justify-content: center;
     z-index: 2000;
     padding: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in;
 }
 
 #dashboard-menu.hidden {
     display: none;
+}
+
+#dashboard-menu.visible {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .dashboard-content {
@@ -30,6 +38,14 @@
     position: relative;
     border: 2px solid var(--color-border-primary);
     box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.3s ease-in, transform 0.3s ease-in;
+}
+
+#dashboard-menu.visible .dashboard-content {
+    opacity: 1;
+    transform: scale(1);
 }
 
 .dashboard-header {

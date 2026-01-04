@@ -16,6 +16,34 @@
     box-sizing: content-box;
 }
 
+/* Responsive Viewport Dimensions - Single Source of Truth */
+/* 
+ * PROGRESSIVE ENHANCEMENT STRATEGY:
+ * 1. Fallback: Use 100vh/100vw (works without JavaScript, older browsers)
+ * 2. Enhancement: Use 100dvh/100dvw (dynamic viewport, modern browsers)
+ * 3. JavaScript: Updates these properties on resize/orientation changes
+ * 
+ * BROWSER SUPPORT:
+ * - dvh/dvw: Chrome 108+, Safari 15.4+, Firefox 101+ (2022+)
+ * - Falls back gracefully to vh/vw in older browsers
+ * - JavaScript enhancement works in all browsers
+ */
+:root {
+    /* Fallback for older browsers (no JavaScript required) */
+    --app-width: 100vw;
+    --app-height: 100vh;
+}
+
+/* Modern browsers: Dynamic viewport units (handle mobile address bars) */
+@supports (height: 100dvh) {
+    :root {
+        --app-width: 100dvw;
+        --app-height: 100dvh;
+    }
+}
+
+/* JavaScript will update these on resize/orientation change for perfect accuracy */
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     background: var(--color-bg-primary);
@@ -24,8 +52,8 @@ body {
 }
 
 #app {
-    height: 100vh;
-    width: 100vw;
+    height: var(--app-height);
+    width: var(--app-width);
     position: relative;
 }
 

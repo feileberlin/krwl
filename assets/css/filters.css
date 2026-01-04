@@ -2,11 +2,12 @@
 
 /* Interactive filter bar */
 #event-filter-bar {
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: fixed;
+    /* Our standard spacing steps are 8px (compact) and 16px (spacious); 10px is an intentional deviation here to balance visibility with screen-edge spacing for the fixed filter bar. */
+    top: 10px;
+    left: 10px;
     right: auto;
-    max-width: calc(100vw - 80px); /* Mobile first: adapt to screen width */
+    max-width: calc(var(--app-width) - 80px); /* Mobile first: adapt to screen width */
     font-size: 0.95rem;
     font-weight: 500;
     color: var(--color-primary);
@@ -26,6 +27,23 @@
     white-space: nowrap;
     overflow-x: auto;
     z-index: 1001;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dashboard opening animation - filter bar expands */
+#event-filter-bar.dashboard-opening {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    width: auto;
+    max-width: none;
+}
+
+/* Filter items fade out during dashboard opening */
+#event-filter-bar.dashboard-opening .filter-bar-item {
+    opacity: 0;
+    transition: opacity 0.2s ease-out;
 }
 
 #event-filter-bar .filter-bar-item {
