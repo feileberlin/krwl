@@ -906,6 +906,25 @@
       ],
       "test_method": "manual",
       "test_instructions": "1. Temporarily break config.json (invalid lat/lon, missing field)\n2. Run: python3 src/event_manager.py list\n3. Verify helpful ConfigurationError with field name\n4. Restore config.json"
+    },
+    {
+      "id": "styled-html-docs",
+      "name": "Styled HTML Documentation",
+      "description": "HTML documentation viewer with Barbie Pink theme and emoji icons, auto-generated from Markdown",
+      "category": "infrastructure",
+      "implemented": true,
+      "files": [
+        "src/modules/docs_generator.py",
+        "src/modules/docs_runner.py",
+        "public/docs/"
+      ],
+      "config_keys": [
+        "design.colors",
+        "design.typography",
+        "design.spacing"
+      ],
+      "test_method": "check_files_exist",
+      "cli_command": "python3 src/event_manager.py docs html-docs"
     }
   ]
 }
