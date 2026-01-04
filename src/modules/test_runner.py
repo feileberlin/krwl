@@ -57,6 +57,12 @@ class TestRunner:
         ],
     }
     
+    # Tests that have been integrated into src/modules/ with different names
+    # Maps test name -> module name in src/modules/
+    INTEGRATED_TESTS = {
+        'test_filters': 'filter_tester',
+    }
+    
     def __init__(self, base_path: Path, verbose: bool = False):
         """Initialize test runner
         
@@ -66,7 +72,25 @@ class TestRunner:
         """
         self.base_path = Path(base_path)
         self.tests_dir = self.base_path / 'tests'
+        self.modules_dir = self.base_path / 'src' / 'modules'
         self.verbose = verbose
+    
+    def _resolve_test_file(self, test_name: str) -> Path:
+        """Resolve test file path, checking both tests/ and src/modules/
+        
+        Args:
+            test_name: Name of the test (e.g., 'test_filters')
+            
+        Returns:
+            Path to the test file
+        """
+        # Check if this test has been integrated into src/modules/
+        if test_name in self.INTEGRATED_TESTS:
+            module_name = self.INTEGRATED_TESTS[test_name]
+            return self.modules_dir / f"{module_name}.py"
+        
+        # Default: look in tests/ directory
+        return self.tests_dir / f"{test_name}.py"
         
     def list_tests(self):
         """List all available test categories and tests"""
@@ -79,9 +103,13 @@ class TestRunner:
             print(f"\n{category.upper()} ({len(tests)} tests):")
             print("-" * 70)
             for test in tests:
-                test_file = self.tests_dir / f"{test}.py"
+                test_file = self._resolve_test_file(test)
                 status = "✓" if test_file.exists() else "✗"
-                print(f"  {status} {test}")
+                # Show location hint for integrated tests
+                location_hint = ""
+                if test in self.INTEGRATED_TESTS:
+                    location_hint = " (integrated in src/modules/)"
+                print(f"  {status} {test}{location_hint}")
                 if test_file.exists():
                     total_tests += 1
         
@@ -102,7 +130,7 @@ class TestRunner:
         if not test_name.startswith('test_'):
             test_name = f'test_{test_name}'
         
-        test_file = self.tests_dir / f"{test_name}.py"
+        test_file = self._resolve_test_file(test_name)
         
         if not test_file.exists():
             print(f"\n✗ Test '{test_name}' not found")
@@ -143,7 +171,7 @@ class TestRunner:
         
         results = []
         for test_name in tests:
-            test_file = self.tests_dir / f"{test_name}.py"
+            test_file = self._resolve_test_file(test_name)
             
             if not test_file.exists():
                 print(f"\n⚠ Skipping '{test_name}' (file not found)")
@@ -180,7 +208,7 @@ class TestRunner:
             tests = self.TEST_CATEGORIES[category]
             
             for test_name in tests:
-                test_file = self.tests_dir / f"{test_name}.py"
+                test_file = self._resolve_test_file(test_name)
                 
                 if not test_file.exists():
                     print(f"\n⚠ Skipping '{test_name}' (file not found)")

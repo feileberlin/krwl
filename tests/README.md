@@ -90,9 +90,11 @@ Individual test files can still be run directly for backward compatibility:
 ```bash
 # Run tests directly (legacy method)
 python3 tests/test_scraper.py --verbose
-python3 tests/test_filters.py --verbose
 python3 tests/test_event_schema.py --verbose
 python3 tests/test_translations.py --verbose
+
+# Filter tests are now integrated in src/modules/
+python3 src/modules/filter_tester.py --verbose
 ```
 
 This method is still supported and useful for:

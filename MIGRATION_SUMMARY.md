@@ -110,7 +110,7 @@ All critical tests passing:
 - ✅ `test_smart_scraper.py` - Smart scraping logic
 - ✅ `test_timestamp_update.py` - Timestamp management
 - ✅ `test_translations.py` - Translation completeness
-- ✅ `test_filters.py` - Event filtering
+- ✅ Filter testing - Event filtering (integrated in `src/modules/filter_tester.py`)
 
 ### CLI Verification
 Verified functionality with CLI commands:

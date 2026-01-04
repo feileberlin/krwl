@@ -84,7 +84,7 @@
 ```bash
 # Example - replace with actual commands you ran
 python3 tests/test_scraper.py --verbose
-python3 tests/test_filters.py --verbose
+python3 src/event_manager.py test filters --verbose
 ```
 
 ### Manual Testing

@@ -233,7 +233,7 @@ python3 verify_features.py --verbose
 # Core tests
 python3 test_scraper.py --verbose
 python3 test_smart_scraper.py --verbose
-python3 test_filters.py --verbose
+python3 src/event_manager.py test filters --verbose
 python3 test_event_schema.py --verbose
 
 # KISS compliance

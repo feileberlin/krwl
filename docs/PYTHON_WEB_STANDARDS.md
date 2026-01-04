@@ -276,10 +276,10 @@ tests/
 ```
 tests/
 ├── test_scraper.py
-├── test_filters.py
 ├── test_components.py
 ├── test_leaflet_compatibility.py
 └── test_lucide_compatibility.py
+# Note: Filter tests in src/modules/filter_tester.py
 ```
 
 **Compliance:** ✅ Comprehensive test coverage

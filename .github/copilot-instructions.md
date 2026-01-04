@@ -162,10 +162,10 @@ krwl-hof/
 │
 ├── tests/
 │   ├── test_scraper.py
-│   ├── test_filters.py
 │   ├── test_event_schema.py
 │   ├── test_translations.py
 │   └── ... (other test files)
+│   # Note: test_filters functionality is in src/modules/filter_tester.py
 │
 ├── config.json             # Unified configuration (auto-adapts to environment)
 ├── features.json           # Feature registry (MUST update when adding features)
@@ -479,8 +479,10 @@ python3 verify_features.py --verbose
 # Scraper tests
 python3 test_scraper.py --verbose
 
-# Filter tests
-python3 test_filters.py --verbose
+# Filter tests (integrated module)
+python3 src/modules/filter_tester.py --verbose
+# Or via test runner:
+python3 src/event_manager.py test filters --verbose
 
 # Event schema validation
 python3 test_event_schema.py --verbose
@@ -960,7 +962,7 @@ GitHub Pages serves the `public/` directory directly.
 1. Edit `assets/js/app.js` (filter logic)
 2. Edit `assets/css/style.css` (filter UI styles)
 3. Rebuild: `python3 src/event_manager.py build production`
-4. Test: `python3 test_filters.py --verbose`
+4. Test: `python3 src/event_manager.py test filters --verbose`
 
 ### Add a new translation
 1. Edit `data/i18n/content.json` (English)

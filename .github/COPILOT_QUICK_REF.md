@@ -79,7 +79,7 @@ python3 scripts/check_kiss.py --verbose
 
 # Run tests
 python3 tests/test_scraper.py --verbose
-python3 tests/test_filters.py --verbose
+python3 src/event_manager.py test filters --verbose
 
 # Build production
 python3 src/event_manager.py build production

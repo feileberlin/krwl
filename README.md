@@ -227,8 +227,8 @@ python3 tests/test_event_schema.py --verbose
 # Scraper tests
 python3 tests/test_scraper.py --verbose
 
-# Filter tests
-python3 tests/test_filters.py --verbose
+# Filter tests (integrated module)
+python3 src/event_manager.py test filters --verbose
 
 # Translation tests
 python3 tests/test_translations.py --verbose

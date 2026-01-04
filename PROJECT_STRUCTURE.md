@@ -85,9 +85,9 @@ krwl-hof/
 ├── tests/                        # TEST FILES
 │   ├── test_components.py
 │   ├── test_scraper.py
-│   ├── test_filters.py
 │   ├── test_linter.py
 │   └── ...
+│   # Note: Filter tests integrated in src/modules/filter_tester.py
 │
 ├── scripts/                      # UTILITY SCRIPTS
 │   ├── validate_docs.py
