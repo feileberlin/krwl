@@ -238,6 +238,17 @@ strong, b {
     font-size: 0.9rem;
 }
 
+/* Custom location inputs */
+#custom-location-inputs {
+    padding: 0.5rem 1rem;
+    border-top: 1px solid rgba(255, 105, 180, 0.2);
+    margin-top: 0.5rem;
+}
+
+#custom-location-inputs.hidden {
+    display: none;
+}
+
 .filter-bar-dropdown-item {
     padding: 0.5rem 1rem;
     cursor: pointer;
@@ -253,6 +264,25 @@ strong, b {
     background: rgba(255, 105, 180, 0.3);
     color: var(--color-primary);
     font-weight: 600;
+}
+
+/* Location filter options */
+.filter-bar-dropdown .location-option {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-bar-dropdown .location-option:hover {
+    background: rgba(255, 105, 180, 0.1);
+}
+
+.filter-bar-dropdown .location-option input[type="radio"] {
+    width: auto;
+    margin: 0 0.5rem 0 0;
+    cursor: pointer;
 }
 
 /* Distance slider container */

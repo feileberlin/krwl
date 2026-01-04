@@ -19,6 +19,8 @@ class EventsApp {
             maxDistance: 5,
             timeFilter: 'sunrise',
             category: 'all',
+            locationType: 'geolocation', // 'geolocation', 'predefined', or 'custom'
+            selectedPredefinedLocation: null, // Index or name of predefined location
             useCustomLocation: false,
             customLat: null,
             customLon: null
@@ -930,12 +932,25 @@ class EventsApp {
         
         // Determine which location to use for distance calculation
         let referenceLocation = this.userLocation;
-        if (this.filters.useCustomLocation && this.filters.customLat && this.filters.customLon) {
+        
+        if (this.filters.locationType === 'predefined' && this.filters.selectedPredefinedLocation !== null) {
+            // Use predefined location from config
+            const predefinedLocs = this.config?.map?.predefined_locations || [];
+            const selectedLoc = predefinedLocs[this.filters.selectedPredefinedLocation];
+            if (selectedLoc) {
+                referenceLocation = {
+                    lat: selectedLoc.lat,
+                    lon: selectedLoc.lon
+                };
+            }
+        } else if (this.filters.locationType === 'custom' && this.filters.customLat && this.filters.customLon) {
+            // Use custom location
             referenceLocation = {
                 lat: this.filters.customLat,
                 lon: this.filters.customLon
             };
         }
+        // Otherwise use geolocation (this.userLocation)
         
         const filtered = this.events.filter(event => {
             // Filter by time
@@ -1114,12 +1129,24 @@ class EventsApp {
         
         // Location description
         if (locationText) {
-            let locDescription = 'from here';
-            if (this.filters.useCustomLocation && this.filters.customLat && this.filters.customLon) {
+            let locDescription = window.i18n ? window.i18n.t('filters.locations.geolocation') : 'from here';
+            
+            if (this.filters.locationType === 'predefined' && this.filters.selectedPredefinedLocation !== null) {
+                // Get predefined location name from config
+                const predefinedLocs = this.config?.map?.predefined_locations || [];
+                const selectedLoc = predefinedLocs[this.filters.selectedPredefinedLocation];
+                if (selectedLoc) {
+                    // Try to get translated name, fallback to display_name
+                    const translatedName = window.i18n ? window.i18n.t(`filters.predefined_locations.${selectedLoc.name}`) : selectedLoc.display_name;
+                    const prefix = window.i18n ? window.i18n.t('filters.locations.prefix') : 'from';
+                    locDescription = `${prefix} ${translatedName}`;
+                }
+            } else if (this.filters.locationType === 'custom' && this.filters.customLat && this.filters.customLon) {
                 locDescription = 'from custom location';
-            } else if (!this.userLocation) {
+            } else if (!this.userLocation && this.filters.locationType === 'geolocation') {
                 locDescription = 'from default location';
             }
+            
             locationText.textContent = locDescription;
         }
     }
@@ -2091,15 +2118,44 @@ class EventsApp {
                     return;
                 }
                 
-                const latValue = this.filters.customLat || (this.userLocation ? this.userLocation.lat.toFixed(4) : '');
-                const lonValue = this.filters.customLon || (this.userLocation ? this.userLocation.lon.toFixed(4) : '');
-                const checked = this.filters.useCustomLocation ? ' checked' : '';
-                const inputsHidden = !this.filters.useCustomLocation ? ' hidden' : '';
+                // Build location options HTML
+                let locationOptionsHtml = '';
                 
-                const content = `
-                    <label>
-                        <input type="checkbox" id="use-custom-location"${checked}>
-                        Use custom location
+                // 1. Geolocation option (from here)
+                const geolocationChecked = this.filters.locationType === 'geolocation' ? ' checked' : '';
+                const geolocationLabel = window.i18n ? window.i18n.t('filters.locations.geolocation') : 'from here';
+                locationOptionsHtml += `
+                    <label class="location-option">
+                        <input type="radio" name="location-type" value="geolocation"${geolocationChecked}>
+                        ${geolocationLabel}
+                    </label>
+                `;
+                
+                // 2. Predefined locations from config
+                const predefinedLocs = this.config?.map?.predefined_locations || [];
+                predefinedLocs.forEach((loc, index) => {
+                    const checked = (this.filters.locationType === 'predefined' && this.filters.selectedPredefinedLocation === index) ? ' checked' : '';
+                    // Try to get translated name, fallback to display_name
+                    const translatedName = window.i18n ? window.i18n.t(`filters.predefined_locations.${loc.name}`) : loc.display_name;
+                    const prefix = window.i18n ? window.i18n.t('filters.locations.prefix') : 'from';
+                    locationOptionsHtml += `
+                        <label class="location-option">
+                            <input type="radio" name="location-type" value="predefined-${index}"${checked}>
+                            ${prefix} ${translatedName}
+                        </label>
+                    `;
+                });
+                
+                // 3. Custom location option
+                const customChecked = this.filters.locationType === 'custom' ? ' checked' : '';
+                const latValue = this.filters.customLat || '';
+                const lonValue = this.filters.customLon || '';
+                const inputsHidden = this.filters.locationType !== 'custom' ? ' hidden' : '';
+                
+                locationOptionsHtml += `
+                    <label class="location-option">
+                        <input type="radio" name="location-type" value="custom"${customChecked}>
+                        Custom location
                     </label>
                     <div id="custom-location-inputs" class="${inputsHidden}">
                         <input type="number" id="custom-lat" placeholder="Latitude" step="0.0001" value="${latValue}">
@@ -2107,50 +2163,90 @@ class EventsApp {
                         <button id="apply-custom-location">Apply</button>
                     </div>
                 `;
+                
+                const content = locationOptionsHtml;
                 const dropdown = createDropdown(content, locationTextEl);
                 
-                const checkbox = dropdown.querySelector('#use-custom-location');
-                const inputs = dropdown.querySelector('#custom-location-inputs');
+                // Add event listeners for radio buttons
+                const radioButtons = dropdown.querySelectorAll('input[type="radio"]');
+                radioButtons.forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        const value = e.target.value;
+                        const inputs = dropdown.querySelector('#custom-location-inputs');
+                        
+                        if (value === 'geolocation') {
+                            // Switch to geolocation
+                            this.filters.locationType = 'geolocation';
+                            this.filters.selectedPredefinedLocation = null;
+                            this.filters.customLat = null;
+                            this.filters.customLon = null;
+                            if (inputs) inputs.classList.add('hidden');
+                            
+                            // Center map on user location if available
+                            if (this.userLocation && this.map) {
+                                this.map.setView([this.userLocation.lat, this.userLocation.lon], 13);
+                            }
+                            
+                            this.displayEvents();
+                            hideAllDropdowns();
+                            
+                        } else if (value.startsWith('predefined-')) {
+                            // Switch to predefined location
+                            const index = parseInt(value.split('-')[1]);
+                            this.filters.locationType = 'predefined';
+                            this.filters.selectedPredefinedLocation = index;
+                            this.filters.customLat = null;
+                            this.filters.customLon = null;
+                            if (inputs) inputs.classList.add('hidden');
+                            
+                            // Center map on predefined location
+                            const selectedLoc = predefinedLocs[index];
+                            if (selectedLoc && this.map) {
+                                this.map.setView([selectedLoc.lat, selectedLoc.lon], 13);
+                            }
+                            
+                            this.displayEvents();
+                            hideAllDropdowns();
+                            
+                        } else if (value === 'custom') {
+                            // Show custom location inputs
+                            this.filters.locationType = 'custom';
+                            this.filters.selectedPredefinedLocation = null;
+                            if (inputs) {
+                                inputs.classList.remove('hidden');
+                                // Pre-fill with current location if available and no custom values set
+                                if (this.userLocation && !this.filters.customLat && !this.filters.customLon) {
+                                    dropdown.querySelector('#custom-lat').value = this.userLocation.lat.toFixed(4);
+                                    dropdown.querySelector('#custom-lon').value = this.userLocation.lon.toFixed(4);
+                                }
+                            }
+                        }
+                    });
+                });
+                
+                // Apply button for custom location
                 const applyBtn = dropdown.querySelector('#apply-custom-location');
-                
-                checkbox.addEventListener('change', (e) => {
-                    if (e.target.checked) {
-                        inputs.classList.remove('hidden');
-                        // Pre-fill with current location if available
-                        if (this.userLocation) {
-                            dropdown.querySelector('#custom-lat').value = this.userLocation.lat.toFixed(4);
-                            dropdown.querySelector('#custom-lon').value = this.userLocation.lon.toFixed(4);
-                        }
-                    } else {
-                        inputs.classList.add('hidden');
-                        this.filters.useCustomLocation = false;
-                        this.filters.customLat = null;
-                        this.filters.customLon = null;
-                        this.displayEvents();
-                        hideAllDropdowns();
-                    }
-                });
-                
-                applyBtn.addEventListener('click', () => {
-                    const lat = parseFloat(dropdown.querySelector('#custom-lat').value);
-                    const lon = parseFloat(dropdown.querySelector('#custom-lon').value);
-                    
-                    if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
-                        this.filters.useCustomLocation = true;
-                        this.filters.customLat = lat;
-                        this.filters.customLon = lon;
+                if (applyBtn) {
+                    applyBtn.addEventListener('click', () => {
+                        const lat = parseFloat(dropdown.querySelector('#custom-lat').value);
+                        const lon = parseFloat(dropdown.querySelector('#custom-lon').value);
                         
-                        // Update map view to custom location
-                        if (this.map) {
-                            this.map.setView([lat, lon], 13);
+                        if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+                            this.filters.customLat = lat;
+                            this.filters.customLon = lon;
+                            
+                            // Update map view to custom location
+                            if (this.map) {
+                                this.map.setView([lat, lon], 13);
+                            }
+                            
+                            this.displayEvents();
+                            hideAllDropdowns();
+                        } else {
+                            alert('Please enter valid latitude (-90 to 90) and longitude (-180 to 180) values.');
                         }
-                        
-                        this.displayEvents();
-                        hideAllDropdowns();
-                    } else {
-                        alert('Please enter valid latitude (-90 to 90) and longitude (-180 to 180) values.');
-                    }
-                });
+                    });
+                }
             });
         }
         
