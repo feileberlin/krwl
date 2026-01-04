@@ -110,6 +110,48 @@ class EventsApp {
     }
     
     /**
+     * Feature detection for browser capabilities
+     * @returns {Object} Object with feature availability flags
+     */
+    detectBrowserFeatures() {
+        const features = {
+            localStorage: false,
+            backdropFilter: false
+        };
+        
+        // Test localStorage
+        try {
+            const testKey = '__krwl_test__';
+            localStorage.setItem(testKey, 'test');
+            localStorage.removeItem(testKey);
+            features.localStorage = true;
+        } catch (e) {
+            features.localStorage = false;
+        }
+        
+        // Test backdrop-filter support
+        const testElement = document.createElement('div');
+        const backdropFilterSupport = 
+            testElement.style.backdropFilter !== undefined ||
+            testElement.style.webkitBackdropFilter !== undefined;
+        features.backdropFilter = backdropFilterSupport;
+        
+        return features;
+    }
+    
+    /**
+     * Check if bookmarking features should be enabled
+     * Requires localStorage and backdrop-filter support
+     * @returns {boolean} True if bookmarking is supported
+     */
+    isBookmarkingSupported() {
+        if (this.browserFeatures === undefined) {
+            this.browserFeatures = this.detectBrowserFeatures();
+        }
+        return this.browserFeatures.localStorage && this.browserFeatures.backdropFilter;
+    }
+    
+    /**
      * COOKIE/LOCALSTORAGE UTILITIES
      * Save and load filter settings and bookmarks
      */
@@ -1458,12 +1500,17 @@ class EventsApp {
         const iconAnchor = event.marker_anchor || [iconSize[0] / 2, iconSize[1]];
         const popupAnchor = event.marker_popup_anchor || [0, -iconSize[1]];
         
+        // Add custom class name based on bookmark state
+        const isBookmarked = this.isBookmarked(event.id);
+        const bookmarkClass = isBookmarked ? 'marker-bookmarked' : 'marker-unbookmarked';
+        
         // Create custom SVG icon using Leaflet's L.icon
         const customIcon = L.icon({
             iconUrl: iconUrl,
             iconSize: iconSize,
             iconAnchor: iconAnchor,
-            popupAnchor: popupAnchor
+            popupAnchor: popupAnchor,
+            className: bookmarkClass
         });
         
         const marker = L.marker([event.location.lat, event.location.lon], {
@@ -1493,6 +1540,33 @@ class EventsApp {
         marker.on('click', () => this.showEventDetail(event));
         
         this.markers.push(marker);
+    }
+    
+    /**
+     * Update marker appearance based on bookmark state
+     * @param {string} eventId - Event ID
+     * @param {boolean} isBookmarked - Whether event is bookmarked
+     */
+    updateMarkerBookmarkState(eventId, isBookmarked) {
+        // Find marker for this event
+        const marker = this.markers.find(m => 
+            m.eventData && m.eventData.id === eventId
+        );
+        
+        if (!marker) return;
+        
+        // Get the marker icon element
+        const markerElement = marker.getElement();
+        if (!markerElement) return;
+        
+        // Update CSS classes
+        if (isBookmarked) {
+            markerElement.classList.remove('marker-unbookmarked');
+            markerElement.classList.add('marker-bookmarked');
+        } else {
+            markerElement.classList.remove('marker-bookmarked');
+            markerElement.classList.add('marker-unbookmarked');
+        }
     }
     
     /**
@@ -1566,10 +1640,10 @@ class EventsApp {
             day: 'numeric'
         });
         
-        // Create bookmark button
+        // Create bookmark button only if bookmarking is supported
         const isBookmarked = this.isBookmarked(event.id);
         const bookmarkClass = isBookmarked ? 'bookmarked' : '';
-        const bookmarkIcon = isBookmarked ? '❤️' : '🤍';
+        const bookmarkingSupported = this.isBookmarkingSupported();
         
         // Build bubble HTML with start time as headline
         bubble.innerHTML = `
@@ -1578,10 +1652,18 @@ class EventsApp {
             <div class="bubble-title">${this.truncateText(event.title, 50)}</div>
             <div class="bubble-location">📍 ${this.truncateText(event.location.name, 30)}</div>
             ${event.distance !== undefined ? `<div class="bubble-distance">🚶 ${event.distance.toFixed(1)} km</div>` : ''}
-            <button class="bubble-bookmark ${bookmarkClass}" data-event-id="${event.id}" title="Bookmark this event">
-                ${bookmarkIcon}
-            </button>
+            ${bookmarkingSupported ? `<button class="bubble-bookmark ${bookmarkClass}" data-event-id="${event.id}" title="Bookmark this event">
+                <i data-lucide="heart" aria-hidden="true"></i>
+            </button>` : ''}
         `;
+        
+        // Initialize Lucide icons in the bubble
+        if (bookmarkingSupported && typeof lucide !== 'undefined') {
+            // Need to call createIcons after adding to DOM
+            setTimeout(() => {
+                lucide.createIcons();
+            }, 10);
+        }
         
         // Position bubble intelligently around marker
         const position = this.calculateBubblePosition(markerPos, index);
@@ -1591,29 +1673,30 @@ class EventsApp {
         // Add click handler to show full details
         bubble.addEventListener('click', (e) => {
             // Don't trigger if clicking bookmark button
-            if (!e.target.classList.contains('bubble-bookmark')) {
+            if (!e.target.classList.contains('bubble-bookmark') && !e.target.closest('.bubble-bookmark')) {
                 this.showEventDetail(event);
             }
         });
         
-        // Add bookmark button handler
-        const bookmarkBtn = bubble.querySelector('.bubble-bookmark');
-        bookmarkBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const nowBookmarked = this.toggleBookmark(event.id);
-            
-            // Update button appearance
-            if (nowBookmarked) {
-                bookmarkBtn.classList.add('bookmarked');
-                bookmarkBtn.textContent = '❤️';
-            } else {
-                bookmarkBtn.classList.remove('bookmarked');
-                bookmarkBtn.textContent = '🤍';
+        // Add bookmark button handler only if bookmarking is supported
+        if (bookmarkingSupported) {
+            const bookmarkBtn = bubble.querySelector('.bubble-bookmark');
+            if (bookmarkBtn) {
+                bookmarkBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const nowBookmarked = this.toggleBookmark(event.id);
+                    
+                    // Update button appearance (CSS handles color via .bookmarked class)
+                    bookmarkBtn.classList.toggle('bookmarked', nowBookmarked);
+                    
+                    // Update marker appearance
+                    this.updateMarkerBookmarkState(event.id, nowBookmarked);
+                    
+                    // Show feedback
+                    this.showBookmarkFeedback(nowBookmarked);
+                });
             }
-            
-            // Show feedback
-            this.showBookmarkFeedback(nowBookmarked);
-        });
+        }
         
         // Add to map container
         document.getElementById('map').appendChild(bubble);

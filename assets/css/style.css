@@ -1156,12 +1156,26 @@ strong, b {
 /* Monochrome marker glow - barbie red */
 .leaflet-marker-icon {
     filter: drop-shadow(0 0 2px var(--color-primary));
-    transition: filter 0.2s ease;
+    transition: filter 0.2s ease, opacity 0.2s ease;
 }
 
 .leaflet-marker-icon:hover {
     filter: drop-shadow(0 0 4px var(--color-primary)) 
             drop-shadow(0 0 8px var(--color-primary));
+}
+
+/* Bookmarked markers: brighter/lighter glow */
+.leaflet-marker-icon.marker-bookmarked {
+    filter: drop-shadow(0 0 6px var(--color-primary)) 
+            drop-shadow(0 0 12px var(--color-primary))
+            brightness(1.2);
+}
+
+/* Unbookmarked markers: dimmer appearance */
+.leaflet-marker-icon.marker-unbookmarked {
+    filter: drop-shadow(0 0 1px var(--color-primary))
+            brightness(0.7)
+            opacity(0.85);
 }
 
 /* Scrollbar styling - monochrome Barbie Red theme */
@@ -1296,16 +1310,33 @@ strong, b {
     right: 8px;
     background: transparent;
     border: none;
-    font-size: 1.3rem;
     cursor: pointer;
     padding: 4px;
     line-height: 1;
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, color 0.2s ease;
     z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.bubble-bookmark:hover {
+/* Lucide heart icon styling */
+.bubble-bookmark i[data-lucide="heart"] {
+    width: 20px;
+    height: 20px;
+    stroke: var(--color-text-tertiary); /* Default unbookmarked stroke color */
+    fill: none; /* Outlined by default */
+    transition: stroke 0.2s ease, fill 0.2s ease;
+}
+
+.bubble-bookmark:hover i[data-lucide="heart"] {
     transform: scale(1.2);
+    stroke: var(--color-primary); /* Barbie pink on hover */
+}
+
+.bubble-bookmark.bookmarked i[data-lucide="heart"] {
+    stroke: var(--color-primary); /* Barbie pink stroke when bookmarked */
+    fill: var(--color-primary); /* Filled with Barbie pink when bookmarked */
 }
 
 .bubble-bookmark.bookmarked {
