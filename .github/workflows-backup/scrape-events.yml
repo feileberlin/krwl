@@ -1,0 +1,121 @@
+name: Automated Event Scraping
+
+on:
+  schedule:
+    # Schedule times are hardcoded based on config.json scraping.schedule settings
+    # Times: 4:00 AM and 4:00 PM Europe/Berlin (from config.json)
+    # Cron uses UTC, so Berlin times are converted:
+    # - 04:00 Berlin (CET/UTC+1 winter) = 03:00 UTC
+    # - 04:00 Berlin (CEST/UTC+2 summer) = 02:00 UTC  
+    # - 16:00 Berlin (CET/UTC+1 winter) = 15:00 UTC
+    # - 16:00 Berlin (CEST/UTC+2 summer) = 14:00 UTC
+    # Using winter time (CET) as baseline:
+    - cron: '0 3 * * *'   # 4:00 AM Berlin time (CET)
+    - cron: '0 15 * * *'  # 4:00 PM Berlin time (CET)
+  workflow_dispatch:  # Allow manual trigger
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Prevent concurrent scraping runs to avoid git push conflicts
+concurrency:
+  group: "scrape-events"
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+      
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Run scraper
+        id: scrape
+        run: |
+          echo "🔍 Starting event scraping..."
+          python3 src/event_manager.py scrape
+          echo "✓ Scraping completed"
+      
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if [[ -n $(git status --porcelain assets/json/) ]]; then
+            echo "changes_detected=true" >> $GITHUB_OUTPUT
+            echo "✓ New events detected"
+          else
+            echo "changes_detected=false" >> $GITHUB_OUTPUT
+            echo "ℹ No new events found"
+          fi
+      
+      - name: Count pending events
+        id: count_pending
+        run: |
+          if [ -f assets/json/pending_events.json ]; then
+            # Count pending events using Python
+            COUNT=$(python3 -c "import json; data = json.load(open('assets/json/pending_events.json')); print(len(data.get('pending_events', [])))")
+            echo "pending_count=$COUNT" >> $GITHUB_OUTPUT
+            echo "ℹ Pending events: $COUNT"
+          else
+            echo "pending_count=0" >> $GITHUB_OUTPUT
+            echo "ℹ Pending events: 0"
+          fi
+      
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.changes_detected == 'true'
+        run: |
+          TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M UTC')
+          git add assets/json/
+          git commit -m "chore: automated event scraping - $TIMESTAMP"
+          if ! git pull --rebase origin main; then
+            echo "❌ git pull --rebase failed due to merge conflicts or another error."
+            echo "ℹ The repository may require manual conflict resolution before automated scraping can continue."
+            # Attempt to abort the rebase to leave the repo in a clean state (ignore errors if no rebase in progress)
+            git rebase --abort || true
+            exit 1
+          fi
+          git push
+          echo "✓ Changes committed and pushed"
+          echo "ℹ Note: Events are in pending queue awaiting editorial review"
+      
+      - name: Generate summary
+        run: |
+          TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          PENDING_COUNT="${{ steps.count_pending.outputs.pending_count }}"
+          CHANGES="${{ steps.check_changes.outputs.changes_detected }}"
+          
+          echo "## 🔍 Event Scraping Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Date/Time:** $TIMESTAMP" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "$CHANGES" == "true" ]; then
+            echo "**Status:** ✅ New events found" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**Status:** ℹ️ No new events" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Pending Events:** $PENDING_COUNT" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "$PENDING_COUNT" -gt "0" ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ **Action Required:** $PENDING_COUNT events awaiting review" >> $GITHUB_STEP_SUMMARY
+          fi
