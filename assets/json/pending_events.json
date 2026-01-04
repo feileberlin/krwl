@@ -146,7 +146,58 @@
       "url": "https://event.frankenpost.de/detail.php?event_id=3152961",
       "category": null,
       "tags": []
+    },
+    {
+      "id": "html_frankenpost_3373838596801354660",
+      "title": "Weihnachtlicher Stadtrundgang",
+      "description": "05.Januar10:30",
+      "location": {
+        "name": "Hof",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-05T18:00:00",
+      "end_time": null,
+      "status": "pending",
+      "source": "Frankenpost",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3214209",
+      "category": null,
+      "tags": []
+    },
+    {
+      "id": "html_frankenpost_-5936131556465191461",
+      "title": "F\u00fchrung: Stadtgeschichte f\u00fcr Kinder",
+      "description": "Montag,05.01.2026,14:30 Uhr",
+      "location": {
+        "name": "Hof",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-05T18:00:00",
+      "end_time": null,
+      "status": "pending",
+      "source": "Frankenpost",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3152877",
+      "category": null,
+      "tags": []
+    },
+    {
+      "id": "html_frankenpost_-71382608431120317",
+      "title": "Churmusik am Nachmittag",
+      "description": "Montag,05.01.2026,15:00 Uhr",
+      "location": {
+        "name": "Hof",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-05T18:00:00",
+      "end_time": null,
+      "status": "pending",
+      "source": "Frankenpost",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3028886",
+      "category": null,
+      "tags": []
     }
   ],
-  "last_scraped": "2026-01-04T02:36:15.360113"
+  "last_scraped": "2026-01-04T23:06:24.295435"
 }
