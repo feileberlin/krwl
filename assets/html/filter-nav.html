@@ -3,16 +3,8 @@
      class="overlay overlay--layer-3 overlay--top-center" 
      role="navigation"
      aria-label="Event filter controls">
-  <button id="filter-bar-logo" 
-          class="filter-bar-logo" 
-          aria-label="Open application menu" 
-          aria-haspopup="dialog" 
-          aria-expanded="false">
-    {logo_svg}
-  </button>
-  <div role="status" aria-live="polite" aria-atomic="true">
-    <span id="filter-bar-event-count" class="filter-bar-item">0 events</span>
-  </div>
+  <button id="filter-bar-logo" class="filter-bar-logo" aria-label="Open application menu" aria-haspopup="dialog" aria-expanded="false">{logo_svg}</button>
+  <span id="filter-bar-event-count" class="filter-bar-item" role="status" aria-live="polite" aria-atomic="true">0 events</span>
   <span id="filter-bar-time-range" class="filter-bar-item" role="button" tabindex="0" aria-label="Time filter">till sunrise</span>
   <span id="filter-bar-distance" class="filter-bar-item" role="button" tabindex="0" aria-label="Distance filter">within 5 km</span>
   <span id="filter-bar-location" class="filter-bar-item" role="button" tabindex="0" aria-label="Location filter">from here</span>

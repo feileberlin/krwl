@@ -32,10 +32,26 @@
     box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
 }
 
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.dashboard-logo {
+    display: flex;
+    align-items: center;
+    color: var(--color-primary);
+}
+
+.dashboard-logo svg {
+    width: 32px;
+    height: 32px;
+    filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.6));
+}
+
 #close-dashboard {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
     background: none;
     border: none;
     color: var(--color-text-secondary);
@@ -60,7 +76,6 @@
     color: var(--color-primary);
     text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
     font-size: 1.5rem;
-    padding-right: 2.5rem;
 }
 
 .dashboard-section {

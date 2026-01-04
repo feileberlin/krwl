@@ -259,10 +259,11 @@ body {
                 0 0 10px rgba(255, 105, 180, 0.3);
     text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 0.3rem;
     align-items: center;
-    word-break: break-word;
+    white-space: nowrap;
+    overflow-x: auto;
     z-index: 1001;
 }
 
@@ -464,10 +465,26 @@ body {
     box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
 }
 
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.dashboard-logo {
+    display: flex;
+    align-items: center;
+    color: var(--color-primary);
+}
+
+.dashboard-logo svg {
+    width: 32px;
+    height: 32px;
+    filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.6));
+}
+
 #close-dashboard {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
     background: none;
     border: none;
     color: var(--color-text-secondary);
@@ -492,7 +509,6 @@ body {
     color: var(--color-primary);
     text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
     font-size: 1.5rem;
-    padding-right: 2.5rem;
 }
 
 .dashboard-section {
@@ -1251,7 +1267,10 @@ body {
        aria-label="Application menu and information"
        aria-hidden="true">
   <div class="dashboard-content">
-    <button id="close-dashboard" aria-label="Close menu">&times;</button>
+    <div class="dashboard-header">
+      <div class="dashboard-logo"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"></svg></div>
+      <button id="close-dashboard" aria-label="Close menu">&times;</button>
+    </div>
     <h2 id="dashboard-title">Project Menu</h2>
     
     <!-- Pending Events Notification -->
@@ -1314,16 +1333,8 @@ body {
      class="overlay overlay--layer-3 overlay--top-center" 
      role="navigation"
      aria-label="Event filter controls">
-  <button id="filter-bar-logo" 
-          class="filter-bar-logo" 
-          aria-label="Open application menu" 
-          aria-haspopup="dialog" 
-          aria-expanded="false">
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"></svg>
-  </button>
-  <div role="status" aria-live="polite" aria-atomic="true">
-    <span id="filter-bar-event-count" class="filter-bar-item">0 events</span>
-  </div>
+  <button id="filter-bar-logo" class="filter-bar-logo" aria-label="Open application menu" aria-haspopup="dialog" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"></svg></button>
+  <span id="filter-bar-event-count" class="filter-bar-item" role="status" aria-live="polite" aria-atomic="true">0 events</span>
   <span id="filter-bar-time-range" class="filter-bar-item" role="button" tabindex="0" aria-label="Time filter">till sunrise</span>
   <span id="filter-bar-distance" class="filter-bar-item" role="button" tabindex="0" aria-label="Distance filter">within 5 km</span>
   <span id="filter-bar-location" class="filter-bar-item" role="button" tabindex="0" aria-label="Location filter">from here</span>
