@@ -124,7 +124,7 @@ def validate_config(config: dict) -> None:
     Raises:
         ValueError: If configuration is invalid
     """
-    from .exceptions import ConfigurationError
+    from ..core.exceptions import ConfigurationError
     
     # Validate required top-level keys
     required_keys = ['app', 'scraping', 'filtering', 'map', 'data']

@@ -2,9 +2,9 @@
 
 import logging
 from datetime import datetime
-from .utils import (load_pending_events, save_pending_events, load_events, 
+from ..utils import (load_pending_events, save_pending_events, load_events, 
                    save_events, add_rejected_event)
-from .batch_selector import BatchSelector
+from ..ui.batch_selector import BatchSelector
 
 # Configure module logger
 logger = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ class EventEditor:
             return
         
         # Load historical events once for all reviews
-        from .utils import load_historical_events
+        from ..utils import load_historical_events
         historical_events = load_historical_events(self.base_path)
             
         i = 0
@@ -121,7 +121,7 @@ class EventEditor:
         save_pending_events(self.base_path, pending_data)
         
         # Update HTML
-        from .utils import update_events_in_html
+        from ..utils import update_events_in_html
         update_events_in_html(self.base_path)
     
     def _batch_reject(self, pending_events, selected_indices):
@@ -160,7 +160,7 @@ class EventEditor:
         """Approve and publish an event with validation"""
         try:
             # Validate event before publishing
-            from .models import validate_event_data
+            from ..core.models import validate_event_data
             validated_event = validate_event_data(event)
             event_dict = validated_event.model_dump()
             
@@ -168,7 +168,7 @@ class EventEditor:
             event_dict['published_at'] = datetime.now().isoformat()
             
             # Backup the published event
-            from .utils import backup_published_event
+            from ..utils import backup_published_event
             backup_path = backup_published_event(self.base_path, event_dict)
             print(f"  ✓ Event backed up to: {backup_path.relative_to(self.base_path)}")
             
@@ -310,7 +310,7 @@ class EventEditor:
             hist_lon = historical.get('location', {}).get('lon')
             if all([event_lat, event_lon, hist_lat, hist_lon]):
                 try:
-                    from .utils import calculate_distance
+                    from ..utils import calculate_distance
                     distance = calculate_distance(event_lat, event_lon, hist_lat, hist_lon)
                     if distance < 1.0:  # Within 1 km
                         score += 0.1  # Proximity is 10% of score

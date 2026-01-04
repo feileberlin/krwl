@@ -1,5 +1,6 @@
-"""KRWL HOF Event Manager Modules"""
+"""KRWL HOF Event Manager Modules - Organized by category"""
 
+# Import commonly used functions and classes for backward compatibility
 from .utils import (
     load_config,
     load_events,
@@ -11,10 +12,10 @@ from .utils import (
     archive_old_events,
     filter_events_by_time
 )
-from .scraper import EventScraper
-from .editor import EventEditor
-from .site_generator import SiteGenerator
-from .scheduler import ScheduleConfig
+from .core.scraper import EventScraper
+from .core.editor import EventEditor
+from .build.site_generator import SiteGenerator
+from .utils.scheduler import ScheduleConfig
 
 __all__ = [
     'load_config',

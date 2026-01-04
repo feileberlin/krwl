@@ -7,8 +7,8 @@ import sys
 from datetime import datetime, timedelta
 from urllib.parse import urljoin, urlparse
 
-from .utils import load_pending_events, save_pending_events
-from .exceptions import SourceUnavailableError, NetworkError, ParsingError
+from ..utils import load_pending_events, save_pending_events
+from ..core.exceptions import SourceUnavailableError, NetworkError, ParsingError
 
 # Configure module logger
 logger = logging.getLogger(__name__)
@@ -108,7 +108,7 @@ class EventScraper:
         Update pending count in events.json
         This allows frontend to read pending count from the same file it already loads
         """
-        from .utils import update_pending_count_in_events
+        from ..utils import update_pending_count_in_events
         update_pending_count_in_events(self.base_path)
         
         # Get the count for logging
@@ -179,7 +179,7 @@ class EventScraper:
                 logger.warning(f"  - {failed['name']}: {failed['error']}")
         
         # Load historical events for deduplication
-        from .utils import load_historical_events, load_events, load_rejected_events, is_event_rejected
+        from ..utils import load_historical_events, load_events, load_rejected_events, is_event_rejected
         historical_events = load_historical_events(self.base_path)
         published_events = load_events(self.base_path).get('events', [])
         
@@ -619,7 +619,7 @@ class EventScraper:
             True if event was added, False otherwise
         """
         try:
-            from .models import validate_event_data
+            from ..core.models import validate_event_data
             
             # Validate event structure
             validated_event = validate_event_data(event_data)

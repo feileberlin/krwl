@@ -27,14 +27,14 @@ logger = logging.getLogger(__name__)
 
 # Import Lucide icon maps (markers and dashboard icons)
 try:
-    from .lucide_markers import LUCIDE_MARKER_BASE64_MAP, DASHBOARD_ICONS_MAP
+    from ..build.lucide_markers import LUCIDE_MARKER_BASE64_MAP, DASHBOARD_ICONS_MAP
 except ImportError:
     # Fallback if lucide_markers module not available
     LUCIDE_MARKER_BASE64_MAP = {}
     DASHBOARD_ICONS_MAP = {}
 
 try:
-    from .linter import Linter
+    from ..build.linter import Linter
 except ImportError:
     # Fallback if linter is not available
     class Linter:

@@ -269,7 +269,7 @@ class ScraperConfigTUI:
             
             # Try to scrape
             try:
-                from .scraper import EventScraper
+                from ..core.scraper import EventScraper
                 scraper = EventScraper(self.config, self.base_path)
                 events = scraper.scrape_source(source)
                 
@@ -441,7 +441,7 @@ class ScraperConfigTUI:
         working = []
         
         try:
-            from .scraper import EventScraper
+            from ..core.scraper import EventScraper
             scraper = EventScraper(self.config, self.base_path)
             
             for i, source in enumerate(sources, 1):

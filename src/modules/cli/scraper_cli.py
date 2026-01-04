@@ -124,7 +124,7 @@ def test_source(name: str, config_path: str = 'config.json',
         
         # Import here to avoid dependency issues
         sys.path.insert(0, str(Path(__file__).parent.parent))
-        from modules.scraper import EventScraper
+        from modules.core.scraper import EventScraper
         
         scraper = EventScraper(config, base_path)
         events = scraper.scrape_source(source)
@@ -202,7 +202,7 @@ def test_all_sources(config_path: str = 'config.json',
         print("Testing all sources...\n")
         
         sys.path.insert(0, str(Path(__file__).parent.parent))
-        from modules.scraper import EventScraper
+        from modules.core.scraper import EventScraper
         scraper = EventScraper(config, base_path)
         
         working = []
