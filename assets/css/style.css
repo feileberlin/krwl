@@ -592,7 +592,7 @@ strong, b {
 }
 
 .cache-enabled {
-    color: #4CAF50;
+    color: #D689B8; /* Light tone - ecological Barbie instead of green */
 }
 
 .cache-disabled {
@@ -737,15 +737,15 @@ strong, b {
 }
 
 .debug-env-badge.env-production {
-    background: rgba(76, 175, 80, 0.15); /* Subtle green */
-    border-color: #5a9e5d; /* Muted green */
-    color: #6db16f; /* Natural green */
+    background: rgba(191, 80, 135, 0.15); /* Barbie light shade */
+    border-color: #BF5087; /* Light shade */
+    color: #D689B8; /* Light tone */
 }
 
 .debug-env-badge.env-ci {
-    background: rgba(88, 166, 255, 0.15); /* Subtle blue */
-    border-color: #6a8caf; /* Muted blue */
-    color: #7ba3d1; /* Natural blue */
+    background: rgba(176, 95, 142, 0.15); /* Barbie medium tone */
+    border-color: #B05F8E; /* Medium tone */
+    color: #D689B8; /* Light tone - ecological Barbie */
 }
 
 .debug-size-list {
@@ -783,7 +783,7 @@ strong, b {
 }
 
 #debug-caching.cache-enabled {
-    color: #6db16f; /* Natural green - ecological */
+    color: #D689B8; /* Light tone - ecological Barbie instead of green */
     font-weight: 700; /* Roboto Bold */
 }
 
