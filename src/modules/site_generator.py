@@ -884,6 +884,8 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
         - Environment detection
         - Caching status
         - File size information (HTML size, cache file size if applicable)
+        - Deployment timestamp
+        - Git commit information (hash, author, date, message)
         
         Args:
             primary_config: Primary configuration object
@@ -967,6 +969,56 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
             logger.warning(f"Could not determine cache status: {e}")
             debug_info['cache_enabled'] = False
             debug_info['cache_file_size'] = None
+        
+        # Deployment timestamp (current time when HTML is generated)
+        debug_info['deployment_time'] = datetime.now().isoformat()
+        
+        # Git commit information
+        try:
+            import subprocess
+            
+            # Get last commit hash (short form)
+            commit_hash = subprocess.check_output(
+                ['git', 'rev-parse', '--short', 'HEAD'],
+                cwd=self.base_path,
+                stderr=subprocess.DEVNULL
+            ).decode('utf-8').strip()
+            
+            # Get commit author
+            commit_author = subprocess.check_output(
+                ['git', 'log', '-1', '--format=%an'],
+                cwd=self.base_path,
+                stderr=subprocess.DEVNULL
+            ).decode('utf-8').strip()
+            
+            # Get commit date
+            commit_date = subprocess.check_output(
+                ['git', 'log', '-1', '--format=%ci'],
+                cwd=self.base_path,
+                stderr=subprocess.DEVNULL
+            ).decode('utf-8').strip()
+            
+            # Get commit message (first line)
+            commit_message = subprocess.check_output(
+                ['git', 'log', '-1', '--format=%s'],
+                cwd=self.base_path,
+                stderr=subprocess.DEVNULL
+            ).decode('utf-8').strip()
+            
+            debug_info['git_commit'] = {
+                'hash': commit_hash,
+                'author': commit_author,
+                'date': commit_date,
+                'message': commit_message
+            }
+        except Exception as e:
+            logger.warning(f"Could not retrieve git commit info: {e}")
+            debug_info['git_commit'] = {
+                'hash': 'unknown',
+                'author': 'unknown',
+                'date': 'unknown',
+                'message': 'Git information not available'
+            }
         
         return debug_info
     

@@ -225,61 +225,71 @@ class EventsApp {
     updateDashboard() {
         // Update dashboard debug info with current state
         const debugSection = document.getElementById('dashboard-debug-section');
-        const debugEnvironment = document.getElementById('debug-environment');
-        const debugEventCounts = document.getElementById('debug-event-counts');
-        const debugDataSource = document.getElementById('debug-data-source');
-        const debugMode = document.getElementById('debug-mode');
-        const debugCaching = document.getElementById('debug-caching');
-        const debugFileSize = document.getElementById('debug-file-size');
-        const debugSizeBreakdown = document.getElementById('debug-size-breakdown');
-        const debugDOMCache = document.getElementById('debug-dom-cache');
-        const debugHistoricalCache = document.getElementById('debug-historical-cache');
         
         // Use DEBUG_INFO from backend if available
         const debugInfo = window.DEBUG_INFO || {};
         
+        // Git commit stamp (prominent display)
+        const commitHash = document.getElementById('debug-commit-hash');
+        const commitAuthor = document.getElementById('debug-commit-author');
+        const commitDate = document.getElementById('debug-commit-date');
+        const commitMessage = document.getElementById('debug-commit-message');
+        
+        if (debugInfo.git_commit) {
+            const git = debugInfo.git_commit;
+            if (commitHash) commitHash.textContent = git.hash || 'unknown';
+            if (commitAuthor) commitAuthor.textContent = git.author || 'unknown';
+            if (commitDate) commitDate.textContent = git.date || 'unknown';
+            if (commitMessage) {
+                commitMessage.textContent = git.message || 'unknown';
+                commitMessage.title = git.message || 'No commit message';
+            }
+        }
+        
+        // Deployment time
+        const deploymentTime = document.getElementById('debug-deployment-time');
+        if (deploymentTime && debugInfo.deployment_time) {
+            try {
+                const date = new Date(debugInfo.deployment_time);
+                deploymentTime.textContent = date.toLocaleString();
+                deploymentTime.title = `Deployment timestamp: ${debugInfo.deployment_time}`;
+            } catch (e) {
+                deploymentTime.textContent = debugInfo.deployment_time;
+            }
+        }
+        
+        // Event counts (individual fields)
+        const eventCountsPublished = document.getElementById('debug-event-counts-published');
+        const eventCountsPending = document.getElementById('debug-event-counts-pending');
+        const eventCountsArchived = document.getElementById('debug-event-counts-archived');
+        const eventCountsTotal = document.getElementById('debug-event-counts-total');
+        
+        if (debugInfo.event_counts) {
+            const counts = debugInfo.event_counts;
+            if (eventCountsPublished) eventCountsPublished.textContent = counts.published || 0;
+            if (eventCountsPending) eventCountsPending.textContent = counts.pending || 0;
+            if (eventCountsArchived) eventCountsArchived.textContent = counts.archived || 0;
+            if (eventCountsTotal) eventCountsTotal.textContent = counts.total || 0;
+        }
+        
+        // Environment
+        const debugEnvironment = document.getElementById('debug-environment');
         if (debugEnvironment) {
             const environment = debugInfo.environment || this.config?.watermark?.text || this.config?.app?.environment || 'UNKNOWN';
             debugEnvironment.textContent = environment.toUpperCase();
             // Add color coding based on environment using CSS classes
-            debugEnvironment.className = ''; // Clear existing classes
+            debugEnvironment.className = 'debug-env-badge';
             if (environment.toLowerCase().includes('dev')) {
                 debugEnvironment.classList.add('env-dev');
             } else if (environment.toLowerCase().includes('production')) {
                 debugEnvironment.classList.add('env-production');
-            }
-        }
-        
-        if (debugEventCounts && debugInfo.event_counts) {
-            const counts = debugInfo.event_counts;
-            const countsText = `Published: ${counts.published} | Pending: ${counts.pending} | Archived: ${counts.archived}`;
-            debugEventCounts.textContent = countsText;
-            debugEventCounts.title = `Total events across all categories: ${counts.total}`;
-        } else if (debugEventCounts) {
-            // Fallback to old behavior if DEBUG_INFO not available
-            const totalEvents = this.events.length;
-            const visibleEvents = this.filterEvents().length;
-            debugEventCounts.textContent = `Visible: ${visibleEvents}/${totalEvents}`;
-        }
-        
-        if (debugDataSource) {
-            const dataSource = this.config?.data?.source || 'unknown';
-            debugDataSource.textContent = dataSource;
-        }
-        
-        if (debugMode) {
-            const debugEnabled = this.config?.debug || false;
-            debugMode.textContent = debugEnabled ? 'Enabled' : 'Disabled';
-            // Use CSS classes instead of inline styles
-            debugMode.className = ''; // Clear existing classes
-            if (debugEnabled) {
-                debugMode.classList.add('debug-enabled');
-            } else {
-                debugMode.classList.add('debug-disabled');
+            } else if (environment.toLowerCase().includes('ci')) {
+                debugEnvironment.classList.add('env-ci');
             }
         }
         
         // Caching status
+        const debugCaching = document.getElementById('debug-caching');
         if (debugCaching) {
             const cacheEnabled = debugInfo.cache_enabled;
             if (cacheEnabled !== undefined) {
@@ -291,6 +301,7 @@ class EventsApp {
         }
         
         // File size information
+        const debugFileSize = document.getElementById('debug-file-size');
         if (debugFileSize && debugInfo.html_sizes) {
             const sizes = debugInfo.html_sizes;
             const totalKB = (sizes.total / 1024).toFixed(1);
@@ -298,21 +309,21 @@ class EventsApp {
             if (debugInfo.cache_enabled && debugInfo.cache_file_size) {
                 // Show cache file size if caching is enabled
                 const cacheKB = (debugInfo.cache_file_size / 1024).toFixed(1);
-                debugFileSize.textContent = `HTML: ${totalKB} KB | Cache: ${cacheKB} KB`;
+                debugFileSize.textContent = `${totalKB} KB (HTML) | ${cacheKB} KB (Cache)`;
                 debugFileSize.title = `Cache file: ${debugInfo.cache_file_path || 'unknown'}`;
             } else {
                 // Show HTML size only
-                debugFileSize.textContent = `HTML: ${totalKB} KB`;
+                debugFileSize.textContent = `${totalKB} KB (HTML only)`;
                 if (!debugInfo.cache_enabled) {
-                    debugFileSize.title = 'Caching disabled - showing HTML size';
+                    debugFileSize.title = 'Caching disabled - showing HTML size only';
                 }
             }
         }
         
         // Size breakdown
+        const debugSizeBreakdown = document.getElementById('debug-size-breakdown');
         if (debugSizeBreakdown && debugInfo.html_sizes) {
             const sizes = debugInfo.html_sizes;
-            const parts = [];
             
             // Show top 3 largest components
             const components = [
@@ -326,14 +337,17 @@ class EventsApp {
             
             components.sort((a, b) => b.size - a.size);
             
+            // Build breakdown as list items
+            let breakdownHTML = '<ul class="debug-size-list">';
             for (let i = 0; i < 3 && i < components.length; i++) {
                 const comp = components[i];
                 const kb = (comp.size / 1024).toFixed(1);
                 const percent = ((comp.size / sizes.total) * 100).toFixed(1);
-                parts.push(`${comp.name}: ${kb} KB (${percent}%)`);
+                breakdownHTML += `<li>${comp.name}: ${kb} KB (${percent}%)</li>`;
             }
+            breakdownHTML += '</ul>';
             
-            debugSizeBreakdown.textContent = parts.join(' | ');
+            debugSizeBreakdown.innerHTML = breakdownHTML;
             
             // Full breakdown in title
             const fullBreakdown = components.map(c => 
@@ -343,13 +357,15 @@ class EventsApp {
         }
         
         // OPTIMIZATION INFO: Display cache statistics
+        const debugDOMCache = document.getElementById('debug-dom-cache');
         if (debugDOMCache) {
             const cacheSize = Object.keys(this.domCache).length;
-            const cacheStatus = cacheSize > 0 ? `${cacheSize} elements cached` : 'Empty';
+            const cacheStatus = cacheSize > 0 ? `${cacheSize} elements cached` : 'No elements cached';
             debugDOMCache.textContent = cacheStatus;
             debugDOMCache.title = `DOM elements cached: ${Object.keys(this.domCache).join(', ') || 'none'}`;
         }
         
+        const debugHistoricalCache = document.getElementById('debug-historical-cache');
         if (debugHistoricalCache) {
             // Note: Frontend doesn't have access to backend Python cache
             // This shows if we implement a frontend cache in the future

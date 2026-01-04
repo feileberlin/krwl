@@ -29,15 +29,59 @@
     
     <div id="dashboard-debug-section" class="dashboard-section" style="display: none;">
       <h3><i class="dashboard-section-icon" data-lucide="bug" aria-hidden="true"></i> Debug Info</h3>
-      <p><strong>Environment:</strong> <span id="debug-environment"></span></p>
-      <p><strong>Event Counts:</strong> <span id="debug-event-counts"></span></p>
-      <p><strong>Data Source:</strong> <span id="debug-data-source"></span></p>
-      <p><strong>Debug Mode:</strong> <span id="debug-mode"></span></p>
-      <p><strong>Caching:</strong> <span id="debug-caching"></span></p>
-      <p><strong>File Size:</strong> <span id="debug-file-size"></span></p>
-      <p><strong>Size Breakdown:</strong> <span id="debug-size-breakdown" style="font-size: 0.9em;"></span></p>
-      <p><strong>DOM Cache:</strong> <span id="debug-dom-cache"></span></p>
-      <p><strong>Historical Events Cache:</strong> <span id="debug-historical-cache"></span></p>
+      
+      <!-- Git Commit Stamp - Prominent Display (2x size) -->
+      <div id="debug-git-stamp" class="debug-git-stamp">
+        <div class="debug-git-hash">
+          <i class="debug-git-icon" data-lucide="git-commit" aria-hidden="true"></i>
+          <span id="debug-commit-hash">unknown</span>
+        </div>
+        <div class="debug-git-details">
+          <div><strong>Author:</strong> <span id="debug-commit-author">unknown</span></div>
+          <div><strong>Date:</strong> <span id="debug-commit-date">unknown</span></div>
+          <div class="debug-commit-message" id="debug-commit-message" title="">unknown</div>
+        </div>
+      </div>
+      
+      <!-- Unix top-style output -->
+      <div class="debug-top-style">
+        <div class="debug-top-header">
+          KRWL HOF System Status - <span id="debug-deployment-time">unknown</span>
+        </div>
+        
+        <div class="debug-top-section">
+          <strong>EVENTS:</strong> 
+          <span id="debug-event-counts-published">0</span> published, 
+          <span id="debug-event-counts-pending">0</span> pending, 
+          <span id="debug-event-counts-archived">0</span> archived
+          <span class="debug-top-total">(<span id="debug-event-counts-total">0</span> total)</span>
+        </div>
+        
+        <div class="debug-top-section">
+          <strong>ENVIRONMENT:</strong> <span id="debug-environment" class="debug-env-badge">UNKNOWN</span>
+        </div>
+        
+        <div class="debug-top-section">
+          <strong>CACHING:</strong> <span id="debug-caching">unknown</span>
+        </div>
+        
+        <div class="debug-top-section">
+          <strong>HTML SIZE:</strong> <span id="debug-file-size">unknown</span>
+        </div>
+        
+        <div class="debug-top-section">
+          <strong>SIZE BREAKDOWN (top 3):</strong>
+          <div id="debug-size-breakdown" class="debug-size-details">Loading...</div>
+        </div>
+        
+        <div class="debug-top-section">
+          <strong>DOM CACHE:</strong> <span id="debug-dom-cache">0 elements</span>
+        </div>
+        
+        <div class="debug-top-section">
+          <strong>HISTORICAL CACHE:</strong> <span id="debug-historical-cache">none</span>
+        </div>
+      </div>
     </div>
     
     <div class="dashboard-section">

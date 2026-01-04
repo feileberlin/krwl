@@ -562,6 +562,10 @@ body {
     color: #4CAF50;
 }
 
+.env-ci {
+    color: #58a6ff;
+}
+
 .debug-enabled {
     color: #FFB3DF;
 }
@@ -569,6 +573,142 @@ body {
 .debug-disabled {
     color: #888;
 }
+
+.cache-enabled {
+    color: #4CAF50;
+}
+
+.cache-disabled {
+    color: #888;
+}
+
+/* Git commit stamp - Prominent display (normal size, stamp-like) */
+.debug-git-stamp {
+    background: linear-gradient(135deg, rgba(255, 105, 180, 0.15), rgba(255, 105, 180, 0.05));
+    border: 2px solid rgba(255, 105, 180, 0.3);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-family: 'Monaco', 'Courier New', monospace;
+}
+
+.debug-git-hash {
+    font-size: 1em; /* Normal size to match terminal style */
+    font-weight: bold;
+    color: #FF69B4;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.debug-git-icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    color: #FF69B4;
+}
+
+.debug-git-icon svg {
+    fill: currentColor;
+    stroke: none;
+}
+
+.debug-git-details {
+    font-size: 0.9em;
+    color: #c9d1d9;
+    line-height: 1.6;
+}
+
+.debug-git-details strong {
+    color: #FFB3DF;
+}
+
+.debug-commit-message {
+    font-style: italic;
+    color: #8b949e;
+    margin-top: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Unix top-style debug output */
+.debug-top-style {
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 0.85em;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 4px;
+    padding: 0.75rem;
+    color: #c9d1d9;
+}
+
+.debug-top-header {
+    color: #FFB3DF;
+    font-weight: bold;
+    border-bottom: 1px solid #30363d;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.debug-top-section {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.debug-top-section strong {
+    color: #58a6ff;
+    display: inline-block;
+    min-width: 140px;
+}
+
+.debug-top-total {
+    color: #8b949e;
+    font-size: 0.9em;
+}
+
+.debug-env-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.debug-env-badge.env-dev {
+    background: rgba(255, 179, 223, 0.2);
+    border: 1px solid #FFB3DF;
+}
+
+.debug-env-badge.env-production {
+    background: rgba(76, 175, 80, 0.2);
+    border: 1px solid #4CAF50;
+}
+
+.debug-env-badge.env-ci {
+    background: rgba(88, 166, 255, 0.2);
+    border: 1px solid #58a6ff;
+}
+
+.debug-size-list {
+    list-style: none;
+    margin: 0.25rem 0 0 0;
+    padding: 0;
+    font-size: 0.95em;
+}
+
+.debug-size-list li {
+    margin-bottom: 0.25rem;
+    color: #8b949e;
+}
+
+.debug-size-details {
+    margin-top: 0.25rem;
+}
+
 
 /* Mobile optimizations */
 @media (max-width: 768px) {
