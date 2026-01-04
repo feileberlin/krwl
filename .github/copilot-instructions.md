@@ -133,10 +133,13 @@ krwl-hof/
 │   │   ├── design-tokens.css   # Generated CSS custom properties
 │   │   ├── README.md           # Component system documentation
 │   │   └── variables-reference.md # CSS design token reference
-│   ├── svg-markers/        # SVG marker icons (generated)
-│   ├── favicon.svg         # App icon
-│   ├── icon-*.svg          # PWA icons
-│   └── manifest.json       # PWA manifest
+│   ├── svg/                # SVG icons (favicon, PWA icons, map markers)
+│   │   ├── favicon.svg         # App icon
+│   │   ├── icon-*.svg          # PWA icons
+│   │   ├── marker-*.svg        # Map marker icons
+│   │   └── README.md           # SVG marker documentation
+│   └── json/               # JSON data files
+│       └── manifest.json       # PWA manifest
 │
 ├── lib/                    # Third-party libraries (gitignored, fetched at build)
 │   ├── leaflet/            # Leaflet.js library

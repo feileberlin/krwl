@@ -277,7 +277,7 @@ lib/leaflet/leaflet.js → Read → INLINE into <script>
 layouts/index.html → Insert data & INLINED assets
 
 # 4. Convert markers to base64
-assets/svg-markers/*.svg → Convert to data URLs → INLINE
+assets/svg/*.svg → Convert to data URLs → INLINE
 
 # 5. Generate SINGLE FILE output
 public/index.html → Self-contained HTML (zero external files)

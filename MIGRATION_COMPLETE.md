@@ -12,10 +12,10 @@ Successfully eliminated the `/static` directory and restructured the project wit
 |----------|----------|-------------|
 | `static/leaflet/` | `lib/leaflet/` | Third-party library |
 | `static/lucide/` | `lib/lucide/` | Third-party library |
-| `static/markers/` | `assets/svg-markers/` | Our SVG markers |
+| `static/markers/` | `assets/svg/` | Our SVG markers |
 | `static/favicon.svg` | `assets/favicon.svg` | Our favicon |
 | `static/icon-*.svg` | `assets/icon-*.svg` | Our PWA icons |
-| `static/manifest.json` | `assets/manifest.json` | Our manifest |
+| `static/manifest.json` | `assets/json/manifest.json` | Our manifest |
 | `target/index.html` | `public/index.html` | Build output |
 
 ### Directory Purposes

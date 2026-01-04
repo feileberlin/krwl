@@ -434,10 +434,10 @@ class SiteGenerator:
         Returns:
             SVG content as string or data URL, or fallback empty SVG if file not found
         """
-        # Try assets directory first, then assets/svg-markers subdirectory
+        # Try assets directory first, then assets/svg subdirectory
         search_paths = [
             self.assets_dir / filename,
-            self.assets_dir / 'svg-markers' / filename
+            self.assets_dir / 'svg' / filename
         ]
         
         svg_path = None
@@ -577,7 +577,7 @@ class SiteGenerator:
             'marker-geolocation'    # User location marker
         ]
         
-        markers_dir = self.assets_dir / 'svg-markers'
+        markers_dir = self.assets_dir / 'svg'
         marker_map = {}
         
         if not markers_dir.exists():

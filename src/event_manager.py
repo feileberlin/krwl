@@ -415,7 +415,7 @@ Customize Branding
        --text-color: #ffffff;
      }
   
-  3. Update PWA manifest (assets/manifest.json):
+  3. Update PWA manifest (assets/json/manifest.json):
      {
        "name": "Your City Events",
        "short_name": "YourCity",

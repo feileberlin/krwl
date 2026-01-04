@@ -197,7 +197,7 @@ Note: The app must be running and accessible at the specified URL.
     )
     
     if success:
-        print("\n💡 Tip: Update assets/manifest.json if screenshot filenames changed")
+        print("\n💡 Tip: Update assets/json/manifest.json if screenshot filenames changed")
         print("=" * 70)
     else:
         print("\n" + "=" * 70)
