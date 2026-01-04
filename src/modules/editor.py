@@ -60,6 +60,7 @@ class EventEditor:
             print("  (e) Edit event")
             print("  (r) Reject and delete")
             print("  (s) Skip to next")
+            print("  (b) Batch select mode")
             print("  (q) Quit review")
             print("-" * 60)
             self._print_review_footer()
@@ -79,12 +80,173 @@ class EventEditor:
                 print("\nEvent rejected and saved to rejected list!")
             elif choice == 's':
                 i += 1
+            elif choice == 'b':
+                # Enter batch selection mode
+                self._batch_selection_mode(pending_events, i)
+                # Reload pending events as they may have changed
+                pending_data = load_pending_events(self.base_path)
+                pending_events = pending_data['pending_events']
+                i = 0  # Restart from beginning
             elif choice == 'q':
                 break
             else:
                 print("\nInvalid choice. Try again.")
                 
         # Save updated pending events
+        save_pending_events(self.base_path, pending_data)
+    
+    def _batch_selection_mode(self, pending_events, current_index):
+        """Interactive batch selection mode for bulk operations"""
+        print("\n" + "=" * 80)
+        print("📦 BATCH SELECTION MODE")
+        print("=" * 80)
+        print("Select events for batch operations using checkboxes")
+        print("-" * 80)
+        
+        # Display all events with selection checkboxes
+        selected = set()
+        
+        while True:
+            print("\n" + "─" * 80)
+            print("📋 All Pending Events:")
+            print("─" * 80)
+            
+            for idx, event in enumerate(pending_events):
+                checkbox = "☑" if idx in selected else "☐"
+                title = event.get('title', 'N/A')[:50]
+                event_id = event.get('id', 'N/A')
+                source = event.get('source', 'N/A')
+                print(f"{idx + 1:3}. {checkbox} {title}")
+                print(f"      ID: {event_id} | Source: {source}")
+            
+            print("\n" + "─" * 80)
+            print(f"Selected: {len(selected)} event(s)")
+            print("─" * 80)
+            print("Commands:")
+            print("  [number]      Toggle selection (e.g., '1' or '1,3,5')")
+            print("  all           Select all events")
+            print("  none          Clear selection")
+            print("  range N-M     Select range (e.g., 'range 1-5')")
+            print("  pattern WORD  Select by title pattern (e.g., 'pattern concert')")
+            print("  approve       Batch approve selected events")
+            print("  reject        Batch reject selected events")
+            print("  show          Show details of selected events")
+            print("  back          Exit batch mode")
+            print("─" * 80)
+            
+            choice = input("\nCommand: ").strip().lower()
+            
+            if choice == 'back':
+                break
+            elif choice == 'all':
+                selected = set(range(len(pending_events)))
+                print(f"✓ Selected all {len(selected)} events")
+            elif choice == 'none':
+                selected.clear()
+                print("✓ Cleared selection")
+            elif choice.startswith('range '):
+                try:
+                    range_str = choice.split(' ', 1)[1]
+                    start, end = map(int, range_str.split('-'))
+                    selected.update(range(start - 1, end))
+                    print(f"✓ Selected events {start} to {end}")
+                except Exception as e:
+                    print(f"❌ Invalid range format: {e}")
+            elif choice.startswith('pattern '):
+                pattern = choice.split(' ', 1)[1].lower()
+                matched = 0
+                for idx, event in enumerate(pending_events):
+                    title = event.get('title', '').lower()
+                    if pattern in title:
+                        selected.add(idx)
+                        matched += 1
+                print(f"✓ Selected {matched} events matching '{pattern}'")
+            elif choice == 'approve':
+                if not selected:
+                    print("❌ No events selected")
+                    continue
+                
+                confirm = input(f"\n⚠️  Approve {len(selected)} event(s)? (yes/no): ")
+                if confirm.lower() == 'yes':
+                    self._batch_approve(pending_events, selected)
+                    print(f"✅ Approved {len(selected)} event(s)")
+                    break
+            elif choice == 'reject':
+                if not selected:
+                    print("❌ No events selected")
+                    continue
+                
+                confirm = input(f"\n⚠️  Reject {len(selected)} event(s)? (yes/no): ")
+                if confirm.lower() == 'yes':
+                    self._batch_reject(pending_events, selected)
+                    print(f"✅ Rejected {len(selected)} event(s)")
+                    break
+            elif choice == 'show':
+                if not selected:
+                    print("❌ No events selected")
+                    continue
+                
+                print("\n" + "=" * 80)
+                print("📋 Selected Events Details:")
+                print("=" * 80)
+                for idx in sorted(selected):
+                    event = pending_events[idx]
+                    print(f"\n{idx + 1}. {event.get('title', 'N/A')}")
+                    print(f"   ID: {event.get('id', 'N/A')}")
+                    print(f"   Source: {event.get('source', 'N/A')}")
+                    print(f"   Time: {event.get('start_time', 'N/A')}")
+                input("\nPress Enter to continue...")
+            else:
+                # Try to parse as number(s)
+                try:
+                    # Handle comma-separated numbers
+                    if ',' in choice:
+                        numbers = [int(n.strip()) - 1 for n in choice.split(',')]
+                    else:
+                        numbers = [int(choice) - 1]
+                    
+                    for num in numbers:
+                        if 0 <= num < len(pending_events):
+                            if num in selected:
+                                selected.remove(num)
+                                print(f"☐ Deselected event {num + 1}")
+                            else:
+                                selected.add(num)
+                                print(f"☑ Selected event {num + 1}")
+                        else:
+                            print(f"❌ Invalid event number: {num + 1}")
+                except ValueError:
+                    print("❌ Invalid command. Type 'back' to exit batch mode.")
+    
+    def _batch_approve(self, pending_events, selected_indices):
+        """Batch approve selected events"""
+        events_data = load_events(self.base_path)
+        
+        # Sort in reverse order to safely remove from list
+        for idx in sorted(selected_indices, reverse=True):
+            event = pending_events[idx]
+            self._approve_event(event)
+            pending_events.pop(idx)
+        
+        # Save changes
+        save_events(self.base_path, events_data)
+        pending_data = {'pending_events': pending_events}
+        save_pending_events(self.base_path, pending_data)
+        
+        # Update HTML
+        from .utils import update_events_in_html
+        update_events_in_html(self.base_path)
+    
+    def _batch_reject(self, pending_events, selected_indices):
+        """Batch reject selected events"""
+        # Sort in reverse order to safely remove from list
+        for idx in sorted(selected_indices, reverse=True):
+            event = pending_events[idx]
+            self._reject_event(event)
+            pending_events.pop(idx)
+        
+        # Save changes
+        pending_data = {'pending_events': pending_events}
         save_pending_events(self.base_path, pending_data)
     
     def _print_review_footer(self):

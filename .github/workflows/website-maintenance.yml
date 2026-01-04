@@ -31,6 +31,7 @@ on:
           - 'scrape-and-deploy'  # Scrape and deploy if changes
           - 'force-deploy'       # Force full rebuild and deploy
           - 'update-events'      # Fast event data update
+          - 'review-pending'     # Review and publish pending events
           - 'info'               # Show scraper capabilities
         default: 'scrape-and-deploy'
       
@@ -38,6 +39,17 @@ on:
         description: 'Force scraping even if sources unchanged'
         type: boolean
         default: false
+      
+      # Editorial options (for review-pending task)
+      event_ids:
+        description: 'Event IDs to publish (comma-separated, or "all" for bulk)'
+        type: string
+        required: false
+      
+      auto_publish_pattern:
+        description: 'Auto-publish events matching pattern (e.g., "pending_*")'
+        type: string
+        required: false
 
 permissions:
   contents: write
@@ -360,3 +372,159 @@ jobs:
           echo "- **Enabled Sources:** ${{ needs.discover-capabilities.outputs.source_count }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Scraping Libraries:** ${{ needs.discover-capabilities.outputs.scraping_enabled }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Schedule:** ${{ needs.discover-capabilities.outputs.schedule_times }} (${{ needs.discover-capabilities.outputs.schedule_timezone }})" >> $GITHUB_STEP_SUMMARY
+
+  # Job 7: Review and publish pending events (editorial workflow)
+  review-pending:
+    name: Review Pending Events
+    runs-on: ubuntu-latest
+    needs: [discover-capabilities, scrape-events]
+    if: |
+      always() &&
+      (github.event.inputs.task == 'review-pending' ||
+       (github.event.inputs.auto_publish_pattern != '' && github.event.inputs.auto_publish_pattern != null))
+    
+    outputs:
+      published_count: ${{ steps.publish.outputs.published_count }}
+      events_published: ${{ steps.publish.outputs.events_published }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Ensure we have latest changes from scrape-events job
+          ref: main
+      
+      - name: Pull latest changes
+        run: |
+          git pull origin main
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+      
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: List pending events
+        id: list_pending
+        run: |
+          echo "📋 Listing pending events..."
+          python3 src/event_manager.py list-pending > pending_list.txt
+          cat pending_list.txt
+          
+          # Count pending events
+          PENDING_COUNT=$(python3 -c "import json; data = json.load(open('assets/json/pending_events.json')); print(len(data.get('pending_events', [])))")
+          echo "pending_count=$PENDING_COUNT" >> $GITHUB_OUTPUT
+          echo "ℹ Found $PENDING_COUNT pending events"
+          
+          # Add to summary
+          echo "## 📋 Pending Events Review" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Pending Events:** $PENDING_COUNT" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat pending_list.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+      
+      - name: Publish events (auto or manual)
+        id: publish
+        run: |
+          echo "🔄 Publishing events..."
+          PUBLISHED_COUNT=0
+          PUBLISHED_IDS=""
+          
+          # Check for auto-publish pattern
+          AUTO_PATTERN="${{ github.event.inputs.auto_publish_pattern }}"
+          MANUAL_IDS="${{ github.event.inputs.event_ids }}"
+          
+          if [ -n "$AUTO_PATTERN" ]; then
+            echo "📦 Auto-publishing events matching: $AUTO_PATTERN"
+            
+            # Use bulk-publish with pattern
+            if python3 src/event_manager.py bulk-publish "$AUTO_PATTERN"; then
+              # Count how many were published
+              PUBLISHED_COUNT=$(git diff --cached --name-only | grep -c "events.json" || echo "0")
+              PUBLISHED_IDS="Pattern: $AUTO_PATTERN"
+              echo "✓ Auto-published events matching pattern"
+            else
+              echo "⚠️ Auto-publish failed or no events matched pattern"
+            fi
+            
+          elif [ -n "$MANUAL_IDS" ]; then
+            echo "📝 Publishing specific events: $MANUAL_IDS"
+            
+            if [ "$MANUAL_IDS" = "all" ]; then
+              # Publish all pending events
+              echo "Publishing ALL pending events..."
+              python3 src/event_manager.py bulk-publish "pending_*"
+              PUBLISHED_COUNT=$(git diff --cached --name-only | grep -c "events.json" || echo "0")
+              PUBLISHED_IDS="all"
+            else
+              # Publish specific IDs (comma-separated)
+              IFS=',' read -ra IDS_ARRAY <<< "$MANUAL_IDS"
+              for EVENT_ID in "${IDS_ARRAY[@]}"; do
+                EVENT_ID=$(echo "$EVENT_ID" | xargs)  # Trim whitespace
+                echo "Publishing: $EVENT_ID"
+                if python3 src/event_manager.py publish "$EVENT_ID"; then
+                  PUBLISHED_COUNT=$((PUBLISHED_COUNT + 1))
+                  PUBLISHED_IDS="$PUBLISHED_IDS $EVENT_ID"
+                else
+                  echo "⚠️ Failed to publish: $EVENT_ID"
+                fi
+              done
+            fi
+            
+          else
+            echo "⚠️ No events specified for publishing"
+            echo "Provide either 'event_ids' or 'auto_publish_pattern'"
+          fi
+          
+          echo "published_count=$PUBLISHED_COUNT" >> $GITHUB_OUTPUT
+          echo "events_published=$PUBLISHED_IDS" >> $GITHUB_OUTPUT
+          
+          echo "✓ Published $PUBLISHED_COUNT event(s)"
+          
+          # Add to summary
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Publishing Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Published:** $PUBLISHED_COUNT event(s)" >> $GITHUB_STEP_SUMMARY
+          if [ -n "$PUBLISHED_IDS" ]; then
+            echo "- **IDs:** $PUBLISHED_IDS" >> $GITHUB_STEP_SUMMARY
+          fi
+      
+      - name: Commit and push changes
+        if: steps.publish.outputs.published_count != '0'
+        run: |
+          TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M UTC')
+          PUBLISHED_COUNT="${{ steps.publish.outputs.published_count }}"
+          
+          git add assets/json/
+          git commit -m "chore: publish $PUBLISHED_COUNT event(s) - $TIMESTAMP"
+          
+          # Pull with rebase to handle concurrent changes
+          if ! git pull --rebase origin main; then
+            echo "❌ Rebase failed - manual intervention required"
+            git rebase --abort || true
+            exit 1
+          fi
+          
+          git push
+          echo "✓ Changes committed and pushed"
+      
+      - name: Trigger deployment
+        if: steps.publish.outputs.published_count != '0'
+        run: |
+          echo "🚀 Events published, deployment will be triggered automatically"
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Deployment triggered automatically** (push to events.json)" >> $GITHUB_STEP_SUMMARY

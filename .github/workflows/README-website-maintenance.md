@@ -63,7 +63,7 @@ The workflow automatically adapts when:
    - Runs scraping automatically
 
 2. **Push to main branch**
-   - On `assets/json/events.json` → Fast event update
+   - On `assets/json/events.json` → Fast event update + deployment
    - On `assets/json/events.demo.json` → Fast event update
    - On `config.json` → Full rebuild (configuration changed)
    - On `src/modules/scraper.py` → Full rebuild (scraper changed)
@@ -76,10 +76,13 @@ Via GitHub Actions UI, choose task:
 - **scrape-and-deploy** - Scrape and deploy if changes found (default)
 - **force-deploy** - Force full rebuild and deploy
 - **update-events** - Fast event data update only
+- **review-pending** - Review and publish pending events (NEW!)
 - **info** - Show scraper capabilities (no deployment)
 
 Options:
 - `force_scrape` - Force scraping even if sources unchanged
+- `event_ids` - Event IDs to publish (comma-separated, or "all" for bulk) (NEW!)
+- `auto_publish_pattern` - Auto-publish events matching pattern (e.g., "pending_*") (NEW!)
 
 ## Workflow Jobs
 
@@ -142,6 +145,45 @@ Options:
 - Manual `info` task only
 
 **Output**: Complete capability information in workflow summary
+
+### Job 7: `review-pending` (NEW!)
+**Purpose**: Review and publish pending events via GitHub Actions
+
+**Conditions**:
+- Manual `review-pending` task OR
+- `auto_publish_pattern` input provided
+
+**Capabilities**:
+- List all pending events
+- Publish specific events by ID
+- Bulk publish all events (`event_ids: "all"`)
+- Auto-publish events matching pattern (`auto_publish_pattern: "pending_*"`)
+- Automatic deployment trigger when events published
+
+**Outputs**:
+- `published_count` - Number of events published
+- `events_published` - IDs of published events
+
+**Editorial Options**:
+1. **Publish specific events**: 
+   - Input: `event_ids: "pending_1,pending_2,pending_3"`
+   - Publishes only specified IDs
+
+2. **Publish all pending events**: 
+   - Input: `event_ids: "all"`
+   - Publishes everything in pending queue
+
+3. **Auto-publish by pattern**: 
+   - Input: `auto_publish_pattern: "pending_*"`
+   - Uses bulk-publish with wildcard matching
+
+**Workflow**:
+1. Checkout latest code (including scraper changes)
+2. Pull latest changes from main
+3. List pending events
+4. Publish based on inputs
+5. Commit and push changes
+6. Trigger automatic deployment
 
 ## Introspection Methods
 
@@ -318,6 +360,120 @@ The wrapper architecture enables easy additions:
 3. **A/B testing** - Deploy preview builds automatically
 4. **Performance optimization** - Skip deployment if no user-visible changes
 5. **Multi-environment** - Support staging/production workflows
+
+---
+
+## Editorial Workflow via GitHub Actions (NEW!)
+
+The unified workflow now includes editorial capabilities for reviewing and publishing pending events directly from GitHub Actions, without needing local CLI access.
+
+### Use Case 1: Review After Scheduled Scraping
+
+**Scenario**: Automated scraping runs at 04:00 and 16:00, adding events to pending queue. You want to review and publish them.
+
+**Steps**:
+1. Go to GitHub Actions → Website Maintenance (Unified)
+2. Click "Run workflow"
+3. Select task: `review-pending`
+4. View pending events list in workflow summary
+5. Decide which to publish:
+   - Option A: Publish specific IDs → `event_ids: "pending_1,pending_3"`
+   - Option B: Publish all → `event_ids: "all"`
+   - Option C: Use pattern → `auto_publish_pattern: "pending_*"`
+6. Run workflow
+7. Events are published and site is automatically deployed
+
+### Use Case 2: Auto-Approve Events from Trusted Sources
+
+**Scenario**: You trust certain event sources and want to auto-publish them without manual review.
+
+**Implementation**:
+1. **Tag events in scraper**: Modify `scraper.py` to add tags:
+   ```python
+   event['tags'] = ['trusted'] if source['name'] == 'Official Source' else []
+   event['id'] = f"pending_{source['name'].lower()}_{timestamp}"
+   ```
+
+2. **Auto-publish workflow**: Schedule a workflow to auto-publish trusted events:
+   ```yaml
+   # Add to schedule section
+   - cron: '30 4 * * *'  # 30 minutes after scraping
+   ```
+   
+3. **Use pattern matching**:
+   - Input: `auto_publish_pattern: "pending_official*"`
+   - All events from official sources auto-published
+
+### Use Case 3: Bulk Publishing for Special Events
+
+**Scenario**: You've reviewed events locally and want to bulk publish multiple specific IDs.
+
+**Steps**:
+1. Run locally: `python3 src/event_manager.py list-pending`
+2. Note event IDs: `pending_1, pending_4, pending_7, pending_12`
+3. Go to GitHub Actions
+4. Run workflow with: `event_ids: "pending_1,pending_4,pending_7,pending_12"`
+5. All specified events published at once
+
+### Use Case 4: Emergency Publishing
+
+**Scenario**: Important event needs immediate publishing while you're away from development machine.
+
+**Steps**:
+1. Access GitHub from mobile or any browser
+2. Actions → Website Maintenance → Run workflow
+3. Task: `review-pending`
+4. `event_ids: "pending_latest"` (assuming you know the ID)
+5. Event published and deployed within 2-3 minutes
+
+### Editorial Commands Reference
+
+| Input | Example | Effect |
+|-------|---------|--------|
+| `event_ids: "pending_1"` | Single ID | Publish one event |
+| `event_ids: "pending_1,pending_2"` | Multiple IDs | Publish specific events |
+| `event_ids: "all"` | All events | Bulk publish everything |
+| `auto_publish_pattern: "pending_*"` | Wildcard | Publish all matching pattern |
+| `auto_publish_pattern: "pending_official*"` | Prefix match | Publish events from specific source |
+
+### Workflow Integration
+
+The editorial workflow integrates seamlessly:
+
+1. **After Scraping**: `scrape-events` job outputs `pending_count`
+2. **Review Trigger**: Workflow can be set to require review if `pending_count > 0`
+3. **Auto-Deploy**: Publishing events automatically triggers deployment via push to `events.json`
+4. **No Double Build**: Uses existing fast update path (Job 3: `update-events`)
+
+### Security Considerations
+
+**Who Can Publish?**
+- Requires GitHub Actions write permissions
+- Only repository collaborators with Actions access
+- Review GitHub's branch protection and required reviews settings
+
+**Audit Trail**:
+- All publishes logged in git commits
+- Commit message includes timestamp and count
+- Workflow run logs show which events published
+- GitHub Actions audit log tracks who triggered workflows
+
+### Local vs. Remote Editorial
+
+| Feature | Local (TUI/CLI) | Remote (GitHub Actions) |
+|---------|-----------------|-------------------------|
+| Interactive review | ✅ Yes | ❌ No (list only) |
+| Edit events | ✅ Yes | ❌ No (publish as-is) |
+| Batch operations | ✅ Yes | ✅ Yes |
+| Access required | 💻 Dev machine | 📱 Any browser |
+| Speed | ⚡ Instant | 🐢 2-3 minutes (CI) |
+| Audit trail | 📝 Manual commit | ✅ Automatic |
+
+**Best Practice**: 
+- Use **local TUI** for detailed review and editing
+- Use **remote workflow** for quick bulk publishing or when away from dev machine
+
+---
 
 ## Architecture Benefits
 

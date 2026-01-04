@@ -774,6 +774,70 @@ def expand_wildcard_patterns(patterns, pending_events):
     return expanded_ids
 
 
+def process_events_in_batches(event_ids, batch_size=10, callback=None):
+    """
+    Process events in batches to avoid overwhelming the system.
+    
+    Args:
+        event_ids: List of event IDs to process
+        batch_size: Number of events to process per batch (default: 10)
+        callback: Function to call for each batch, receives (batch_ids, batch_num, total_batches)
+        
+    Returns:
+        Dict with batch processing results
+    """
+    if not event_ids:
+        return {
+            'total': 0,
+            'batches': 0,
+            'processed': 0,
+            'failed': 0
+        }
+    
+    total_events = len(event_ids)
+    batches = [event_ids[i:i + batch_size] for i in range(0, total_events, batch_size)]
+    total_batches = len(batches)
+    
+    results = {
+        'total': total_events,
+        'batches': total_batches,
+        'processed': 0,
+        'failed': 0,
+        'batch_results': []
+    }
+    
+    print(f"📦 Processing {total_events} events in {total_batches} batch(es) of {batch_size}")
+    
+    for batch_num, batch_ids in enumerate(batches, 1):
+        print(f"\n🔄 Batch {batch_num}/{total_batches} ({len(batch_ids)} events)...")
+        
+        batch_result = {
+            'batch_num': batch_num,
+            'ids': batch_ids,
+            'success': [],
+            'failed': []
+        }
+        
+        if callback:
+            try:
+                callback_result = callback(batch_ids, batch_num, total_batches)
+                batch_result.update(callback_result)
+            except Exception as e:
+                print(f"❌ Batch {batch_num} failed: {e}")
+                batch_result['failed'] = batch_ids
+        
+        results['processed'] += len(batch_result.get('success', []))
+        results['failed'] += len(batch_result.get('failed', []))
+        results['batch_results'].append(batch_result)
+    
+    print(f"\n✅ Batch processing complete:")
+    print(f"   Total: {results['total']}")
+    print(f"   Processed: {results['processed']}")
+    print(f"   Failed: {results['failed']}")
+    
+    return results
+
+
 def cli_reject_event(base_path, event_id):
     """CLI: Reject a pending event"""
     pending_data = load_pending_events(base_path)
@@ -883,7 +947,7 @@ def _publish_events_batch(base_path, events_to_publish, events, events_data):
 
 
 def cli_bulk_publish_events(base_path, event_ids_str):
-    """CLI: Bulk publish pending events (supports wildcards)"""
+    """CLI: Bulk publish pending events (supports wildcards and batching)"""
     # Parse comma-separated event IDs/patterns
     patterns = [p.strip() for p in event_ids_str.split(',')]
     
@@ -903,35 +967,54 @@ def cli_bulk_publish_events(base_path, event_ids_str):
     
     events_data = load_events(base_path)
     
-    print(f"Bulk publishing {len(event_ids)} event(s)...")
-    print("-" * 80)
+    print(f"📝 Bulk publishing {len(event_ids)} event(s)...")
+    print("=" * 80)
     
-    # Find events to publish
-    events_to_publish, initial_failed_ids = _find_events_to_process(event_ids, events)
-    failed_count = len(initial_failed_ids)
+    # Determine batch size based on total count
+    batch_size = 10 if len(event_ids) > 20 else len(event_ids)
     
-    # Publish events
-    published_count, pub_failed_count, pub_failed_ids = _publish_events_batch(
-        base_path, events_to_publish, events, events_data
-    )
-    failed_count += pub_failed_count
-    failed_ids = initial_failed_ids + pub_failed_ids
+    # Process in batches
+    def publish_batch(batch_ids, batch_num, total_batches):
+        """Process a batch of events for publishing"""
+        batch_result = {'success': [], 'failed': []}
+        
+        # Find events in this batch
+        events_to_publish, failed_ids = _find_events_to_process(batch_ids, events)
+        batch_result['failed'].extend(failed_ids)
+        
+        # Publish the batch
+        published_count, pub_failed_count, pub_failed_ids = _publish_events_batch(
+            base_path, events_to_publish, events, events_data
+        )
+        
+        # Track successes (IDs that were not failed)
+        for event_id in batch_ids:
+            if event_id not in failed_ids and event_id not in pub_failed_ids:
+                batch_result['success'].append(event_id)
+        
+        batch_result['failed'].extend(pub_failed_ids)
+        
+        print(f"   ✓ Batch {batch_num}: {len(batch_result['success'])} published, {len(batch_result['failed'])} failed")
+        
+        return batch_result
     
-    # Save changes
-    if published_count > 0:
+    # Process all batches
+    results = process_events_in_batches(event_ids, batch_size=batch_size, callback=publish_batch)
+    
+    # Save changes if any events were published
+    if results['processed'] > 0:
+        print("\n💾 Saving changes...")
         save_events(base_path, events_data)
         save_pending_events(base_path, pending_data)
         
-        # Update events in HTML
-        print("\nUpdating events in HTML...")
+        print("🔄 Updating events in HTML...")
         update_events_in_html(base_path)
     
     # Summary
-    print("-" * 80)
-    print(f"✓ Successfully published: {published_count} event(s)")
-    if failed_count > 0:
-        print(f"✗ Failed: {failed_count} event(s)")
-        print(f"  Failed IDs: {', '.join(failed_ids)}")
+    print("=" * 80)
+    print(f"✅ Successfully published: {results['processed']} event(s)")
+    if results['failed'] > 0:
+        print(f"❌ Failed: {results['failed']} event(s)")
         return 1
     
     return 0
