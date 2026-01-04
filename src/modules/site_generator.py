@@ -1004,7 +1004,9 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
             dashboard_aside.format(
                 logo_svg=logo_svg
             ),
-            filter_nav,
+            filter_nav.format(
+                logo_svg=logo_svg
+            ),
             '',
             '<!-- Layer 4: Modals (reserved for future use) -->',
             '',

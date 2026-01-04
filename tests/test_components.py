@@ -322,6 +322,61 @@ def test_z_index_layering():
     return True
 
 
+def test_logo_svg_replacement():
+    """Test that logo_svg placeholder is replaced in all components"""
+    print("\n" + "=" * 60)
+    print("Testing Logo SVG Replacement")
+    print("=" * 60)
+    
+    base_path = Path(__file__).parent.parent
+    generator = SiteGenerator(base_path)
+    
+    # Load minimal data for testing
+    configs = [{'app': {'name': 'Test App'}}]
+    events = []
+    content_en = {'noscript': {'warning': 'JS disabled'}}
+    content_de = {'noscript': {'warning': 'JS deaktiviert'}}
+    stylesheets = {
+        'leaflet_css': '/* Leaflet CSS */',
+        'app_css': '/* App CSS */',
+        'time_drawer_css': '/* Time Drawer CSS */'
+    }
+    scripts = {
+        'leaflet_js': '// Leaflet JS',
+        'i18n_js': '// i18n JS',
+        'time_drawer_js': '// Time Drawer JS',
+        'app_js': '// App JS',
+        'lucide_js': '// Lucide JS'
+    }
+    marker_icons = {}
+    
+    # Build HTML
+    html = generator.build_html_from_components(
+        configs, events, content_en, content_de,
+        stylesheets, scripts, marker_icons
+    )
+    
+    # Verify logo_svg placeholder is NOT present (should be replaced)
+    assert '{logo_svg}' not in html, "Found unreplaced {logo_svg} placeholder in generated HTML"
+    print("✓ No {logo_svg} placeholder found in generated HTML")
+    
+    # Verify logo SVG is present in dashboard-aside component
+    assert '<div class="dashboard-logo"><svg' in html, "Logo SVG missing from dashboard-aside"
+    print("✓ Logo SVG found in dashboard-aside component")
+    
+    # Verify logo SVG is present in filter-nav component (button with id="filter-bar-logo")
+    assert 'id="filter-bar-logo"' in html, "Filter bar logo button missing"
+    
+    # Extract the button content to verify SVG is inside
+    button_start = html.find('id="filter-bar-logo"')
+    button_section = html[button_start:button_start+200]
+    assert '<svg' in button_section, "Logo SVG missing from filter-nav component"
+    print("✓ Logo SVG found in filter-nav component")
+    
+    print("✅ Logo SVG replacement validated")
+    return True
+
+
 def run_all_tests():
     """Run all component tests"""
     print("=" * 60)
@@ -335,7 +390,8 @@ def run_all_tests():
         ("HTML Assembly", test_html_assembly),
         ("Component-Based Generation", test_component_based_generation),
         ("Semantic Structure", test_semantic_structure),
-        ("Z-Index Layering", test_z_index_layering)
+        ("Z-Index Layering", test_z_index_layering),
+        ("Logo SVG Replacement", test_logo_svg_replacement)
     ]
     
     passed = 0
