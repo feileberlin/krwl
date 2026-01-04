@@ -1,6 +1,6 @@
 <!-- Layer 3: Dashboard menu - Complementary information (z-index: 1600) -->
 <aside id="dashboard-menu" 
-       class="overlay overlay--layer-3 overlay--top-left" 
+       class="overlay overlay--layer-3 overlay--top-left hidden" 
        role="complementary"
        aria-label="Application menu and information"
        aria-hidden="true">
@@ -27,7 +27,7 @@
       <p>This project helps you find local events near you using geolocation filtering and real-time data aggregation from multiple sources.</p>
     </div>
     
-    <div class="dashboard-section">
+    <div id="dashboard-debug-section" class="dashboard-section" style="display: none;">
       <h3><i class="dashboard-section-icon" data-lucide="bug" aria-hidden="true"></i> Debug Info</h3>
       <p><strong>Environment:</strong> <span id="debug-environment"></span></p>
       <p><strong>Event Count:</strong> <span id="debug-event-count"></span></p>
