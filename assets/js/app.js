@@ -16,7 +16,7 @@ class EventsApp {
         this.currentEdgeDetail = null;
         this.currentEventIndex = null; // Track which event is currently displayed
         this.filters = {
-            maxDistance: 5,
+            maxDistance: 2, // Default to 30 min walk (2 km)
             timeFilter: 'sunrise',
             category: 'all',
             useCustomLocation: false,
@@ -1015,15 +1015,18 @@ class EventsApp {
         if (distanceText) {
             const distance = this.filters.maxDistance;
             let distanceDescription = '';
-            if (distance <= 1) {
-                distanceDescription = 'within walking distance';
-            } else if (distance <= 5) {
-                const minutes = Math.round(distance * 3); // ~3 min per km walking
-                distanceDescription = `within ${minutes} minutes walk`;
-            } else if (distance <= 15) {
-                const minutes = Math.round(distance * 4); // ~4 min per km by bike
-                distanceDescription = `within ${minutes} minutes by bike`;
+            
+            // Match predefined distance filter options
+            if (distance === 2) {
+                distanceDescription = 'within 30 min walk';
+            } else if (distance === 3.75) {
+                distanceDescription = 'within 30 min bicycle ride';
+            } else if (distance === 12.5) {
+                distanceDescription = 'within 30 min public transport';
+            } else if (distance === 60) {
+                distanceDescription = 'within 60 min car sharing';
             } else {
+                // Fallback for any other distance values (backward compatibility)
                 distanceDescription = `within ${distance} km`;
             }
             distanceText.textContent = distanceDescription;
@@ -1974,20 +1977,21 @@ class EventsApp {
                 }
                 
                 const content = `
-                    <input type="range" id="distance-filter" min="1" max="50" value="${this.filters.maxDistance}" step="0.5">
-                    <span id="distance-value">${this.filters.maxDistance} km</span>
+                    <select id="distance-filter">
+                        <option value="2">within 30 min walk (2 km)</option>
+                        <option value="3.75">within 30 min bicycle ride (3.75 km)</option>
+                        <option value="12.5">within 30 min public transport (12.5 km)</option>
+                        <option value="60">within 60 min car sharing (60 km)</option>
+                    </select>
                 `;
                 const dropdown = createDropdown(content, distanceTextEl);
                 
-                const slider = dropdown.querySelector('#distance-filter');
-                const valueDisplay = dropdown.querySelector('#distance-value');
-                slider.addEventListener('input', (e) => {
-                    const value = parseFloat(e.target.value);
-                    this.filters.maxDistance = value;
-                    valueDisplay.textContent = `${value} km`;
-                    // OPTIMIZATION: Use debounced update for slider (fires frequently during drag)
-                    // Uses SLIDER_DEBOUNCE_DELAY constant (100ms) optimized for slider interactions
-                    this.displayEventsDebounced();
+                const select = dropdown.querySelector('#distance-filter');
+                select.value = this.filters.maxDistance;
+                select.addEventListener('change', (e) => {
+                    this.filters.maxDistance = parseFloat(e.target.value);
+                    this.displayEvents();
+                    hideAllDropdowns();
                 });
             });
         }
