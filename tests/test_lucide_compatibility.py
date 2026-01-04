@@ -23,6 +23,12 @@ class LucideCompatibilityTester:
     # Lucide icons we use in the application
     # Update this list when adding new icons
     USED_ICONS = {
+        'alert-triangle',  # Dashboard: Pending events notification
+        'book-open',       # Dashboard: About section
+        'bug',             # Dashboard: Debug info
+        'user',            # Dashboard: Maintainer
+        'book-text',       # Dashboard: Documentation
+        'heart',           # Dashboard: Thanks to
         'calendar',
         'clock',
         'map-pin',
@@ -39,7 +45,6 @@ class LucideCompatibilityTester:
         'search',
         'home',
         'star',
-        'heart',
         'trash',
         'edit',
         'check',

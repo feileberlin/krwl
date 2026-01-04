@@ -110,6 +110,12 @@ Current icons in use (update `tests/test_lucide_compatibility.py` when adding):
 
 | Icon Name | Usage | Location |
 |-----------|-------|----------|
+| `alert-triangle` | Pending events | Dashboard notification |
+| `book-open` | About section | Dashboard header |
+| `bug` | Debug info | Dashboard header |
+| `user` | Maintainer | Dashboard header |
+| `book-text` | Documentation | Dashboard header |
+| `heart` | Thanks/Credits | Dashboard header |
 | `calendar` | Event dates | Event cards |
 | `clock` | Time filters | Filter bar |
 | `map-pin` | Location | Event details |
@@ -126,7 +132,6 @@ Current icons in use (update `tests/test_lucide_compatibility.py` when adding):
 | `search` | Search | Future feature |
 | `home` | Home link | Navigation |
 | `star` | Favorites | Future feature |
-| `heart` | Likes | Future feature |
 | `trash` | Delete | Admin actions |
 | `edit` | Edit | Admin actions |
 | `check` | Confirm | Forms |

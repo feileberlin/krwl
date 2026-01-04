@@ -1,6 +1,23 @@
-# Auto-generated Lucide marker map
-# Generated from Lucide icons wrapped in gyro shape
+# Auto-generated Lucide icons map
+# Contains both map markers and dashboard icons as inline SVG
+# This unified module creates all icon maps for the application
 
+"""
+Lucide Icons Module - Unified Icon Management
+
+This module provides:
+1. LUCIDE_MARKER_BASE64_MAP - Map markers (base64 encoded, gyro-wrapped)
+2. DASHBOARD_ICONS_MAP - Dashboard icons (filled SVG, monochrome)
+3. Helper functions to get, validate, and manage icons
+
+Usage:
+    from lucide_markers import get_marker_icon, get_dashboard_icon
+    
+    marker = get_marker_icon('marker-music')
+    dashboard = get_dashboard_icon('alert-triangle')
+"""
+
+# Map markers - Lucide icons wrapped in gyro shape for map display
 LUCIDE_MARKER_BASE64_MAP = {
   "marker-on-stage": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBkcmFtYSBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTEwIDExaC4wMSIgLz4KICA8cGF0aCBkPSJNMTQgNmguMDEiIC8+CiAgPHBhdGggZD0iTTE4IDZoLjAxIiAvPgogIDxwYXRoIGQ9Ik02LjUgMTMuMWguMDEiIC8+CiAgPHBhdGggZD0iTTIyIDVjMCA5LTQgMTItNiAxMnMtNi0zLTYtMTJjMC0yIDItMyA2LTNzNiAxIDYgMyIgLz4KICA8cGF0aCBkPSJNMTcuNCA5LjljLS44LjgtMiAuOC0yLjggMCIgLz4KICA8cGF0aCBkPSJNMTAuMSA3LjFDOSA3LjIgNy43IDcuNyA2IDguNmMtMy41IDItNC43IDMuOS0zLjcgNS42IDQuNSA3LjggOS41IDguNCAxMS4yIDcuNC45LS41IDEuOS0yLjEgMS45LTQuNyIgLz4KICA8cGF0aCBkPSJNOS4xIDE2LjVjLjMtMS4xIDEuNC0xLjcgMi40LTEuNCIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==",
   "marker-music": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBtdXNpYyBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTkgMThWNWwxMi0ydjEzIiAvPgogIDxjaXJjbGUgY3g9IjYiIGN5PSIxOCIgcj0iMyIgLz4KICA8Y2lyY2xlIGN4PSIxOCIgY3k9IjE2IiByPSIzIiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+",
@@ -32,3 +49,162 @@ LUCIDE_MARKER_BASE64_MAP = {
   "marker-default": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBtYXAtcGluIG1hcmtlciAtIHVuaWZpZWQgZ3lybyBzaGFwZSAtLT4KICAKICA8IS0tIERyb3Agc2hhZG93IC0tPgogIDxlbGxpcHNlIGN4PSIxNiIgY3k9IjQ2IiByeD0iNiIgcnk9IjIiIGZpbGw9IiMwMDAiIG9wYWNpdHk9IjAuNSIvPgogIAogIDwhLS0gU1RBTkRBUkQgR1lSTyBTSEFQRSAoc2FtZSBmb3IgYWxsKSAtLT4KICA8cGF0aCBkPSJNMTYgMiBDOSAyIDMgOCAzIDE1IEMzIDI0IDE2IDQ2IDE2IDQ2IEMxNiA0NiAyOSAyNCAyOSAxNSBDMjkgOCAyMyAyIDE2IDIgWiIgCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEx1Y2lkZSBpY29uIChzY2FsZWQgYW5kIHBvc2l0aW9uZWQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2LCAxNSkgc2NhbGUoMC41KSIgc3Ryb2tlPSIjMDBmZjAwIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTIsIC0xMikiPgo8cGF0aCBkPSJNMjAgMTBjMCA0Ljk5My01LjUzOSAxMC4xOTMtNy4zOTkgMTEuNzk5YTEgMSAwIDAgMS0xLjIwMiAwQzkuNTM5IDIwLjE5MyA0IDE0Ljk5MyA0IDEwYTggOCAwIDAgMSAxNiAwIiAvPgogIDxjaXJjbGUgY3g9IjEyIiBjeT0iMTAiIHI9IjMiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=",
   "marker-geolocation": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBsb2NhdGUgbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxsaW5lIHgxPSIyIiB4Mj0iNSIgeTE9IjEyIiB5Mj0iMTIiIC8+CiAgPGxpbmUgeDE9IjE5IiB4Mj0iMjIiIHkxPSIxMiIgeTI9IjEyIiAvPgogIDxsaW5lIHgxPSIxMiIgeDI9IjEyIiB5MT0iMiIgeTI9IjUiIC8+CiAgPGxpbmUgeDE9IjEyIiB4Mj0iMTIiIHkxPSIxOSIgeTI9IjIyIiAvPgogIDxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjciIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4="
 }
+# Dashboard icons - Filled Lucide icons for dashboard menu
+# These are rendered as filled SVG (not outlined) to match monochrome corporate design
+DASHBOARD_ICONS_MAP = {
+    "alert-triangle": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+    "book-open": '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
+    "bug": '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 8.8 3 7.1 3 5"/><path d="M6 13H2"/><path d="M3 21c0-2.1 1.7-3.9 3.8-4"/><path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"/><path d="M22 13h-4"/><path d="M17.2 17c2.1.1 3.8 1.9 3.8 4"/></svg>',
+    "user": '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>',
+    "book-text": '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h6"/><path d="M8 11h8"/></svg>',
+    "heart": '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>'
+}
+
+# ============================================================================
+# Helper Functions - Icon Map Management
+# ============================================================================
+
+def get_marker_icon(marker_name, fallback='marker-default'):
+    """
+    Get a map marker icon by name.
+    
+    Args:
+        marker_name: Name of the marker (e.g., 'marker-music')
+        fallback: Fallback marker if not found (default: 'marker-default')
+        
+    Returns:
+        Base64 encoded SVG data URL string
+    """
+    return LUCIDE_MARKER_BASE64_MAP.get(marker_name, LUCIDE_MARKER_BASE64_MAP.get(fallback, ''))
+
+
+def get_dashboard_icon(icon_name, fallback=None):
+    """
+    Get a dashboard icon by name.
+    
+    Args:
+        icon_name: Name of the icon (e.g., 'alert-triangle')
+        fallback: Fallback icon if not found (default: None)
+        
+    Returns:
+        Inline SVG string or empty string if not found
+    """
+    return DASHBOARD_ICONS_MAP.get(icon_name, DASHBOARD_ICONS_MAP.get(fallback, '') if fallback else '')
+
+
+def list_marker_icons():
+    """
+    List all available map marker icon names.
+    
+    Returns:
+        List of marker icon names
+    """
+    return list(LUCIDE_MARKER_BASE64_MAP.keys())
+
+
+def list_dashboard_icons():
+    """
+    List all available dashboard icon names.
+    
+    Returns:
+        List of dashboard icon names
+    """
+    return list(DASHBOARD_ICONS_MAP.keys())
+
+
+def get_all_marker_icons():
+    """
+    Get all map marker icons.
+    
+    Returns:
+        Dictionary of all marker icons {name: base64_data_url}
+    """
+    return LUCIDE_MARKER_BASE64_MAP.copy()
+
+
+def get_all_dashboard_icons():
+    """
+    Get all dashboard icons.
+    
+    Returns:
+        Dictionary of all dashboard icons {name: svg_string}
+    """
+    return DASHBOARD_ICONS_MAP.copy()
+
+
+def count_icons():
+    """
+    Count total icons available.
+    
+    Returns:
+        Dictionary with counts: {'markers': int, 'dashboard': int, 'total': int}
+    """
+    marker_count = len(LUCIDE_MARKER_BASE64_MAP)
+    dashboard_count = len(DASHBOARD_ICONS_MAP)
+    return {
+        'markers': marker_count,
+        'dashboard': dashboard_count,
+        'total': marker_count + dashboard_count
+    }
+
+
+def validate_icon(icon_name, icon_type='marker'):
+    """
+    Validate if an icon exists.
+    
+    Args:
+        icon_name: Name of the icon
+        icon_type: Type of icon ('marker' or 'dashboard')
+        
+    Returns:
+        Boolean indicating if icon exists
+    """
+    if icon_type == 'marker':
+        return icon_name in LUCIDE_MARKER_BASE64_MAP
+    elif icon_type == 'dashboard':
+        return icon_name in DASHBOARD_ICONS_MAP
+    return False
+
+
+# ============================================================================
+# Module Info
+# ============================================================================
+
+__all__ = [
+    # Data maps
+    'LUCIDE_MARKER_BASE64_MAP',
+    'DASHBOARD_ICONS_MAP',
+    # Helper functions
+    'get_marker_icon',
+    'get_dashboard_icon',
+    'list_marker_icons',
+    'list_dashboard_icons',
+    'get_all_marker_icons',
+    'get_all_dashboard_icons',
+    'count_icons',
+    'validate_icon',
+]
+
+# Module metadata
+__version__ = '1.0.0'
+__author__ = 'KRWL HOF Community Events'
+__description__ = 'Unified Lucide icons module for map markers and dashboard icons'
+
+if __name__ == '__main__':
+    # Self-test when run directly
+    print(f"Lucide Icons Module v{__version__}")
+    print(f"{__description__}\n")
+    
+    counts = count_icons()
+    print(f"📍 Map Markers: {counts['markers']}")
+    print(f"🎛️  Dashboard Icons: {counts['dashboard']}")
+    print(f"📊 Total Icons: {counts['total']}\n")
+    
+    print("Map Markers:")
+    for name in list_marker_icons()[:5]:
+        print(f"  - {name}")
+    print(f"  ... and {counts['markers'] - 5} more\n")
+    
+    print("Dashboard Icons:")
+    for name in list_dashboard_icons():
+        print(f"  - {name}")

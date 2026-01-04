@@ -25,12 +25,13 @@ import html
 # Configure module logger
 logger = logging.getLogger(__name__)
 
-# Import Lucide marker base64 map
+# Import Lucide icon maps (markers and dashboard icons)
 try:
-    from .lucide_markers import LUCIDE_MARKER_BASE64_MAP
+    from .lucide_markers import LUCIDE_MARKER_BASE64_MAP, DASHBOARD_ICONS_MAP
 except ImportError:
     # Fallback if lucide_markers module not available
     LUCIDE_MARKER_BASE64_MAP = {}
+    DASHBOARD_ICONS_MAP = {}
 
 try:
     from .linter import Linter
@@ -601,6 +602,32 @@ class SiteGenerator:
         
         return marker_map
     
+    def inline_icon_maps_to_window(self, marker_icons: Dict[str, str]) -> str:
+        """
+        Create JavaScript code to inline icon maps to window object.
+        
+        This helper function generates the JavaScript code that embeds both
+        map marker icons and dashboard icons into the global window object,
+        making them available to the frontend JavaScript.
+        
+        Args:
+            marker_icons: Dictionary of marker icons (from generate_marker_icon_map)
+            
+        Returns:
+            JavaScript code string that defines window.MARKER_ICONS and window.DASHBOARD_ICONS
+        """
+        import json
+        
+        # Generate inline JavaScript for icon maps
+        js_code = f'''// Icon Maps - Inlined by site_generator.py
+// Map markers for event categories (base64 encoded gyro-wrapped icons)
+window.MARKER_ICONS = {json.dumps(marker_icons, ensure_ascii=False)};
+
+// Dashboard icons (filled SVG for monochrome corporate design)
+window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'''
+        
+        return js_code
+    
     def filter_and_sort_future_events(self, events: List[Dict]) -> List[Dict]:
         """Filter out past events and sort (running events first, then chronological)."""
         from datetime import timezone
@@ -913,7 +940,8 @@ window.APP_CONFIG = {json.dumps(runtime_config, ensure_ascii=False)};
 window.__INLINE_EVENTS_DATA__ = {{ "events": {json.dumps(events, ensure_ascii=False)} }};
 window.EMBEDDED_CONTENT_EN = {json.dumps(content_en, ensure_ascii=False)};
 window.EMBEDDED_CONTENT_DE = {json.dumps(content_de, ensure_ascii=False)};
-window.MARKER_ICONS = {json.dumps(marker_icons, ensure_ascii=False)};'''
+window.MARKER_ICONS = {json.dumps(marker_icons, ensure_ascii=False)};
+window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'''
         
         # Config loader and fetch interceptor (legacy placeholders - not currently used)
         config_loader = ''
@@ -1040,6 +1068,8 @@ window.MARKER_ICONS = {json.dumps(marker_icons, ensure_ascii=False)};'''
         print("Generating marker icon map...")
         marker_icons = self.generate_marker_icon_map()
         print(f"✅ Embedded {len(marker_icons)} Lucide marker icons as base64 data URLs")
+        
+        print(f"✅ Embedded {len(DASHBOARD_ICONS_MAP)} dashboard icons")
         
         print(f"Building HTML ({len(events)} total events)...")
         

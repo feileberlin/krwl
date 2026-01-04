@@ -376,8 +376,29 @@ body {
 }
 
 .pending-notification-icon {
-    font-size: 1.5em;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
     flex-shrink: 0;
+    color: #FF69B4; /* Barbie Pink - 4.2:1 contrast on #161b22, suitable for large icons */
+}
+
+/* Fill notification icon with solid color instead of stroke/outline */
+.pending-notification-icon svg {
+    fill: currentColor;
+    stroke: none;
+}
+
+/* Pulse animation for notification icon */
+@keyframes pulse-warning {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
 }
 
 #pending-notification-text {
@@ -415,10 +436,43 @@ body {
     margin-bottom: 0;
 }
 
+/* Dashboard section header icons */
+.dashboard-section-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+    color: #c9d1d9; /* Light text - 12.5:1 contrast on #161b22 */
+}
+
+/* Fill icons with solid color instead of stroke/outline */
+.dashboard-section-icon svg {
+    fill: currentColor;
+    stroke: none;
+}
+
 .dashboard-section h3 {
     color: var(--color-primary);
     font-size: 1rem;
     margin-bottom: 0.5rem;
+}
+
+/* Hover effect for section icons */
+.dashboard-section h3:hover .dashboard-section-icon {
+    color: #FF69B4; /* Barbie Pink hover */
+    transition: color 0.2s ease;
+}
+
+/* Ensure icons inherit from Lucide and maintain accessibility */
+.dashboard-content [data-lucide] {
+    color: inherit;
+}
+
+/* Make all dashboard Lucide icons filled (not outlined) */
+.dashboard-content [data-lucide] svg {
+    fill: currentColor;
+    stroke: none;
 }
 
 .dashboard-section p {
