@@ -993,6 +993,48 @@
       "test_file": "tests/test_archive_events.py",
       "test_instructions": "1. Run archiving tests: python3 tests/test_archive_events.py\n2. Test dry-run: python3 src/event_manager.py archive-monthly --dry-run\n3. View configuration: python3 src/event_manager.py archive-info\n4. Test with different retention: Edit config.json → archiving.retention.active_window_days\n5. Verify archives created: Check assets/json/events/archived/ directory\n6. Test GitHub Actions: Trigger website-maintenance workflow with archive mode",
       "cli_command": "python3 src/event_manager.py archive-monthly --dry-run"
+    },
+    {
+      "id": "responsive-viewport-system",
+      "name": "Responsive Viewport System for Multi-Layer Architecture",
+      "description": "CSS custom properties (--app-width, --app-height) with progressive enhancement that ensures all fixed-position layers scale consistently with the base map layer. Handles mobile browser address bars, orientation changes, and keyboard appearance. Includes JavaScript enhancement for pixel-perfect dimensions.",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "assets/css/base.css",
+        "assets/css/map.css",
+        "assets/css/filters.css",
+        "assets/css/style.css",
+        "assets/css/scrollbar.css",
+        "assets/css/time-drawer.css",
+        "assets/js/app.js",
+        "docs/LAYER_ARCHITECTURE_ANALYSIS.md"
+      ],
+      "config_keys": [],
+      "code_patterns": [
+        {
+          "file": "assets/css/base.css",
+          "pattern": "--app-width|--app-height|100dvh|100dvw",
+          "description": "CSS custom properties for viewport dimensions with progressive enhancement"
+        },
+        {
+          "file": "assets/js/app.js",
+          "pattern": "updateViewportDimensions|setProperty\\('--app-width'|setProperty\\('--app-height'",
+          "description": "JavaScript viewport dimension updater"
+        },
+        {
+          "file": "assets/js/app.js",
+          "pattern": "addEventListener\\('resize'|addEventListener\\('orientationchange'",
+          "description": "Event listeners for viewport changes"
+        },
+        {
+          "file": "assets/css/map.css",
+          "pattern": "width: var\\(--app-width\\)|height: var\\(--app-height\\)",
+          "description": "Map layer uses CSS custom properties"
+        }
+      ],
+      "test_method": "manual",
+      "test_instructions": "1. Open app in browser\n2. Verify no hardcoded 100vh/100vw in layers: grep -r '100vh\\|100vw' assets/css/*.css\n3. Test mobile: Open DevTools → Mobile view → Toggle device toolbar\n4. Test orientation: Rotate device/emulator from portrait to landscape\n5. Test address bar: Scroll on mobile to hide/show address bar\n6. Verify CSS variables: Open DevTools → Elements → :root → Check --app-width and --app-height\n7. Test resize: Resize browser window and verify all layers scale together\n8. Test keyboard: On mobile, focus input field to show keyboard, verify layers adjust\n9. Architecture analysis: Read docs/LAYER_ARCHITECTURE_ANALYSIS.md for design rationale"
     }
   ]
 }
