@@ -323,13 +323,25 @@ def update_pending_count_in_events(base_path):
 def load_pending_events(base_path):
     """Load pending events from pending_events.json"""
     pending_path = base_path / 'assets' / 'json' / 'pending_events.json'
-    with open(pending_path, 'r') as f:
-        return json.load(f)
+    try:
+        with open(pending_path, 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        # Create empty pending events file if it doesn't exist
+        pending_data = {'pending_events': [], 'last_scraped': None}
+        save_pending_events(base_path, pending_data)
+        return pending_data
+    except json.JSONDecodeError:
+        # Handle malformed JSON by returning empty structure
+        logger.warning(f"Malformed JSON in {pending_path}, returning empty structure")
+        pending_data = {'pending_events': [], 'last_scraped': None}
+        return pending_data
 
 
 def save_pending_events(base_path, pending_data):
     """Save pending events to pending_events.json"""
     pending_path = base_path / 'assets' / 'json' / 'pending_events.json'
+    pending_path.parent.mkdir(parents=True, exist_ok=True)
     pending_data['last_scraped'] = datetime.now().isoformat()
     with open(pending_path, 'w') as f:
         json.dump(pending_data, f, indent=2)
