@@ -218,6 +218,14 @@ COMMANDS:
     dependencies fetch        Fetch third-party dependencies
     dependencies check        Check if dependencies are present
     
+    test                      Run all tests
+    test --list               List available test categories and tests
+    test core                 Run core functionality tests
+    test features             Run feature tests
+    test infrastructure       Run infrastructure tests
+    test scraper              Run specific test (e.g., test_scraper)
+    test --verbose            Run tests with verbose output
+    
     archive                   Archive past events to archived_events.json
     load-examples             Load example data for development
     clear-data                Clear all event data
@@ -257,6 +265,24 @@ EXAMPLES:
     
     # Load example data for testing
     python3 event_manager.py load-examples
+    
+    # Run all tests
+    python3 event_manager.py test
+    
+    # Run specific test category
+    python3 event_manager.py test core
+    python3 event_manager.py test features
+    
+    # Run individual test
+    python3 event_manager.py test scraper
+    python3 event_manager.py test translations
+    
+    # List available tests
+    python3 event_manager.py test --list
+    
+    # Run tests with verbose output
+    python3 event_manager.py test --verbose
+    python3 event_manager.py test core --verbose
     
     # Get help
     python3 event_manager.py --help
@@ -1078,6 +1104,45 @@ def cli_archive_old_events(base_path):
     return 0
 
 
+def cli_test(base_path, category=None, test_name=None, verbose=False, list_tests=False):
+    """CLI: Run tests
+    
+    Args:
+        base_path: Repository root path
+        category: Test category to run (core, features, infrastructure) or None for all
+        test_name: Specific test name to run
+        verbose: Enable verbose output
+        list_tests: List available tests
+        
+    Returns:
+        Exit code (0 for success, 1 for error)
+    """
+    from modules.test_runner import TestRunner
+    
+    runner = TestRunner(base_path, verbose=verbose)
+    
+    if list_tests:
+        runner.list_tests()
+        return 0
+    
+    # If a specific name is provided, check if it's a category or individual test
+    if test_name:
+        # Check if it's a category
+        if test_name in runner.TEST_CATEGORIES:
+            result = runner.run_category(test_name)
+            return 0 if result['success'] else 1
+        # Otherwise treat as individual test
+        return 0 if runner.run_single(test_name) else 1
+    
+    # If category specified, run that category
+    if category:
+        result = runner.run_category(category)
+        return 0 if result['success'] else 1
+    
+    # Otherwise run all tests
+    return 0 if runner.run_all() else 1
+
+
 def _execute_command(args, base_path, config):
     """Execute the specified CLI command.
     
@@ -1151,6 +1216,17 @@ def _execute_command(args, base_path, config):
     if command == 'clear-data':
         return cli_clear_data(base_path)
     
+    if command == 'test':
+        # Parse test arguments
+        verbose = '--verbose' in args.args if args.args else False
+        list_tests = '--list' in args.args if args.args else False
+        
+        # Filter out flags to get the actual test/category name
+        test_args = [arg for arg in (args.args or []) if not arg.startswith('--')]
+        test_name = test_args[0] if test_args else None
+        
+        return cli_test(base_path, test_name=test_name, verbose=verbose, list_tests=list_tests)
+    
     if command == 'review':
         app = EventManagerTUI()
         app.review_pending_events()
@@ -1198,13 +1274,13 @@ def _execute_dependencies_command(args, base_path):
 
 def main():
     """Main entry point"""
+    # Use parse_known_args to allow command-specific flags
     parser = argparse.ArgumentParser(
         description='KRWL HOF Community Events Manager',
         add_help=False
     )
     parser.add_argument('command', nargs='?', default=None,
                        help='Command to execute')
-    parser.add_argument('args', nargs='*', help='Command arguments')
     parser.add_argument('-h', '--help', action='store_true',
                        help='Show help message')
     parser.add_argument('-v', '--version', action='store_true',
@@ -1214,7 +1290,9 @@ def main():
     parser.add_argument('--debug', action='store_true',
                        help='Enable debug logging')
     
-    args = parser.parse_args()
+    # Parse known args first, then capture remaining args
+    args, remaining = parser.parse_known_args()
+    args.args = remaining  # Store remaining args for command processing
     
     # Show help
     if args.help:
