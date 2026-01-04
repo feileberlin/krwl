@@ -416,11 +416,33 @@ jobs:
         id: list_pending
         run: |
           echo "📋 Listing pending events..."
-          python3 src/event_manager.py list-pending > pending_list.txt
-          cat pending_list.txt
           
-          # Count pending events
-          PENDING_COUNT=$(python3 -c "import json; data = json.load(open('assets/json/pending_events.json')); print(len(data.get('pending_events', [])))")
+          # Ensure pending_events.json exists
+          if [ ! -f "assets/json/pending_events.json" ]; then
+            echo "ℹ️  pending_events.json not found, creating empty file..."
+            mkdir -p assets/json
+            echo '{"pending_events": [], "last_scraped": null}' > assets/json/pending_events.json
+          fi
+          
+          # List pending events (if list-pending command exists)
+          if python3 src/event_manager.py list-pending > pending_list.txt 2>&1; then
+            cat pending_list.txt
+          else
+            echo "⚠️  Could not run list-pending command"
+            cat pending_list.txt
+          fi
+          
+          # Count pending events with error handling
+          PENDING_COUNT=$(python3 -c "
+          import json
+          try:
+              with open('assets/json/pending_events.json', 'r') as f:
+                  data = json.load(f)
+              print(len(data.get('pending_events', [])))
+          except (FileNotFoundError, json.JSONDecodeError, KeyError) as e:
+              print('0')
+          " 2>/dev/null || echo "0")
+          
           echo "pending_count=$PENDING_COUNT" >> $GITHUB_OUTPUT
           echo "ℹ Found $PENDING_COUNT pending events"
           
@@ -429,9 +451,14 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Pending Events:** $PENDING_COUNT" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          cat pending_list.txt >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          
+          if [ "$PENDING_COUNT" -gt "0" ]; then
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat pending_list.txt >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ No pending events to review." >> $GITHUB_STEP_SUMMARY
+          fi
       
       - name: Publish events (auto or manual)
         id: publish
