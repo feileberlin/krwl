@@ -242,6 +242,21 @@ COMMANDS:
     dependencies fetch        Fetch third-party dependencies
     dependencies check        Check if dependencies are present
     
+    schema validate           Validate events against schema
+    schema migrate            Migrate events to new schema format
+    schema categories         List all valid event categories
+    
+    cache stats               Show cache statistics
+    cache clear               Clear asset cache
+    cache inspect KEY         Inspect specific cache entry
+    
+    icons                     Show current icon mode
+    icons mode [MODE]         Set or show icon mode (svg-paths | base64)
+    icons switch              Interactive icon mode switcher
+    icons compare             Compare icon modes
+    
+    config validate           Validate configuration file
+    
     test                      Run all tests
     test --list               List available test categories and tests
     test core                 Run core functionality tests
@@ -1637,6 +1652,85 @@ def _execute_command(args, base_path, config):
         capabilities = scraper.get_scraper_capabilities()
         print(json.dumps(capabilities, indent=2))
         return 0
+    
+    # Production Optimization Commands
+    if command == 'schema':
+        # Schema subcommands
+        if not args.args:
+            print("Error: Missing schema subcommand")
+            print("Usage: python3 event_manager.py schema [validate|migrate|categories]")
+            return 1
+        
+        subcommand = args.args[0]
+        
+        if subcommand == 'validate':
+            return cli_schema_validate(base_path)
+        elif subcommand == 'migrate':
+            return cli_schema_migrate(base_path)
+        elif subcommand == 'categories':
+            return cli_schema_categories(base_path)
+        else:
+            print(f"Error: Unknown schema subcommand '{subcommand}'")
+            return 1
+    
+    if command == 'cache':
+        # Cache subcommands
+        if not args.args:
+            print("Error: Missing cache subcommand")
+            print("Usage: python3 event_manager.py cache [stats|clear|inspect KEY]")
+            return 1
+        
+        subcommand = args.args[0]
+        
+        if subcommand == 'stats':
+            return cli_cache_stats(base_path)
+        elif subcommand == 'clear':
+            return cli_cache_clear(base_path)
+        elif subcommand == 'inspect' and len(args.args) > 1:
+            return cli_cache_inspect(base_path, args.args[1])
+        else:
+            print(f"Error: Unknown or incomplete cache subcommand")
+            print("Usage: python3 event_manager.py cache [stats|clear|inspect KEY]")
+            return 1
+    
+    if command == 'icons':
+        # Icons subcommands
+        if not args.args:
+            # No subcommand - show current mode
+            return cli_icons_mode(base_path)
+        
+        subcommand = args.args[0]
+        
+        if subcommand == 'mode':
+            if len(args.args) > 1:
+                # Set mode
+                return cli_icons_mode(base_path, args.args[1])
+            else:
+                # Show mode
+                return cli_icons_mode(base_path)
+        elif subcommand == 'switch':
+            return cli_icons_switch(base_path)
+        elif subcommand == 'compare':
+            return cli_icons_compare(base_path)
+        else:
+            print(f"Error: Unknown icons subcommand '{subcommand}'")
+            print("Usage: python3 event_manager.py icons [mode|switch|compare]")
+            return 1
+    
+    if command == 'config':
+        # Config subcommands
+        if not args.args:
+            print("Error: Missing config subcommand")
+            print("Usage: python3 event_manager.py config [validate]")
+            return 1
+        
+        subcommand = args.args[0]
+        
+        if subcommand == 'validate':
+            return cli_config_validate(base_path)
+        else:
+            print(f"Error: Unknown config subcommand '{subcommand}'")
+            return 1
     
     if command is None:
         # No command - launch interactive TUI
