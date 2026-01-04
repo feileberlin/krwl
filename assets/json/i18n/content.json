@@ -29,8 +29,13 @@
     },
     "time_ranges": {
       "sunrise": "till sunrise",
-      "sunday": "till sunday's prime time",
-      "full-moon": "till next full moon"
+      "sunday-primetime": "till sunday's primetime",
+      "full-moon": "till next full moon",
+      "6h": "in the next 6 hours",
+      "12h": "in the next 12 hours",
+      "24h": "in the next 24 hours",
+      "48h": "in the next 48 hours",
+      "all": "upcoming"
     },
     "distances": {
       "1.25": "not more than 15 minutes walk",

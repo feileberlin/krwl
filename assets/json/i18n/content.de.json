@@ -29,8 +29,13 @@
     },
     "time_ranges": {
       "sunrise": "bis sonnenaufgang",
-      "sunday": "bis sonntag zur primetime",
-      "full-moon": "bis zum nächsten vollmond"
+      "sunday-primetime": "bis sonntag zur primetime",
+      "full-moon": "bis zum nächsten vollmond",
+      "6h": "in den nächsten 6 stunden",
+      "12h": "in den nächsten 12 stunden",
+      "24h": "in den nächsten 24 stunden",
+      "48h": "in den nächsten 48 stunden",
+      "all": "bevorstehend"
     },
     "distances": {
       "1.25": "maximal 15 minuten zu fuß",

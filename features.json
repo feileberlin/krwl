@@ -146,6 +146,31 @@
       "test_method": "check_code_patterns"
     },
     {
+      "id": "extended-time-filters",
+      "name": "Extended Time Filter Options",
+      "description": "Additional time filter options including Sunday primetime (20:15) and full moon timing. Provides more flexible event filtering beyond basic time ranges.",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "assets/js/app.js",
+        "assets/json/i18n/content.json",
+        "assets/json/i18n/content.de.json"
+      ],
+      "code_patterns": [
+        {
+          "file": "assets/js/app.js",
+          "pattern": "getNextSundayPrimetime|getNextFullMoonMorning|sunday-primetime|full-moon",
+          "description": "Sunday primetime and full moon calculation methods"
+        },
+        {
+          "file": "assets/json/i18n/content.json",
+          "pattern": "sunday-primetime|full-moon",
+          "description": "Time filter translations"
+        }
+      ],
+      "test_method": "check_code_patterns"
+    },
+    {
       "id": "static-site-generation",
       "name": "Static Site Generation (CDN Inliner)",
       "description": "Generates single-file static HTML with all resources inlined from CDN or local fallback",
