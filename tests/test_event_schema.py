@@ -729,7 +729,7 @@ class EventSchemaTester:
         print("HOW TO RECOVER FULL FUNCTIONALITY:")
         print("-" * 60)
         print("""
-1. Open the affected event file (data/events.json)
+1. Open the affected event file (assets/json/events.json)
 
 2. For each event with issues:
    - Add missing required fields (id, title, location, start_time, source, status)

@@ -392,12 +392,12 @@ Edit data/config.json (Unified Configuration - Auto-Adapts to Environment)
 Update Translations
 ────────────────────────────────────────────────────────────────────────────────
   Edit these files for your language:
-  - data/content.json (English)
-  - data/content.de.json (German)
+  - assets/json/i18n/content.json (English)
+  - assets/json/i18n/content.de.json (German)
   
   Or create new language files:
-  - data/content.fr.json (French)
-  - data/content.es.json (Spanish)
+  - assets/json/i18n/content.fr.json (French)
+  - assets/json/i18n/content.es.json (Spanish)
 
 ═══════════════════════════════════════════════════════════════════════════════
 4. CUSTOMIZATION

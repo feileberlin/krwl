@@ -644,7 +644,7 @@ class Linter:
         - Z-index values are integers
         
         Args:
-            design_config: Design section from data/config.json
+            design_config: Design section from config.json
         
         Returns:
             LintResult with validation results

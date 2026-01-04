@@ -139,7 +139,17 @@ krwl-hof/
 │   │   ├── marker-*.svg        # Map marker icons
 │   │   └── README.md           # SVG marker documentation
 │   └── json/               # JSON data files
-│       └── manifest.json       # PWA manifest
+│       ├── manifest.json       # PWA manifest
+│       ├── events.json         # Published events data
+│       ├── pending_events.json # Events awaiting approval
+│       ├── rejected_events.json # Rejected events log
+│       ├── archived_events.json # Archived past events
+│       ├── events.demo.json    # Demo events for development
+│       ├── i18n/               # Internationalization
+│       │   ├── content.json    # English translations
+│       │   └── content.de.json # German translations
+│       ├── old/                # Event backups
+│       └── templates/          # JSON templates
 │
 ├── lib/                    # Third-party libraries (gitignored, fetched at build)
 │   ├── leaflet/            # Leaflet.js library
@@ -148,15 +158,6 @@ krwl-hof/
 ├── public/                 # Build output (gitignored)
 │   └── index.html          # 🚫 AUTO-GENERATED (do not edit directly)
 │
-├── data/
-│   ├── events.json         # Published events data
-│   ├── pending_events.json # Events awaiting approval
-│   ├── rejected_events.json # Rejected events log
-│   ├── i18n/
-│   │   ├── content.json    # English translations
-│   │   └── content.de.json # German translations
-│   └── events.demo.json    # Demo events for development
-│
 ├── tests/
 │   ├── test_scraper.py
 │   ├── test_filters.py
@@ -164,8 +165,7 @@ krwl-hof/
 │   ├── test_translations.py
 │   └── ... (other test files)
 │
-├── config.prod.json        # Production configuration
-├── config.dev.json         # Development configuration
+├── config.json             # Unified configuration (auto-adapts to environment)
 ├── features.json           # Feature registry (MUST update when adding features)
 └── requirements.txt        # Python dependencies
 ```
