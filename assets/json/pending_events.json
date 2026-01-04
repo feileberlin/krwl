@@ -95,7 +95,58 @@
       "source": "Frankenpost",
       "scraped_at": "2026-01-03T16:43:18.513817",
       "status": "pending"
+    },
+    {
+      "id": "html_frankenpost_219664318063026605",
+      "title": "F\u00fchrung durch die Wohnr\u00e4ume der Sommerresidenz der Markgr\u00e4fin Caroline",
+      "description": "04.Januar",
+      "location": {
+        "name": "Hof",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-04T18:00:00",
+      "end_time": null,
+      "status": "pending",
+      "source": "Frankenpost",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3185852",
+      "category": null,
+      "tags": []
+    },
+    {
+      "id": "html_frankenpost_3042000915306191524",
+      "title": "Klaviermusik aus vier Stilepochen",
+      "description": "Sonntag,04.01.2026,10:00 Uhr",
+      "location": {
+        "name": "Hof",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-04T18:00:00",
+      "end_time": null,
+      "status": "pending",
+      "source": "Frankenpost",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3028938",
+      "category": null,
+      "tags": []
+    },
+    {
+      "id": "html_frankenpost_3418267685193062465",
+      "title": "Spot(t)-Light. Richard Wagner in der zeitgen\u00f6ssischen Karikatur",
+      "description": "Sonntag,04.01.2026,10:00 Uhr",
+      "location": {
+        "name": "Hof",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-04T18:00:00",
+      "end_time": null,
+      "status": "pending",
+      "source": "Frankenpost",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3152961",
+      "category": null,
+      "tags": []
     }
   ],
-  "last_scraped": "2026-01-03T16:43:18.515360"
+  "last_scraped": "2026-01-04T02:36:15.360113"
 }
