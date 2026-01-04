@@ -1081,6 +1081,74 @@ class EventsApp {
         return dayAfterFullMoon;
     }
     
+    /**
+     * Count category occurrences under current filter conditions (excluding category filter).
+     * Used to show dynamic counts in category dropdown.
+     * 
+     * @returns {Object} Map of category names to their occurrence counts
+     */
+    countCategoriesUnderFilters() {
+        const maxEventTime = this.getMaxEventTime();
+        const maxDistance = this.filters.maxDistance;
+        
+        // Determine which location to use for distance calculation
+        let referenceLocation = this.userLocation;
+        
+        if (this.filters.locationType === 'predefined' && this.filters.selectedPredefinedLocation !== null) {
+            const predefinedLocs = this.config?.map?.predefined_locations || [];
+            const selectedLoc = predefinedLocs[this.filters.selectedPredefinedLocation];
+            if (selectedLoc) {
+                referenceLocation = {
+                    lat: selectedLoc.lat,
+                    lon: selectedLoc.lon
+                };
+            }
+        } else if (this.filters.locationType === 'custom' && this.filters.customLat && this.filters.customLon) {
+            referenceLocation = {
+                lat: this.filters.customLat,
+                lon: this.filters.customLon
+            };
+        }
+        
+        // Count categories for events that pass time/distance/location filters
+        const categoryCounts = {};
+        
+        this.events.forEach(event => {
+            // BOOKMARKS: Count bookmarked events regardless of other filters
+            if (this.isBookmarked(event.id)) {
+                const cat = event.category || 'uncategorized';
+                categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+                return;
+            }
+            
+            // Filter by time
+            const eventTime = new Date(event.start_time);
+            if (eventTime > maxEventTime) {
+                return;
+            }
+            
+            // Filter by distance if location is available
+            if (referenceLocation && event.location) {
+                const distance = this.calculateDistance(
+                    referenceLocation.lat,
+                    referenceLocation.lon,
+                    event.location.lat,
+                    event.location.lon
+                );
+                
+                if (distance > maxDistance) {
+                    return;
+                }
+            }
+            
+            // Count this event's category
+            const cat = event.category || 'uncategorized';
+            categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+        });
+        
+        return categoryCounts;
+    }
+    
     filterEvents() {
         const maxEventTime = this.getMaxEventTime();
         const maxDistance = this.filters.maxDistance;
@@ -2466,15 +2534,22 @@ class EventsApp {
                     return;
                 }
                 
-                // Build category options from events
-                let optionsHTML = '<option value="all">All Categories</option>';
-                const categories = new Set();
-                this.events.forEach(event => {
-                    if (event.category) categories.add(event.category);
-                });
-                categories.forEach(cat => {
+                // Build category options with dynamic counts under current filter conditions
+                const categoryCounts = this.countCategoriesUnderFilters();
+                
+                // Calculate total count for "All Categories"
+                const totalCount = Object.values(categoryCounts).reduce((sum, count) => sum + count, 0);
+                
+                // Build options HTML with counts
+                let optionsHTML = `<option value="all">All Categories (${totalCount})</option>`;
+                
+                // Sort categories alphabetically for consistent display
+                const sortedCategories = Object.keys(categoryCounts).sort();
+                
+                sortedCategories.forEach(cat => {
+                    const count = categoryCounts[cat];
                     const selected = cat === this.filters.category ? ' selected' : '';
-                    optionsHTML += `<option value="${cat}"${selected}>${cat}</option>`;
+                    optionsHTML += `<option value="${cat}"${selected}>${cat} (${count})</option>`;
                 });
                 
                 const content = `<select id="category-filter">${optionsHTML}</select>`;

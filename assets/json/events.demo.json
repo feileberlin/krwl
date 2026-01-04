@@ -19,7 +19,8 @@
         "type": "offset",
         "minutes": -30,
         "duration_hours": 2
-      }
+      },
+      "category": "on-stage"
     },
     {
       "id": "demo_started_5min_ago",
@@ -40,7 +41,8 @@
         "type": "offset",
         "minutes": -5,
         "duration_hours": 2
-      }
+      },
+      "category": "music"
     },
     {
       "id": "demo_starting_5min",
@@ -61,7 +63,8 @@
         "type": "offset",
         "minutes": 5,
         "duration_hours": 2
-      }
+      },
+      "category": "sports"
     },
     {
       "id": "demo_starting_15min",
@@ -82,7 +85,8 @@
         "type": "offset",
         "minutes": 15,
         "duration_hours": 2
-      }
+      },
+      "category": "workshop"
     },
     {
       "id": "demo_starting_30min",
@@ -103,7 +107,8 @@
         "type": "offset",
         "minutes": 30,
         "duration_hours": 2
-      }
+      },
+      "category": "food"
     },
     {
       "id": "demo_in_1hour",
@@ -124,7 +129,8 @@
         "type": "offset",
         "hours": 1,
         "duration_hours": 2
-      }
+      },
+      "category": "market"
     },
     {
       "id": "demo_in_2hours",
@@ -145,7 +151,8 @@
         "type": "offset",
         "hours": 2,
         "duration_hours": 2
-      }
+      },
+      "category": "art"
     },
     {
       "id": "demo_this_evening",
@@ -166,7 +173,8 @@
         "type": "offset",
         "hours": 4,
         "duration_hours": 2
-      }
+      },
+      "category": "on-stage"
     },
     {
       "id": "demo_just_ended",
@@ -188,7 +196,8 @@
         "hours": -2,
         "minutes": -10,
         "duration_hours": 2
-      }
+      },
+      "category": "music"
     },
     {
       "id": "demo_very_soon",
@@ -209,7 +218,8 @@
         "type": "offset",
         "minutes": 45,
         "duration_hours": 2
-      }
+      },
+      "category": "sports"
     },
     {
       "id": "demo_utc_plus1",
@@ -231,7 +241,8 @@
         "hours": 1,
         "duration_hours": 2,
         "timezone_offset": 1
-      }
+      },
+      "category": "workshop"
     },
     {
       "id": "demo_utc_plus2",
@@ -253,7 +264,8 @@
         "hours": 1,
         "duration_hours": 2,
         "timezone_offset": 2
-      }
+      },
+      "category": "food"
     },
     {
       "id": "demo_utc_minus5",
@@ -275,7 +287,8 @@
         "hours": 1,
         "duration_hours": 2,
         "timezone_offset": -5
-      }
+      },
+      "category": "market"
     },
     {
       "id": "demo_utc_plus9",
@@ -297,7 +310,8 @@
         "hours": 1,
         "duration_hours": 2,
         "timezone_offset": 9
-      }
+      },
+      "category": "art"
     },
     {
       "id": "demo_utc_plus530",
@@ -319,7 +333,8 @@
         "minutes": 30,
         "duration_hours": 2,
         "timezone_offset": 5.5
-      }
+      },
+      "category": "on-stage"
     },
     {
       "id": "demo_before_sunrise_5min",
@@ -340,7 +355,8 @@
         "type": "sunrise_relative",
         "end_offset_minutes": -5,
         "start_offset_hours": -2
-      }
+      },
+      "category": "music"
     },
     {
       "id": "demo_at_sunrise",
@@ -361,7 +377,8 @@
         "type": "sunrise_relative",
         "end_offset_minutes": 0,
         "start_offset_hours": -1.5
-      }
+      },
+      "category": "sports"
     },
     {
       "id": "demo_after_sunrise_5min",
@@ -382,7 +399,8 @@
         "type": "sunrise_relative",
         "end_offset_minutes": 5,
         "start_offset_hours": -1
-      }
+      },
+      "category": "workshop"
     },
     {
       "id": "demo_crossing_sunrise",
@@ -403,7 +421,8 @@
         "type": "sunrise_relative",
         "start_offset_hours": -2,
         "end_offset_hours": 1
-      }
+      },
+      "category": "food"
     },
     {
       "id": "demo_starting_before_sunrise",
@@ -424,7 +443,8 @@
         "type": "sunrise_relative",
         "start_offset_minutes": -30,
         "end_offset_minutes": 30
-      }
+      },
+      "category": "market"
     },
     {
       "id": "demo_starting_after_sunrise",
@@ -445,7 +465,8 @@
         "type": "sunrise_relative",
         "start_offset_minutes": 30,
         "end_offset_hours": 2
-      }
+      },
+      "category": "art"
     },
     {
       "id": "demo_all_night",
@@ -466,7 +487,8 @@
         "type": "sunrise_relative",
         "start_offset_hours": -8,
         "end_offset_minutes": 0
-      }
+      },
+      "category": "on-stage"
     },
     {
       "id": "demo_far_away",
@@ -487,7 +509,8 @@
         "type": "offset",
         "hours": 2,
         "duration_hours": 2
-      }
+      },
+      "category": "music"
     }
   ],
   "last_updated": "2026-01-02T14:12:41",
