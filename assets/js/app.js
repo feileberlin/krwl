@@ -224,6 +224,7 @@ class EventsApp {
     
     updateDashboard() {
         // Update dashboard debug info with current state
+        const debugSection = document.getElementById('dashboard-debug-section');
         const debugEnvironment = document.getElementById('debug-environment');
         const debugEventCount = document.getElementById('debug-event-count');
         const debugDataSource = document.getElementById('debug-data-source');
@@ -279,6 +280,11 @@ class EventsApp {
             // This shows if we implement a frontend cache in the future
             debugHistoricalCache.textContent = 'Backend (Python)';
             debugHistoricalCache.title = 'Historical events are cached in the backend during scraping to improve performance';
+        }
+        
+        // Show debug section after data is loaded
+        if (debugSection && debugSection.style.display === 'none') {
+            debugSection.style.display = 'block';
         }
     }
     
