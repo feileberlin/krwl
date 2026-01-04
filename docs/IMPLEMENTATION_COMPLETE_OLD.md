@@ -11,7 +11,7 @@ Successfully implemented a complete component-based templating system with centr
 - **Tokens**: 70 CSS custom properties
 - **Categories**: colors, typography, spacing, z-index, shadows, borders, transitions, branding
 - **Generator**: `src/tools/generate_design_tokens.py`
-- **Output**: `partials/design-tokens.css` (auto-generated)
+- **Output**: `assets/html/design-tokens.css` (auto-generated)
 
 ### 2. Component-Based Templating
 - **Structure**: Flat directory (KISS principle - no nested folders)
@@ -134,8 +134,8 @@ python3 -m pytest tests/ -v
 - `docs/KISS_IMPROVEMENTS.md` - Simplifications made
 
 ### For Developers
-- `partials/README.md` - Component system guide
-- `partials/variables-reference.md` - CSS tokens reference
+- `assets/html/README.md` - Component system guide
+- `assets/html/variables-reference.md` - CSS tokens reference
 - `.github/DOCUMENTATION_STANDARD.md` - Documentation standard
 - `tests/README.md` - Testing guide
 - `scripts/README.md` - Scripts guide

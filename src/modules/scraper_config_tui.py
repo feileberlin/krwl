@@ -24,7 +24,7 @@ class ScraperConfigTUI:
             config_path: Path to config file
             base_path: Base path for data files
         """
-        self.config_path = config_path or 'data/config.json'
+        self.config_path = config_path or 'config.json'
         self.base_path = Path(base_path or '.')
         self.config = self._load_config()
         
@@ -523,7 +523,7 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(description='Interactive scraper configuration')
-    parser.add_argument('--config', default='data/config.json', 
+    parser.add_argument('--config', default='config.json', 
                        help='Path to config file')
     parser.add_argument('--base-path', default='.',
                        help='Base path for data files')

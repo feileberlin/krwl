@@ -392,12 +392,12 @@ Edit data/config.json (Unified Configuration - Auto-Adapts to Environment)
 Update Translations
 ────────────────────────────────────────────────────────────────────────────────
   Edit these files for your language:
-  - data/content.json (English)
-  - data/content.de.json (German)
+  - assets/json/i18n/content.json (English)
+  - assets/json/i18n/content.de.json (German)
   
   Or create new language files:
-  - data/content.fr.json (French)
-  - data/content.es.json (Spanish)
+  - assets/json/i18n/content.fr.json (French)
+  - assets/json/i18n/content.es.json (Spanish)
 
 ═══════════════════════════════════════════════════════════════════════════════
 4. CUSTOMIZATION
@@ -415,7 +415,7 @@ Customize Branding
        --text-color: #ffffff;
      }
   
-  3. Update PWA manifest (assets/manifest.json):
+  3. Update PWA manifest (assets/json/manifest.json):
      {
        "name": "Your City Events",
        "short_name": "YourCity",
@@ -986,7 +986,7 @@ def cli_generate(base_path, config):
     CLI: Generate static site with inlined HTML.
     
     Creates a self-contained HTML file with all CSS, JS, events, and translations
-    embedded. Uses KISS templating (Python .format()) from partials/.
+    embedded. Uses KISS templating (Python .format()) from assets/html/.
     
     Output: public/index.html (~313KB single-file HTML)
     """

@@ -9,7 +9,7 @@ Usage:
     python3 src/tools/generate_design_tokens.py
     
 Output:
-    partials/design-tokens.css
+    assets/html/design-tokens.css
 """
 
 import json
@@ -216,7 +216,7 @@ def main():
     css = generate_css_custom_properties(design)
     
     # Write output
-    output_file = base_path / 'partials' / 'design-tokens.css'
+    output_file = base_path / 'assets' / 'html' / 'design-tokens.css'
     output_file.parent.mkdir(parents=True, exist_ok=True)
     
     with open(output_file, 'w', encoding='utf-8') as f:

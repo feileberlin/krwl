@@ -86,7 +86,7 @@ class SiteGenerator:
         self.base_path = Path(base_path)
         self.src_path = self.base_path / 'src'  # Source code location
         self.static_path = self.base_path / 'public'  # Build output directory
-        self.data_path = self.base_path / 'data'  # Data files
+        self.data_path = self.base_path / 'assets' / 'json'  # Data files
         self.dependencies_dir = self.base_path / 'lib'  # Third-party libraries
         self.assets_dir = self.base_path / 'assets'  # Source assets
         self.dependencies_dir.mkdir(parents=True, exist_ok=True)
@@ -294,7 +294,7 @@ class SiteGenerator:
     def load_all_events(self) -> List[Dict]:
         """Load all event data (real + demo) from data directory"""
         events = []
-        data_path = self.base_path / 'data'
+        data_path = self.base_path / 'assets' / 'json'
         
         # Real events
         events_file = data_path / 'events.json'
@@ -315,7 +315,7 @@ class SiteGenerator:
         Load configuration file with environment-specific overrides applied.
         
         Uses load_config() from utils.py to apply runtime overrides based on
-        the environment setting in data/config.json. This ensures the generated
+        the environment setting in config.json. This ensures the generated
         static HTML contains the correct configuration for the target environment.
         """
         configs = []
@@ -325,8 +325,8 @@ class SiteGenerator:
             config = load_config(self.base_path)
             configs.append(config)
         else:
-            # Fallback: load raw data/config.json (for backward compatibility)
-            config_file = 'data/config.json'
+            # Fallback: load raw config.json (for backward compatibility)
+            config_file = 'config.json'
             path = self.base_path / config_file
             if path.exists():
                 with open(path, 'r', encoding='utf-8') as f:
@@ -377,7 +377,7 @@ class SiteGenerator:
     
     def load_translation_data(self) -> Tuple[Dict, Dict]:
         """Load translation files for all languages"""
-        data_path = self.base_path / 'data' / 'i18n'
+        data_path = self.base_path / 'assets' / 'json' / 'i18n'
         with open(data_path / 'content.json', 'r') as f:
             content_en = json.load(f)
         with open(data_path / 'content.de.json', 'r') as f:
@@ -434,10 +434,10 @@ class SiteGenerator:
         Returns:
             SVG content as string or data URL, or fallback empty SVG if file not found
         """
-        # Try assets directory first, then assets/svg-markers subdirectory
+        # Try assets directory first, then assets/svg subdirectory
         search_paths = [
             self.assets_dir / filename,
-            self.assets_dir / 'svg-markers' / filename
+            self.assets_dir / 'svg' / filename
         ]
         
         svg_path = None
@@ -577,7 +577,7 @@ class SiteGenerator:
             'marker-geolocation'    # User location marker
         ]
         
-        markers_dir = self.assets_dir / 'svg-markers'
+        markers_dir = self.assets_dir / 'svg'
         marker_map = {}
         
         if not markers_dir.exists():
@@ -716,7 +716,7 @@ class SiteGenerator:
     
     def load_component(self, component_path: str) -> str:
         """
-        Load a component template from partials/ directory.
+        Load a component template from assets/html/ directory.
         
         Args:
             component_path: Component filename (e.g., 'html-head.html', 'map-main.html')
@@ -730,11 +730,11 @@ class SiteGenerator:
         Example:
             html_head = self.load_component('html-head.html')
         """
-        full_path = self.base_path / 'partials' / component_path
+        full_path = self.base_path / 'assets' / 'html' / component_path
         if not full_path.exists():
             raise FileNotFoundError(
                 f"Component not found: {full_path}\n"
-                f"Available components should be in partials/:\n"
+                f"Available components should be in assets/html/:\n"
                 f"  - html-head.html\n"
                 f"  - html-body-open.html\n"
                 f"  - html-body-close.html\n"
@@ -773,7 +773,7 @@ class SiteGenerator:
             CSS string with custom properties
         """
         # Check if pre-generated CSS exists
-        tokens_css_path = self.base_path / 'partials' / 'design-tokens.css'
+        tokens_css_path = self.base_path / 'assets' / 'html' / 'design-tokens.css'
         if tokens_css_path.exists():
             return tokens_css_path.read_text(encoding='utf-8')
         
@@ -786,7 +786,7 @@ class SiteGenerator:
         lines = [
             "/**",
             " * Design Tokens - Auto-generated CSS Custom Properties",
-            " * Generated from data/config.json design section",
+            " * Generated from config.json design section",
             " */",
             "",
             ":root {",
@@ -932,11 +932,11 @@ window.MARKER_ICONS = {json.dumps(marker_icons, ensure_ascii=False)};'''
   
   DO NOT EDIT THIS FILE DIRECTLY
   Edit source files and regenerate instead:
-  - Components: partials/
-  - Design tokens: data/config.json (design section)
+  - Components: assets/html/
+  - Design tokens: config.json (design section)
   - Styles: assets/css/
   - Scripts: assets/js/
-  - Events: data/
+  - Events: assets/json/
 -->'''
         
         # Load design tokens CSS
@@ -1000,7 +1000,7 @@ window.MARKER_ICONS = {json.dumps(marker_icons, ensure_ascii=False)};'''
         
         Process:
         1. Ensures dependencies are present (Leaflet.js) - auto-fetches if missing
-        2. Loads all configurations from data/config.json
+        2. Loads all configurations from config.json
         3. Loads stylesheets (Leaflet CSS, app CSS, time-drawer CSS)
         4. Loads JavaScript files (Leaflet, i18n, time-drawer, app.js)
         5. Loads event data (real events + demo events)

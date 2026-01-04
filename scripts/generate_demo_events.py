@@ -52,7 +52,7 @@ def cleanup_old_files(base_dir="."):
         "data/events.demo.json.old",
         # Old backup files
         "data/events.backup.json",
-        "data/events.json.backup",
+        "assets/json/events.json.backup",
         "data/pending_events.json.backup",
         "examples/events_example.json.old",
         "examples/pending_events_example.json.old",

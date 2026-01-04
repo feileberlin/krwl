@@ -282,7 +282,7 @@ python3 src/event_manager.py bulk-publish "pending_*"
 python3 src/event_manager.py bulk-reject "pending_*"
 ```
 
-Approved events move to `data/events.json` and appear on the map.
+Approved events move to `assets/json/events.json` and appear on the map.
 
 ### 3. Static Site Generation
 

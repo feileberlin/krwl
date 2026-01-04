@@ -178,10 +178,10 @@ def validate_config(config: dict) -> None:
 
 def load_config(base_path):
     """
-    Load data/config.json with environment override support.
+    Load config.json with environment override support.
     
     Environment can be:
-    1. Explicitly set in data/config.json ("development" or "production") - bypasses auto-detection
+    1. Explicitly set in config.json ("development" or "production") - bypasses auto-detection
     2. Set to "auto" - uses automatic environment detection (default)
     
     Auto-detection checks os.environ for:
@@ -222,7 +222,7 @@ def load_config(base_path):
         # Explicit override - use it directly
         env_is_dev = (env_override == 'development')
         env_name = env_override
-        logger.info(f"Environment forced to: {env_name} (from data/config.json)")
+        logger.info(f"Environment forced to: {env_name} (from config.json)")
     else:
         # Auto-detection mode
         env_is_dev = is_development()
@@ -287,14 +287,14 @@ def load_config(base_path):
 
 def load_events(base_path):
     """Load published events from events.json"""
-    events_path = base_path / 'data' / 'events.json'
+    events_path = base_path / 'assets' / 'json' / 'events.json'
     with open(events_path, 'r') as f:
         return json.load(f)
 
 
 def save_events(base_path, events_data):
     """Save published events to events.json"""
-    events_path = base_path / 'data' / 'events.json'
+    events_path = base_path / 'assets' / 'json' / 'events.json'
     events_data['last_updated'] = datetime.now().isoformat()
     with open(events_path, 'w') as f:
         json.dump(events_data, f, indent=2)
@@ -315,21 +315,21 @@ def update_pending_count_in_events(base_path):
     events_data['pending_count'] = len(pending_data.get('pending_events', []))
     
     # Save back to events.json WITHOUT updating timestamp
-    events_path = base_path / 'data' / 'events.json'
+    events_path = base_path / 'assets' / 'json' / 'events.json'
     with open(events_path, 'w') as f:
         json.dump(events_data, f, indent=2)
 
 
 def load_pending_events(base_path):
     """Load pending events from pending_events.json"""
-    pending_path = base_path / 'data' / 'pending_events.json'
+    pending_path = base_path / 'assets' / 'json' / 'pending_events.json'
     with open(pending_path, 'r') as f:
         return json.load(f)
 
 
 def save_pending_events(base_path, pending_data):
     """Save pending events to pending_events.json"""
-    pending_path = base_path / 'data' / 'pending_events.json'
+    pending_path = base_path / 'assets' / 'json' / 'pending_events.json'
     pending_data['last_scraped'] = datetime.now().isoformat()
     with open(pending_path, 'w') as f:
         json.dump(pending_data, f, indent=2)
@@ -337,7 +337,7 @@ def save_pending_events(base_path, pending_data):
 
 def load_rejected_events(base_path):
     """Load rejected events from rejected_events.json"""
-    rejected_path = base_path / 'data' / 'rejected_events.json'
+    rejected_path = base_path / 'assets' / 'json' / 'rejected_events.json'
     try:
         with open(rejected_path, 'r') as f:
             return json.load(f)
@@ -350,7 +350,7 @@ def load_rejected_events(base_path):
 
 def save_rejected_events(base_path, rejected_data):
     """Save rejected events to rejected_events.json"""
-    rejected_path = base_path / 'data' / 'rejected_events.json'
+    rejected_path = base_path / 'assets' / 'json' / 'rejected_events.json'
     rejected_data['last_updated'] = datetime.now().isoformat()
     with open(rejected_path, 'w') as f:
         json.dump(rejected_data, f, indent=2)
@@ -567,7 +567,7 @@ def filter_events_by_time(events, config):
 
 def backup_published_event(base_path, event):
     """
-    Backup a single published event to data/old/ folder.
+    Backup a single published event to assets/json/old/ folder.
     Each event is saved as a separate JSON file named by event ID.
     
     Args:
@@ -580,7 +580,7 @@ def backup_published_event(base_path, event):
     import os
     
     # Create old directory structure
-    old_dir = base_path / 'data' / 'old'
+    old_dir = base_path / 'assets' / 'json' / 'old'
     old_dir.mkdir(parents=True, exist_ok=True)
     
     # Generate filename from event ID and timestamp
@@ -611,7 +611,7 @@ _historical_events_cache = None
 
 def load_historical_events(base_path):
     """
-    Load all historical events from data/old/ folder.
+    Load all historical events from assets/json/old/ folder.
     Returns a list of event dictionaries from all backup files.
     
     OPTIMIZATION: Uses in-memory caching to avoid re-reading disk on every call.
@@ -637,7 +637,7 @@ def load_historical_events(base_path):
     if _historical_events_cache is not None:
         return _historical_events_cache
     
-    old_dir = base_path / 'data' / 'old'
+    old_dir = base_path / 'assets' / 'json' / 'old'
     historical_events = []
     
     if not old_dir.exists():
