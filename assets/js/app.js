@@ -215,14 +215,20 @@ class EventsApp {
         // Update dashboard debug info with current state
         const debugSection = document.getElementById('dashboard-debug-section');
         const debugEnvironment = document.getElementById('debug-environment');
-        const debugEventCount = document.getElementById('debug-event-count');
+        const debugEventCounts = document.getElementById('debug-event-counts');
         const debugDataSource = document.getElementById('debug-data-source');
         const debugMode = document.getElementById('debug-mode');
+        const debugCaching = document.getElementById('debug-caching');
+        const debugFileSize = document.getElementById('debug-file-size');
+        const debugSizeBreakdown = document.getElementById('debug-size-breakdown');
         const debugDOMCache = document.getElementById('debug-dom-cache');
         const debugHistoricalCache = document.getElementById('debug-historical-cache');
         
+        // Use DEBUG_INFO from backend if available
+        const debugInfo = window.DEBUG_INFO || {};
+        
         if (debugEnvironment) {
-            const environment = this.config?.watermark?.text || this.config?.app?.environment || 'UNKNOWN';
+            const environment = debugInfo.environment || this.config?.watermark?.text || this.config?.app?.environment || 'UNKNOWN';
             debugEnvironment.textContent = environment.toUpperCase();
             // Add color coding based on environment using CSS classes
             debugEnvironment.className = ''; // Clear existing classes
@@ -233,10 +239,16 @@ class EventsApp {
             }
         }
         
-        if (debugEventCount) {
+        if (debugEventCounts && debugInfo.event_counts) {
+            const counts = debugInfo.event_counts;
+            const countsText = `Published: ${counts.published} | Pending: ${counts.pending} | Archived: ${counts.archived}`;
+            debugEventCounts.textContent = countsText;
+            debugEventCounts.title = `Total events across all categories: ${counts.total}`;
+        } else if (debugEventCounts) {
+            // Fallback to old behavior if DEBUG_INFO not available
             const totalEvents = this.events.length;
             const visibleEvents = this.filterEvents().length;
-            debugEventCount.textContent = `${visibleEvents}/${totalEvents}`;
+            debugEventCounts.textContent = `Visible: ${visibleEvents}/${totalEvents}`;
         }
         
         if (debugDataSource) {
@@ -254,6 +266,69 @@ class EventsApp {
             } else {
                 debugMode.classList.add('debug-disabled');
             }
+        }
+        
+        // Caching status
+        if (debugCaching) {
+            const cacheEnabled = debugInfo.cache_enabled;
+            if (cacheEnabled !== undefined) {
+                debugCaching.textContent = cacheEnabled ? 'Enabled' : 'Disabled';
+                debugCaching.className = cacheEnabled ? 'cache-enabled' : 'cache-disabled';
+            } else {
+                debugCaching.textContent = 'Unknown';
+            }
+        }
+        
+        // File size information
+        if (debugFileSize && debugInfo.html_sizes) {
+            const sizes = debugInfo.html_sizes;
+            const totalKB = (sizes.total / 1024).toFixed(1);
+            
+            if (debugInfo.cache_enabled && debugInfo.cache_file_size) {
+                // Show cache file size if caching is enabled
+                const cacheKB = (debugInfo.cache_file_size / 1024).toFixed(1);
+                debugFileSize.textContent = `HTML: ${totalKB} KB | Cache: ${cacheKB} KB`;
+                debugFileSize.title = `Cache file: ${debugInfo.cache_file_path || 'unknown'}`;
+            } else {
+                // Show HTML size only
+                debugFileSize.textContent = `HTML: ${totalKB} KB`;
+                if (!debugInfo.cache_enabled) {
+                    debugFileSize.title = 'Caching disabled - showing HTML size';
+                }
+            }
+        }
+        
+        // Size breakdown
+        if (debugSizeBreakdown && debugInfo.html_sizes) {
+            const sizes = debugInfo.html_sizes;
+            const parts = [];
+            
+            // Show top 3 largest components
+            const components = [
+                { name: 'Events', size: sizes.events_data },
+                { name: 'Scripts', size: sizes.scripts },
+                { name: 'Styles', size: sizes.stylesheets },
+                { name: 'Translations', size: sizes.translations },
+                { name: 'Markers', size: sizes.marker_icons },
+                { name: 'Other', size: sizes.other }
+            ];
+            
+            components.sort((a, b) => b.size - a.size);
+            
+            for (let i = 0; i < 3 && i < components.length; i++) {
+                const comp = components[i];
+                const kb = (comp.size / 1024).toFixed(1);
+                const percent = ((comp.size / sizes.total) * 100).toFixed(1);
+                parts.push(`${comp.name}: ${kb} KB (${percent}%)`);
+            }
+            
+            debugSizeBreakdown.textContent = parts.join(' | ');
+            
+            // Full breakdown in title
+            const fullBreakdown = components.map(c => 
+                `${c.name}: ${(c.size / 1024).toFixed(1)} KB (${((c.size / sizes.total) * 100).toFixed(1)}%)`
+            ).join('\n');
+            debugSizeBreakdown.title = `Full breakdown:\n${fullBreakdown}`;
         }
         
         // OPTIMIZATION INFO: Display cache statistics

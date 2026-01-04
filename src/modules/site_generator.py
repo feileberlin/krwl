@@ -875,6 +875,194 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
         
         return '\n'.join(lines)
     
+    def calculate_debug_info(self, primary_config: Dict, events: List[Dict]) -> Dict:
+        """
+        Calculate debug information for dashboard.
+        
+        Collects:
+        - Event counts (pending, published, archived)
+        - Environment detection
+        - Caching status
+        - File size information (HTML size, cache file size if applicable)
+        
+        Args:
+            primary_config: Primary configuration object
+            events: List of published event data
+            
+        Returns:
+            Dictionary with debug information
+        """
+        debug_info = {}
+        
+        # Event counts
+        try:
+            pending_file = self.data_path / 'pending_events.json'
+            archived_file = self.data_path / 'archived_events.json'
+            
+            pending_count = 0
+            if pending_file.exists():
+                with open(pending_file, 'r', encoding='utf-8') as f:
+                    pending_data = json.load(f)
+                    pending_count = len(pending_data)
+            
+            archived_count = 0
+            if archived_file.exists():
+                with open(archived_file, 'r', encoding='utf-8') as f:
+                    archived_data = json.load(f)
+                    archived_count = len(archived_data)
+            
+            debug_info['event_counts'] = {
+                'published': len(events),
+                'pending': pending_count,
+                'archived': archived_count,
+                'total': len(events) + pending_count + archived_count
+            }
+        except Exception as e:
+            logger.warning(f"Could not calculate event counts: {e}")
+            debug_info['event_counts'] = {
+                'published': len(events),
+                'pending': 0,
+                'archived': 0,
+                'total': len(events)
+            }
+        
+        # Environment
+        try:
+            from .utils import is_ci, is_production
+            if is_production():
+                environment = 'production'
+            elif is_ci():
+                environment = 'ci'
+            else:
+                environment = 'development'
+            
+            debug_info['environment'] = environment
+        except Exception as e:
+            logger.warning(f"Could not detect environment: {e}")
+            debug_info['environment'] = primary_config.get('app', {}).get('environment', 'unknown')
+        
+        # Caching status
+        try:
+            cache_enabled = primary_config.get('performance', {}).get('cache_enabled', False)
+            debug_info['cache_enabled'] = cache_enabled
+            
+            # Try to find and measure cache file size
+            cache_file_size = None
+            if cache_enabled:
+                # Check for cache file in common locations
+                potential_cache_files = [
+                    self.base_path / '.cache' / 'events_cache.json',
+                    self.base_path / 'cache' / 'events.json',
+                    self.base_path / '.cache' / 'historical_events.json',
+                ]
+                
+                for cache_file in potential_cache_files:
+                    if cache_file.exists():
+                        cache_file_size = cache_file.stat().st_size
+                        debug_info['cache_file_path'] = str(cache_file.relative_to(self.base_path))
+                        break
+            
+            debug_info['cache_file_size'] = cache_file_size
+        except Exception as e:
+            logger.warning(f"Could not determine cache status: {e}")
+            debug_info['cache_enabled'] = False
+            debug_info['cache_file_size'] = None
+        
+        return debug_info
+    
+    def calculate_html_size_breakdown(self, html: str) -> Dict:
+        """
+        Calculate size breakdown of generated HTML.
+        
+        Analyzes the HTML to determine which parts are largest:
+        - Total size
+        - Embedded events data
+        - Embedded translations
+        - Stylesheets (Leaflet + app CSS)
+        - Scripts (Leaflet + app.js)
+        - Marker icons
+        
+        Args:
+            html: Generated HTML string
+            
+        Returns:
+            Dictionary with size information in bytes
+        """
+        sizes = {
+            'total': len(html.encode('utf-8')),
+            'events_data': 0,
+            'translations': 0,
+            'stylesheets': 0,
+            'scripts': 0,
+            'marker_icons': 0,
+            'other': 0
+        }
+        
+        try:
+            # Find embedded events data
+            events_marker = 'window.__INLINE_EVENTS_DATA__'
+            events_start = html.find(events_marker)
+            if events_start != -1:
+                events_end = html.find('};', events_start)
+                if events_end != -1:
+                    sizes['events_data'] = len(html[events_start:events_end+2].encode('utf-8'))
+            
+            # Find translations
+            for marker in ['window.EMBEDDED_CONTENT_EN', 'window.EMBEDDED_CONTENT_DE']:
+                trans_start = html.find(marker)
+                if trans_start != -1:
+                    trans_end = html.find('};', trans_start)
+                    if trans_end != -1:
+                        sizes['translations'] += len(html[trans_start:trans_end+2].encode('utf-8'))
+            
+            # Find stylesheets (inside <style> tags)
+            style_start = 0
+            while True:
+                style_start = html.find('<style>', style_start)
+                if style_start == -1:
+                    break
+                style_end = html.find('</style>', style_start)
+                if style_end != -1:
+                    sizes['stylesheets'] += len(html[style_start:style_end+8].encode('utf-8'))
+                    style_start = style_end
+                else:
+                    break
+            
+            # Find scripts (inside <script> tags, excluding inline data)
+            script_start = 0
+            while True:
+                script_start = html.find('<script>', script_start)
+                if script_start == -1:
+                    break
+                script_end = html.find('</script>', script_start)
+                if script_end != -1:
+                    script_content = html[script_start:script_end+9]
+                    # Exclude data embedding scripts (already counted separately)
+                    if 'window.__INLINE_EVENTS_DATA__' not in script_content and \
+                       'window.EMBEDDED_CONTENT' not in script_content and \
+                       'window.MARKER_ICONS' not in script_content:
+                        sizes['scripts'] += len(script_content.encode('utf-8'))
+                    script_start = script_end
+                else:
+                    break
+            
+            # Find marker icons
+            marker_start = html.find('window.MARKER_ICONS')
+            if marker_start != -1:
+                marker_end = html.find('};', marker_start)
+                if marker_end != -1:
+                    sizes['marker_icons'] = len(html[marker_start:marker_end+2].encode('utf-8'))
+            
+            # Calculate other
+            accounted = sizes['events_data'] + sizes['translations'] + sizes['stylesheets'] + \
+                       sizes['scripts'] + sizes['marker_icons']
+            sizes['other'] = max(0, sizes['total'] - accounted)
+            
+        except Exception as e:
+            logger.warning(f"Could not calculate HTML size breakdown: {e}")
+        
+        return sizes
+    
     def build_html_from_components(
         self,
         configs: List[Dict],
@@ -926,6 +1114,9 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
             }
         }
         
+        # Calculate debug information
+        debug_info = self.calculate_debug_info(primary_config, events)
+        
         # Prepare embedded data for frontend
         # All data is embedded by backend - frontend does NOT fetch config.json or events
         embedded_data = f'''// Data embedded by backend (site_generator.py) - frontend does NOT fetch files
@@ -935,7 +1126,8 @@ window.__INLINE_EVENTS_DATA__ = {{ "events": {json.dumps(events, ensure_ascii=Fa
 window.EMBEDDED_CONTENT_EN = {json.dumps(content_en, ensure_ascii=False)};
 window.EMBEDDED_CONTENT_DE = {json.dumps(content_de, ensure_ascii=False)};
 window.MARKER_ICONS = {json.dumps(marker_icons, ensure_ascii=False)};
-window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'''
+window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};
+window.DEBUG_INFO = {json.dumps(debug_info, ensure_ascii=False)};'''
         
         # Config loader and fetch interceptor (legacy placeholders - not currently used)
         config_loader = ''
@@ -1073,6 +1265,27 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
             stylesheets, scripts, marker_icons
         )
         print("✅ Site generated using components")
+        
+        # Calculate HTML size breakdown and inject into DEBUG_INFO
+        html_sizes = self.calculate_html_size_breakdown(html)
+        
+        # Find and update DEBUG_INFO with size information
+        debug_info_marker = 'window.DEBUG_INFO = '
+        debug_info_start = html.find(debug_info_marker)
+        if debug_info_start != -1:
+            debug_info_end = html.find('};', debug_info_start)
+            if debug_info_end != -1:
+                # Extract current DEBUG_INFO
+                current_debug_json = html[debug_info_start + len(debug_info_marker):debug_info_end + 1]
+                try:
+                    debug_data = json.loads(current_debug_json)
+                    debug_data['html_sizes'] = html_sizes
+                    # Replace with updated DEBUG_INFO
+                    updated_debug_json = json.dumps(debug_data, ensure_ascii=False)
+                    html = html[:debug_info_start + len(debug_info_marker)] + updated_debug_json + html[debug_info_end + 1:]
+                    print(f"✅ Injected HTML size breakdown into DEBUG_INFO")
+                except Exception as e:
+                    logger.warning(f"Could not update DEBUG_INFO with size info: {e}")
         
         # Lint the generated content
         if not skip_lint:
