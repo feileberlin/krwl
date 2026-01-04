@@ -37,3 +37,6 @@ tenacity>=8.2.0  # Retry logic with exponential backoff
 # Documentation Building
 markdown>=3.5.0         # Markdown to HTML conversion
 Pygments>=2.17.0        # Syntax highlighting for code blocks
+
+# Production Optimization
+brotli>=1.1.0           # Brotli compression for static assets
