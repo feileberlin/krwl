@@ -15,10 +15,10 @@ from pathlib import Path
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from modules.core.scraper import EventScraper
-from modules.core.editor import EventEditor
-from modules.build.site_generator import SiteGenerator
-from modules.helpers.batch_operations import expand_wildcards, process_in_batches, find_events_by_ids, determine_batch_size
+from modules.scraper import EventScraper
+from modules.editor import EventEditor
+from modules.site_generator import SiteGenerator
+from modules.batch_operations import expand_wildcards, process_in_batches, find_events_by_ids, determine_batch_size
 from modules.utils import (
     load_config, load_events, save_events, 
     load_pending_events, save_pending_events, 
@@ -1126,7 +1126,7 @@ def cli_test(base_path, test_name=None, verbose=False, list_tests=False):
     Returns:
         Exit code (0 for success, 1 for error)
     """
-    from modules.cli.test_runner import TestRunner
+    from modules.test_runner import TestRunner
     
     runner = TestRunner(base_path, verbose=verbose)
     
@@ -1233,7 +1233,7 @@ def _execute_command(args, base_path, config):
     
     if command == 'utils':
         # Delegate to utility runner module (KISS: keep main CLI simple)
-        from modules.cli.utility_runner import UtilityRunner
+        from modules.utility_runner import UtilityRunner
         
         runner = UtilityRunner(base_path)
         
@@ -1249,7 +1249,7 @@ def _execute_command(args, base_path, config):
     
     if command == 'docs':
         # Delegate to documentation runner module (KISS: keep main CLI simple)
-        from modules.cli.docs_runner import DocsRunner
+        from modules.docs_runner import DocsRunner
         
         runner = DocsRunner(base_path)
         
@@ -1357,7 +1357,7 @@ def main():
     base_path = Path(__file__).parent.parent
     
     # Configure logging based on mode
-    from modules.helpers.logging_config import configure_for_cli, configure_for_tui
+    from modules.logging_config import configure_for_cli, configure_for_tui
     if args.command is None:
         # TUI mode - log to file only
         configure_for_tui()
