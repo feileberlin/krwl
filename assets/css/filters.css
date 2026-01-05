@@ -46,6 +46,46 @@
     transition: opacity 0.2s ease-out;
 }
 
+/* Filter chips - bracketed button design */
+.filter-chip {
+    cursor: pointer;
+    background: rgba(255, 105, 180, 0.15);
+    border: 1px solid rgba(255, 105, 180, 0.4);
+    border-radius: 6px;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-primary);
+    transition: all 0.2s ease-out;
+    position: relative;
+    display: inline-block;
+    white-space: nowrap;
+    text-shadow: 0 0 8px rgba(255, 105, 180, 0.4);
+}
+
+.filter-chip:hover {
+    background: rgba(255, 105, 180, 0.25);
+    border-color: rgba(255, 105, 180, 0.6);
+    color: var(--color-text-primary);
+    text-shadow: 0 0 12px rgba(255, 105, 180, 0.7);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(255, 105, 180, 0.3);
+}
+
+.filter-chip.active {
+    background: rgba(255, 105, 180, 0.35);
+    border-color: var(--color-primary);
+    color: var(--color-text-primary);
+    text-shadow: 0 0 15px rgba(255, 105, 180, 0.9);
+    box-shadow: 0 0 12px rgba(255, 105, 180, 0.5);
+}
+
+.filter-chip:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Legacy support for .filter-bar-item class (deprecated) */
 #event-filter-bar .filter-bar-item {
     cursor: pointer;
     text-decoration: underline;
@@ -116,13 +156,13 @@
     position: fixed;
     background: var(--barbie-shade-darkest);
     backdrop-filter: blur(10px);
-    border: 2px solid var(--color-border-primary);
+    border: 2px solid rgba(255, 105, 180, 0.5);
     border-radius: 8px;
-    padding: 0.5rem 0;
+    padding: 0.25rem 0;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
                 0 0 10px rgba(255, 105, 180, 0.3);
     z-index: 3000;
-    min-width: 200px;
+    min-width: 220px;
     white-space: normal;
 }
 
@@ -140,21 +180,53 @@
     font-size: 0.9rem;
 }
 
+/* Dropdown items for chip-based design */
 .filter-bar-dropdown-item {
-    padding: 0.5rem 1rem;
+    padding: 0.6rem 1rem;
     cursor: pointer;
     transition: all 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 3px solid transparent;
 }
 
 .filter-bar-dropdown-item:hover {
     background: rgba(255, 105, 180, 0.2);
     color: var(--color-primary);
+    border-left-color: rgba(255, 105, 180, 0.5);
 }
 
 .filter-bar-dropdown-item.selected {
     background: rgba(255, 105, 180, 0.3);
     color: var(--color-primary);
     font-weight: 600;
+    border-left-color: var(--color-primary);
+}
+
+.filter-bar-dropdown-item.current-selection {
+    background: rgba(255, 105, 180, 0.35);
+    color: var(--color-text-primary);
+    font-weight: 700;
+    border-left-color: var(--color-primary);
+    border-bottom: 1px solid rgba(255, 105, 180, 0.3);
+    margin-bottom: 0.25rem;
+}
+
+.filter-bar-dropdown-item .item-label {
+    flex: 1;
+}
+
+.filter-bar-dropdown-item .item-count {
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-left: 1rem;
+}
+
+.filter-bar-dropdown-item.current-selection .item-count {
+    color: var(--color-primary);
+    font-weight: 700;
 }
 
 /* Distance slider container */
