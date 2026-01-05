@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duplicate Event Detection Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #0d1117;
+            color: #c9d1d9;
+        }
+        
+        h1 {
+            color: #FF69B4;
+        }
+        
+        .demo-section {
+            background: #161b22;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+        }
+        
+        .debug-duplicates {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        
+        .debug-duplicates.warning {
+            background: rgba(217, 119, 6, 0.15);
+            border: 1px solid rgba(217, 119, 6, 0.3);
+        }
+        
+        .debug-duplicates.ok {
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        
+        .duplicate-warning {
+            color: #f59e0b;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .duplicate-ok {
+            color: #22c55e;
+        }
+        
+        .duplicate-details {
+            margin-top: 0.5rem;
+            font-size: 0.85em;
+        }
+        
+        .duplicate-item {
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 3px;
+        }
+        
+        .duplicate-item strong {
+            color: #FF69B4;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        
+        .duplicate-hint {
+            color: #8b949e;
+            font-size: 0.9em;
+        }
+        
+        button {
+            background: #FF69B4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background: #ff4da6;
+        }
+        
+        .event-list {
+            background: #0d1117;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .event-item {
+            padding: 8px;
+            margin: 5px 0;
+            background: #161b22;
+            border-radius: 3px;
+            border-left: 3px solid #30363d;
+        }
+        
+        .event-item.duplicate {
+            border-left-color: #f59e0b;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Duplicate Event Detection Demo</h1>
+    
+    <div class="demo-section">
+        <h2>What This Feature Does</h2>
+        <p>The duplicate detection feature automatically scans all loaded events and identifies duplicates based on:</p>
+        <ul>
+            <li><strong>Event ID</strong> - If two events have the same ID</li>
+            <li><strong>Title + Time + Location</strong> - If two events have the same title, start time, and location</li>
+        </ul>
+        <p>When duplicates are found, a warning appears in the dashboard debug section with details.</p>
+    </div>
+    
+    <div class="demo-section">
+        <h2>Demo Scenarios</h2>
+        <button onclick="testNoDuplicates()">Scenario 1: No Duplicates ✓</button>
+        <button onclick="testWithDuplicates()">Scenario 2: With Duplicates ⚠️</button>
+        <button onclick="testMultipleDuplicates()">Scenario 3: Multiple Duplicates</button>
+    </div>
+    
+    <div class="demo-section">
+        <h2>Current Events</h2>
+        <div id="event-list" class="event-list"></div>
+    </div>
+    
+    <div class="demo-section">
+        <h2>Dashboard Debug Section Preview</h2>
+        <div id="duplicate-display"></div>
+    </div>
+    
+    <script>
+        let currentEvents = [];
+        
+        // Simulate the app's duplicate detection function
+        function detectDuplicateEvents(events) {
+            if (!events || events.length === 0) {
+                return [];
+            }
+            
+            const eventMap = new Map();
+            
+            events.forEach(event => {
+                let key;
+                if (event.id) {
+                    key = `id:${event.id}`;
+                } else {
+                    const locationKey = event.location ? 
+                        `${event.location.lat},${event.location.lon}` : 
+                        'no-location';
+                    key = `${event.title}|${event.start_time}|${locationKey}`;
+                }
+                
+                if (!eventMap.has(key)) {
+                    eventMap.set(key, {
+                        title: event.title,
+                        start_time: event.start_time ? new Date(event.start_time).toLocaleString('en-US', { 
+                            month: 'short', 
+                            day: 'numeric', 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                        }) : 'unknown',
+                        location: event.location?.name || 'unknown location',
+                        count: 1,
+                        events: [event]
+                    });
+                } else {
+                    const existing = eventMap.get(key);
+                    existing.count++;
+                    existing.events.push(event);
+                }
+            });
+            
+            const duplicates = Array.from(eventMap.values())
+                .filter(item => item.count > 1)
+                .sort((a, b) => b.count - a.count);
+            
+            return duplicates;
+        }
+        
+        function updateDisplay() {
+            // Update event list
+            const eventListDiv = document.getElementById('event-list');
+            if (currentEvents.length === 0) {
+                eventListDiv.innerHTML = '<p>No events loaded</p>';
+            } else {
+                eventListDiv.innerHTML = currentEvents.map((event, idx) => `
+                    <div class="event-item ${event.isDuplicate ? 'duplicate' : ''}">
+                        <strong>${event.title}</strong>
+                        <div>${new Date(event.start_time).toLocaleString()}</div>
+                        <div style="font-size: 0.85em; color: #8b949e;">${event.location.name}</div>
+                    </div>
+                `).join('');
+            }
+            
+            // Update duplicate display
+            const duplicates = detectDuplicateEvents(currentEvents);
+            const displayDiv = document.getElementById('duplicate-display');
+            
+            if (duplicates.length > 0) {
+                const duplicateCount = duplicates.reduce((sum, dup) => sum + dup.count - 1, 0);
+                displayDiv.innerHTML = `
+                    <div class="debug-duplicates warning">
+                        <strong class="duplicate-warning">⚠️ ${duplicateCount} duplicate${duplicateCount !== 1 ? 's' : ''} detected</strong>
+                        <div class="duplicate-details">
+                            ${duplicates.map(dup => `
+                                <div class="duplicate-item">
+                                    <strong>${dup.title}</strong> (${dup.count}x)
+                                    <div class="duplicate-hint">${dup.start_time} at ${dup.location}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else {
+                displayDiv.innerHTML = `
+                    <div class="debug-duplicates ok">
+                        <strong class="duplicate-ok">✓ No duplicates</strong>
+                    </div>
+                `;
+            }
+        }
+        
+        function testNoDuplicates() {
+            currentEvents = [
+                {
+                    id: 'event-1',
+                    title: 'Summer Festival',
+                    start_time: '2026-07-15T18:00:00',
+                    location: { name: 'City Park', lat: 50.3167, lon: 11.9167 }
+                },
+                {
+                    id: 'event-2',
+                    title: 'Jazz Concert',
+                    start_time: '2026-07-16T20:00:00',
+                    location: { name: 'Music Hall', lat: 50.3180, lon: 11.9200 }
+                },
+                {
+                    id: 'event-3',
+                    title: 'Art Exhibition',
+                    start_time: '2026-07-17T14:00:00',
+                    location: { name: 'Art Gallery', lat: 50.3150, lon: 11.9150 }
+                }
+            ];
+            updateDisplay();
+        }
+        
+        function testWithDuplicates() {
+            currentEvents = [
+                {
+                    id: 'event-1',
+                    title: 'Summer Festival',
+                    start_time: '2026-07-15T18:00:00',
+                    location: { name: 'City Park', lat: 50.3167, lon: 11.9167 },
+                    isDuplicate: true
+                },
+                {
+                    id: 'event-1', // Same ID - duplicate!
+                    title: 'Summer Festival',
+                    start_time: '2026-07-15T18:00:00',
+                    location: { name: 'City Park', lat: 50.3167, lon: 11.9167 },
+                    isDuplicate: true
+                },
+                {
+                    id: 'event-2',
+                    title: 'Jazz Concert',
+                    start_time: '2026-07-16T20:00:00',
+                    location: { name: 'Music Hall', lat: 50.3180, lon: 11.9200 }
+                }
+            ];
+            updateDisplay();
+        }
+        
+        function testMultipleDuplicates() {
+            currentEvents = [
+                {
+                    id: 'event-1',
+                    title: 'Summer Festival',
+                    start_time: '2026-07-15T18:00:00',
+                    location: { name: 'City Park', lat: 50.3167, lon: 11.9167 },
+                    isDuplicate: true
+                },
+                {
+                    id: 'event-1',
+                    title: 'Summer Festival',
+                    start_time: '2026-07-15T18:00:00',
+                    location: { name: 'City Park', lat: 50.3167, lon: 11.9167 },
+                    isDuplicate: true
+                },
+                {
+                    id: 'event-1',
+                    title: 'Summer Festival',
+                    start_time: '2026-07-15T18:00:00',
+                    location: { name: 'City Park', lat: 50.3167, lon: 11.9167 },
+                    isDuplicate: true
+                },
+                {
+                    title: 'Market Day',
+                    start_time: '2026-07-20T10:00:00',
+                    location: { name: 'Town Square', lat: 50.3150, lon: 11.9180 },
+                    isDuplicate: true
+                },
+                {
+                    title: 'Market Day',
+                    start_time: '2026-07-20T10:00:00',
+                    location: { name: 'Town Square', lat: 50.3150, lon: 11.9180 },
+                    isDuplicate: true
+                }
+            ];
+            updateDisplay();
+        }
+        
+        // Initialize with no duplicates
+        testNoDuplicates();
+    </script>
+</body>
+</html>
