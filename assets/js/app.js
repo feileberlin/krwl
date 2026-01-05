@@ -23,6 +23,9 @@ class EventsApp {
         // Speech bubbles: Array of active speech bubble elements
         this.speechBubbles = [];
         
+        // Duplicate event statistics for dashboard warnings
+        this.duplicateStats = null;
+        
         // Load saved filter settings from cookie or use defaults
         this.filters = this.loadFiltersFromCookie() || {
             maxDistance: 2, // Default to 30 min walk (2 km)
@@ -535,6 +538,47 @@ class EventsApp {
         if (debugSection && debugSection.style.display === 'none') {
             debugSection.style.display = 'block';
         }
+    }
+    
+    /**
+     * Update dashboard debug section with duplicate event warnings
+     */
+    updateDuplicateWarnings() {
+        const warningElement = document.getElementById('debug-duplicate-warnings');
+        
+        if (!warningElement) {
+            this.log('Debug duplicate warnings element not found');
+            return;
+        }
+        
+        if (!this.duplicateStats || this.duplicateStats.total === 0) {
+            // No duplicates - hide warning
+            warningElement.style.display = 'none';
+            return;
+        }
+        
+        // Show duplicate warning
+        const stats = this.duplicateStats;
+        const warningIcon = '⚠️';
+        const warningMessage = `${warningIcon} ${stats.total} duplicate event${stats.total > 1 ? 's' : ''} detected (${stats.eventsWithDuplicates} unique event${stats.eventsWithDuplicates > 1 ? 's' : ''} with duplicates)`;
+        
+        // Build detail list (limit to top 5)
+        const detailsHTML = stats.details.slice(0, 5).map(d => 
+            `<li>${d.title.substring(0, 40)}${d.title.length > 40 ? '...' : ''} (×${d.count})</li>`
+        ).join('');
+        
+        const moreText = stats.details.length > 5 ? `<li>...and ${stats.details.length - 5} more</li>` : '';
+        
+        warningElement.innerHTML = `
+            <div class="debug-duplicate-warning-header">${warningMessage}</div>
+            <ul class="debug-duplicate-list">
+                ${detailsHTML}
+                ${moreText}
+            </ul>
+        `;
+        warningElement.style.display = 'block';
+        
+        this.log('Duplicate warnings updated:', stats);
     }
     
     async checkPendingEvents() {
@@ -1623,12 +1667,30 @@ class EventsApp {
             }
         });
         
+        // Track duplicate statistics for dashboard warnings
+        let totalDuplicates = 0;
+        let eventsWithDuplicates = 0;
+        const duplicateDetails = [];
+        
         // Now create speech bubbles with intelligent positioning
         // For each location group, detect and remove duplicates
         let bubbleIndex = 0;
         locationGroups.forEach((group, locationKey) => {
             // Detect duplicates within this location group
             const uniqueEvents = this.deduplicateEvents(group);
+            
+            // Track duplicates for debug warnings
+            uniqueEvents.forEach(item => {
+                if (item.duplicateCount > 1) {
+                    totalDuplicates += (item.duplicateCount - 1); // Don't count the original
+                    eventsWithDuplicates++;
+                    duplicateDetails.push({
+                        title: item.event.title,
+                        count: item.duplicateCount,
+                        location: item.event.location.name
+                    });
+                }
+            });
             
             uniqueEvents.forEach((item, groupIndex) => {
                 // Delay each bubble slightly for a nice cascading effect
@@ -1647,6 +1709,16 @@ class EventsApp {
                 bubbleIndex++;
             });
         });
+        
+        // Store duplicate statistics for dashboard display
+        this.duplicateStats = {
+            total: totalDuplicates,
+            eventsWithDuplicates: eventsWithDuplicates,
+            details: duplicateDetails
+        };
+        
+        // Update dashboard with duplicate warnings
+        this.updateDuplicateWarnings();
     }
     
     /**
