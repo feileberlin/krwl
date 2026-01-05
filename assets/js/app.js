@@ -1303,6 +1303,9 @@ class EventsApp {
         // Update count with descriptive sentence
         this.updateFilterDescription(filteredEvents.length);
         
+        // Update category counts in dropdown (krawlist_revisited pattern)
+        this.updateCategoryCounts();
+        
         // Update dashboard with event stats
         this.updateDashboard();
         
@@ -1447,6 +1450,112 @@ class EventsApp {
             
             locationText.textContent = locDescription;
         }
+    }
+    
+    /**
+     * Update category dropdown counts dynamically
+     * Based on krawlist_revisited pattern - updates ALL option labels with live counts
+     * Preserves original labels using data-original-label attribute
+     */
+    updateCategoryCounts() {
+        const categorySelect = document.getElementById('category-filter');
+        if (!categorySelect) return;
+        
+        // Get current category counts under active filters
+        const categoryCounts = this.countCategoriesUnderFilters();
+        
+        // Calculate total count for "All Categories"
+        const totalCount = Object.values(categoryCounts).reduce((sum, count) => sum + count, 0);
+        
+        // Update each option with live counts
+        Array.from(categorySelect.options).forEach(option => {
+            const value = option.value;
+            
+            // Skip the placeholder option
+            if (value === '') {
+                return;
+            }
+            
+            // Store original label on first run
+            if (!option.hasAttribute('data-original-label')) {
+                let cleanLabel = option.textContent.trim();
+                // Remove leading numbers and emojis with robust regex
+                cleanLabel = cleanLabel.replace(/^(\d+\s*)?([\u{1F000}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]\s*)*(.*)$/u, '$3');
+                option.setAttribute('data-original-label', cleanLabel.trim());
+            }
+            
+            const originalLabel = option.getAttribute('data-original-label');
+            
+            // Update label with count
+            if (value === 'all') {
+                option.textContent = `${totalCount} ${originalLabel}`;
+            } else {
+                const count = categoryCounts[value] || 0;
+                // Format: "{count} {icon} {label}" or just "{count} {label}" if no icon
+                // For now, keep it simple: "{count} {label}"
+                option.textContent = `${count} ${originalLabel}`;
+            }
+        });
+    }
+    
+    /**
+     * Initialize category dropdown with all categories
+     * Called once during initialization to populate static select
+     */
+    initializeCategoryDropdown() {
+        const categorySelect = document.getElementById('category-filter');
+        if (!categorySelect) return;
+        
+        // Clear existing options except placeholder
+        while (categorySelect.options.length > 1) {
+            categorySelect.remove(1);
+        }
+        
+        // Add "All Categories" option
+        const allOption = document.createElement('option');
+        allOption.value = 'all';
+        allOption.setAttribute('data-original-label', 'events');
+        allOption.textContent = 'events';
+        categorySelect.appendChild(allOption);
+        
+        // Get all unique categories from events
+        const categories = new Set();
+        this.events.forEach(event => {
+            const cat = event.category || 'uncategorized';
+            categories.add(cat);
+        });
+        
+        // Sort categories alphabetically
+        const sortedCategories = Array.from(categories).sort();
+        
+        // Add category options
+        sortedCategories.forEach(cat => {
+            const option = document.createElement('option');
+            option.value = cat;
+            option.setAttribute('data-original-label', cat);
+            option.textContent = cat;
+            categorySelect.appendChild(option);
+        });
+        
+        // Set up change event listener with reset-after-selection pattern
+        categorySelect.addEventListener('change', () => {
+            const selected = categorySelect.value;
+            if (selected) {
+                // Apply filter
+                this.filters.category = selected;
+                this.saveFiltersToCookie();
+                this.displayEvents();
+                
+                // CRITICAL: Reset to placeholder (krawlist_revisited pattern)
+                // Use setTimeout to ensure reset happens after display completes
+                setTimeout(() => {
+                    categorySelect.value = '';
+                }, 0);
+            }
+        });
+        
+        // Update counts for the first time
+        this.updateCategoryCounts();
     }
     
     displayEventCard(event, container) {
@@ -2802,48 +2911,8 @@ class EventsApp {
             return dropdown;
         };
         
-        // Category filter click
-        if (categoryTextEl) {
-            categoryTextEl.addEventListener('click', (e) => {
-                e.stopPropagation();
-                
-                if (this.activeDropdown && this.activeFilterEl === categoryTextEl) {
-                    hideAllDropdowns();
-                    return;
-                }
-                
-                // Build category options with dynamic counts under current filter conditions
-                const categoryCounts = this.countCategoriesUnderFilters();
-                
-                // Calculate total count for "All Categories"
-                const totalCount = Object.values(categoryCounts).reduce((sum, count) => sum + count, 0);
-                
-                // Build options HTML with counts
-                let optionsHTML = `<option value="all">All Categories (${totalCount})</option>`;
-                
-                // Sort categories alphabetically for consistent display
-                const sortedCategories = Object.keys(categoryCounts).sort();
-                
-                sortedCategories.forEach(cat => {
-                    const count = categoryCounts[cat];
-                    const selected = cat === this.filters.category ? ' selected' : '';
-                    optionsHTML += `<option value="${cat}"${selected}>${cat} (${count})</option>`;
-                });
-                
-                const content = `<select id="category-filter">${optionsHTML}</select>`;
-                const dropdown = createDropdown(content, categoryTextEl);
-                
-                // Add event listener to select
-                const select = dropdown.querySelector('#category-filter');
-                select.value = this.filters.category;
-                select.addEventListener('change', (e) => {
-                    this.filters.category = e.target.value;
-                    this.saveFiltersToCookie();
-                    this.displayEvents();
-                    hideAllDropdowns();
-                });
-            });
-        }
+        // Initialize static category dropdown with reset-after-selection pattern
+        this.initializeCategoryDropdown();
         
         // Time filter click
         if (timeTextEl) {

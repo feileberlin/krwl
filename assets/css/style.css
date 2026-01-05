@@ -171,6 +171,39 @@ strong, b {
     text-align: center;
 }
 
+/* Category filter select */
+#event-filter-bar .filter-bar-select {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font: inherit;
+    padding: 0;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 3px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+#event-filter-bar .filter-bar-select:hover {
+    color: var(--color-text-primary);
+    text-shadow: 0 0 15px rgba(255, 105, 180, 0.8);
+    text-decoration-style: solid;
+}
+
+#event-filter-bar .filter-bar-select:focus {
+    outline: none;
+    color: var(--color-text-primary);
+    text-shadow: 0 0 15px rgba(255, 105, 180, 0.8);
+}
+
+#event-filter-bar .filter-bar-select option {
+    background: var(--color-bg-primary);
+    color: var(--color-text-primary);
+}
+
 /* Filter logo button */
 #event-filter-bar .filter-bar-logo {
     display: inline-flex;
