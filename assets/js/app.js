@@ -1479,6 +1479,67 @@ class EventsApp {
         container.appendChild(card);
     }
     
+    /**
+     * Auto-detect event category from title and description
+     * Uses keyword matching to intelligently categorize events
+     * 
+     * @param {Object} event - Event object with title and description
+     * @returns {string} Detected category or 'community' as fallback
+     */
+    detectEventCategory(event) {
+        const text = `${event.title || ''} ${event.description || ''}`.toLowerCase();
+        
+        // Performance & Entertainment (high priority)
+        if (/\b(konzert|concert|musik|music|band|sänger|singer)\b/i.test(text)) return 'music';
+        if (/\b(theater|theatre|schauspiel|drama|bühne|stage|performance|aufführung)\b/i.test(text)) return 'performance';
+        if (/\b(oper|opera)\b/i.test(text)) return 'opera';
+        
+        // Arts & Culture
+        if (/\b(ausstellung|exhibition|galerie|gallery|kunst|art|künstler|artist)\b/i.test(text)) return 'arts';
+        if (/\b(museum|sammlung|collection)\b/i.test(text)) return 'museum';
+        
+        // Historical & Tourism
+        if (/\b(führung|tour|besichtigung|visit|wohnräume|residence|residenz|schloss|castle|burg|palace|palast)\b/i.test(text)) return 'historical';
+        if (/\b(monument|denkmal|heritage|erbe)\b/i.test(text)) return 'heritage';
+        if (/\b(ruine|ruins)\b/i.test(text)) return 'ruins';
+        
+        // Educational & Skills
+        if (/\b(workshop|seminar|kurs|course|training|schulung|vortrag|lecture)\b/i.test(text)) return 'workshop';
+        
+        // Festivals & Celebrations
+        if (/\b(festival|fest|feier|celebration|party)\b/i.test(text)) return 'festival';
+        
+        // Sports & Fitness
+        if (/\b(sport|fitness|athlon|spiel|game|match|wettkampf|competition)\b/i.test(text)) return 'sports';
+        if (/\b(schwimmen|swimming|pool|bad)\b/i.test(text)) return 'swimming';
+        
+        // Food & Dining
+        if (/\b(restaurant|essen|food|dining|culinary|gastronomie|küche|cuisine)\b/i.test(text)) return 'food';
+        if (/\b(markt|market|bauernmarkt|farmers.market)\b/i.test(text)) return 'market';
+        
+        // Social & Community
+        if (/\b(treffen|meeting|treff|meetup|stammtisch|gathering|zusammenkunft)\b/i.test(text)) return 'community';
+        if (/\b(pub|kneipe|bar)\b/i.test(text)) return 'pub';
+        
+        // Religious & Cultural
+        if (/\b(kirche|church|gottesdienst|worship|messe|mass)\b/i.test(text)) return 'religious';
+        if (/\b(tradition|cultural|kultur)\b/i.test(text)) return 'cultural';
+        
+        // Parks & Nature
+        if (/\b(park|garten|garden|natur|nature|outdoor)\b/i.test(text)) return 'park';
+        
+        // Libraries & Archives
+        if (/\b(bibliothek|library|bücher|books)\b/i.test(text)) return 'library';
+        if (/\b(archiv|archive)\b/i.test(text)) return 'archive';
+        
+        // Government & Civic
+        if (/\b(rathaus|city.hall|town.hall|bürgermeister|mayor)\b/i.test(text)) return 'city-hall';
+        if (/\b(parliament|regierung|government|politik|political)\b/i.test(text)) return 'government';
+        
+        // Default fallback - community events
+        return 'community';
+    }
+    
     getMarkerIconForCategory(category) {
         // Return base64 data URL for marker icons from embedded MARKER_ICONS
         // Comprehensive mapping of event categories to marker icons
@@ -1606,6 +1667,11 @@ class EventsApp {
     
     addEventMarker(event) {
         if (!event.location) return;
+        
+        // Auto-detect category if not present
+        if (!event.category) {
+            event.category = this.detectEventCategory(event);
+        }
         
         // Check if event has custom marker icon, otherwise use category-based icon
         const iconUrl = event.marker_icon || this.getMarkerIconForCategory(event.category);
