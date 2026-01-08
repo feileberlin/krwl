@@ -1364,11 +1364,11 @@ class EventsApp {
             let categoryName = this.filters.category;
             
             if (this.filters.category === 'all') {
-                // "0 events" or "5 events"
-                eventCountCategoryText.textContent = `${count} event${count !== 1 ? 's' : ''}`;
+                // "[0 events]" or "[5 events]"
+                eventCountCategoryText.textContent = `[${count} event${count !== 1 ? 's' : ''}]`;
             } else {
-                // "0 music events" or "5 music events"
-                eventCountCategoryText.textContent = `${count} ${categoryName} event${count !== 1 ? 's' : ''}`;
+                // "[0 music events]" or "[5 music events]"
+                eventCountCategoryText.textContent = `[${count} ${categoryName} event${count !== 1 ? 's' : ''}]`;
             }
         }
         
@@ -1401,7 +1401,7 @@ class EventsApp {
                     timeDescription = 'upcoming';
                     break;
             }
-            timeText.textContent = timeDescription;
+            timeText.textContent = `[${timeDescription}]`;
         }
         
         // Distance description (approximate travel time)
@@ -1422,7 +1422,7 @@ class EventsApp {
                 // Fallback for any other distance values (backward compatibility)
                 distanceDescription = `within ${distance} km`;
             }
-            distanceText.textContent = distanceDescription;
+            distanceText.textContent = `[${distanceDescription}]`;
         }
         
         // Location description
@@ -1445,7 +1445,7 @@ class EventsApp {
                 locDescription = 'from default location';
             }
             
-            locationText.textContent = locDescription;
+            locationText.textContent = `[${locDescription}]`;
         }
     }
     
@@ -2818,29 +2818,64 @@ class EventsApp {
                 // Calculate total count for "All Categories"
                 const totalCount = Object.values(categoryCounts).reduce((sum, count) => sum + count, 0);
                 
-                // Build options HTML with counts
-                let optionsHTML = `<option value="all">All Categories (${totalCount})</option>`;
+                // Build dropdown items HTML with current selection at top
+                let dropdownHTML = '';
+                
+                // Current selection at top (highlighted)
+                if (this.filters.category === 'all') {
+                    dropdownHTML += `
+                        <div class="filter-bar-dropdown-item current-selection" data-value="all">
+                            <span class="item-label">${totalCount} event${totalCount !== 1 ? 's' : ''}</span>
+                        </div>
+                    `;
+                } else {
+                    const currentCount = categoryCounts[this.filters.category] || 0;
+                    dropdownHTML += `
+                        <div class="filter-bar-dropdown-item current-selection" data-value="${this.filters.category}">
+                            <span class="item-label">${currentCount} ${this.filters.category} event${currentCount !== 1 ? 's' : ''}</span>
+                        </div>
+                    `;
+                }
+                
+                // Other options with predictive counts
+                // Add "All events" option if not currently selected
+                if (this.filters.category !== 'all') {
+                    dropdownHTML += `
+                        <div class="filter-bar-dropdown-item" data-value="all">
+                            <span class="item-label">${totalCount} event${totalCount !== 1 ? 's' : ''}</span>
+                        </div>
+                    `;
+                }
                 
                 // Sort categories alphabetically for consistent display
                 const sortedCategories = Object.keys(categoryCounts).sort();
                 
                 sortedCategories.forEach(cat => {
+                    // Skip current selection (already shown at top)
+                    if (cat === this.filters.category) {
+                        return;
+                    }
+                    
                     const count = categoryCounts[cat];
-                    const selected = cat === this.filters.category ? ' selected' : '';
-                    optionsHTML += `<option value="${cat}"${selected}>${cat} (${count})</option>`;
+                    dropdownHTML += `
+                        <div class="filter-bar-dropdown-item" data-value="${cat}">
+                            <span class="item-label">${count} ${cat} event${count !== 1 ? 's' : ''}</span>
+                        </div>
+                    `;
                 });
                 
-                const content = `<select id="category-filter">${optionsHTML}</select>`;
-                const dropdown = createDropdown(content, categoryTextEl);
+                const dropdown = createDropdown(dropdownHTML, categoryTextEl);
                 
-                // Add event listener to select
-                const select = dropdown.querySelector('#category-filter');
-                select.value = this.filters.category;
-                select.addEventListener('change', (e) => {
-                    this.filters.category = e.target.value;
-                    this.saveFiltersToCookie();
-                    this.displayEvents();
-                    hideAllDropdowns();
+                // Add click listeners to all dropdown items
+                dropdown.querySelectorAll('.filter-bar-dropdown-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const value = item.getAttribute('data-value');
+                        this.filters.category = value;
+                        this.saveFiltersToCookie();
+                        this.displayEvents();
+                        hideAllDropdowns();
+                    });
                 });
             });
         }
