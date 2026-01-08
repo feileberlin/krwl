@@ -87,6 +87,8 @@ static/logo.svg
 # Build artifacts - dependencies are fetched at build time
 lib/leaflet/
 lib/lucide/
+lib/roboto/
+lib/roboto-mono/
 public/index.html
 
 # Event data - runtime generated files (exclude from version control)
