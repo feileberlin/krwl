@@ -299,7 +299,58 @@
       "url": "https://event.frankenpost.de/detail.php?event_id=2582992",
       "category": null,
       "tags": []
+    },
+    {
+      "id": "html_frankenpost_6867284990555995245",
+      "title": "F\u00fchrung durch die Wohnr\u00e4ume der Sommerresidenz der Markgr\u00e4fin Caroline",
+      "description": "08.Januar",
+      "location": {
+        "name": "Hof",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-08T18:00:00",
+      "end_time": null,
+      "status": "pending",
+      "source": "Frankenpost",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3185852",
+      "category": null,
+      "tags": []
+    },
+    {
+      "id": "html_frankenpost_-6547095617177940736",
+      "title": "Kunst in Bayreuth - Werke der 1940er bis 1960er Jahre - aus den Sammlungen und Stiftungen im Kunstmuseum",
+      "description": "Donnerstag,08.01.2026,",
+      "location": {
+        "name": "Hof",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-08T18:00:00",
+      "end_time": null,
+      "status": "pending",
+      "source": "Frankenpost",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
+      "category": null,
+      "tags": []
+    },
+    {
+      "id": "html_frankenpost_-3267728730594728664",
+      "title": "Kunstausstellung: Stephan Klenner-Otto  - Von Jean Paul zu E.T.A. Hofmann",
+      "description": "Donnerstag,08.01.2026,",
+      "location": {
+        "name": "Hof",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-08T18:00:00",
+      "end_time": null,
+      "status": "pending",
+      "source": "Frankenpost",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3236166",
+      "category": null,
+      "tags": []
     }
   ],
-  "last_scraped": "2026-01-07T03:57:39.149378"
+  "last_scraped": "2026-01-08T03:57:21.532660"
 }
