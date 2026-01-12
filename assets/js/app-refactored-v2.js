@@ -738,10 +738,3 @@ class EventsApp {
         
         detail.classList.remove('hidden');
     }
-
-}
-
-// Initialize app when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    new EventsApp();
-});

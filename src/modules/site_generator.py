@@ -450,18 +450,59 @@ class SiteGenerator:
 
     
     def load_script_resources(self) -> Dict[str, str]:
-        """Load all JavaScript resources including Lucide"""
+        """
+        Load all JavaScript resources including Lucide.
+        
+        KISS Refactoring: app.js is now modular
+        - Loads all module files (storage, filters, map, speech-bubbles, utils)
+        - Concatenates them into single inline script for app_js placeholder
+        - Removes export statements (not needed in inline context)
+        """
         scripts = {
             'leaflet_js': self.read_text_file(
                 self.dependencies_dir / 'leaflet' / 'leaflet.js'
             ),
             'i18n_js': self.read_text_file(
                 self.base_path / "assets" / 'js' / 'i18n.js'
-            ),
-            'app_js': self.read_text_file(
-                self.base_path / "assets" / 'js' / 'app.js'
             )
         }
+        
+        # KISS Refactoring: Build modular app.js from components
+        # Load all modules in correct order (dependencies first)
+        js_modules = []
+        module_files = [
+            'storage.js',         # No dependencies
+            'filters.js',         # Depends on: storage
+            'map.js',             # Depends on: storage
+            'speech-bubbles.js',  # Depends on: storage
+            'utils.js',           # No dependencies
+            'event-listeners.js', # Depends on: app (circular, loaded before)
+            'app.js'              # Depends on: all modules
+        ]
+        
+        for module_file in module_files:
+            module_path = self.base_path / "assets" / 'js' / module_file
+            if module_path.exists():
+                module_content = self.read_text_file(module_path)
+                
+                # Remove CommonJS export statements (not needed in browser inline context)
+                # Pattern: if (typeof module !== 'undefined' && module.exports) { ... }
+                import re
+                module_content = re.sub(
+                    r'\n// Export for use in other modules.*?\n.*?if \(typeof module.*?\n.*?module\.exports.*?\n.*?\}',
+                    '',
+                    module_content,
+                    flags=re.DOTALL
+                )
+                
+                js_modules.append(f"// ============================================================================")
+                js_modules.append(f"// MODULE: {module_file}")
+                js_modules.append(f"// ============================================================================")
+                js_modules.append(module_content.strip())
+                js_modules.append("")  # Blank line between modules
+        
+        # Combine all modules into single app_js
+        scripts['app_js'] = '\n'.join(js_modules)
         
         # Load Lucide library if available
         lucide_path = self.dependencies_dir / 'lucide' / 'lucide.min.js'
