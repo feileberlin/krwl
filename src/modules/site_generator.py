@@ -104,6 +104,12 @@ class SiteGenerator:
     """Generates static site with runtime-configurable behavior"""
     
     def __init__(self, base_path):
+        """
+        Initialize SiteGenerator.
+        
+        Args:
+            base_path: Base path to repository
+        """
         self.base_path = Path(base_path)
         self.src_path = self.base_path / 'src'  # Source code location
         self.static_path = self.base_path / 'public'  # Build output directory
@@ -111,6 +117,59 @@ class SiteGenerator:
         self.dependencies_dir = self.base_path / 'lib'  # Third-party libraries
         self.assets_dir = self.base_path / 'assets'  # Source assets
         self.dependencies_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Debug comments detection with force override support
+        # Priority: 1) Environment variable, 2) Config file, 3) Auto-detection
+        self.enable_debug_comments = self._detect_debug_comments()
+    
+    def _detect_debug_comments(self) -> bool:
+        """
+        Detect whether debug comments should be enabled.
+        
+        Priority order (KISS approach):
+        1. Environment variable DEBUG_COMMENTS (for GitHub Actions override)
+        2. Config file debug_comments.force_enabled setting
+        3. Automatic environment detection (development=on, production/ci=off)
+        
+        Returns:
+            True if debug comments should be enabled, False otherwise
+        """
+        import os
+        
+        # Priority 1: Check environment variable (GitHub Actions support)
+        debug_env = os.environ.get('DEBUG_COMMENTS', '').lower()
+        if debug_env in ('true', '1', 'yes', 'on'):
+            logger.info("Debug comments FORCE ENABLED via environment variable DEBUG_COMMENTS")
+            return True
+        elif debug_env in ('false', '0', 'no', 'off'):
+            logger.info("Debug comments FORCE DISABLED via environment variable DEBUG_COMMENTS")
+            return False
+        
+        # Priority 2: Check config file setting
+        try:
+            if load_config is not None:
+                config = load_config(self.base_path)
+                force_enabled = config.get('debug_comments', {}).get('force_enabled', False)
+                if force_enabled:
+                    logger.info("Debug comments FORCE ENABLED via config.json")
+                    return True
+        except Exception as e:
+            logger.warning(f"Could not load debug_comments config: {e}")
+        
+        # Priority 3: Auto-detection based on environment
+        try:
+            from .utils import is_production, is_ci
+            # Enable debug comments only in development (not production, not CI)
+            is_dev = not is_production() and not is_ci()
+            if is_dev:
+                logger.info("Debug comments AUTO-ENABLED (development mode)")
+            else:
+                logger.info("Debug comments AUTO-DISABLED (production/CI mode)")
+            return is_dev
+        except ImportError:
+            # Fallback: assume production (disable debug comments)
+            logger.warning("Could not import environment detection, disabling debug comments")
+            return False
     
     # ==================== Dependency Management ====================
     
@@ -330,6 +389,115 @@ class SiteGenerator:
             logger.error(f"Error reading {path}: {e}")
             return fallback
     
+    def wrap_with_debug_comment(self, content: str, resource_type: str, source_path: str = '', 
+                                 additional_info: Dict = None) -> str:
+        """
+        Wrap content with debug metadata comments for better debugging.
+        
+        Adds generation timestamp, source file path, content size, and optional metadata
+        to help developers understand where embedded assets come from.
+        
+        Controlled by self.enable_debug_comments flag (set in constructor).
+        
+        Args:
+            content: The actual content (CSS, JS, JSON) to wrap
+            resource_type: Type of resource ('css', 'js', 'json')
+            source_path: Relative path to source file (e.g., 'assets/css/style.css')
+            additional_info: Optional dict with extra debug metadata
+        
+        Returns:
+            Content wrapped with debug comments (preserves original formatting)
+            If debug comments disabled, returns content unchanged
+        """
+        # Skip if debug comments disabled
+        if not self.enable_debug_comments:
+            return content
+        
+        if not content or not content.strip():
+            return content
+        
+        # Calculate content size
+        content_bytes = len(content.encode('utf-8'))
+        content_kb = content_bytes / 1024
+        
+        # Build metadata dict
+        metadata = {
+            'generated_at': datetime.now().isoformat(),
+            'source_file': source_path or 'unknown',
+            'size_bytes': content_bytes,
+            'size_kb': round(content_kb, 2),
+            'type': resource_type
+        }
+        
+        # Add additional info if provided
+        if additional_info:
+            metadata.update(additional_info)
+        
+        # Format comment based on resource type
+        if resource_type == 'css':
+            comment_start = '/*'
+            comment_end = '*/'
+            prefix = ' * '
+        elif resource_type == 'js':
+            comment_start = '/*'
+            comment_end = '*/'
+            prefix = ' * '
+        elif resource_type == 'json':
+            # JSON comments as JS comments (when embedded in <script> tags)
+            comment_start = '/*'
+            comment_end = '*/'
+            prefix = ' * '
+        else:
+            # HTML comments for other types
+            comment_start = '<!--'
+            comment_end = '-->'
+            prefix = '  '
+        
+        # Build debug comment header
+        separator = '=' * 78
+        debug_lines = [
+            comment_start,
+            f"{prefix}{separator}",
+            f"{prefix}EMBEDDED RESOURCE DEBUG INFO",
+            f"{prefix}{separator}"
+        ]
+        
+        for key, value in metadata.items():
+            debug_lines.append(f"{prefix}{key}: {value}")
+        
+        debug_lines.extend([
+            f"{prefix}{separator}",
+            comment_end
+        ])
+        
+        debug_header = '\n'.join(debug_lines)
+        
+        # Add footer comment for clarity
+        debug_footer = f"{comment_start} END OF {resource_type.upper()}: {source_path or 'embedded'} {comment_end}"
+        
+        return f"{debug_header}\n{content}\n{debug_footer}"
+    
+    def html_component_comment(self, component_name: str, position: str = 'start') -> str:
+        """
+        Generate HTML comment marking component boundaries.
+        
+        Args:
+            component_name: Name of the component (e.g., 'html-head.html', 'map-main.html')
+            position: Either 'start' or 'end' to mark beginning/end of component
+        
+        Returns:
+            HTML comment string, or empty string if debug comments disabled
+        """
+        if not self.enable_debug_comments:
+            return ''
+        
+        if position == 'start':
+            return f'<!-- ▼ START COMPONENT: assets/html/{component_name} ▼ -->'
+        elif position == 'end':
+            return f'<!-- ▲ END COMPONENT: assets/html/{component_name} ▲ -->'
+        else:
+            return f'<!-- COMPONENT: assets/html/{component_name} -->'
+    
     def load_all_events(self) -> List[Dict]:
         """Load all event data (real + demo) from data directory"""
         events = []
@@ -374,7 +542,7 @@ class SiteGenerator:
         return configs
     
     def load_stylesheet_resources(self) -> Dict[str, str]:
-        """Load all CSS resources including fonts"""
+        """Load all CSS resources including fonts with debug comments"""
         # Try to load Leaflet CSS, fallback to CDN link comment if missing
         leaflet_css_path = self.dependencies_dir / 'leaflet' / 'leaflet.css'
         leaflet_css = self.read_text_file(leaflet_css_path, fallback='')
@@ -383,13 +551,38 @@ class SiteGenerator:
             # Provide a comment indicating CDN should be used
             leaflet_css = '/* Leaflet CSS: Load from CDN at runtime if needed */'
             logger.warning("Leaflet CSS not found locally, generated HTML will need CDN fallback")
+        else:
+            # Wrap with debug comments
+            leaflet_css = self.wrap_with_debug_comment(
+                leaflet_css, 
+                'css', 
+                'lib/leaflet/leaflet.css',
+                {'library': 'Leaflet.js', 'version': '1.9.4'}
+            )
+        
+        # Generate Roboto fonts with debug comments
+        roboto_fonts = self.generate_roboto_font_faces()
+        roboto_fonts = self.wrap_with_debug_comment(
+            roboto_fonts,
+            'css',
+            'lib/roboto/*.woff2 (base64-encoded)',
+            {'library': 'Google Fonts - Roboto', 'format': 'woff2'}
+        )
+        
+        # Load app CSS with debug comments
+        app_css_path = self.base_path / "assets" / 'css' / 'style.css'
+        app_css = self.read_text_file(app_css_path)
+        app_css = self.wrap_with_debug_comment(
+            app_css,
+            'css',
+            'assets/css/style.css',
+            {'description': 'Main application styles'}
+        )
         
         stylesheets = {
-            'roboto_fonts': self.generate_roboto_font_faces(),
+            'roboto_fonts': roboto_fonts,
             'leaflet_css': leaflet_css,
-            'app_css': self.read_text_file(
-                self.base_path / "assets" / 'css' / 'style.css'
-            )
+            'app_css': app_css
         }
         return stylesheets
     
@@ -476,12 +669,13 @@ class SiteGenerator:
     
     def load_script_resources(self) -> Dict[str, str]:
         """
-        Load all JavaScript resources including Lucide.
+        Load all JavaScript resources including Lucide with debug comments.
         
         KISS Refactoring: app.js is now modular
         - Loads all module files (storage, filters, map, speech-bubbles, utils)
         - Concatenates them into single inline script for app_js placeholder
         - Removes export statements (not needed in inline context)
+        - Wraps each resource with debug metadata comments
         """
         # Try to load Leaflet JS, fallback to CDN loader if missing
         leaflet_js_path = self.dependencies_dir / 'leaflet' / 'leaflet.js'
@@ -508,12 +702,28 @@ class SiteGenerator:
     }
 })();'''
             logger.warning("Leaflet JS not found locally, using CDN fallback in generated HTML")
+        else:
+            # Wrap with debug comments
+            leaflet_js = self.wrap_with_debug_comment(
+                leaflet_js,
+                'js',
+                'lib/leaflet/leaflet.js',
+                {'library': 'Leaflet.js', 'version': '1.9.4'}
+            )
+        
+        # Load i18n.js with debug comments
+        i18n_path = self.base_path / "assets" / 'js' / 'i18n.js'
+        i18n_js = self.read_text_file(i18n_path)
+        i18n_js = self.wrap_with_debug_comment(
+            i18n_js,
+            'js',
+            'assets/js/i18n.js',
+            {'description': 'Internationalization system'}
+        )
         
         scripts = {
             'leaflet_js': leaflet_js,
-            'i18n_js': self.read_text_file(
-                self.base_path / "assets" / 'js' / 'i18n.js'
-            )
+            'i18n_js': i18n_js
         }
         
         # KISS Refactoring: Build modular app.js from components
@@ -550,17 +760,33 @@ class SiteGenerator:
                 
                 js_modules.append(f"// ============================================================================")
                 js_modules.append(f"// MODULE: {module_file}")
+                js_modules.append(f"// SOURCE: assets/js/{module_file}")
                 js_modules.append(f"// ============================================================================")
                 js_modules.append(module_content.strip())
                 js_modules.append("")  # Blank line between modules
         
-        # Combine all modules into single app_js
-        scripts['app_js'] = '\n'.join(js_modules)
+        # Combine all modules into single app_js and wrap with debug comments
+        combined_app_js = '\n'.join(js_modules)
+        scripts['app_js'] = self.wrap_with_debug_comment(
+            combined_app_js,
+            'js',
+            'assets/js/*.js (modular)',
+            {
+                'description': 'Modular application code (concatenated)',
+                'modules': ', '.join(module_files)
+            }
+        )
         
         # Load Lucide library if available
         lucide_path = self.dependencies_dir / 'lucide' / 'lucide.min.js'
         if lucide_path.exists():
-            scripts['lucide_js'] = self.read_text_file(lucide_path)
+            lucide_js = self.read_text_file(lucide_path)
+            scripts['lucide_js'] = self.wrap_with_debug_comment(
+                lucide_js,
+                'js',
+                'lib/lucide/lucide.min.js',
+                {'library': 'Lucide Icons', 'format': 'minified UMD'}
+            )
         else:
             # Provide empty stub if Lucide not available
             scripts['lucide_js'] = '// Lucide not available'
@@ -1412,18 +1638,84 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
         # Calculate debug information
         debug_info = self.calculate_debug_info(primary_config, events)
         
-        # Prepare embedded data for frontend
+        # Prepare embedded data for frontend with debug comments
         # All data is embedded by backend - frontend does NOT fetch config.json or events
         # Note: WEATHER_CACHE is now deprecated, weather data is in APP_CONFIG.weather.data
-        embedded_data = f'''// Data embedded by backend (site_generator.py) - frontend does NOT fetch files
+        
+        # Build embedded data strings with individual wrapping
+        app_config_json = json.dumps(runtime_config, ensure_ascii=False, indent=2 if self.enable_debug_comments else None)
+        events_json = json.dumps(events, ensure_ascii=False, indent=2 if self.enable_debug_comments else None)
+        content_en_json = json.dumps(content_en, ensure_ascii=False, indent=2 if self.enable_debug_comments else None)
+        content_de_json = json.dumps(content_de, ensure_ascii=False, indent=2 if self.enable_debug_comments else None)
+        marker_icons_json = json.dumps(marker_icons, ensure_ascii=False, indent=2 if self.enable_debug_comments else None)
+        dashboard_icons_json = json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False, indent=2 if self.enable_debug_comments else None)
+        debug_info_json = json.dumps(debug_info, ensure_ascii=False, indent=2 if self.enable_debug_comments else None)
+        
+        # Wrap each data section with debug comments
+        if self.enable_debug_comments:
+            app_config_wrapped = self.wrap_with_debug_comment(
+                app_config_json, 'json', 'config.json (runtime subset)',
+                {'description': 'Minimal runtime config for frontend'}
+            )
+            events_wrapped = self.wrap_with_debug_comment(
+                events_json, 'json', 'assets/json/events.json + events.demo.json',
+                {'description': 'Published events data', 'count': len(events)}
+            )
+            content_en_wrapped = self.wrap_with_debug_comment(
+                content_en_json, 'json', 'assets/json/i18n/content.json',
+                {'description': 'English translations'}
+            )
+            content_de_wrapped = self.wrap_with_debug_comment(
+                content_de_json, 'json', 'assets/json/i18n/content.de.json',
+                {'description': 'German translations'}
+            )
+            marker_icons_wrapped = self.wrap_with_debug_comment(
+                marker_icons_json, 'json', 'assets/markers/*.svg (base64)',
+                {'description': 'Map marker icons', 'count': len(marker_icons)}
+            )
+            dashboard_icons_wrapped = self.wrap_with_debug_comment(
+                dashboard_icons_json, 'json', 'src/modules/lucide_markers.py',
+                {'description': 'Dashboard UI icons', 'count': len(DASHBOARD_ICONS_MAP)}
+            )
+            debug_info_wrapped = self.wrap_with_debug_comment(
+                debug_info_json, 'json', '(generated)',
+                {'description': 'Debug information for dashboard'}
+            )
+            
+            embedded_data = f'''// Data embedded by backend (site_generator.py) - frontend does NOT fetch files
 // config.json is backend-only, frontend uses this minimal runtime config
-window.APP_CONFIG = {json.dumps(runtime_config, ensure_ascii=False)};
-window.__INLINE_EVENTS_DATA__ = {{ "events": {json.dumps(events, ensure_ascii=False)} }};
-window.EMBEDDED_CONTENT_EN = {json.dumps(content_en, ensure_ascii=False)};
-window.EMBEDDED_CONTENT_DE = {json.dumps(content_de, ensure_ascii=False)};
-window.MARKER_ICONS = {json.dumps(marker_icons, ensure_ascii=False)};
-window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};
-window.DEBUG_INFO = {json.dumps(debug_info, ensure_ascii=False)};'''
+
+{app_config_wrapped}
+window.APP_CONFIG = {app_config_json};
+
+{events_wrapped}
+window.__INLINE_EVENTS_DATA__ = {{ "events": {events_json} }};
+
+{content_en_wrapped}
+window.EMBEDDED_CONTENT_EN = {content_en_json};
+
+{content_de_wrapped}
+window.EMBEDDED_CONTENT_DE = {content_de_json};
+
+{marker_icons_wrapped}
+window.MARKER_ICONS = {marker_icons_json};
+
+{dashboard_icons_wrapped}
+window.DASHBOARD_ICONS = {dashboard_icons_json};
+
+{debug_info_wrapped}
+window.DEBUG_INFO = {debug_info_json};'''
+        else:
+            # No debug comments - compact format
+            embedded_data = f'''// Data embedded by backend (site_generator.py) - frontend does NOT fetch files
+// config.json is backend-only, frontend uses this minimal runtime config
+window.APP_CONFIG = {app_config_json};
+window.__INLINE_EVENTS_DATA__ = {{ "events": {events_json} }};
+window.EMBEDDED_CONTENT_EN = {content_en_json};
+window.EMBEDDED_CONTENT_DE = {content_de_json};
+window.MARKER_ICONS = {marker_icons_json};
+window.DASHBOARD_ICONS = {dashboard_icons_json};
+window.DEBUG_INFO = {debug_info_json};'''
         
         # Config loader and fetch interceptor (legacy placeholders - not currently used)
         config_loader = ''
@@ -1460,11 +1752,12 @@ window.DEBUG_INFO = {json.dumps(debug_info, ensure_ascii=False)};'''
         dashboard_aside = self.load_component('dashboard-aside.html')
         filter_nav = self.load_component('filter-nav.html')
         
-        # Assemble HTML from components
+        # Assemble HTML from components with debug comments showing source files
         html_parts = [
             generated_comment,
             '<!DOCTYPE html>',
             f'<html lang="{lang}">',
+            self.html_component_comment('html-head.html', 'start'),
             html_head.format(
                 app_name=app_name,
                 favicon=favicon,
@@ -1473,26 +1766,36 @@ window.DEBUG_INFO = {json.dumps(debug_info, ensure_ascii=False)};'''
                 leaflet_css=stylesheets['leaflet_css'],
                 app_css=stylesheets['app_css']
             ),
+            self.html_component_comment('html-head.html', 'end'),
+            self.html_component_comment('html-body-open.html', 'start'),
             html_body_open.format(
                 noscript_html=noscript_html
             ),
+            self.html_component_comment('html-body-open.html', 'end'),
             '',
             '<!-- Layer 1: Fullscreen map -->',
+            self.html_component_comment('map-main.html', 'start'),
             map_main,
+            self.html_component_comment('map-main.html', 'end'),
             '',
             '<!-- Layer 2: Event popups (rendered by Leaflet) -->',
             '',
             '<!-- Layer 3: UI overlays -->',
+            self.html_component_comment('dashboard-aside.html', 'start'),
             dashboard_aside.format(
                 logo_svg=logo_svg,
                 app_name=app_name
             ),
+            self.html_component_comment('dashboard-aside.html', 'end'),
+            self.html_component_comment('filter-nav.html', 'start'),
             filter_nav.format(
                 logo_svg=logo_svg
             ),
+            self.html_component_comment('filter-nav.html', 'end'),
             '',
             '<!-- Layer 4: Modals (reserved for future use) -->',
             '',
+            self.html_component_comment('html-body-close.html', 'start'),
             html_body_close.format(
                 embedded_data=embedded_data,
                 config_loader=config_loader,
@@ -1501,7 +1804,8 @@ window.DEBUG_INFO = {json.dumps(debug_info, ensure_ascii=False)};'''
                 lucide_js=scripts.get('lucide_js', '// Lucide not available'),
                 i18n_js=scripts['i18n_js'],
                 app_js=scripts['app_js']
-            )
+            ),
+            self.html_component_comment('html-body-close.html', 'end')
         ]
         
         return '\n'.join(html_parts)

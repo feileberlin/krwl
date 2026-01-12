@@ -108,6 +108,19 @@
   "_comment_hosting_support": "WORKS WITH: GitHub Pages, Vercel, Netlify, Heroku, Railway, Render, Fly.io, Google Cloud, AWS, and more!",
   "_comment_separator_2": "═══════════════════════════════════════════════════════════════════════════════",
   
+  "_comment_debug_section": "────────────────────────────────────────────────────────────────────────────────",
+  "_comment_debug_help": "DEBUG COMMENTS - Control debug metadata in generated HTML",
+  "_comment_debug_usage": "Set 'force_debug_comments' to override automatic environment detection",
+  "_comment_debug_values": "  • false (default) - Auto-detect based on environment (dev=on, prod/ci=off)",
+  "_comment_debug_values2": "  • true - Force debug comments ON regardless of environment",
+  "_comment_debug_kiss": "KISS: One setting controls debug comments everywhere!",
+  "_comment_debug_env": "GitHub Actions: Set environment variable DEBUG_COMMENTS=true to force enable",
+  
+  "debug_comments": {
+    "force_enabled": false,
+    "_comment_force": "Set to true to force debug comments in production/CI (useful for troubleshooting)"
+  },
+  
   "app": {
     "name": "KRWL HOF Community Events",
     "_comment_name": "App name is auto-adjusted: adds '[DEV]' suffix in development mode",
