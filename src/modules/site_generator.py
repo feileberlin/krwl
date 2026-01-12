@@ -482,6 +482,18 @@ class SiteGenerator:
             content_de = json.load(f)
         return content_en, content_de
     
+    def load_weather_cache(self) -> Dict:
+        """Load weather cache if it exists, return empty dict if not"""
+        weather_cache_path = self.base_path / 'assets' / 'json' / 'weather_cache.json'
+        if weather_cache_path.exists():
+            try:
+                with open(weather_cache_path, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+            except Exception as e:
+                logger.warning(f"Failed to load weather cache: {e}")
+                return {}
+        return {}
+    
     def ensure_dependencies_present(self) -> bool:
         """Ensure dependencies are available, fetch if missing"""
         # Check only for critical Leaflet files (markers not critical for build)
@@ -1227,6 +1239,7 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
         stylesheets: Dict[str, str],
         scripts: Dict[str, str],
         marker_icons: Dict[str, str],
+        weather_cache: Dict = None,
         lang: str = 'en'
     ) -> str:
         """
@@ -1274,6 +1287,10 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
         # Calculate debug information
         debug_info = self.calculate_debug_info(primary_config, events)
         
+        # Ensure weather_cache is a dict (default to empty if None)
+        if weather_cache is None:
+            weather_cache = {}
+        
         # Prepare embedded data for frontend
         # All data is embedded by backend - frontend does NOT fetch config.json or events
         embedded_data = f'''// Data embedded by backend (site_generator.py) - frontend does NOT fetch files
@@ -1282,6 +1299,7 @@ window.APP_CONFIG = {json.dumps(runtime_config, ensure_ascii=False)};
 window.__INLINE_EVENTS_DATA__ = {{ "events": {json.dumps(events, ensure_ascii=False)} }};
 window.EMBEDDED_CONTENT_EN = {json.dumps(content_en, ensure_ascii=False)};
 window.EMBEDDED_CONTENT_DE = {json.dumps(content_de, ensure_ascii=False)};
+window.WEATHER_CACHE = {json.dumps(weather_cache, ensure_ascii=False)};
 window.MARKER_ICONS = {json.dumps(marker_icons, ensure_ascii=False)};
 window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};
 window.DEBUG_INFO = {json.dumps(debug_info, ensure_ascii=False)};'''
@@ -1414,6 +1432,13 @@ window.DEBUG_INFO = {json.dumps(debug_info, ensure_ascii=False)};'''
         print("Loading translations...")
         content_en, content_de = self.load_translation_data()
         
+        print("Loading weather cache...")
+        weather_cache = self.load_weather_cache()
+        if weather_cache:
+            print(f"✅ Loaded weather cache ({len(weather_cache)} entries)")
+        else:
+            print("ℹ️  No weather cache found (optional)")
+        
         print("Generating marker icon map...")
         marker_icons = self.generate_marker_icon_map()
         print(f"✅ Embedded {len(marker_icons)} Lucide marker icons as base64 data URLs")
@@ -1427,6 +1452,7 @@ window.DEBUG_INFO = {json.dumps(debug_info, ensure_ascii=False)};'''
         html_de = self.build_html_from_components(
             configs, events, content_en, content_de,
             stylesheets, scripts, marker_icons,
+            weather_cache=weather_cache,
             lang='de'
         )
         print("✅ German site generated using components")
@@ -1436,6 +1462,7 @@ window.DEBUG_INFO = {json.dumps(debug_info, ensure_ascii=False)};'''
         html_en = self.build_html_from_components(
             configs, events, content_en, content_de,
             stylesheets, scripts, marker_icons,
+            weather_cache=weather_cache,
             lang='en'
         )
         print("✅ English site generated using components")
@@ -1543,6 +1570,9 @@ window.DEBUG_INFO = {json.dumps(debug_info, ensure_ascii=False)};'''
                 import shutil
                 shutil.copy2(src, dst)
                 print(f"   ✅ Copied {json_file} to public/en/")
+        
+        # Note: Weather cache is now inlined into HTML as window.WEATHER_CACHE
+        # No need to copy weather_cache.json as a separate file
         
         print(f"\n✅ Multi-language site generated successfully!")
         print(f"   German (root): {output_file_de} ({len(html_de) / 1024:.1f} KB)")

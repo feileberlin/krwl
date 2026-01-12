@@ -869,17 +869,16 @@ class EventsApp {
     
     async loadWeather() {
         /**
-         * Load weather dresscode from cache. Simple KISS implementation.
+         * Load weather dresscode from embedded cache. Simple KISS implementation.
+         * Weather data is inlined in HTML as window.WEATHER_CACHE (no separate fetch needed).
          */
         try {
             if (!this.config.weather?.display?.show_in_filter_bar) {
                 return;
             }
             
-            const response = await fetch('weather_cache.json');
-            if (!response.ok) return;
-            
-            const cache = await response.json();
+            // Use inlined weather cache (embedded by site_generator.py)
+            const cache = window.WEATHER_CACHE || {};
             const cacheKeys = Object.keys(cache);
             if (cacheKeys.length === 0) return;
             
