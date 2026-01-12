@@ -22,11 +22,82 @@ class EventUtils {
      * @returns {Array} Processed events with computed timestamps
      */
     processTemplateEvents(events, filterModule) {
-        // Delegate to TemplateEngine module
-        const templateEngine = new TemplateEngine(this.config);
-        return templateEngine.processTemplateEvents(events, filterModule);
+        const now = new Date();
+        
+        return events.map(event => {
+            if (!event.relative_time) {
+                return event;
+            }
+            
+            const processedEvent = { ...event };
+            const spec = event.relative_time;
+            const type = spec.type;
+            
+            let startTime, endTime;
+            
+            if (type === 'offset') {
+                startTime = new Date(now);
+                
+                if (spec.hours) {
+                    startTime.setHours(startTime.getHours() + spec.hours);
+                }
+                
+                if (spec.minutes) {
+                    startTime.setMinutes(startTime.getMinutes() + spec.minutes);
+                }
+                
+                const durationMs = (spec.duration_hours || 2) * 60 * 60 * 1000;
+                endTime = new Date(startTime.getTime() + durationMs);
+                
+                const tzOffset = spec.timezone_offset || 0;
+                if (tzOffset !== 0) {
+                    const sign = tzOffset >= 0 ? '+' : '-';
+                    const hours = Math.abs(Math.floor(tzOffset));
+                    const minutes = Math.abs((tzOffset % 1) * 60);
+                    const tzString = `${sign}${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+                    
+                    processedEvent.start_time = this.formatDateTimeWithTZ(startTime, tzString);
+                    processedEvent.end_time = this.formatDateTimeWithTZ(endTime, tzString);
+                } else {
+                    processedEvent.start_time = this.formatDateTime(startTime);
+                    processedEvent.end_time = this.formatDateTime(endTime);
+                }
+                
+            } else if (type === 'sunrise_relative') {
+                const sunrise = filterModule.getNextSunrise();
+                
+                startTime = new Date(sunrise);
+                if (spec.start_offset_hours) {
+                    startTime.setHours(startTime.getHours() + spec.start_offset_hours);
+                }
+                if (spec.start_offset_minutes) {
+                    startTime.setMinutes(startTime.getMinutes() + spec.start_offset_minutes);
+                }
+                
+                endTime = new Date(sunrise);
+                if (spec.end_offset_hours) {
+                    endTime.setHours(endTime.getHours() + spec.end_offset_hours);
+                }
+                if (spec.end_offset_minutes) {
+                    endTime.setMinutes(endTime.getMinutes() + spec.end_offset_minutes);
+                }
+                
+                processedEvent.start_time = this.formatDateTime(startTime);
+                processedEvent.end_time = this.formatDateTime(endTime);
+            }
+            
+            processedEvent.published_at = this.formatDateTime(now);
+            
+            return processedEvent;
+        });
     }
-
+    
+    /**
+     * Format date as ISO 8601 without timezone
+     * @param {Date} date - Date to format
+     * @returns {string} Formatted date string
+     */
+    formatDateTime(date) {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');

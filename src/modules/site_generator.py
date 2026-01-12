@@ -471,15 +471,17 @@ class SiteGenerator:
         # Load all modules in correct order (dependencies first)
         js_modules = []
         module_files = [
-            'storage.js',         # No dependencies
-            'filters.js',         # Depends on: storage
-            'map.js',             # Depends on: storage
-            'speech-bubbles.js',  # Depends on: storage
-            'utils.js',           # No dependencies
-            'dropdown.js',        # UI component (no dependencies)
-            'dashboard-ui.js',    # Depends on: utils
-            'event-listeners.js', # Depends on: app, dropdown
-            'app.js'              # Depends on: all modules
+            'storage.js',              # No dependencies
+            'filters.js',              # Depends on: storage
+            'map.js',                  # Depends on: storage
+            'speech-bubbles.js',       # Depends on: storage (simplified grid layout)
+            'utils.js',                # Depends on: template-engine (simplified)
+            'template-engine.js',      # Template processing (extracted from utils)
+            'dropdown.js',             # UI component (no dependencies)
+            'dashboard-ui.js',         # Depends on: utils
+            'filter-description-ui.js', # Filter description formatting (extracted from app)
+            'event-listeners.js',      # Depends on: app, dropdown
+            'app.js'                   # Depends on: all modules (KISS compliant!)
         ]
         
         for module_file in module_files:

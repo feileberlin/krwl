@@ -21,7 +21,6 @@ class EventsApp {
         this.speechBubbles = new SpeechBubbles(this.config, this.storage);
         this.utils = new EventUtils(this.config);
         this.dashboardUI = new DashboardUI(this.config, this.utils);
-        this.filterDescriptionUI = new FilterDescriptionUI(this.config);
         
         // App state
         this.events = [];
@@ -418,10 +417,110 @@ class EventsApp {
 
 
     updateFilterDescription(count) {
-        // Delegate to FilterDescriptionUI module
-        this.filterDescriptionUI.update(count, this.filters, this.userLocation);
+        // Filter Bar Structure (Semantic Header):
+        // <header id="event-filter-bar"> - Page header/banner with filters
+        //   <button .filter-bar-logo> - Project menu button
+        //   <div role="status"> - Live region for event count updates
+        //     #filter-bar-event-count - Shows "X events" with category
+        //   #filter-bar-time-range - Time filter button (sunrise, 6h, 12h, etc.)
+        //   #filter-bar-distance - Distance filter button (km radius)
+        //   #filter-bar-location - Location filter button (here/custom)
+        
+        // Update individual parts of the filter sentence
+        const eventCountCategoryText = document.getElementById('filter-bar-event-count');
+        const timeText = document.getElementById('filter-bar-time-range');
+        const distanceText = document.getElementById('filter-bar-distance');
+        const locationText = document.getElementById('filter-bar-location');
+        
+        // Combined event count and category (KISS principle)
+        if (eventCountCategoryText) {
+            let categoryName = this.filters.category;
+            
+            if (this.filters.category === 'all') {
+                // "[0 events]" or "[5 events]"
+                eventCountCategoryText.textContent = `[${count} event${count !== 1 ? 's' : ''}]`;
+            } else {
+                // "[0 music events]" or "[5 music events]"
+                eventCountCategoryText.textContent = `[${count} ${categoryName} event${count !== 1 ? 's' : ''}]`;
+            }
+        }
+        
+        // Time description
+        if (timeText) {
+            let timeDescription = '';
+            switch (this.filters.timeFilter) {
+                case 'sunrise':
+                    timeDescription = 'till sunrise';
+                    break;
+                case 'sunday-primetime':
+                    timeDescription = "till Sunday's primetime";
+                    break;
+                case 'full-moon':
+                    timeDescription = 'till next full moon';
+                    break;
+                case '6h':
+                    timeDescription = 'in the next 6 hours';
+                    break;
+                case '12h':
+                    timeDescription = 'in the next 12 hours';
+                    break;
+                case '24h':
+                    timeDescription = 'in the next 24 hours';
+                    break;
+                case '48h':
+                    timeDescription = 'in the next 48 hours';
+                    break;
+                case 'all':
+                    timeDescription = 'upcoming';
+                    break;
+            }
+            timeText.textContent = `[${timeDescription}]`;
+        }
+        
+        // Distance description (approximate travel time)
+        if (distanceText) {
+            const distance = this.filters.maxDistance;
+            let distanceDescription = '';
+            
+            // Match predefined distance filter options
+            if (distance === 2) {
+                distanceDescription = 'within 30 min walk';
+            } else if (distance === 3.75) {
+                distanceDescription = 'within 30 min bicycle ride';
+            } else if (distance === 12.5) {
+                distanceDescription = 'within 30 min public transport';
+            } else if (distance === 60) {
+                distanceDescription = 'within 60 min car sharing';
+            } else {
+                // Fallback for any other distance values (backward compatibility)
+                distanceDescription = `within ${distance} km`;
+            }
+            distanceText.textContent = `[${distanceDescription}]`;
+        }
+        
+        // Location description
+        if (locationText) {
+            let locDescription = window.i18n ? window.i18n.t('filters.locations.geolocation') : 'from here';
+            
+            if (this.filters.locationType === 'predefined' && this.filters.selectedPredefinedLocation !== null) {
+                // Get predefined location name from config
+                const predefinedLocs = this.config?.map?.predefined_locations || [];
+                const selectedLoc = predefinedLocs[this.filters.selectedPredefinedLocation];
+                if (selectedLoc) {
+                    // Try to get translated name, fallback to display_name
+                    const translatedName = window.i18n ? window.i18n.t(`filters.predefined_locations.${selectedLoc.name}`) : selectedLoc.display_name;
+                    const prefix = window.i18n ? window.i18n.t('filters.locations.prefix') : 'from';
+                    locDescription = `${prefix} ${translatedName}`;
+                }
+            } else if (this.filters.locationType === 'custom' && this.filters.customLat && this.filters.customLon) {
+                locDescription = 'from custom location';
+            } else if (!this.userLocation && this.filters.locationType === 'geolocation') {
+                locDescription = 'from default location';
+            }
+            
+            locationText.textContent = `[${locDescription}]`;
+        }
     }
-
     
 
     navigateEvents(direction) {

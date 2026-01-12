@@ -1,13 +1,10 @@
 /**
- * SpeechBubbles Module
+ * SpeechBubbles Module (Simplified)
  * 
- * Handles speech bubble UI elements that appear over map markers:
- * - Bubble creation and positioning
- * - Collision detection
- * - Deduplication logic
- * - Click handlers
+ * Handles speech bubble UI components for events on the map.
+ * Simplified positioning using CSS Grid instead of complex collision detection.
  * 
- * KISS: Single responsibility - speech bubble management only
+ * KISS: Replaced 100-line calculateBubblePosition() with simple grid layout
  */
 
 class SpeechBubbles {
@@ -15,98 +12,97 @@ class SpeechBubbles {
         this.config = config;
         this.storage = storage;
         this.speechBubbles = [];
-        this.occupiedBubblePositions = [];
     }
     
     /**
      * Clear all speech bubbles from the map
      */
     clearSpeechBubbles() {
-        this.speechBubbles.forEach(bubble => {
-            if (bubble.parentElement) {
-                bubble.remove();
-            }
-        });
+        // Remove all bubble elements
+        const bubbles = document.querySelectorAll('.speech-bubble');
+        bubbles.forEach(bubble => bubble.remove());
+        
+        // Clear array
         this.speechBubbles = [];
-        this.occupiedBubblePositions = [];
+        
+        this.log('Speech bubbles cleared');
     }
     
     /**
-     * Show speech bubbles for all visible events
+     * Show speech bubbles for all filtered events
      * @param {Array} events - Filtered events to display
      * @param {Array} markers - Corresponding Leaflet markers
      * @param {Object} map - Leaflet map instance
      */
     showAllSpeechBubbles(events, markers, map) {
+        if (!events || events.length === 0) return;
+        
         this.clearSpeechBubbles();
         
-        const maxBubbles = 30; // Limit to prevent performance issues
-        const eventsToShow = events.slice(0, maxBubbles);
+        // Group events by location (deduplication)
+        const eventItems = this.deduplicateEvents(events);
         
-        // Build array of {event, marker, originalIndex} for deduplication
-        const eventItems = eventsToShow.map((event, index) => ({
-            event,
-            marker: markers[index],
-            originalIndex: index
-        }));
+        this.log(`Showing ${eventItems.length} speech bubbles (${events.length} events after deduplication)`);
         
-        // Deduplicate events
-        const uniqueItems = this.deduplicateEvents(eventItems);
-        
-        // Create speech bubbles for unique events
-        uniqueItems.forEach((item, index) => {
-            this.createSpeechBubble(
-                item.event,
-                item.marker,
-                index,
-                1, // groupSize (deprecated)
-                0, // groupIndex (deprecated)
-                item.duplicateCount,
-                map
+        // Create bubbles with simple grid positioning
+        eventItems.forEach((item, index) => {
+            const marker = markers.find(m => 
+                m.options.customData && m.options.customData.id === item.event.id
             );
-        });
-        
-        this.log(`Showing ${uniqueItems.length} speech bubbles (${eventsToShow.length} total events)`);
-    }
-    
-    /**
-     * Deduplicate events based on title and start time
-     * @param {Array} eventItems - Array of {event, marker, originalIndex}
-     * @returns {Array} Array of unique items with duplicateCount property
-     */
-    deduplicateEvents(eventItems) {
-        const uniqueMap = new Map();
-        
-        eventItems.forEach(item => {
-            const title = item.event.title.toLowerCase().trim();
-            const startTime = item.event.start_time;
-            const key = `${title}|${startTime}`;
             
-            if (uniqueMap.has(key)) {
-                const existing = uniqueMap.get(key);
-                existing.duplicateCount++;
-                existing.duplicates.push(item.event);
-            } else {
-                uniqueMap.set(key, {
-                    ...item,
-                    duplicateCount: 1,
-                    duplicates: [item.event]
-                });
+            if (marker) {
+                this.createSpeechBubble(
+                    item.event,
+                    marker,
+                    index,
+                    item.groupSize,
+                    0,
+                    item.duplicateCount,
+                    map
+                );
             }
         });
-        
-        return Array.from(uniqueMap.values());
     }
     
     /**
-     * Create and position a speech bubble for an event
+     * Deduplicate events by title similarity
+     * @param {Array} events - Events to deduplicate
+     * @returns {Array} Deduplicated event items with metadata
+     */
+    deduplicateEvents(events) {
+        const titleMap = new Map();
+        
+        events.forEach(event => {
+            const key = event.title.toLowerCase().trim();
+            if (!titleMap.has(key)) {
+                titleMap.set(key, []);
+            }
+            titleMap.get(key).push(event);
+        });
+        
+        const eventItems = [];
+        titleMap.forEach((group, title) => {
+            eventItems.push({
+                event: group[0],
+                groupSize: group.length,
+                duplicateCount: group.length
+            });
+        });
+        
+        return eventItems;
+    }
+    
+    /**
+     * Create a single speech bubble for an event
+     * KISS: Simplified positioning using CSS Grid
      * @param {Object} event - Event data
      * @param {Object} marker - Leaflet marker
-     * @param {number} index - Display order index
-     * @param {number} groupSize - Deprecated, kept for compatibility
-     * @param {number} groupIndex - Deprecated, kept for compatibility
+     * @param {number} index - Bubble index for positioning
+     * @param {number} groupSize - Number of events in group
+     * @param {number} groupIndex - Index within group
      * @param {number} duplicateCount - Number of duplicate events
      * @param {Object} map - Leaflet map instance
+     * @returns {HTMLElement} Created bubble element
      */
     createSpeechBubble(event, marker, index, groupSize = 1, groupIndex = 0, duplicateCount = 1, map) {
         if (!marker || !map) return;
@@ -118,6 +114,7 @@ class SpeechBubbles {
         const bubble = document.createElement('div');
         bubble.className = 'speech-bubble';
         bubble.setAttribute('data-event-id', event.id);
+        bubble.setAttribute('data-bubble-index', index);
         
         // Format start time
         const startTime = new Date(event.start_time);
@@ -158,8 +155,9 @@ class SpeechBubbles {
             setTimeout(() => lucide.createIcons(), 10);
         }
         
-        // Position bubble
-        const position = this.calculateBubblePosition(markerPos, index);
+        // KISS: Simple positioning using CSS Grid
+        // Calculate position using simple offset from marker
+        const position = this.calculateSimplePosition(markerPos, index);
         bubble.style.left = position.x + 'px';
         bubble.style.top = position.y + 'px';
         
@@ -174,105 +172,41 @@ class SpeechBubbles {
     }
     
     /**
-     * Calculate position for speech bubble with collision detection
-     * Uses blended randomness + predictable patterns for organic variety
+     * Calculate simple grid-based position for speech bubble
+     * KISS: Replaces 100-line complex algorithm with predictable grid layout
      * @param {Object} markerPos - {x, y} marker screen position
      * @param {number} index - Bubble index
      * @returns {Object} {x, y} position for bubble
      */
-    calculateBubblePosition(markerPos, index) {
+    calculateSimplePosition(markerPos, index) {
         const bubbleWidth = 220;
         const bubbleHeight = 140;
+        const margin = 10;
+        const spacing = 15;
+        
+        // Get map dimensions
         const mapContainer = document.getElementById('map');
         const viewportWidth = mapContainer.clientWidth;
         const viewportHeight = mapContainer.clientHeight;
-        const margin = 10;
-        const padding = 15; // Minimum spacing between bubbles
         
-        // Helper: Check if two rectangles overlap
-        const overlaps = (x1, y1, x2, y2) => {
-            return !(x1 + bubbleWidth + padding < x2 || 
-                     x2 + bubbleWidth + padding < x1 || 
-                     y1 + bubbleHeight + padding < y2 || 
-                     y2 + bubbleHeight + padding < y1);
-        };
+        // Calculate grid dimensions
+        const cellWidth = bubbleWidth + spacing;
+        const cellHeight = bubbleHeight + spacing;
+        const columns = Math.max(1, Math.floor(viewportWidth / cellWidth));
         
-        // Try random positions with collision detection
-        const maxAttempts = 100;
-        let attempt = 0;
+        // Calculate grid position
+        const col = index % columns;
+        const row = Math.floor(index / columns);
         
-        while (attempt < maxAttempts) {
-            // Semi-random offset with index-based bias
-            const distance = 60 + Math.random() * 140;
-            const randomAngle = Math.random() * 2 * Math.PI;
-            const indexBias = (index * 0.5) % (2 * Math.PI);
-            const angle = randomAngle + indexBias;
-            
-            let x = markerPos.x + Math.cos(angle) * distance;
-            let y = markerPos.y + Math.sin(angle) * distance;
-            
-            // Clamp to viewport bounds
-            x = Math.max(margin, Math.min(x, viewportWidth - bubbleWidth - margin));
-            y = Math.max(margin, Math.min(y, viewportHeight - bubbleHeight - margin));
-            
-            // Check for overlaps
-            let hasOverlap = false;
-            for (const occupied of this.occupiedBubblePositions) {
-                if (overlaps(x, y, occupied.x, occupied.y)) {
-                    hasOverlap = true;
-                    break;
-                }
-            }
-            
-            if (!hasOverlap) {
-                this.occupiedBubblePositions.push({ x, y });
-                return { x, y };
-            }
-            
-            attempt++;
-        }
+        // Calculate x, y from grid
+        let x = col * cellWidth + margin;
+        let y = row * cellHeight + margin;
         
-        // Fallback: Spiral pattern with golden angle
-        const spiralAttempts = 30;
-        for (let i = 0; i < spiralAttempts; i++) {
-            const spiralRadius = 80 + (i * 30);
-            const goldenAngle = (index + i) * 0.618 * 2 * Math.PI;
-            const randomOffset = (Math.random() - 0.5) * 0.5;
-            const spiralAngle = goldenAngle + randomOffset;
-            
-            let x = markerPos.x + Math.cos(spiralAngle) * spiralRadius;
-            let y = markerPos.y + Math.sin(spiralAngle) * spiralRadius;
-            
-            x = Math.max(margin, Math.min(x, viewportWidth - bubbleWidth - margin));
-            y = Math.max(margin, Math.min(y, viewportHeight - bubbleHeight - margin));
-            
-            let hasOverlap = false;
-            for (const occupied of this.occupiedBubblePositions) {
-                if (overlaps(x, y, occupied.x, occupied.y)) {
-                    hasOverlap = true;
-                    break;
-                }
-            }
-            
-            if (!hasOverlap) {
-                this.occupiedBubblePositions.push({ x, y });
-                return { x, y };
-            }
-        }
+        // Clamp to viewport bounds
+        x = Math.min(x, viewportWidth - bubbleWidth - margin);
+        y = Math.min(y, viewportHeight - bubbleHeight - margin);
         
-        // Last resort: Grid layout
-        const gridCellWidth = bubbleWidth + padding + 15;
-        const gridCellHeight = bubbleHeight + padding + 5;
-        const gridColumns = Math.floor(viewportWidth / gridCellWidth);
-        
-        const gridX = (index % gridColumns) * gridCellWidth + margin;
-        const gridY = Math.floor(index / gridColumns) * gridCellHeight + margin;
-        
-        const forceX = Math.min(gridX, viewportWidth - bubbleWidth - margin);
-        const forceY = Math.min(gridY, viewportHeight - bubbleHeight - margin);
-        
-        this.occupiedBubblePositions.push({ x: forceX, y: forceY });
-        return { x: forceX, y: forceY };
+        return { x, y };
     }
     
     /**
@@ -282,12 +216,14 @@ class SpeechBubbles {
      * @returns {string} Truncated text
      */
     truncateText(text, maxLength) {
-        if (text.length <= maxLength) return text;
+        if (!text || text.length <= maxLength) return text;
         return text.substring(0, maxLength - 3) + '...';
     }
     
     /**
-     * Debug logging helper
+     * Log helper
+     * @param {string} message - Message to log
+     * @param  {...any} args - Additional arguments
      */
     log(message, ...args) {
         if (this.config && this.config.debug) {
