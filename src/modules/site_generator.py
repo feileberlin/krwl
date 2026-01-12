@@ -476,7 +476,9 @@ class SiteGenerator:
             'map.js',             # Depends on: storage
             'speech-bubbles.js',  # Depends on: storage
             'utils.js',           # No dependencies
-            'event-listeners.js', # Depends on: app (circular, loaded before)
+            'dropdown.js',        # UI component (no dependencies)
+            'dashboard-ui.js',    # Depends on: utils
+            'event-listeners.js', # Depends on: app, dropdown
             'app.js'              # Depends on: all modules
         ]
         
