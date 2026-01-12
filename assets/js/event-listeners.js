@@ -157,6 +157,12 @@ class EventListeners {
         if (timeTextEl) {
             this.setupTimeFilter(timeTextEl);
         }
+        
+        // Distance filter
+        const distanceTextEl = document.getElementById('filter-bar-distance');
+        if (distanceTextEl) {
+            this.setupDistanceFilter(distanceTextEl);
+        }
     }
     
     setupCategoryFilter(categoryTextEl) {
@@ -181,12 +187,10 @@ class EventListeners {
     
     setupTimeFilter(timeTextEl) {
         const timeRanges = [
-            { label: 'until sunrise', value: 'sunrise' },
-            { label: 'next 6 hours', value: '6h' },
-            { label: 'next 12 hours', value: '12h' },
-            { label: 'next 24 hours', value: '24h' },
-            { label: 'next 48 hours', value: '48h' },
-            { label: 'all upcoming', value: 'all' }
+            { label: 'Next Sunrise (6 AM)', value: 'sunrise' },
+            { label: "Till Sunday's Primetime (20:15)", value: 'sunday-primetime' },
+            { label: 'Till Next Full Moon', value: 'full-moon' },
+            { label: 'All upcoming events', value: 'all' }
         ];
         
         new CustomDropdown(
@@ -195,6 +199,26 @@ class EventListeners {
             this.app.filters.timeFilter,
             (value) => {
                 this.app.filters.timeFilter = value;
+                this.app.storage.saveFiltersToCookie(this.app.filters);
+                this.app.displayEvents();
+            }
+        );
+    }
+    
+    setupDistanceFilter(distanceTextEl) {
+        const distances = [
+            { label: 'within 30 min walk (2 km)', value: '2' },
+            { label: 'within 30 min bicycle ride (3.75 km)', value: '3.75' },
+            { label: 'within 30 min public transport (12.5 km)', value: '12.5' },
+            { label: 'within 60 min car sharing (60 km)', value: '60' }
+        ];
+        
+        new CustomDropdown(
+            distanceTextEl,
+            distances,
+            String(this.app.filters.maxDistance),
+            (value) => {
+                this.app.filters.maxDistance = parseFloat(value);
                 this.app.storage.saveFiltersToCookie(this.app.filters);
                 this.app.displayEvents();
             }

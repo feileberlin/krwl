@@ -22,6 +22,7 @@ class EventsApp {
         this.utils = new EventUtils(this.config);
         this.dashboardUI = new DashboardUI(this.config, this.utils);
         this.filterDescriptionUI = new FilterDescriptionUI(this.config);
+        this.eventListeners = new EventListeners(this);
         
         // App state
         this.events = [];
@@ -422,7 +423,10 @@ class EventsApp {
         this.filterDescriptionUI.update(count, this.filters, this.userLocation);
     }
 
-    
+    setupEventListeners() {
+        // Delegate to EventListeners module
+        this.eventListeners.setupEventListeners();
+    }
 
     navigateEvents(direction) {
         if (this.currentEventIndex === null || this.currentEventIndex === undefined) {
