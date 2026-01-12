@@ -39,10 +39,28 @@ BLACKS & GREYS:
 /* Import design tokens - these are inlined during site generation */
 /* Design tokens provide: colors, typography, spacing, z-index, shadows, borders, transitions */
 
+/* Responsive Viewport Dimensions - Progressive Enhancement */
+/* 
+ * PROGRESSIVE ENHANCEMENT STRATEGY:
+ * 1. Fallback: Use 100vh/100vw (works without JavaScript, older browsers)
+ * 2. Enhancement: Use 100dvh/100dvw (dynamic viewport, modern browsers)
+ * 
+ * BROWSER SUPPORT:
+ * - dvh/dvw: Chrome 108+, Safari 15.4+, Firefox 101+ (2022+)
+ * - Falls back gracefully to vh/vw in older browsers
+ */
 :root {
-    /* App dimensions - full viewport */
+    /* Fallback for older browsers (no JavaScript required) */
     --app-width: 100vw;
     --app-height: 100vh;
+}
+
+/* Modern browsers: Dynamic viewport units (handle mobile address bars) */
+@supports (height: 100dvh) {
+    :root {
+        --app-width: 100dvw;
+        --app-height: 100dvh;
+    }
 }
 
 * {
