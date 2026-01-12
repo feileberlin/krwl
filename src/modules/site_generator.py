@@ -1812,11 +1812,13 @@ window.DEBUG_INFO = {debug_info_json};'''
     
     def generate_site(self, skip_lint: bool = False) -> bool:
         """
-        Generate complete static site with inlined HTML for multiple languages.
+        Generate complete static site with inlined HTML.
         
-        Generates two language-specific HTML files:
-        - public/index.html (German - default at root)
-        - public/en/index.html (English - at /en/)
+        Generates single HTML file in primary language (German):
+        - public/index.html (German - default/primary language)
+        
+        Multi-language infrastructure (i18n.js, translation files) is preserved
+        but only German version is generated and deployed.
         
         Process:
         1. Ensures dependencies are present (Leaflet.js) - auto-fetches if missing
@@ -1824,10 +1826,10 @@ window.DEBUG_INFO = {debug_info_json};'''
         3. Loads stylesheets (Leaflet CSS, app CSS)
         4. Loads JavaScript files (Leaflet, i18n, app.js)
         5. Loads event data (real events + demo events)
-        6. Loads translations (English and German)
+        6. Loads translations (English and German) for i18n.js
         7. Builds HTML structure using templates with all assets inlined
         8. Lints and validates generated content (HTML, CSS, JS, translations, SVG)
-        9. Writes output to public/index.html (German) and public/en/index.html (English)
+        9. Writes output to public/index.html (German - primary language)
         
         Args:
             skip_lint: If True, skip linting validation (useful for testing)
@@ -1836,7 +1838,7 @@ window.DEBUG_INFO = {debug_info_json};'''
             True if generation succeeds, False otherwise
         """
         print("=" * 60)
-        print("🔨 Generating Multi-Language Site")
+        print("🔨 Generating Static Site (German)")
         print("=" * 60)
         
         if not self.ensure_dependencies_present():
@@ -1872,8 +1874,8 @@ window.DEBUG_INFO = {debug_info_json};'''
         
         print(f"Building HTML ({len(events)} total events)...")
         
-        # Build German HTML (default at root)
-        print("\n📝 Generating German version (root: /)")
+        # Build German HTML (primary language)
+        print("\n📝 Generating German version (primary language)")
         html_de = self.build_html_from_components(
             configs, events, content_en, content_de,
             stylesheets, scripts, marker_icons,
@@ -1882,43 +1884,26 @@ window.DEBUG_INFO = {debug_info_json};'''
         )
         print("✅ German site generated using components")
         
-        # Build English HTML (at /en/)
-        print("\n📝 Generating English version (path: /en/)")
-        html_en = self.build_html_from_components(
-            configs, events, content_en, content_de,
-            stylesheets, scripts, marker_icons,
-            weather_cache=weather_cache,
-            lang='en'
-        )
-        print("✅ English site generated using components")
-        
-        # Calculate HTML size breakdown for German version
+        # Calculate HTML size breakdown
         html_sizes = self.calculate_html_size_breakdown(html_de)
         
-        # Find and update DEBUG_INFO with size information (for both versions)
-        for html_var_name, html_content in [('html_de', html_de), ('html_en', html_en)]:
-            debug_info_marker = 'window.DEBUG_INFO = '
-            debug_info_start = html_content.find(debug_info_marker)
-            if debug_info_start != -1:
-                debug_info_end = html_content.find('};', debug_info_start)
-                if debug_info_end != -1:
-                    # Extract current DEBUG_INFO
-                    current_debug_json = html_content[debug_info_start + len(debug_info_marker):debug_info_end + 1]
-                    try:
-                        debug_data = json.loads(current_debug_json)
-                        debug_data['html_sizes'] = html_sizes
-                        debug_data['language'] = 'de' if html_var_name == 'html_de' else 'en'
-                        # Replace with updated DEBUG_INFO
-                        updated_debug_json = json.dumps(debug_data, ensure_ascii=False)
-                        html_content = html_content[:debug_info_start + len(debug_info_marker)] + updated_debug_json + html_content[debug_info_end + 1:]
-                        
-                        # Update the variable
-                        if html_var_name == 'html_de':
-                            html_de = html_content
-                        else:
-                            html_en = html_content
-                    except Exception as e:
-                        logger.warning(f"Could not update DEBUG_INFO for {html_var_name}: {e}")
+        # Find and update DEBUG_INFO with size information
+        debug_info_marker = 'window.DEBUG_INFO = '
+        debug_info_start = html_de.find(debug_info_marker)
+        if debug_info_start != -1:
+            debug_info_end = html_de.find('};', debug_info_start)
+            if debug_info_end != -1:
+                # Extract current DEBUG_INFO
+                current_debug_json = html_de[debug_info_start + len(debug_info_marker):debug_info_end + 1]
+                try:
+                    debug_data = json.loads(current_debug_json)
+                    debug_data['html_sizes'] = html_sizes
+                    debug_data['language'] = 'de'
+                    # Replace with updated DEBUG_INFO
+                    updated_debug_json = json.dumps(debug_data, ensure_ascii=False)
+                    html_de = html_de[:debug_info_start + len(debug_info_marker)] + updated_debug_json + html_de[debug_info_end + 1:]
+                except Exception as e:
+                    logger.warning(f"Could not update DEBUG_INFO: {e}")
         
         print(f"✅ Injected HTML size breakdown into DEBUG_INFO")
         
@@ -1962,48 +1947,16 @@ window.DEBUG_INFO = {debug_info_json};'''
                 print("\n⚠️  Build completed with lint errors (warnings only, not blocking)")
                 # Don't block build, just warn
         
-        # Write German version to root
-        output_file_de = self.static_path / 'index.html'
-        with open(output_file_de, 'w', encoding='utf-8') as f:
+        # Write German version to root (primary/only deployment)
+        output_file = self.static_path / 'index.html'
+        with open(output_file, 'w', encoding='utf-8') as f:
             f.write(html_de)
         
-        # Write English version to /en/ subdirectory
-        en_dir = self.static_path / 'en'
-        en_dir.mkdir(exist_ok=True)
-        output_file_en = en_dir / 'index.html'
-        with open(output_file_en, 'w', encoding='utf-8') as f:
-            f.write(html_en)
-        
-        # Copy translation JSON files to public/ for both root and /en/
-        print("\n📄 Copying translation files...")
-        i18n_source = self.base_path / 'assets' / 'json' / 'i18n'
-        
-        # Copy to root (for German site)
-        for json_file in ['content.json', 'content.de.json']:
-            src = i18n_source / json_file
-            dst = self.static_path / json_file
-            if src.exists():
-                import shutil
-                shutil.copy2(src, dst)
-                print(f"   ✅ Copied {json_file} to public/")
-        
-        # Copy to /en/ (for English site)
-        for json_file in ['content.json', 'content.de.json']:
-            src = i18n_source / json_file
-            dst = en_dir / json_file
-            if src.exists():
-                import shutil
-                shutil.copy2(src, dst)
-                print(f"   ✅ Copied {json_file} to public/en/")
-        
-        # Note: Weather cache is now inlined into HTML as window.WEATHER_CACHE
-        # No need to copy weather_cache.json as a separate file
-        
-        print(f"\n✅ Multi-language site generated successfully!")
-        print(f"   German (root): {output_file_de} ({len(html_de) / 1024:.1f} KB)")
-        print(f"   English (/en/): {output_file_en} ({len(html_en) / 1024:.1f} KB)")
+        print(f"\n✅ Static site generated successfully!")
+        print(f"   Output: {output_file} ({len(html_de) / 1024:.1f} KB)")
         print(f"   Total events: {len(events)}")
         print(f"   Configs: {len(configs)} (runtime-selected)")
+        print(f"   Language: German (primary)")
         print("\n" + "=" * 60)
         return True
     
