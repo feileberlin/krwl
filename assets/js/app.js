@@ -898,7 +898,8 @@ class EventsApp {
         /**
          * Display weather dresscode in filter bar.
          * Shows at the end of the filter bar after location.
-         * Displays only dresscode by default, temperature shown on hover.
+         * Format: "with [dresscode]." e.g., "with warm pullover."
+         * Temperature shown on hover via title attribute.
          * Weather chip is informational only (not a filter).
          */
         const weatherChip = this.getCachedElement('#filter-bar-weather');
@@ -907,22 +908,23 @@ class EventsApp {
             return;
         }
         
-        // Display only dresscode text (temperature shown on hover via title)
-        weatherChip.textContent = dresscode;
+        // Format dresscode with "with" prefix and period suffix
+        const formattedDresscode = `with ${dresscode}.`;
+        weatherChip.textContent = formattedDresscode;
         
         // Store temperature in data attribute for potential future use
         if (temperature) {
             weatherChip.setAttribute('data-temperature', temperature);
             // Show temperature on hover via title attribute
-            weatherChip.setAttribute('title', `${temperature} • ${dresscode}`);
+            weatherChip.setAttribute('title', `${temperature} • ${formattedDresscode}`);
         } else {
-            weatherChip.setAttribute('title', dresscode);
+            weatherChip.setAttribute('title', formattedDresscode);
         }
         
         // Show the chip
         weatherChip.style.display = '';  // Remove display:none
         
-        this.log('Weather dresscode displayed:', dresscode, temperature ? `(${temperature})` : '');
+        this.log('Weather dresscode displayed:', formattedDresscode, temperature ? `(${temperature})` : '');
     }
     
     processTemplateEvents(events) {
