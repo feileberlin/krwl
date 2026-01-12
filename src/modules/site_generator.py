@@ -307,10 +307,28 @@ class SiteGenerator:
     
     # ==================== Site Generation ====================
     
-    def read_text_file(self, path: Path) -> str:
-        """Read text file content"""
-        with open(path, 'r', encoding='utf-8') as f:
-            return f.read()
+    def read_text_file(self, path: Path, fallback: str = '') -> str:
+        """
+        Read text file content with optional fallback.
+        
+        Args:
+            path: Path to file to read
+            fallback: Fallback content if file doesn't exist (default: empty string)
+        
+        Returns:
+            File content or fallback
+        """
+        try:
+            if path.exists():
+                with open(path, 'r', encoding='utf-8') as f:
+                    return f.read()
+            else:
+                if fallback != '':
+                    logger.warning(f"File not found: {path}, using fallback")
+                return fallback
+        except Exception as e:
+            logger.error(f"Error reading {path}: {e}")
+            return fallback
     
     def load_all_events(self) -> List[Dict]:
         """Load all event data (real + demo) from data directory"""
@@ -357,11 +375,18 @@ class SiteGenerator:
     
     def load_stylesheet_resources(self) -> Dict[str, str]:
         """Load all CSS resources including fonts"""
+        # Try to load Leaflet CSS, fallback to CDN link comment if missing
+        leaflet_css_path = self.dependencies_dir / 'leaflet' / 'leaflet.css'
+        leaflet_css = self.read_text_file(leaflet_css_path, fallback='')
+        
+        if not leaflet_css:
+            # Provide a comment indicating CDN should be used
+            leaflet_css = '/* Leaflet CSS: Load from CDN at runtime if needed */'
+            logger.warning("Leaflet CSS not found locally, generated HTML will need CDN fallback")
+        
         stylesheets = {
             'roboto_fonts': self.generate_roboto_font_faces(),
-            'leaflet_css': self.read_text_file(
-                self.dependencies_dir / 'leaflet' / 'leaflet.css'
-            ),
+            'leaflet_css': leaflet_css,
             'app_css': self.read_text_file(
                 self.base_path / "assets" / 'css' / 'style.css'
             )
@@ -458,10 +483,34 @@ class SiteGenerator:
         - Concatenates them into single inline script for app_js placeholder
         - Removes export statements (not needed in inline context)
         """
+        # Try to load Leaflet JS, fallback to CDN loader if missing
+        leaflet_js_path = self.dependencies_dir / 'leaflet' / 'leaflet.js'
+        leaflet_js = self.read_text_file(leaflet_js_path, fallback='')
+        
+        if not leaflet_js:
+            # Provide a CDN loader fallback
+            leaflet_js = '''/* Leaflet JS: Load from CDN at runtime */
+(function() {
+    if (typeof L === 'undefined') {
+        console.warn('Leaflet not available - loading from CDN...');
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+        script.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=';
+        script.crossOrigin = '';
+        document.head.appendChild(script);
+        
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+        link.integrity = 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=';
+        link.crossOrigin = '';
+        document.head.appendChild(link);
+    }
+})();'''
+            logger.warning("Leaflet JS not found locally, using CDN fallback in generated HTML")
+        
         scripts = {
-            'leaflet_js': self.read_text_file(
-                self.dependencies_dir / 'leaflet' / 'leaflet.js'
-            ),
+            'leaflet_js': leaflet_js,
             'i18n_js': self.read_text_file(
                 self.base_path / "assets" / 'js' / 'i18n.js'
             )
@@ -540,17 +589,28 @@ class SiteGenerator:
         return {}
     
     def ensure_dependencies_present(self) -> bool:
-        """Ensure dependencies are available, fetch if missing"""
+        """
+        Ensure dependencies are available, fetch if missing.
+        
+        If dependencies can't be fetched (e.g., no internet in CI), 
+        warns but continues - CDN fallbacks will be used in generated HTML.
+        
+        Returns:
+            True to continue with generation (even if deps missing)
+        """
         # Check only for critical Leaflet files (markers not critical for build)
         leaflet_js = self.dependencies_dir / 'leaflet' / 'leaflet.js'
         leaflet_css = self.dependencies_dir / 'leaflet' / 'leaflet.css'
         
         if not leaflet_js.exists() or not leaflet_css.exists():
-            print("\n⚠️  Critical dependencies missing - fetching now...")
+            print("\n⚠️  Leaflet dependencies missing - attempting to fetch...")
             if not self.fetch_all_dependencies():
-                print("❌ Failed to fetch dependencies")
-                return False
-            print()
+                print("⚠️  Failed to fetch dependencies - will use CDN fallbacks in generated HTML")
+                print("    This is normal in CI environments without internet access")
+                print("    Production builds should run 'dependencies fetch' first\n")
+                # Don't fail - allow generation with CDN fallbacks
+            else:
+                print("✅ Dependencies fetched successfully\n")
         return True
     
     def sanitize_svg_content(self, svg_content: str) -> str:
@@ -1329,22 +1389,38 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
             }
         }
         
+        # Add weather to runtime config if enabled (simplified: single location weather embedded in config)
+        weather_config = primary_config.get('weather', {})
+        if weather_config.get('enabled', False):
+            # Extract current weather from weather_cache if available
+            weather_data = None
+            if weather_cache and isinstance(weather_cache, dict):
+                # Get first available weather entry (simplified: single location)
+                for key, entry in weather_cache.items():
+                    if isinstance(entry, dict) and entry.get('data'):
+                        weather_data = entry['data']
+                        break
+            
+            runtime_config['weather'] = {
+                'enabled': True,
+                'display': weather_config.get('display', {}),
+                'data': weather_data  # Current weather data or None
+            }
+        else:
+            runtime_config['weather'] = {'enabled': False}
+        
         # Calculate debug information
         debug_info = self.calculate_debug_info(primary_config, events)
         
-        # Ensure weather_cache is a dict (default to empty if None)
-        if weather_cache is None:
-            weather_cache = {}
-        
         # Prepare embedded data for frontend
         # All data is embedded by backend - frontend does NOT fetch config.json or events
+        # Note: WEATHER_CACHE is now deprecated, weather data is in APP_CONFIG.weather.data
         embedded_data = f'''// Data embedded by backend (site_generator.py) - frontend does NOT fetch files
 // config.json is backend-only, frontend uses this minimal runtime config
 window.APP_CONFIG = {json.dumps(runtime_config, ensure_ascii=False)};
 window.__INLINE_EVENTS_DATA__ = {{ "events": {json.dumps(events, ensure_ascii=False)} }};
 window.EMBEDDED_CONTENT_EN = {json.dumps(content_en, ensure_ascii=False)};
 window.EMBEDDED_CONTENT_DE = {json.dumps(content_de, ensure_ascii=False)};
-window.WEATHER_CACHE = {json.dumps(weather_cache, ensure_ascii=False)};
 window.MARKER_ICONS = {json.dumps(marker_icons, ensure_ascii=False)};
 window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};
 window.DEBUG_INFO = {json.dumps(debug_info, ensure_ascii=False)};'''

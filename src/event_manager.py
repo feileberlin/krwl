@@ -224,7 +224,7 @@ COMMANDS:
     (no command)              Launch interactive TUI (default)
     setup                     Show detailed setup instructions for your own site
     scrape                    Scrape events from configured sources
-    scrape-weather            Scrape current weather and dresscode (hourly cache)
+    scrape-weather            Scrape weather for map center location (config: weather.enabled)
     scrape-weather --force    Force refresh weather data (bypass cache)
     review                    Review pending events interactively
     publish EVENT_ID          Publish a specific pending event
@@ -693,28 +693,41 @@ def cli_scrape(base_path, config):
 
 
 def cli_scrape_weather(base_path, config, force_refresh=False):
-    """CLI: Scrape current weather and dresscode (KISS: single location - Hof)"""
+    """CLI: Scrape current weather for the configured map center location"""
     from modules.weather_scraper import WeatherScraper
-    
-    print("Scraping weather data for Hof...")
     
     # Check if weather is enabled
     if not config.get('weather', {}).get('enabled', False):
         print("⚠ Weather scraping is disabled in config.json")
+        print("  To enable: Set weather.enabled = true in config.json")
         return 1
+    
+    # Get location from map config
+    map_center = config.get('map', {}).get('default_center', {})
+    location_name = config.get('weather', {}).get('locations', [{}])[0].get('name', 'Map Center')
+    
+    print(f"Scraping weather data for {location_name}...")
+    print(f"  Location: {map_center.get('lat', 'N/A')}, {map_center.get('lon', 'N/A')}")
     
     scraper = WeatherScraper(base_path, config)
     
-    # Scrape for Hof only (KISS)
-    weather_data = scraper.get_weather(location_name="Hof", force_refresh=force_refresh)
+    # Scrape for configured location
+    weather_data = scraper.get_weather(
+        location_name=location_name,
+        lat=map_center.get('lat'),
+        lon=map_center.get('lon'),
+        force_refresh=force_refresh
+    )
     
     if weather_data and weather_data.get('dresscode'):
         print(f"✓ Dresscode: {weather_data['dresscode']}")
         if weather_data.get('temperature'):
             print(f"  Temperature: {weather_data['temperature']}")
+        print(f"  Cached until: ~{weather_data.get('timestamp', 'N/A')}")
         return 0
     else:
         print("✗ Failed to fetch weather or no valid dresscode found")
+        print("  Weather scraping requires internet access")
         return 1
 
 

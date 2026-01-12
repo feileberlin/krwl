@@ -217,17 +217,17 @@ class EventsApp {
     
     async loadWeather() {
         try {
-            if (!this.config.weather?.display?.show_in_filter_bar) return;
+            // Check if weather is enabled and should be displayed
+            const weather = this.config.weather;
+            if (!weather?.enabled || !weather?.display?.show_in_filter_bar) return;
             
-            const cache = window.WEATHER_CACHE || {};
-            const keys = Object.keys(cache);
-            if (keys.length === 0) return;
+            // Get weather data from config (embedded by backend)
+            const weatherData = weather.data;
+            if (!weatherData) return;
             
-            const key = keys.find(k => k.includes('Hof')) || keys[0];
-            const entry = cache[key];
-            
-            if (entry?.data?.dresscode) {
-                this.displayWeatherDresscode(entry.data.dresscode, entry.data.temperature);
+            // Display dresscode if available
+            if (weatherData.dresscode) {
+                this.displayWeatherDresscode(weatherData.dresscode, weatherData.temperature);
             }
         } catch (error) {
             console.warn('Weather load failed:', error);
