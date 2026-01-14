@@ -6,20 +6,20 @@
   
   <!-- Longhouse pin - barrel roof -->
   <path d="M8 18 Q8 10 16 10 Q24 10 24 18 L24 20 L18 20 L16 46 L14 20 L8 20 Z" 
-        fill="none" stroke="#00ff00" stroke-width="2"/>
+        fill="none" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Roof structure -->
   <path d="M10 12 Q12 11 16 11 Q20 11 22 12" 
-        fill="none" stroke="#00ff00" stroke-width="1"/>
+        fill="none" stroke="#D689B8" stroke-width="1"/>
   <path d="M10 14 Q12 13 16 13 Q20 13 22 14" 
-        fill="none" stroke="#00ff00" stroke-width="1"/>
+        fill="none" stroke="#D689B8" stroke-width="1"/>
   <path d="M10 16 Q12 15 16 15 Q20 15 22 16" 
-        fill="none" stroke="#00ff00" stroke-width="1"/>
+        fill="none" stroke="#D689B8" stroke-width="1"/>
   
   <!-- Entrance -->
   <path d="M15 16 L15 20 L17 20 L17 16" 
-        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+        fill="none" stroke="#D689B8" stroke-width="1.5"/>
   
   <!-- Smoke hole -->
-  <circle cx="16" cy="12" r="1" fill="none" stroke="#00ff00" stroke-width="1"/>
+  <circle cx="16" cy="12" r="1" fill="none" stroke="#D689B8" stroke-width="1"/>
 </svg>

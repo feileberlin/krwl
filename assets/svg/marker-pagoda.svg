@@ -6,28 +6,28 @@
   
   <!-- Multi-tiered pagoda pin -->
   <path d="M14 20 L16 46 L18 20" 
-        fill="none" stroke="#00ff00" stroke-width="2"/>
+        fill="none" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Top tier -->
   <path d="M12 6 L20 6 L22 8 L10 8 Z" 
-        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+        fill="none" stroke="#D689B8" stroke-width="1.5"/>
   
   <!-- Second tier -->
   <path d="M11 10 L21 10 L23 12 L9 12 Z" 
-        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+        fill="none" stroke="#D689B8" stroke-width="1.5"/>
   
   <!-- Third tier -->
   <path d="M10 14 L22 14 L24 16 L8 16 Z" 
-        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+        fill="none" stroke="#D689B8" stroke-width="1.5"/>
   
   <!-- Base -->
-  <rect x="12" y="16" width="8" height="4" fill="none" stroke="#00ff00" stroke-width="1.5"/>
+  <rect x="12" y="16" width="8" height="4" fill="none" stroke="#D689B8" stroke-width="1.5"/>
   
   <!-- Spire on top -->
-  <line x1="16" y1="2" x2="16" y2="6" stroke="#00ff00" stroke-width="1.5"/>
-  <circle cx="16" cy="2" r="1" fill="#00ff00"/>
+  <line x1="16" y1="2" x2="16" y2="6" stroke="#D689B8" stroke-width="1.5"/>
+  <circle cx="16" cy="2" r="1" fill="#D689B8"/>
   
   <!-- Support columns -->
-  <line x1="14" y1="8" x2="14" y2="20" stroke="#00ff00" stroke-width="1"/>
-  <line x1="18" y1="8" x2="18" y2="20" stroke="#00ff00" stroke-width="1"/>
+  <line x1="14" y1="8" x2="14" y2="20" stroke="#D689B8" stroke-width="1"/>
+  <line x1="18" y1="8" x2="18" y2="20" stroke="#D689B8" stroke-width="1"/>
 </svg>

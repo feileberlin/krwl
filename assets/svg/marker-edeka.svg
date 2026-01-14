@@ -6,14 +6,14 @@
   
   <!-- E-shaped pin -->
   <path d="M12 4 L20 4 L20 6 L14 6 L14 10 L19 10 L19 12 L14 12 L14 16 L20 16 L20 18 L18 18 L16 46 L14 18 L12 18 Z" 
-        fill="none" stroke="#00ff00" stroke-width="2"/>
+        fill="none" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Large E -->
-  <line x1="13" y1="6" x2="13" y2="17" stroke="#00ff00" stroke-width="2"/>
-  <line x1="13" y1="6" x2="19" y2="6" stroke="#00ff00" stroke-width="2"/>
-  <line x1="13" y1="11" x2="18" y2="11" stroke="#00ff00" stroke-width="1.5"/>
-  <line x1="13" y1="17" x2="19" y2="17" stroke="#00ff00" stroke-width="2"/>
+  <line x1="13" y1="6" x2="13" y2="17" stroke="#D689B8" stroke-width="2"/>
+  <line x1="13" y1="6" x2="19" y2="6" stroke="#D689B8" stroke-width="2"/>
+  <line x1="13" y1="11" x2="18" y2="11" stroke="#D689B8" stroke-width="1.5"/>
+  <line x1="13" y1="17" x2="19" y2="17" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Brand indicator -->
-  <text x="16" y="14" font-family="monospace" font-size="4" fill="#00ff00" text-anchor="middle">EDEKA</text>
+  <text x="16" y="14" font-family="monospace" font-size="4" fill="#D689B8" text-anchor="middle">EDEKA</text>
 </svg>

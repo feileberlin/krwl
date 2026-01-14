@@ -6,20 +6,20 @@
   
   <!-- Bridge pin -->
   <path d="M6 14 L26 14 L26 18 L18 18 L16 46 L14 18 L6 18 Z" 
-        fill="none" stroke="#00ff00" stroke-width="2"/>
+        fill="none" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Bridge arches -->
-  <path d="M8 14 Q10 10 12 14" fill="none" stroke="#00ff00" stroke-width="1.5"/>
-  <path d="M12 14 Q14 10 16 14" fill="none" stroke="#00ff00" stroke-width="1.5"/>
-  <path d="M16 14 Q18 10 20 14" fill="none" stroke="#00ff00" stroke-width="1.5"/>
-  <path d="M20 14 Q22 10 24 14" fill="none" stroke="#00ff00" stroke-width="1.5"/>
+  <path d="M8 14 Q10 10 12 14" fill="none" stroke="#D689B8" stroke-width="1.5"/>
+  <path d="M12 14 Q14 10 16 14" fill="none" stroke="#D689B8" stroke-width="1.5"/>
+  <path d="M16 14 Q18 10 20 14" fill="none" stroke="#D689B8" stroke-width="1.5"/>
+  <path d="M20 14 Q22 10 24 14" fill="none" stroke="#D689B8" stroke-width="1.5"/>
   
   <!-- Bridge pillars -->
-  <line x1="10" y1="14" x2="10" y2="18" stroke="#00ff00" stroke-width="1.5"/>
-  <line x1="14" y1="14" x2="14" y2="18" stroke="#00ff00" stroke-width="1.5"/>
-  <line x1="18" y1="14" x2="18" y2="18" stroke="#00ff00" stroke-width="1.5"/>
-  <line x1="22" y1="14" x2="22" y2="18" stroke="#00ff00" stroke-width="1.5"/>
+  <line x1="10" y1="14" x2="10" y2="18" stroke="#D689B8" stroke-width="1.5"/>
+  <line x1="14" y1="14" x2="14" y2="18" stroke="#D689B8" stroke-width="1.5"/>
+  <line x1="18" y1="14" x2="18" y2="18" stroke="#D689B8" stroke-width="1.5"/>
+  <line x1="22" y1="14" x2="22" y2="18" stroke="#D689B8" stroke-width="1.5"/>
   
   <!-- Roadway -->
-  <line x1="6" y1="14" x2="26" y2="14" stroke="#00ff00" stroke-width="2"/>
+  <line x1="6" y1="14" x2="26" y2="14" stroke="#D689B8" stroke-width="2"/>
 </svg>

@@ -6,20 +6,20 @@
   
   <!-- Building pin -->
   <path d="M8 10 L24 10 L24 20 L18 20 L16 46 L14 20 L8 20 Z" 
-        fill="none" stroke="#00ff00" stroke-width="2"/>
+        fill="none" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Roof -->
   <path d="M6 10 L16 4 L26 10" 
-        fill="none" stroke="#00ff00" stroke-width="2"/>
+        fill="none" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Star of David -->
   <path d="M16 8 L18 11 L21 11 L19 13 L21 16 L18 14 L16 16 L14 14 L11 16 L13 13 L11 11 L14 11 Z" 
-        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+        fill="none" stroke="#D689B8" stroke-width="1.5"/>
   <path d="M14 11 L18 11 L16 14 Z" 
-        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+        fill="none" stroke="#D689B8" stroke-width="1.5"/>
   <path d="M14 14 L16 11 L18 14 Z" 
-        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+        fill="none" stroke="#D689B8" stroke-width="1.5"/>
   
   <!-- Entrance -->
-  <rect x="14" y="15" width="4" height="4" fill="none" stroke="#00ff00" stroke-width="1"/>
+  <rect x="14" y="15" width="4" height="4" fill="none" stroke="#D689B8" stroke-width="1"/>
 </svg>

@@ -19,7 +19,7 @@
     stroke-width: 2;
     stroke-linecap: round;
     opacity: 0.85;
-    filter: drop-shadow(0 0 4px rgba(255, 105, 180, 0.6)); /* Matches --color-primary glow */
+    filter: drop-shadow(0 0 4px rgba(214, 137, 184, 0.6)); /* Matches --color-primary glow */
 }
 
 .speech-bubble {
@@ -32,7 +32,7 @@
     width: 220px;
     z-index: 1000;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
-                0 0 15px rgba(255, 105, 180, 0.4);
+                0 0 15px rgba(214, 137, 184, 0.4);
     cursor: grab;
     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
                 box-shadow 0.3s ease, 
@@ -55,7 +55,7 @@
     z-index: 1100;
     transform: scale(1.08);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7),
-                0 0 30px rgba(255, 105, 180, 0.8);
+                0 0 30px rgba(214, 137, 184, 0.8);
     transition: transform 0.1s ease, box-shadow 0.1s ease;
     animation: none; /* Cancel appear animation during drag */
 }
@@ -87,7 +87,7 @@
 .speech-bubble:hover {
     transform: scale(1.05) rotate(0.5deg);
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6),
-                0 0 20px rgba(255, 105, 180, 0.6);
+                0 0 20px rgba(214, 137, 184, 0.6);
     filter: brightness(1.1);
 }
 
@@ -224,7 +224,7 @@
     bottom: 80px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(255, 105, 180, 0.95);
+    background: rgba(214, 137, 184, 0.95);
     color: white;
     padding: 12px 24px;
     border-radius: 8px;

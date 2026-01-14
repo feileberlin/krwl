@@ -6,25 +6,25 @@
   
   <!-- Conical tent pin -->
   <path d="M16 4 L8 20 L14 20 L16 46 L18 20 L24 20 Z" 
-        fill="none" stroke="#00ff00" stroke-width="2"/>
+        fill="none" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Tent poles -->
-  <line x1="16" y1="4" x2="16" y2="20" stroke="#00ff00" stroke-width="1"/>
-  <line x1="16" y1="4" x2="10" y2="18" stroke="#00ff00" stroke-width="1"/>
-  <line x1="16" y1="4" x2="22" y2="18" stroke="#00ff00" stroke-width="1"/>
+  <line x1="16" y1="4" x2="16" y2="20" stroke="#D689B8" stroke-width="1"/>
+  <line x1="16" y1="4" x2="10" y2="18" stroke="#D689B8" stroke-width="1"/>
+  <line x1="16" y1="4" x2="22" y2="18" stroke="#D689B8" stroke-width="1"/>
   
   <!-- Smoke flap opening -->
-  <path d="M14 6 L18 6" stroke="#00ff00" stroke-width="1"/>
+  <path d="M14 6 L18 6" stroke="#D689B8" stroke-width="1"/>
   
   <!-- Cover sections -->
-  <path d="M12 12 Q16 11 20 12" fill="none" stroke="#00ff00" stroke-width="1"/>
-  <path d="M10 16 Q16 15 22 16" fill="none" stroke="#00ff00" stroke-width="1"/>
+  <path d="M12 12 Q16 11 20 12" fill="none" stroke="#D689B8" stroke-width="1"/>
+  <path d="M10 16 Q16 15 22 16" fill="none" stroke="#D689B8" stroke-width="1"/>
   
   <!-- Entrance flap -->
   <path d="M15 16 L15 20 L17 20 L17 16" 
-        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+        fill="none" stroke="#D689B8" stroke-width="1.5"/>
   
   <!-- Securing ropes -->
-  <line x1="8" y1="20" x2="6" y2="22" stroke="#00ff00" stroke-width="0.5"/>
-  <line x1="24" y1="20" x2="26" y2="22" stroke="#00ff00" stroke-width="0.5"/>
+  <line x1="8" y1="20" x2="6" y2="22" stroke="#D689B8" stroke-width="0.5"/>
+  <line x1="24" y1="20" x2="26" y2="22" stroke="#D689B8" stroke-width="0.5"/>
 </svg>

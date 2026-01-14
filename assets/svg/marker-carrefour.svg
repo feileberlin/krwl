@@ -6,12 +6,12 @@
   
   <!-- C-shaped pin -->
   <path d="M20 6 Q12 6 12 12 Q12 18 20 18 L18 18 L16 46 L14 18 L12 18 Q10 18 10 12 Q10 6 18 6 Z" 
-        fill="none" stroke="#00ff00" stroke-width="2"/>
+        fill="none" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Large C -->
   <path d="M20 7 Q12 7 12 12 Q12 17 20 17" 
-        fill="none" stroke="#00ff00" stroke-width="2"/>
+        fill="none" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Brand indicator -->
-  <text x="16" y="13" font-family="monospace" font-size="3.5" fill="#00ff00" text-anchor="middle">CARREFOUR</text>
+  <text x="16" y="13" font-family="monospace" font-size="3.5" fill="#D689B8" text-anchor="middle">CARREFOUR</text>
 </svg>

@@ -6,26 +6,26 @@
   
   <!-- Gate towers -->
   <path d="M8 6 L8 20 L12 20 M20 20 L24 20 L24 6" 
-        fill="none" stroke="#00ff00" stroke-width="2"/>
+        fill="none" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Battlements -->
   <path d="M8 6 L8 4 L10 4 L10 6 M22 6 L22 4 L24 4 L24 6" 
-        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+        fill="none" stroke="#D689B8" stroke-width="1.5"/>
   
   <!-- Archway -->
   <path d="M12 18 L12 10 Q12 6 16 6 Q20 6 20 10 L20 18" 
-        fill="none" stroke="#00ff00" stroke-width="2"/>
+        fill="none" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Inner arch -->
   <path d="M13 17 L13 11 Q13 8 16 8 Q19 8 19 11 L19 17" 
-        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+        fill="none" stroke="#D689B8" stroke-width="1.5"/>
   
   <!-- Pin stem -->
   <path d="M14 20 L16 46 L18 20" 
-        fill="none" stroke="#00ff00" stroke-width="2"/>
+        fill="none" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Portcullis indication -->
-  <line x1="14" y1="12" x2="18" y2="12" stroke="#00ff00" stroke-width="0.5"/>
-  <line x1="14" y1="14" x2="18" y2="14" stroke="#00ff00" stroke-width="0.5"/>
-  <line x1="14" y1="16" x2="18" y2="16" stroke="#00ff00" stroke-width="0.5"/>
+  <line x1="14" y1="12" x2="18" y2="12" stroke="#D689B8" stroke-width="0.5"/>
+  <line x1="14" y1="14" x2="18" y2="14" stroke="#D689B8" stroke-width="0.5"/>
+  <line x1="14" y1="16" x2="18" y2="16" stroke="#D689B8" stroke-width="0.5"/>
 </svg>

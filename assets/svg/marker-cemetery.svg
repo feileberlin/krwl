@@ -6,16 +6,16 @@
   
   <!-- Rounded tombstone pin shape -->
   <path d="M10 8 Q10 4 16 4 Q22 4 22 8 L22 20 L18 20 L16 46 L14 20 L10 20 Z" 
-        fill="none" stroke="#00ff00" stroke-width="2"/>
+        fill="none" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Inner rounded rect -->
   <path d="M12 9 Q12 7 16 7 Q20 7 20 9 L20 17 L12 17 Z" 
-        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+        fill="none" stroke="#D689B8" stroke-width="1.5"/>
   
   <!-- Cross on tombstone -->
-  <line x1="16" y1="10" x2="16" y2="15" stroke="#00ff00" stroke-width="1.5"/>
-  <line x1="14" y1="12" x2="18" y2="12" stroke="#00ff00" stroke-width="1.5"/>
+  <line x1="16" y1="10" x2="16" y2="15" stroke="#D689B8" stroke-width="1.5"/>
+  <line x1="14" y1="12" x2="18" y2="12" stroke="#D689B8" stroke-width="1.5"/>
   
   <!-- RIP text representation -->
-  <line x1="14" y1="16" x2="18" y2="16" stroke="#00ff00" stroke-width="0.5"/>
+  <line x1="14" y1="16" x2="18" y2="16" stroke="#D689B8" stroke-width="0.5"/>
 </svg>

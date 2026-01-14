@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="192" height="192">
   <!-- Background - EcoBarbie Pink -->
-  <rect width="32" height="32" fill="#FF69B4" rx="6"/>
+  <rect width="32" height="32" fill="#D689B8" rx="6"/>
   
   <!-- Megaphone icon (centered, scaled for 32x32) -->
   <g transform="translate(7, 8) scale(0.9)">

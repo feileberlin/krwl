@@ -6,22 +6,22 @@
   
   <!-- Torii gate pin -->
   <path d="M14 20 L16 46 L18 20" 
-        fill="none" stroke="#00ff00" stroke-width="2"/>
+        fill="none" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Top rail (kasagi) - curved -->
   <path d="M6 10 Q8 8 16 8 Q24 8 26 10" 
-        stroke="#00ff00" stroke-width="2" fill="none"/>
+        stroke="#D689B8" stroke-width="2" fill="none"/>
   
   <!-- Second rail (nuki) - straight -->
-  <line x1="8" y1="14" x2="24" y2="14" stroke="#00ff00" stroke-width="1.5"/>
+  <line x1="8" y1="14" x2="24" y2="14" stroke="#D689B8" stroke-width="1.5"/>
   
   <!-- Left pillar -->
-  <line x1="10" y1="10" x2="10" y2="20" stroke="#00ff00" stroke-width="2"/>
+  <line x1="10" y1="10" x2="10" y2="20" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Right pillar -->
-  <line x1="22" y1="10" x2="22" y2="20" stroke="#00ff00" stroke-width="2"/>
+  <line x1="22" y1="10" x2="22" y2="20" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Base plates -->
-  <path d="M8 19 L12 19 L12 20 L8 20 Z" fill="none" stroke="#00ff00" stroke-width="1"/>
-  <path d="M20 19 L24 19 L24 20 L20 20 Z" fill="none" stroke="#00ff00" stroke-width="1"/>
+  <path d="M8 19 L12 19 L12 20 L8 20 Z" fill="none" stroke="#D689B8" stroke-width="1"/>
+  <path d="M20 19 L24 19 L24 20 L20 20 Z" fill="none" stroke="#D689B8" stroke-width="1"/>
 </svg>

@@ -6,17 +6,17 @@
   
   <!-- Star fortress shape -->
   <path d="M16 6 L18 10 L22 10 L19 13 L20 17 L16 14.5 L12 17 L13 13 L10 10 L14 10 Z" 
-        fill="none" stroke="#00ff00" stroke-width="2"/>
+        fill="none" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Inner fortification -->
   <path d="M16 9 L17 11 L19 11 L17.5 12.5 L18 14 L16 12.5 L14 14 L14.5 12.5 L13 11 L15 11 Z" 
-        fill="none" stroke="#00ff00" stroke-width="1.5"/>
+        fill="none" stroke="#D689B8" stroke-width="1.5"/>
   
   <!-- Pin stem -->
   <path d="M14 18 L16 46 L18 18" 
-        fill="none" stroke="#00ff00" stroke-width="2"/>
+        fill="none" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Bastions -->
-  <line x1="16" y1="17" x2="16" y2="18" stroke="#00ff00" stroke-width="2"/>
-  <path d="M12 17 L20 17" fill="none" stroke="#00ff00" stroke-width="1.5"/>
+  <line x1="16" y1="17" x2="16" y2="18" stroke="#D689B8" stroke-width="2"/>
+  <path d="M12 17 L20 17" fill="none" stroke="#D689B8" stroke-width="1.5"/>
 </svg>

@@ -1,25 +1,19 @@
 /*
-MONOCHROMATIC BARBIE RED COLOR PALETTE:
-Base Color: Barbie Red #FF69B4 (RGB: 255, 105, 180)
+MONOCHROMATIC ECOBARBIE COLOR PALETTE:
+Base Color: ecoBarbie #D689B8 (RGB: 214, 137, 184)
 
-TINTS (Barbie Red + White):
-- Lightest: #FFE5F3 (10% red, 90% white)
-- Light: #FFCCEB (30% red, 70% white)
-- Medium: #FFB3DF (50% red, 50% white)
+ecoBarbie is the new Barbie! A softer, more ecological pink tone.
 
-PURE:
-- Barbie Red: #FF69B4
+TONES (ecoBarbie + Grey):
+- Light Tone: #D689B8 (primary ecoBarbie)
+- Medium Tone: #B05F8E (ecoBarbie + medium grey)
+- Dark Tone: #8A4A70 (ecoBarbie + dark grey)
 
-TONES (Barbie Red + Grey):
-- Light Tone: #D689B8 (red + light grey)
-- Medium Tone: #B05F8E (red + medium grey)
-- Dark Tone: #8A4A70 (red + dark grey)
-
-SHADES (Barbie Red + Black):
-- Light Shade: #BF5087 (75% red, 25% black)
-- Medium Shade: #80355A (50% red, 50% black)
-- Dark Shade: #401B2D (25% red, 75% black)
-- Darkest: #200D16 (10% red, 90% black)
+SHADES (ecoBarbie + Black):
+- Light Shade: #BF5087 (75% ecoBarbie, 25% black)
+- Medium Shade: #80355A (50% ecoBarbie, 50% black)
+- Dark Shade: #401B2D (25% ecoBarbie, 75% black)
+- Darkest: #200D16 (10% ecoBarbie, 90% black)
 
 BLACKS & GREYS:
 - Pure Black: #000000
@@ -203,8 +197,8 @@ strong, b {
     border: 0px;
     line-height: 1.6;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
-                0 0 10px rgba(255, 105, 180, 0.3);
-    text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+                0 0 10px rgba(214, 137, 184, 0.3);
+    text-shadow: 0 0 10px rgba(214, 137, 184, 0.5);
     display: flex;
     flex-wrap: nowrap;
     gap: 0.3rem;
@@ -226,13 +220,13 @@ strong, b {
 
 #event-filter-bar .filter-bar-item:hover {
     color: var(--color-text-primary);
-    text-shadow: 0 0 15px rgba(255, 105, 180, 0.8);
+    text-shadow: 0 0 15px rgba(214, 137, 184, 0.8);
     text-decoration-style: solid;
 }
 
 #event-filter-bar .filter-bar-item.editing {
     color: var(--color-text-primary);
-    background: rgba(255, 105, 180, 0.3);
+    background: rgba(214, 137, 184, 0.3);
     padding: 0.1rem 0.5rem;
     border-radius: 4px;
     text-decoration: none;
@@ -265,14 +259,14 @@ strong, b {
     font: inherit;
     font-size: 0.95rem;
     font-weight: 500;
-    text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+    text-shadow: 0 0 10px rgba(214, 137, 184, 0.5);
     padding: 0;
     transition: all 0.2s;
 }
 
 #event-filter-bar .filter-chip:hover {
     color: var(--color-text-primary);
-    text-shadow: 0 0 15px rgba(255, 105, 180, 0.8);
+    text-shadow: 0 0 15px rgba(214, 137, 184, 0.8);
 }
 
 /* Weather chip - informational display (not a filter) */
@@ -288,12 +282,12 @@ strong, b {
 #event-filter-bar .weather-chip:hover {
     opacity: 1;
     color: var(--color-text-primary);
-    text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
+    text-shadow: 0 0 10px rgba(214, 137, 184, 0.3);
     /* Temperature shown in browser's native tooltip via title attribute */
 }
 
 #event-filter-bar .filter-bar-logo:hover {
-    background: rgba(255, 105, 180, 0.2);
+    background: rgba(214, 137, 184, 0.2);
     transform: scale(1.1);
 }
 
@@ -307,13 +301,13 @@ strong, b {
     height: 1em; /* Match filter bar text size */
     stroke: currentColor;
     fill: none;
-    filter: drop-shadow(0 0 4px rgba(255, 105, 180, 0.6));
+    filter: drop-shadow(0 0 4px rgba(214, 137, 184, 0.6));
     transition: filter 0.2s;
 }
 
 #event-filter-bar .filter-bar-logo:hover svg {
     stroke: currentColor;
-    filter: drop-shadow(0 0 8px rgba(255, 105, 180, 1));
+    filter: drop-shadow(0 0 8px rgba(214, 137, 184, 1));
 }
 
 /* Filter dropdowns */
@@ -347,7 +341,7 @@ strong, b {
 /* Custom location inputs */
 #custom-location-inputs {
     padding: 0.5rem 1rem;
-    border-top: 1px solid rgba(255, 105, 180, 0.2);
+    border-top: 1px solid rgba(214, 137, 184, 0.2);
     margin-top: 0.5rem;
 }
 
@@ -362,12 +356,12 @@ strong, b {
 }
 
 .filter-bar-dropdown-item:hover {
-    background: rgba(255, 105, 180, 0.2);
+    background: rgba(214, 137, 184, 0.2);
     color: var(--color-primary);
 }
 
 .filter-bar-dropdown-item.selected {
-    background: rgba(255, 105, 180, 0.3);
+    background: rgba(214, 137, 184, 0.3);
     color: var(--color-primary);
     font-weight: 600;
 }
@@ -382,7 +376,7 @@ strong, b {
 }
 
 .filter-bar-dropdown .location-option:hover {
-    background: rgba(255, 105, 180, 0.1);
+    background: rgba(214, 137, 184, 0.1);
 }
 
 .filter-bar-dropdown .location-option input[type="radio"] {
@@ -425,7 +419,7 @@ strong, b {
 }
 
 #imprint-link:hover {
-    background: rgba(255, 105, 180, 0.1);
+    background: rgba(214, 137, 184, 0.1);
     color: var(--color-primary);
 }
 
@@ -502,7 +496,7 @@ strong, b {
     position: relative;
     border: 2px solid var(--color-border-primary);
     border-top: none;
-    box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+    box-shadow: 0 0 20px rgba(214, 137, 184, 0.3);
 }
 
 .dashboard-header {
@@ -521,7 +515,7 @@ strong, b {
 .dashboard-logo svg {
     width: 32px;
     height: 32px;
-    filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.6));
+    filter: drop-shadow(0 0 8px rgba(214, 137, 184, 0.6));
 }
 
 #close-dashboard {
@@ -547,14 +541,14 @@ strong, b {
 .dashboard-content h2 {
     margin-bottom: 1rem;
     color: var(--color-primary);
-    text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
+    text-shadow: 0 0 10px rgba(214, 137, 184, 0.3);
     font-size: 1.5rem;
 }
 
 .dashboard-section {
     margin-bottom: 1rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 105, 180, 0.2);
+    border-bottom: 1px solid rgba(214, 137, 184, 0.2);
 }
 
 /* Pending Events Notification */
@@ -575,7 +569,7 @@ strong, b {
     width: 24px;
     height: 24px;
     flex-shrink: 0;
-    color: #FF69B4; /* Barbie Pink - 4.2:1 contrast on #161b22, suitable for large icons */
+    color: #D689B8; /* Barbie Pink - 4.2:1 contrast on #161b22, suitable for large icons */
 }
 
 /* Fill notification icon with solid color instead of stroke/outline */
@@ -701,7 +695,7 @@ strong, b {
 
 .dashboard-links a:hover {
     color: var(--color-primary-hover);
-    text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+    text-shadow: 0 0 10px rgba(214, 137, 184, 0.5);
     transform: translateX(3px);
 }
 
@@ -997,7 +991,7 @@ strong, b {
 }
 
 .duplicate-item strong {
-    color: #FF69B4; /* Primary pink */
+    color: #D689B8; /* Primary pink */
     display: block;
     margin-bottom: 0.25rem;
 }
@@ -1175,7 +1169,7 @@ strong, b {
 
 .event-card:hover {
     transform: translateX(-5px);
-    box-shadow: 0 5px 15px rgba(255, 105, 180, 0.3);
+    box-shadow: 0 5px 15px rgba(214, 137, 184, 0.3);
     background: var(--barbie-shade-medium);
 }
 
@@ -1223,7 +1217,7 @@ strong, b {
     overflow-y: auto;
     position: relative;
     border: 2px solid var(--color-border-primary);
-    box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+    box-shadow: 0 0 20px rgba(214, 137, 184, 0.3);
 }
 
 #close-detail {
@@ -1246,7 +1240,7 @@ strong, b {
 .detail-content h2 {
     margin-bottom: 1rem;
     color: var(--color-primary);
-    text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
+    text-shadow: 0 0 10px rgba(214, 137, 184, 0.3);
 }
 
 .detail-content p {
@@ -1260,7 +1254,7 @@ strong, b {
     padding: 1rem;
     border-radius: 8px;
     margin: 1rem 0;
-    border: 1px solid rgba(255, 105, 180, 0.2);
+    border: 1px solid rgba(214, 137, 184, 0.2);
 }
 
 #detail-link {
@@ -1271,12 +1265,12 @@ strong, b {
     border-radius: 5px;
     text-decoration: none;
     transition: all 0.2s;
-    box-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
+    box-shadow: 0 0 10px rgba(214, 137, 184, 0.3);
 }
 
 #detail-link:hover {
     background: var(--color-primary-hover);
-    box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+    box-shadow: 0 0 15px rgba(214, 137, 184, 0.5);
 }
 
 /* Edge-positioned event details with arrows */
@@ -1290,7 +1284,7 @@ strong, b {
     max-width: 280px;
     z-index: 1500;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
-                0 0 10px rgba(255, 105, 180, 0.3);
+                0 0 10px rgba(214, 137, 184, 0.3);
     pointer-events: auto;
 }
 

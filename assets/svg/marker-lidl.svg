@@ -6,12 +6,12 @@
   
   <!-- L-shaped pin -->
   <path d="M12 4 L14 4 L14 16 L20 16 L20 18 L18 18 L16 46 L14 18 L12 18 Z" 
-        fill="none" stroke="#00ff00" stroke-width="2"/>
+        fill="none" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Large L letter -->
-  <line x1="13" y1="6" x2="13" y2="17" stroke="#00ff00" stroke-width="2"/>
-  <line x1="13" y1="17" x2="19" y2="17" stroke="#00ff00" stroke-width="2"/>
+  <line x1="13" y1="6" x2="13" y2="17" stroke="#D689B8" stroke-width="2"/>
+  <line x1="13" y1="17" x2="19" y2="17" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Brand indicator -->
-  <text x="16" y="12" font-family="monospace" font-size="6" fill="#00ff00" text-anchor="middle">LIDL</text>
+  <text x="16" y="12" font-family="monospace" font-size="6" fill="#D689B8" text-anchor="middle">LIDL</text>
 </svg>

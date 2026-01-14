@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
   <!-- Megaphone icon in ecobarbie design - no background, just pink icon -->
   <g transform="translate(7, 8) scale(0.9)">
-    <path style="fill:none;stroke:#FF69B4;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;" 
+    <path style="fill:none;stroke:#D689B8;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;" 
           d="M 4.43,15.8 H 3.81 c -0.64,-0.19 -0.9,-4.46 -0.02,-5.45 0.61,-0.06 3.81,-0.06 3.81,-0.06 0,0 2.37,0.19 7.44,-3.62 0,0 0.17,0.02 0.85,4.58 0,0 1.42,1.76 -0.11,3.71 0,0 -0.27,3.6 -0.7,4.52 0,0 -4.17,-3.43 -8.8,-3.73 l -0.04,3.58 c -0.07,0.43 -1.71,0.37 -1.72,0 z" />
   </g>
 </svg>

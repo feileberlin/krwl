@@ -12,8 +12,8 @@
   /* ====================================================================== */
 
   /* Colors */
-  --color-primary: #FF69B4;
-  --color-primary-hover: #ff4da6;
+  --color-primary: #D689B8;
+  --color-primary-hover: #E8A5C8;
   --color-bg-primary: #0d1117;
   --color-bg-secondary: #161b22;
   --color-bg-tertiary: #21262d;
@@ -61,7 +61,7 @@
   --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.3);
   --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.4);
   --shadow-large: 0 8px 24px rgba(0, 0, 0, 0.5);
-  --shadow-glow-primary: 0 0 10px rgba(255, 105, 180, 0.3);
+  --shadow-glow-primary: 0 0 10px rgba(214, 137, 184, 0.3);
 
   /* Borders */
   --border-radius-small: 4px;

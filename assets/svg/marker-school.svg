@@ -6,10 +6,10 @@
   
   <!-- STANDARD GYRO SHAPE (same for all) -->
   <path d="M16 2 C9 2 3 8 3 15 C3 24 16 46 16 46 C16 46 29 24 29 15 C29 8 23 2 16 2 Z" 
-        fill="none" stroke="#00ff00" stroke-width="2"/>
+        fill="none" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Lucide icon (scaled and positioned) -->
-  <g transform="translate(16, 15) scale(0.5)" stroke="#00ff00" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <g transform="translate(16, 15) scale(0.5)" stroke="#D689B8" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <g transform="translate(-12, -12)">
 <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" />
   <path d="M22 10v6" />

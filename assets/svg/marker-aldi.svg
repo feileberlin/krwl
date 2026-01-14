@@ -6,12 +6,12 @@
   
   <!-- A-frame pin shape -->
   <path d="M12 18 L16 4 L20 18 L18 18 L16 46 L14 18 Z" 
-        fill="none" stroke="#00ff00" stroke-width="2"/>
+        fill="none" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Large A letter -->
-  <path d="M10 20 L16 6 L22 20" fill="none" stroke="#00ff00" stroke-width="2"/>
-  <line x1="13" y1="14" x2="19" y2="14" stroke="#00ff00" stroke-width="2"/>
+  <path d="M10 20 L16 6 L22 20" fill="none" stroke="#D689B8" stroke-width="2"/>
+  <line x1="13" y1="14" x2="19" y2="14" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Brand indicator -->
-  <text x="16" y="17" font-family="monospace" font-size="6" fill="#00ff00" text-anchor="middle">ALDI</text>
+  <text x="16" y="17" font-family="monospace" font-size="6" fill="#D689B8" text-anchor="middle">ALDI</text>
 </svg>

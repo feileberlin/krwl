@@ -6,17 +6,17 @@
   
   <!-- Envelope pin shape -->
   <path d="M8 8 L24 8 L24 18 L18 18 L16 46 L14 18 L8 18 Z" 
-        fill="none" stroke="#00ff00" stroke-width="2"/>
+        fill="none" stroke="#D689B8" stroke-width="2"/>
   
   <!-- Post horn (Deutsche Post symbol) -->
   <path d="M11 10 Q11 14 15 14 L19 14 Q20 14 20 12" 
-        fill="none" stroke="#00ff00" stroke-width="1.5"/>
-  <circle cx="20" cy="12" r="1.5" fill="none" stroke="#00ff00" stroke-width="1"/>
+        fill="none" stroke="#D689B8" stroke-width="1.5"/>
+  <circle cx="20" cy="12" r="1.5" fill="none" stroke="#D689B8" stroke-width="1"/>
   
   <!-- Horn mouthpiece -->
   <path d="M11 10 Q10 10 10 11 Q10 12 11 12 Q12 12 12 11 Q12 10 11 10" 
-        fill="none" stroke="#00ff00" stroke-width="1"/>
+        fill="none" stroke="#D689B8" stroke-width="1"/>
   
   <!-- Brand text -->
-  <text x="16" y="16" font-family="monospace" font-size="3" fill="#00ff00" text-anchor="middle">DEUTSCHE POST</text>
+  <text x="16" y="16" font-family="monospace" font-size="3" fill="#D689B8" text-anchor="middle">DEUTSCHE POST</text>
 </svg>

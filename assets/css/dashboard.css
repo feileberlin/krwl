@@ -37,7 +37,7 @@
     overflow-y: auto;
     position: relative;
     border: 2px solid var(--color-border-primary);
-    box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+    box-shadow: 0 0 20px rgba(214, 137, 184, 0.3);
     opacity: 0;
     transform: scale(0.95);
     transition: opacity 0.3s ease-in, transform 0.3s ease-in;
@@ -64,7 +64,7 @@
 .dashboard-logo svg {
     width: 32px;
     height: 32px;
-    filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.6));
+    filter: drop-shadow(0 0 8px rgba(214, 137, 184, 0.6));
 }
 
 #close-dashboard {
@@ -90,14 +90,14 @@
 .dashboard-content h2 {
     margin-bottom: 1rem;
     color: var(--color-primary);
-    text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
+    text-shadow: 0 0 10px rgba(214, 137, 184, 0.3);
     font-size: 1.5rem;
 }
 
 .dashboard-section {
     margin-bottom: 1rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 105, 180, 0.2);
+    border-bottom: 1px solid rgba(214, 137, 184, 0.2);
 }
 
 .dashboard-section:last-child {
@@ -142,7 +142,7 @@
 
 .dashboard-links a:hover {
     color: var(--color-primary-hover);
-    text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+    text-shadow: 0 0 10px rgba(214, 137, 184, 0.5);
     transform: translateX(3px);
 }
 
