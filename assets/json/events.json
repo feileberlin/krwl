@@ -5,9 +5,9 @@
       "title": "Kunst in Bayreuth - Werke der 1940er bis 1960er Jahre - aus den Sammlungen und Stiftungen im Kunstmuseum",
       "description": "Donnerstag,01.01.2026,",
       "location": {
-        "name": "Regionalzeitung",
-        "lat": 50.3167,
-        "lon": 11.9167
+        "name": "Kunstmuseum Bayreuth, Maximilianstraße 33, 95444 Bayreuth",
+        "lat": 49.9440,
+        "lon": 11.5747
       },
       "start_time": "2026-01-01T18:00:00",
       "end_time": null,
@@ -15,16 +15,17 @@
       "source": "Frankenpost",
       "scraped_at": "2026-01-01T13:27:18.685017",
       "status": "published",
-      "published_at": "2026-01-01T13:42:00.700054"
+      "published_at": "2026-01-01T13:42:00.700054",
+      "category": "arts"
     },
     {
       "id": "html_frankenpost_4878466979842611893",
       "title": "Ausstellung zum Fotowettbewerb: Zeig mir deine Lebenswerte Stadt (bis 7. Januar 2026)",
       "description": "Donnerstag,01.01.2026,",
       "location": {
-        "name": "Regionalzeitung",
-        "lat": 50.3167,
-        "lon": 11.9167
+        "name": "RW21 Volkshochschule Bayreuth, Richard-Wagner-Str. 21, 95444 Bayreuth",
+        "lat": 49.9454,
+        "lon": 11.5771
       },
       "start_time": "2026-01-01T18:00:00",
       "end_time": null,
@@ -32,16 +33,17 @@
       "source": "Frankenpost",
       "scraped_at": "2026-01-01T13:27:18.684482",
       "status": "published",
-      "published_at": "2026-01-01T13:42:00.700226"
+      "published_at": "2026-01-01T13:42:00.700226",
+      "category": "arts"
     },
     {
       "id": "html_frankenpost_6710371282043762830",
-      "title": "F\u00fchrung durch die Wohnr\u00e4ume der Sommerresidenz der Markgr\u00e4fin Caroline",
+      "title": "Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline",
       "description": "01.Januar",
       "location": {
-        "name": "Regionalzeitung",
-        "lat": 50.3167,
-        "lon": 11.9167
+        "name": "Schloss Carolinenruhe, Colmdorf 8, 95448 Bayreuth",
+        "lat": 49.93047,
+        "lon": 11.56740
       },
       "start_time": "2026-01-01T18:00:00",
       "end_time": null,
@@ -49,7 +51,8 @@
       "source": "Frankenpost",
       "scraped_at": "2026-01-01T13:27:18.683791",
       "status": "published",
-      "published_at": "2026-01-01T13:42:00.700343"
+      "published_at": "2026-01-01T13:42:00.700343",
+      "category": "palace"
     },
     {
       "id": "test_event_001",
@@ -66,7 +69,8 @@
       "source": "manual_test",
       "scraped_at": "2026-01-01T14:45:00",
       "status": "published",
-      "published_at": "2026-01-01T14:45:54.237616"
+      "published_at": "2026-01-01T14:45:54.237616",
+      "category": "community"
     }
   ],
   "last_updated": "2026-01-03T15:47:19.164009",

@@ -385,8 +385,8 @@
   
   "map": {
     "default_center": {
-      "lat": 50.3167,
-      "lon": 11.9167
+      "lat": 49.9440,
+      "lon": 11.5760
     },
     "default_zoom": 13,
     "tile_provider": "https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png",
