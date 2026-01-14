@@ -3,27 +3,61 @@
  * 
  * Handles speech bubble UI components for events on the map.
  * Simplified positioning using CSS Grid instead of complex collision detection.
+ * Bubbles follow their markers when map is panned/zoomed.
  * 
  * KISS: Replaced 100-line calculateBubblePosition() with simple grid layout
  */
+
+// Bubble dimension constants
+const BUBBLE_WIDTH = 220;
+const BUBBLE_HEIGHT = 140;
+const BUBBLE_MARGIN = 15;
+
+// Positioning constants
+const MARKER_VERTICAL_OFFSET = 50;     // Pixels above marker
+const BASE_SPREAD_OFFSET = 60;         // Minimum distance from marker
+const SPREAD_FACTOR = 40;              // Additional spread per bubble
+const HORIZONTAL_SPREAD_MULTIPLIER = 1.2; // Wider horizontal spread
+
+// Filter bar constants
+const FILTER_BAR_PADDING = 20;         // Extra padding below filter bar
+const DEFAULT_FILTER_BAR_HEIGHT = 60;  // Fallback if filter bar not found
+
+// Organic variation seeds (prime numbers for better distribution)
+const SEED_MULTIPLIER_X = 17;
+const SEED_OFFSET = 11;
+const VARIATION_RANGE_X = 21;
+const SEED_MULTIPLIER_Y = 13;
+const VARIATION_RANGE_Y = 15;
 
 class SpeechBubbles {
     constructor(config, storage) {
         this.config = config;
         this.storage = storage;
         this.speechBubbles = [];
+        this.map = null;
+        this.bubbleData = []; // Store bubble-marker associations for updates
+        this.moveHandler = null; // Store reference for cleanup
     }
     
     /**
      * Clear all speech bubbles from the map
      */
     clearSpeechBubbles() {
+        // Remove map move listener if exists
+        if (this.map && this.moveHandler) {
+            this.map.off('move', this.moveHandler);
+            this.map.off('zoom', this.moveHandler);
+            this.moveHandler = null;
+        }
+        
         // Remove all bubble elements
         const bubbles = document.querySelectorAll('.speech-bubble');
         bubbles.forEach(bubble => bubble.remove());
         
-        // Clear array
+        // Clear arrays
         this.speechBubbles = [];
+        this.bubbleData = [];
         
         this.log('Speech bubbles cleared');
     }
@@ -42,6 +76,7 @@ class SpeechBubbles {
         }
         
         this.clearSpeechBubbles();
+        this.map = map;
         
         // Group events by location (deduplication)
         const eventItems = this.deduplicateEvents(events);
@@ -66,6 +101,11 @@ class SpeechBubbles {
                 );
             }
         });
+        
+        // Setup map move/zoom listener to update bubble positions
+        this.moveHandler = () => this.updateBubblePositions();
+        map.on('move', this.moveHandler);
+        map.on('zoom', this.moveHandler);
     }
     
     /**
@@ -98,7 +138,7 @@ class SpeechBubbles {
     
     /**
      * Create a single speech bubble for an event
-     * KISS: Simplified positioning using CSS Grid
+     * Bubbles follow their markers when map is moved
      * @param {Object} event - Event data
      * @param {Object} marker - Leaflet marker
      * @param {number} index - Bubble index for positioning
@@ -159,15 +199,21 @@ class SpeechBubbles {
             setTimeout(() => lucide.createIcons(), 10);
         }
         
-        // KISS: Simple positioning using CSS Grid
-        // Calculate position using simple offset from marker
-        const position = this.calculateSimplePosition(markerPos, index);
+        // Calculate position relative to marker (bubble appears above/around marker)
+        const position = this.calculateMarkerRelativePosition(markerPos, index);
         bubble.style.left = position.x + 'px';
         bubble.style.top = position.y + 'px';
         
         // Add to map container
         document.getElementById('map').appendChild(bubble);
         this.speechBubbles.push(bubble);
+        
+        // Store bubble-marker association for updates on map move
+        this.bubbleData.push({
+            bubble: bubble,
+            marker: marker,
+            index: index
+        });
         
         // Fade in animation
         setTimeout(() => bubble.classList.add('visible'), 10);
@@ -176,51 +222,82 @@ class SpeechBubbles {
     }
     
     /**
-     * Calculate natural staggered position for speech bubble
-     * KISS: CSS-friendly positioning with organic stagger effect
+     * Update all bubble positions when map is moved/zoomed
+     * Called on map 'move' and 'zoom' events
+     */
+    updateBubblePositions() {
+        if (!this.map || this.bubbleData.length === 0) return;
+        
+        const mapContainer = document.getElementById('map');
+        const viewportWidth = mapContainer.clientWidth;
+        const viewportHeight = mapContainer.clientHeight;
+        
+        this.bubbleData.forEach(({ bubble, marker, index }) => {
+            // Get updated marker position in screen coordinates
+            const markerPos = this.map.latLngToContainerPoint(marker.getLatLng());
+            
+            // Calculate new position relative to marker
+            const position = this.calculateMarkerRelativePosition(markerPos, index);
+            
+            // Update bubble position
+            bubble.style.left = position.x + 'px';
+            bubble.style.top = position.y + 'px';
+            
+            // Hide bubble if marker is outside viewport (with some margin)
+            const isVisible = markerPos.x > -BUBBLE_WIDTH && 
+                              markerPos.x < viewportWidth + BUBBLE_WIDTH &&
+                              markerPos.y > -BUBBLE_HEIGHT && 
+                              markerPos.y < viewportHeight + BUBBLE_HEIGHT;
+            
+            bubble.style.opacity = isVisible ? '' : '0';
+            bubble.style.pointerEvents = isVisible ? '' : 'none';
+        });
+    }
+    
+    /**
+     * Calculate position for speech bubble relative to its marker
+     * Bubbles spread like leaves around the marker, growing upward
      * @param {Object} markerPos - {x, y} marker screen position
-     * @param {number} index - Bubble index
+     * @param {number} index - Bubble index for spread variation
      * @returns {Object} {x, y} position for bubble
      */
-    calculateSimplePosition(markerPos, index) {
-        const bubbleWidth = 220;
-        const bubbleHeight = 140;
-        const margin = 10;
-        const spacing = 15;
+    calculateMarkerRelativePosition(markerPos, index) {
+        // Get filter bar height dynamically to avoid overlap
+        const filterBar = document.getElementById('event-filter-bar');
+        const filterBarHeight = filterBar ? filterBar.offsetHeight + FILTER_BAR_PADDING : DEFAULT_FILTER_BAR_HEIGHT;
         
         // Get map dimensions
         const mapContainer = document.getElementById('map');
         const viewportWidth = mapContainer.clientWidth;
         const viewportHeight = mapContainer.clientHeight;
         
-        // Calculate grid dimensions
-        const cellWidth = bubbleWidth + spacing;
-        const cellHeight = bubbleHeight + spacing;
-        const columns = Math.max(1, Math.floor(viewportWidth / cellWidth));
+        // Use golden angle for natural leaf-like spread around marker
+        const goldenAngle = Math.PI * (3 - Math.sqrt(5)); // ~137.5 degrees
+        const angle = index * goldenAngle;
         
-        // Calculate grid position
-        const col = index % columns;
-        const row = Math.floor(index / columns);
+        // Distance from marker increases with index (like tree branches)
+        const offset = BASE_SPREAD_OFFSET + Math.sqrt(index) * SPREAD_FACTOR;
         
-        // Add natural stagger: alternate rows offset by half cell width
-        // Creates organic "brick wall" pattern instead of rigid grid
-        const rowOffset = (row % 2) * (cellWidth / 2);
+        // Calculate offset from marker position
+        // Spread mostly upward and sideways (like leaves on a tree)
+        const offsetX = Math.cos(angle) * offset * HORIZONTAL_SPREAD_MULTIPLIER;
+        const offsetY = -Math.abs(Math.sin(angle) * offset) - MARKER_VERTICAL_OFFSET;
         
-        // Calculate x, y with stagger
-        let x = col * cellWidth + margin + rowOffset;
-        let y = row * cellHeight + margin;
+        // Position bubble relative to marker
+        let x = markerPos.x + offsetX - BUBBLE_WIDTH / 2;
+        let y = markerPos.y + offsetY - BUBBLE_HEIGHT;
         
-        // Add subtle random offset (±5px) for organic feel - still deterministic
-        const seed = (index * 13 + 7) % 100; // Pseudo-random from index
-        const randomX = (seed % 11) - 5; // -5 to +5 px
-        const randomY = ((seed * 17) % 11) - 5; // -5 to +5 px
+        // Add small organic variation for natural feel
+        const seed = (index * SEED_MULTIPLIER_X + SEED_OFFSET) % 100;
+        const organicX = ((seed % VARIATION_RANGE_X) - Math.floor(VARIATION_RANGE_X / 2));
+        const organicY = (((seed * SEED_MULTIPLIER_Y) % VARIATION_RANGE_Y) - Math.floor(VARIATION_RANGE_Y / 2));
         
-        x += randomX;
-        y += randomY;
+        x += organicX;
+        y += organicY;
         
-        // Clamp to viewport bounds
-        x = Math.max(margin, Math.min(x, viewportWidth - bubbleWidth - margin));
-        y = Math.max(margin, Math.min(y, viewportHeight - bubbleHeight - margin));
+        // Clamp to viewport bounds - ensure bubbles stay below filter bar
+        x = Math.max(BUBBLE_MARGIN, Math.min(x, viewportWidth - BUBBLE_WIDTH - BUBBLE_MARGIN));
+        y = Math.max(filterBarHeight + BUBBLE_MARGIN, Math.min(y, viewportHeight - BUBBLE_HEIGHT - BUBBLE_MARGIN));
         
         return { x, y };
     }
