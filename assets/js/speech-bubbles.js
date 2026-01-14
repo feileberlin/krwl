@@ -4,6 +4,7 @@
  * Handles speech bubble UI components for events on the map.
  * Simplified positioning using CSS Grid instead of complex collision detection.
  * Bubbles follow their markers when map is panned/zoomed.
+ * Users can drag bubbles to resolve positioning conflicts manually.
  * 
  * KISS: Replaced 100-line calculateBubblePosition() with simple grid layout
  */
@@ -38,6 +39,23 @@ class SpeechBubbles {
         this.map = null;
         this.bubbleData = []; // Store bubble-marker associations for updates
         this.moveHandler = null; // Store reference for cleanup
+        
+        // Drag state
+        this.dragState = {
+            isDragging: false,
+            bubble: null,
+            startX: 0,
+            startY: 0,
+            bubbleOffsetX: 0,
+            bubbleOffsetY: 0,
+            mapOffsetX: 0,
+            mapOffsetY: 0
+        };
+        
+        // Bind drag handlers to preserve context
+        this.handleDragStart = this.handleDragStart.bind(this);
+        this.handleDragMove = this.handleDragMove.bind(this);
+        this.handleDragEnd = this.handleDragEnd.bind(this);
     }
     
     /**
@@ -212,8 +230,12 @@ class SpeechBubbles {
         this.bubbleData.push({
             bubble: bubble,
             marker: marker,
-            index: index
+            index: index,
+            userOffset: null // Track user-applied drag offset
         });
+        
+        // Add drag event listeners for repositioning
+        this.setupDragListeners(bubble);
         
         // Fade in animation
         setTimeout(() => bubble.classList.add('visible'), 10);
@@ -222,26 +244,203 @@ class SpeechBubbles {
     }
     
     /**
+     * Setup drag event listeners for a bubble
+     * Supports both mouse and touch events for mobile
+     * @param {HTMLElement} bubble - Bubble element
+     */
+    setupDragListeners(bubble) {
+        // Mouse events
+        bubble.addEventListener('mousedown', this.handleDragStart);
+        
+        // Touch events for mobile
+        bubble.addEventListener('touchstart', this.handleDragStart, { passive: false });
+    }
+    
+    /**
+     * Handle drag start (mousedown/touchstart)
+     * @param {Event} e - Mouse or touch event
+     */
+    handleDragStart(e) {
+        // Don't drag if clicking on bookmark button
+        if (e.target.closest('.bubble-bookmark')) return;
+        
+        const bubble = e.target.closest('.speech-bubble');
+        if (!bubble) return;
+        
+        // Prevent map panning while dragging bubble
+        if (this.map) {
+            this.map.dragging.disable();
+        }
+        
+        // Get starting position
+        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+        
+        const rect = bubble.getBoundingClientRect();
+        const mapContainer = document.getElementById('map');
+        const mapRect = mapContainer.getBoundingClientRect();
+        
+        // Store the mouse offset within the bubble (relative to bubble's top-left)
+        // and the map container offset for coordinate conversion
+        this.dragState = {
+            isDragging: true,
+            bubble: bubble,
+            startX: clientX,
+            startY: clientY,
+            // Offset of click point within the bubble
+            bubbleOffsetX: clientX - rect.left,
+            bubbleOffsetY: clientY - rect.top,
+            // Map container's position for coordinate conversion
+            mapOffsetX: mapRect.left,
+            mapOffsetY: mapRect.top
+        };
+        
+        bubble.classList.add('dragging');
+        
+        // Add move/end listeners to document
+        document.addEventListener('mousemove', this.handleDragMove);
+        document.addEventListener('mouseup', this.handleDragEnd);
+        document.addEventListener('touchmove', this.handleDragMove, { passive: false });
+        document.addEventListener('touchend', this.handleDragEnd);
+        
+        // Prevent text selection and default touch behavior
+        e.preventDefault();
+        
+        this.log('Drag started for bubble');
+    }
+    
+    /**
+     * Handle drag move (mousemove/touchmove)
+     * @param {Event} e - Mouse or touch event
+     */
+    handleDragMove(e) {
+        if (!this.dragState.isDragging || !this.dragState.bubble) return;
+        
+        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+        
+        const mapContainer = document.getElementById('map');
+        const mapRect = mapContainer.getBoundingClientRect();
+        
+        // Calculate new position relative to map container
+        // clientX/Y is in viewport coords, subtract map offset to get map-relative position
+        // then subtract bubble offset to position the bubble where user grabbed it
+        let newX = clientX - mapRect.left - this.dragState.bubbleOffsetX;
+        let newY = clientY - mapRect.top - this.dragState.bubbleOffsetY;
+        
+        // Get filter bar height to avoid overlap
+        const filterBar = document.getElementById('event-filter-bar');
+        const filterBarHeight = filterBar ? filterBar.offsetHeight + FILTER_BAR_PADDING : DEFAULT_FILTER_BAR_HEIGHT;
+        
+        // Clamp to viewport bounds
+        newX = Math.max(BUBBLE_MARGIN, Math.min(newX, mapContainer.clientWidth - BUBBLE_WIDTH - BUBBLE_MARGIN));
+        newY = Math.max(filterBarHeight + BUBBLE_MARGIN, Math.min(newY, mapContainer.clientHeight - BUBBLE_HEIGHT - BUBBLE_MARGIN));
+        
+        // Apply position
+        this.dragState.bubble.style.left = newX + 'px';
+        this.dragState.bubble.style.top = newY + 'px';
+        
+        e.preventDefault();
+    }
+    
+    /**
+     * Handle drag end (mouseup/touchend)
+     * @param {Event} e - Mouse or touch event
+     */
+    handleDragEnd(e) {
+        if (!this.dragState.isDragging) return;
+        
+        const bubble = this.dragState.bubble;
+        
+        // Re-enable map panning
+        if (this.map) {
+            this.map.dragging.enable();
+        }
+        
+        if (bubble) {
+            bubble.classList.remove('dragging');
+            
+            // Store user offset so position persists during map move
+            const bubbleDataEntry = this.bubbleData.find(d => d.bubble === bubble);
+            if (bubbleDataEntry && bubbleDataEntry.marker) {
+                const markerPos = this.map.latLngToContainerPoint(bubbleDataEntry.marker.getLatLng());
+                const bubbleX = parseFloat(bubble.style.left);
+                const bubbleY = parseFloat(bubble.style.top);
+                
+                // Store offset from marker position
+                bubbleDataEntry.userOffset = {
+                    x: bubbleX - markerPos.x,
+                    y: bubbleY - markerPos.y
+                };
+                
+                this.log('User repositioned bubble, offset stored:', bubbleDataEntry.userOffset);
+            }
+        }
+        
+        // Remove move/end listeners
+        document.removeEventListener('mousemove', this.handleDragMove);
+        document.removeEventListener('mouseup', this.handleDragEnd);
+        document.removeEventListener('touchmove', this.handleDragMove);
+        document.removeEventListener('touchend', this.handleDragEnd);
+        
+        // Reset drag state
+        this.dragState = {
+            isDragging: false,
+            bubble: null,
+            startX: 0,
+            startY: 0,
+            bubbleOffsetX: 0,
+            bubbleOffsetY: 0,
+            mapOffsetX: 0,
+            mapOffsetY: 0
+        };
+        
+        this.log('Drag ended');
+    }
+    
+    /**
      * Update all bubble positions when map is moved/zoomed
      * Called on map 'move' and 'zoom' events
+     * Respects user-adjusted positions (userOffset) when available
      */
     updateBubblePositions() {
         if (!this.map || this.bubbleData.length === 0) return;
+        
+        // Don't update positions while user is dragging
+        if (this.dragState.isDragging) return;
         
         const mapContainer = document.getElementById('map');
         const viewportWidth = mapContainer.clientWidth;
         const viewportHeight = mapContainer.clientHeight;
         
-        this.bubbleData.forEach(({ bubble, marker, index }) => {
+        // Get filter bar height to avoid overlap
+        const filterBar = document.getElementById('event-filter-bar');
+        const filterBarHeight = filterBar ? filterBar.offsetHeight + FILTER_BAR_PADDING : DEFAULT_FILTER_BAR_HEIGHT;
+        
+        this.bubbleData.forEach(({ bubble, marker, index, userOffset }) => {
             // Get updated marker position in screen coordinates
             const markerPos = this.map.latLngToContainerPoint(marker.getLatLng());
             
-            // Calculate new position relative to marker
-            const position = this.calculateMarkerRelativePosition(markerPos, index);
+            let x, y;
+            
+            // If user has manually repositioned this bubble, use their offset
+            if (userOffset) {
+                x = markerPos.x + userOffset.x;
+                y = markerPos.y + userOffset.y;
+                
+                // Clamp to viewport bounds
+                x = Math.max(BUBBLE_MARGIN, Math.min(x, viewportWidth - BUBBLE_WIDTH - BUBBLE_MARGIN));
+                y = Math.max(filterBarHeight + BUBBLE_MARGIN, Math.min(y, viewportHeight - BUBBLE_HEIGHT - BUBBLE_MARGIN));
+            } else {
+                // Use automatic positioning
+                const position = this.calculateMarkerRelativePosition(markerPos, index);
+                x = position.x;
+                y = position.y;
+            }
             
             // Update bubble position
-            bubble.style.left = position.x + 'px';
-            bubble.style.top = position.y + 'px';
+            bubble.style.left = x + 'px';
+            bubble.style.top = y + 'px';
             
             // Hide bubble if marker is outside viewport (with some margin)
             const isVisible = markerPos.x > -BUBBLE_WIDTH && 

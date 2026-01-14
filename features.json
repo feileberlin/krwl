@@ -1139,6 +1139,31 @@
       ],
       "test_method": "check_code_patterns",
       "test_instructions": "1. Run weather scraper: python3 src/event_manager.py scrape-weather\n2. Verify cache created: assets/json/weather_cache.json\n3. Check dresscode is validated against accepted list\n4. Generate site: python3 src/event_manager.py generate\n5. Verify window.WEATHER_CACHE is embedded in public/index.html\n6. Open site and verify weather chip appears at end of filter bar\n7. Verify dresscode text is displayed in format 'with [dresscode].' (e.g., 'with warm pullover.')\n8. Hover over chip to see temperature tooltip (e.g., '8°C • with warm pullover.')\n9. Test hourly caching: run scrape-weather again within 1 hour, should use cache\n10. Force refresh: python3 src/event_manager.py scrape-weather --force\n11. Test GitHub Actions: Go to Actions → Website Maintenance (Unified) → Run workflow → Select 'scrape-weather'"
+    },
+    {
+      "id": "draggable-speech-bubbles",
+      "name": "Draggable Speech Bubbles",
+      "description": "Speech bubbles (event info cards) can be dragged by the user to manually resolve any positioning conflicts. Supports both mouse and touch gestures. User-positioned bubbles maintain their relative offset from the marker when the map is panned or zoomed.",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "assets/js/speech-bubbles.js",
+        "assets/css/style.css"
+      ],
+      "code_patterns": [
+        {
+          "file": "assets/js/speech-bubbles.js",
+          "pattern": "handleDragStart|handleDragMove|handleDragEnd|userOffset",
+          "description": "Drag event handlers and user offset tracking"
+        },
+        {
+          "file": "assets/css/style.css",
+          "pattern": "\\.speech-bubble\\.dragging|cursor: grab",
+          "description": "Drag cursor and dragging state styles"
+        }
+      ],
+      "test_method": "manual",
+      "test_instructions": "1. Open the app with events displayed\n2. Verify bubbles show cursor: grab on hover\n3. Click and drag a bubble - it should move freely\n4. Verify bubble shows elevated style while dragging (scale, shadow)\n5. Release the bubble - it should stay at new position\n6. Pan or zoom the map - dragged bubble should maintain relative position to its marker\n7. Test on mobile: touch and drag should work\n8. Verify map panning is disabled while dragging bubble\n9. Verify clicking bookmark button inside bubble does not trigger drag"
     }
   ]
 }
