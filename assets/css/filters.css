@@ -138,8 +138,8 @@
 }
 
 #event-filter-bar .filter-bar-logo svg {
-    width: 20px;
-    height: 20px;
+    width: 4em;
+    height: 4em;
     stroke: var(--color-primary);
     fill: none;
     filter: drop-shadow(0 0 5px rgba(255, 105, 180, 0.6));
