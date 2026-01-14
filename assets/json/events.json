@@ -5,8 +5,8 @@
       "title": "Kunst in Bayreuth - Werke der 1940er bis 1960er Jahre - aus den Sammlungen und Stiftungen im Kunstmuseum",
       "description": "Donnerstag,01.01.2026,",
       "location": {
-        "name": "Kunstmuseum Bayreuth, Maximilianstraße 33, 95444 Bayreuth",
-        "lat": 49.9440,
+        "name": "Kunstmuseum Bayreuth, Maximilianstra\u00dfe 33, 95444 Bayreuth",
+        "lat": 49.944,
         "lon": 11.5747
       },
       "start_time": "2026-01-01T18:00:00",
@@ -38,12 +38,12 @@
     },
     {
       "id": "html_frankenpost_6710371282043762830",
-      "title": "Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline",
+      "title": "F\u00fchrung durch die Wohnr\u00e4ume der Sommerresidenz der Markgr\u00e4fin Caroline",
       "description": "01.Januar",
       "location": {
         "name": "Schloss Carolinenruhe, Colmdorf 8, 95448 Bayreuth",
         "lat": 49.93047,
-        "lon": 11.56740
+        "lon": 11.5674
       },
       "start_time": "2026-01-01T18:00:00",
       "end_time": null,
