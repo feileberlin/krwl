@@ -395,14 +395,14 @@
     "predefined_locations": [
       {
         "name": "location.no1",
-        "lat": 50.3125,
-        "lon": 11.9189,
+        "lat": 50.308053,
+        "lon": 11.9233,
         "display_name": "Hof Hauptbahnhof"
       },
       {
         "name": "location.no2",
-        "lat": 50.3195,
-        "lon": 11.9175,
+        "lat": 50.3164799,
+        "lon": 11.9146205,
         "display_name": "Sonnenplatz"
       }
     ]
