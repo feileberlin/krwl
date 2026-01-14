@@ -125,6 +125,7 @@
     background: none;
     border: none;
     color: inherit;
+    font-size: 0.95rem;
 }
 
 #event-filter-bar .filter-bar-logo:hover {
@@ -138,16 +139,16 @@
 }
 
 #event-filter-bar .filter-bar-logo svg {
-    width: 4em;
-    height: 4em;
-    stroke: var(--color-primary);
+    width: 1em; /* Match filter bar text size */
+    height: 1em; /* Match filter bar text size */
+    stroke: currentColor;
     fill: none;
-    filter: drop-shadow(0 0 5px rgba(255, 105, 180, 0.6));
+    filter: drop-shadow(0 0 4px rgba(255, 105, 180, 0.6));
     transition: filter 0.2s;
 }
 
 #event-filter-bar .filter-bar-logo:hover svg {
-    stroke: var(--color-primary);
+    stroke: currentColor;
     filter: drop-shadow(0 0 8px rgba(255, 105, 180, 1));
 }
 

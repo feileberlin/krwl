@@ -569,7 +569,28 @@ class SiteGenerator:
             {'library': 'Google Fonts - Roboto', 'format': 'woff2'}
         )
         
-        # Load app CSS with debug comments
+        # Load modular app CSS with debug comments (Leaflet CSS stays separate)
+        app_css_modules = [
+            ('assets/css/base.css', 'Base styles'),
+            ('assets/css/map.css', 'Map styles'),
+            ('assets/css/leaflet-custom.css', 'Leaflet custom overrides'),
+            ('assets/css/filters.css', 'Filter bar styles'),
+            ('assets/css/dashboard.css', 'Dashboard styles'),
+            ('assets/css/scrollbar.css', 'Scrollbar styles'),
+            ('assets/css/bubbles.css', 'Speech bubble styles'),
+            ('assets/css/mobile.css', 'Mobile overrides')
+        ]
+        module_css_parts = []
+        for module_path, description in app_css_modules:
+            module_content = self.read_text_file(self.base_path / module_path, fallback='')
+            if module_content.strip():
+                module_css_parts.append(self.wrap_with_debug_comment(
+                    module_content,
+                    'css',
+                    module_path,
+                    {'description': description}
+                ))
+
         app_css_path = self.base_path / "assets" / 'css' / 'style.css'
         app_css = self.read_text_file(app_css_path)
         app_css = self.wrap_with_debug_comment(
@@ -578,6 +599,9 @@ class SiteGenerator:
             'assets/css/style.css',
             {'description': 'Main application styles'}
         )
+
+        if module_css_parts:
+            app_css = "\n\n".join(module_css_parts + [app_css])
         
         stylesheets = {
             'roboto_fonts': roboto_fonts,

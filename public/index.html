@@ -137,7 +137,1221 @@
 }
 </style>
 <style>/* Leaflet CSS: Load from CDN at runtime if needed */</style>
-<style>/*
+<style>/* Base Styles - Reset and Global */
+/* Design tokens are loaded separately via design-tokens.css */
+
+/* IMPORTANT: Exclude Leaflet from box-sizing reset */
+/* Leaflet uses content-box for calculations, border-box breaks it */
+/* See: https://leafletjs.com/reference.html#map-boxzoom */
+*:not([class*='leaflet']) {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Explicitly reset box-sizing for Leaflet elements */
+.leaflet-container,
+.leaflet-container * {
+    box-sizing: content-box;
+}
+
+/* Responsive Viewport Dimensions - Single Source of Truth */
+/* 
+ * PROGRESSIVE ENHANCEMENT STRATEGY:
+ * 1. Fallback: Use 100vh/100vw (works without JavaScript, older browsers)
+ * 2. Enhancement: Use 100dvh/100dvw (dynamic viewport, modern browsers)
+ * 3. JavaScript: Updates these properties on resize/orientation changes
+ * 
+ * BROWSER SUPPORT:
+ * - dvh/dvw: Chrome 108+, Safari 15.4+, Firefox 101+ (2022+)
+ * - Falls back gracefully to vh/vw in older browsers
+ * - JavaScript enhancement works in all browsers
+ */
+:root {
+    /* Fallback for older browsers (no JavaScript required) */
+    --app-width: 100vw;
+    --app-height: 100vh;
+}
+
+/* Modern browsers: Dynamic viewport units (handle mobile address bars) */
+@supports (height: 100dvh) {
+    :root {
+        --app-width: 100dvw;
+        --app-height: 100dvh;
+    }
+}
+
+/* JavaScript will update these on resize/orientation change for perfect accuracy */
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    overflow: hidden;
+}
+
+#app {
+    height: var(--app-height);
+    width: var(--app-width);
+    position: relative;
+}
+
+/* Noscript warning styles */
+noscript {
+    display: block;
+    padding: 20px;
+    background: var(--color-warning);
+    color: var(--color-bg-primary);
+    text-align: center;
+    font-weight: bold;
+}
+
+
+/* Map */
+
+#map {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--app-width);
+    height: var(--app-height);
+    z-index: 1;
+    background: var(--barbie-shade-darkest);
+}
+
+/* Apply monochromatic filter to Leaflet map tiles */
+.leaflet-container {
+    background: var(--barbie-shade-darkest);
+    /* Monochromatic filter: Convert to grayscale, then apply Barbie Red hue */
+    filter: grayscale(100%) brightness(0.5) sepia(100%) hue-rotate(290deg) saturate(200%);
+}
+
+.leaflet-tile-container {
+    background: var(--barbie-shade-darkest);
+}
+
+/* Remove filter from map controls and markers so they stay colorful */
+.leaflet-control,
+.leaflet-marker-icon,
+.leaflet-popup {
+    filter: none !important;
+}
+
+#map-overlay {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+#map-overlay > * {
+    pointer-events: auto;
+}
+
+
+/* Leaflet Custom */
+
+/* Edge-positioned event details with arrows */
+.event-detail-edge {
+    position: fixed;
+    background: var(--barbie-shade-darkest);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--color-border-primary);
+    border-radius: 8px;
+    padding: 1rem;
+    max-width: 280px;
+    z-index: 1500;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
+                0 0 10px rgba(255, 105, 180, 0.3);
+    pointer-events: auto;
+}
+
+.event-detail-edge h3 {
+    color: var(--color-primary);
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+}
+
+.event-detail-edge p {
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    margin: 0.3rem 0;
+    line-height: 1.4;
+}
+
+.event-detail-edge .detail-time {
+    color: var(--color-text-tertiary);
+    font-size: 0.8rem;
+}
+
+.event-detail-edge .detail-distance {
+    color: var(--color-text-tertiary);
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+/* SVG arrow container */
+#event-arrows-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1400;
+}
+
+#event-arrows-container svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Leaflet customization */
+.leaflet-popup-content-wrapper {
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    border: 2px solid var(--color-border-primary);
+}
+
+.leaflet-popup-tip {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-border-primary);
+}
+
+/* Monochrome marker glow - barbie red */
+.leaflet-marker-icon {
+    filter: drop-shadow(0 0 2px var(--color-primary));
+    transition: filter 0.2s ease;
+}
+
+.leaflet-marker-icon:hover {
+    filter: drop-shadow(0 0 4px var(--color-primary)) 
+            drop-shadow(0 0 8px var(--color-primary));
+}
+
+
+/* Filters */
+
+/* Interactive filter bar */
+#event-filter-bar {
+    position: fixed;
+    /* Our standard spacing steps are 8px (compact) and 16px (spacious); 10px is an intentional deviation here to balance visibility with screen-edge spacing for the fixed filter bar. */
+    top: 10px;
+    left: 10px;
+    right: auto;
+    max-width: calc(var(--app-width) - 80px); /* Mobile first: adapt to screen width */
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-primary);
+    padding: 0.8rem;
+    background: var(--barbie-shade-darkest);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    border: 0px;
+    line-height: 1.6;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
+                0 0 10px rgba(255, 105, 180, 0.3);
+    text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.3rem;
+    align-items: center;
+    white-space: nowrap;
+    overflow-x: auto;
+    z-index: 1001;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dashboard opening animation - filter bar expands */
+#event-filter-bar.dashboard-opening {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    width: auto;
+    max-width: none;
+}
+
+/* Filter items fade out during dashboard opening */
+#event-filter-bar.dashboard-opening .filter-bar-item {
+    opacity: 0;
+    transition: opacity 0.2s ease-out;
+}
+
+/* Filter chips - bracketed button design with ecoBarbie colorspace */
+.filter-chip {
+    cursor: pointer;
+    background: rgba(214, 137, 184, 0.15); /* ecoBarbie Light Tone: #D689B8 */
+    border: 1px solid rgba(214, 137, 184, 0.4);
+    border-radius: 6px;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #D689B8; /* ecoBarbie Light Tone - ecological Barbie */
+    transition: all 0.2s ease-out;
+    position: relative;
+    display: inline-block;
+    white-space: nowrap;
+    text-shadow: none; /* Natural, no glow */
+}
+
+.filter-chip:hover {
+    background: rgba(214, 137, 184, 0.25);
+    border-color: rgba(214, 137, 184, 0.6);
+    color: var(--color-text-primary);
+    text-shadow: none; /* Natural, no glow */
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(138, 74, 112, 0.3); /* ecoBarbie Dark Tone shadow */
+}
+
+.filter-chip.active {
+    background: rgba(176, 95, 142, 0.35); /* ecoBarbie Medium Tone: #B05F8E */
+    border-color: #D689B8; /* ecoBarbie Light Tone */
+    color: var(--color-text-primary);
+    text-shadow: none; /* Natural, no glow */
+    box-shadow: 0 0 12px rgba(138, 74, 112, 0.5); /* ecoBarbie Dark Tone shadow */
+}
+
+.filter-chip:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Legacy support for .filter-bar-item class (deprecated) */
+#event-filter-bar .filter-bar-item {
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 3px;
+    transition: all 0.2s;
+    position: relative;
+    display: inline-block;
+}
+
+#event-filter-bar .filter-bar-item:hover {
+    color: var(--color-text-primary);
+    text-shadow: 0 0 15px rgba(255, 105, 180, 0.8);
+    text-decoration-style: solid;
+}
+
+#event-filter-bar .filter-bar-item.editing {
+    color: var(--color-text-primary);
+    background: rgba(255, 105, 180, 0.3);
+    padding: 0.1rem 0.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    min-width: 150px;
+    text-align: center;
+}
+
+/* Filter logo button */
+#event-filter-bar .filter-bar-logo {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+    cursor: pointer;
+    padding: 0.2rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 0.95rem;
+}
+
+#event-filter-bar .filter-bar-logo:hover {
+    background: rgba(255, 105, 180, 0.2);
+    transform: scale(1.1);
+}
+
+#event-filter-bar .filter-bar-logo:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+#event-filter-bar .filter-bar-logo svg {
+    width: 1em; /* Match filter bar text size */
+    height: 1em; /* Match filter bar text size */
+    stroke: currentColor;
+    fill: none;
+    filter: drop-shadow(0 0 4px rgba(255, 105, 180, 0.6));
+    transition: filter 0.2s;
+}
+
+#event-filter-bar .filter-bar-logo:hover svg {
+    stroke: currentColor;
+    filter: drop-shadow(0 0 8px rgba(255, 105, 180, 1));
+}
+
+/* Filter dropdowns - ecoBarbie colorspace */
+.filter-bar-dropdown {
+    position: fixed;
+    background: var(--barbie-shade-darkest);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(214, 137, 184, 0.5); /* ecoBarbie Light Tone */
+    border-radius: 8px;
+    padding: 0.25rem 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
+                0 0 10px rgba(138, 74, 112, 0.3); /* ecoBarbie Dark Tone glow */
+    z-index: 3000;
+    min-width: 220px;
+    white-space: normal;
+}
+
+.filter-bar-dropdown select,
+.filter-bar-dropdown input[type="range"],
+.filter-bar-dropdown input[type="number"],
+.filter-bar-dropdown button {
+    width: 100%;
+    margin: 0.3rem 0;
+    padding: 0.5rem;
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+
+/* Dropdown items for chip-based design - ecoBarbie colorspace */
+.filter-bar-dropdown-item {
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 3px solid transparent;
+}
+
+.filter-bar-dropdown-item:hover {
+    background: rgba(214, 137, 184, 0.2); /* ecoBarbie Light Tone */
+    color: #D689B8; /* ecoBarbie Light Tone */
+    border-left-color: rgba(214, 137, 184, 0.5);
+}
+
+.filter-bar-dropdown-item.selected {
+    background: rgba(176, 95, 142, 0.3); /* ecoBarbie Medium Tone */
+    color: #D689B8; /* ecoBarbie Light Tone */
+    font-weight: 600;
+    border-left-color: #D689B8; /* ecoBarbie Light Tone */
+}
+
+.filter-bar-dropdown-item.current-selection {
+    background: rgba(176, 95, 142, 0.35); /* ecoBarbie Medium Tone */
+    color: var(--color-text-primary);
+    font-weight: 700;
+    border-left-color: #D689B8; /* ecoBarbie Light Tone */
+    border-bottom: 1px solid rgba(214, 137, 184, 0.3); /* ecoBarbie Light Tone */
+    margin-bottom: 0.25rem;
+}
+
+.filter-bar-dropdown-item .item-label {
+    flex: 1;
+}
+
+.filter-bar-dropdown-item .item-count {
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-left: 1rem;
+}
+
+.filter-bar-dropdown-item.current-selection .item-count {
+    color: #D689B8; /* ecoBarbie Light Tone */
+    font-weight: 700;
+}
+
+/* Distance slider container */
+.distance-slider-container {
+    padding: 1rem;
+}
+
+.distance-slider-container input[type="range"] {
+    width: 100%;
+    margin: 0.5rem 0;
+}
+
+.distance-slider-container .distance-display {
+    color: var(--color-primary);
+    font-weight: 600;
+    text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+#imprint-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.2rem;
+    margin-right: 0.5rem;
+    background: none;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+#imprint-link:hover {
+    background: rgba(255, 105, 180, 0.1);
+    color: var(--color-primary);
+}
+
+#site-logo {
+    height: 40px;
+    width: 40px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#site-logo path {
+    stroke: var(--color-primary) !important;
+    transition: stroke 0.2s;
+}
+
+#imprint-link:hover #site-logo path {
+    stroke: var(--color-primary) !important;
+}
+
+#imprint-text {
+    display: none;
+}
+
+
+/* Dashboard */
+
+/* Dashboard menu modal */
+#dashboard-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in;
+}
+
+#dashboard-menu.hidden {
+    display: none;
+}
+
+#dashboard-menu.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.dashboard-content {
+    background: var(--color-bg-secondary);
+    border-radius: 12px;
+    padding: 1.5rem;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    border: 2px solid var(--color-border-primary);
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.3s ease-in, transform 0.3s ease-in;
+}
+
+#dashboard-menu.visible .dashboard-content {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.dashboard-logo {
+    display: flex;
+    align-items: center;
+    color: var(--color-primary);
+}
+
+.dashboard-logo svg {
+    width: 32px;
+    height: 32px;
+    filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.6));
+}
+
+#close-dashboard {
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    font-size: 1.8rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+    padding: 0.5rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#close-dashboard:hover {
+    color: var(--color-primary);
+}
+
+.dashboard-content h2 {
+    margin-bottom: 1rem;
+    color: var(--color-primary);
+    text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
+    font-size: 1.5rem;
+}
+
+.dashboard-section {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 105, 180, 0.2);
+}
+
+.dashboard-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.dashboard-section h3 {
+    color: var(--color-primary);
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-section p {
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+
+.dashboard-section strong {
+    color: var(--color-text-primary);
+}
+
+.dashboard-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dashboard-links li {
+    margin-bottom: 0.4rem;
+}
+
+.dashboard-links a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-block;
+    font-size: 0.9rem;
+}
+
+.dashboard-links a:hover {
+    color: var(--color-primary-hover);
+    text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+    transform: translateX(3px);
+}
+
+/* Environment and debug mode state classes */
+.env-dev {
+    color: #FFB3DF;
+}
+
+.env-production {
+    color: #D689B8; /* EcoBarbie Light Tone - no green in EcoBarbie design */
+}
+
+.debug-enabled {
+    color: #FFB3DF;
+}
+
+.debug-disabled {
+    color: #888;
+}
+
+
+/* Scrollbar */
+
+/* Scrollbar styling - monochrome Barbie Red theme */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--barbie-shade-darkest);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-hover);
+}
+
+@media (max-width: 768px) {
+    #event-filter-bar {
+        max-width: calc(var(--app-width) - 40px); /* More space on mobile */
+        font-size: 0.85rem;
+    }
+    
+    #event-list {
+        display: none; /* Hidden for fullscreen map */
+    }
+    
+    #map {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: var(--app-width);
+        height: var(--app-height);
+    }
+}
+
+@media (max-width: 480px) {
+    #event-filter-bar {
+        max-width: calc(var(--app-width) - 30px);
+        font-size: 0.8rem;
+        padding: 0.6rem;
+        gap: 0.2rem;
+    }
+    
+    .filter-bar-dropdown {
+        max-width: calc(var(--app-width) - 40px);
+        font-size: 0.85rem;
+    }
+}
+
+/* Speech Bubbles */
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SPEECH BUBBLES - Event details shown on page load
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.bubble-connectors {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 900;
+}
+
+.bubble-connector-line {
+    stroke: var(--color-primary);
+    stroke-width: 2;
+    stroke-linecap: round;
+    opacity: 0.85;
+    filter: drop-shadow(0 0 4px rgba(255, 105, 180, 0.6)); /* Matches --color-primary glow */
+}
+
+.speech-bubble {
+    position: absolute;
+    background: rgba(13, 17, 23, 0.95);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--color-primary);
+    border-radius: 12px;
+    padding: 12px;
+    width: 220px;
+    z-index: 1000;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
+                0 0 15px rgba(255, 105, 180, 0.4);
+    cursor: grab;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                box-shadow 0.3s ease, 
+                opacity 0.4s ease,
+                filter 0.3s ease;
+    opacity: 0;
+    pointer-events: auto;
+    font-size: 0.85rem;
+    /* Organic appearance */
+    transform-origin: center;
+    will-change: transform;
+    /* Touch action for mobile drag */
+    touch-action: none;
+    user-select: none;
+}
+
+/* Dragging state - overrides hover and animation */
+.speech-bubble.dragging {
+    cursor: grabbing;
+    z-index: 1100;
+    transform: scale(1.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7),
+                0 0 30px rgba(255, 105, 180, 0.8);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    animation: none; /* Cancel appear animation during drag */
+}
+
+/* Prevent hover effects during drag */
+.speech-bubble.dragging:hover {
+    transform: scale(1.08); /* Keep dragging transform, don't apply hover */
+    filter: none;
+}
+
+/* Add subtle animation on appear */
+.speech-bubble.visible {
+    opacity: 1;
+    animation: bubbleAppear 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes bubbleAppear {
+    0% {
+        opacity: 0;
+        transform: scale(0.8) translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Natural hover with slight rotation */
+.speech-bubble:hover {
+    transform: scale(1.05) rotate(0.5deg);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6),
+                0 0 20px rgba(255, 105, 180, 0.6);
+    filter: brightness(1.1);
+}
+
+/* Add nth-child variations for organic feel */
+.speech-bubble:nth-child(3n+1) {
+    animation-delay: 0.05s;
+}
+
+.speech-bubble:nth-child(3n+2) {
+    animation-delay: 0.1s;
+}
+
+.speech-bubble:nth-child(3n) {
+    animation-delay: 0.15s;
+}
+
+/* Subtle rotation variations on hover for different bubbles */
+.speech-bubble:nth-child(even):hover {
+    transform: scale(1.05) rotate(-0.5deg);
+}
+
+.speech-bubble:nth-child(3n):hover {
+    transform: scale(1.05) rotate(1deg);
+}
+
+/* Speech bubble headline - START TIME */
+.bubble-time-headline {
+    color: var(--color-primary);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    line-height: 1.2;
+}
+
+/* Speech bubble date */
+.bubble-date {
+    color: var(--color-text-secondary);
+    font-size: 0.75rem;
+    margin-bottom: 8px;
+    line-height: 1.2;
+}
+
+/* Speech bubble title */
+.bubble-title {
+    color: var(--color-text-primary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 6px;
+    line-height: 1.3;
+}
+
+/* Speech bubble location */
+.bubble-location {
+    color: var(--color-text-secondary);
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+    line-height: 1.2;
+}
+
+/* Speech bubble distance */
+.bubble-distance {
+    color: var(--color-text-tertiary);
+    font-size: 0.75rem;
+    margin-bottom: 8px;
+    line-height: 1.2;
+}
+
+/* Bookmark button in speech bubble */
+.bubble-bookmark {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+    transition: transform 0.2s ease, color 0.2s ease;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Lucide heart icon styling */
+.bubble-bookmark i[data-lucide="heart"] {
+    width: 20px;
+    height: 20px;
+    stroke: var(--color-text-tertiary); /* Default unbookmarked stroke color */
+    fill: none; /* Outlined by default */
+    transition: stroke 0.2s ease, fill 0.2s ease;
+}
+
+.bubble-bookmark:hover i[data-lucide="heart"] {
+    transform: scale(1.2);
+    stroke: #D689B8; /* EcoBarbie Light Tone on hover */
+}
+
+.bubble-bookmark.bookmarked i[data-lucide="heart"] {
+    stroke: #D689B8; /* EcoBarbie Light Tone stroke when bookmarked */
+    fill: #D689B8; /* Filled with EcoBarbie Light Tone when bookmarked */
+}
+
+.bubble-bookmark.bookmarked {
+    animation: heartbeat 0.3s ease;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+}
+
+/* Duplicate count badge */
+.bubble-duplicate-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--color-warning);
+    color: var(--color-bg-primary);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 12px;
+    border: 2px solid var(--color-bg-primary);
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+/* Bookmark feedback notification */
+.bookmark-feedback {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 105, 180, 0.95);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    z-index: 2500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    animation: slideUpFadeIn 0.3s ease;
+}
+
+.bookmark-feedback.fade-out {
+    animation: fadeOut 0.3s ease;
+    opacity: 0;
+}
+
+@keyframes slideUpFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* Mobile adjustments for speech bubbles */
+@media (max-width: 768px) {
+    .speech-bubble {
+        width: 180px;
+        padding: 10px;
+        font-size: 0.75rem;
+    }
+    
+    .bubble-time-headline {
+        font-size: 1rem;
+    }
+    
+    .bubble-date {
+        font-size: 0.7rem;
+    }
+    
+    .bubble-title {
+        font-size: 0.8rem;
+    }
+    
+    .bubble-location,
+    .bubble-distance {
+        font-size: 0.7rem;
+    }
+    
+    .bubble-bookmark {
+        font-size: 1.1rem;
+    }
+}
+
+
+/* Mobile */
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    #dashboard-menu {
+        padding: 0.5rem;
+    }
+    
+    .dashboard-content {
+        padding: 1rem;
+        border-radius: 8px;
+        max-height: 95vh;
+    }
+    
+    .dashboard-content h2 {
+        font-size: 1.3rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .dashboard-section {
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+    
+    .dashboard-section h3 {
+        font-size: 0.95rem;
+    }
+    
+    .dashboard-section p {
+        font-size: 0.85rem;
+    }
+    
+    .dashboard-links a {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-content {
+        padding: 0.75rem;
+    }
+    
+    .dashboard-content h2 {
+        font-size: 1.2rem;
+    }
+    
+    .dashboard-section h3 {
+        font-size: 0.9rem;
+    }
+}
+
+#event-list {
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 350px;
+    background: var(--barbie-shade-darkest);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    overflow-y: auto;
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+    z-index: 999;
+}
+
+#event-list.hidden {
+    display: none;
+}
+
+#reset-filters {
+    background: var(--barbie-shade-dark);
+    color: var(--color-text-tertiary);
+    border: 1px solid var(--light-grey);
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    transition: all 0.2s;
+}
+
+#reset-filters:hover {
+    background: var(--barbie-shade-medium);
+    border-color: var(--color-text-tertiary);
+    color: var(--color-text-secondary);
+}
+
+.location-override label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.location-override input[type="checkbox"] {
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+
+.event-card {
+    background: var(--barbie-shade-dark);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-left: 3px solid var(--color-primary);
+}
+
+.event-card:hover {
+    transform: translateX(-5px);
+    box-shadow: 0 5px 15px rgba(255, 105, 180, 0.3);
+    background: var(--barbie-shade-medium);
+}
+
+.event-card h3 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-primary);
+}
+
+.event-card p {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.3rem;
+}
+
+.event-card .distance {
+    color: var(--color-text-tertiary);
+    font-size: 0.8rem;
+}
+
+#event-detail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+#event-detail.hidden {
+    display: none;
+}
+
+.detail-content {
+    background: var(--color-bg-secondary);
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    border: 2px solid var(--color-border-primary);
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+}
+
+#close-detail {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+#close-detail:hover {
+    color: var(--color-primary);
+}
+
+.detail-content h2 {
+    margin-bottom: 1rem;
+    color: var(--color-primary);
+    text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
+}
+
+.detail-content p {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    color: var(--color-text-secondary);
+}
+
+#detail-info {
+    background: var(--barbie-shade-darkest);
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    border: 1px solid rgba(255, 105, 180, 0.2);
+}
+
+#detail-link {
+    display: inline-block;
+    background: var(--color-primary);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: all 0.2s;
+    box-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
+}
+
+#detail-link:hover {
+    background: var(--color-primary-hover);
+    box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+}
+
+
+/*
 MONOCHROMATIC BARBIE RED COLOR PALETTE:
 Base Color: Barbie Red #FF69B4 (RGB: 255, 105, 180)
 
@@ -1562,295 +2776,7 @@ strong, b {
     }
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   SPEECH BUBBLES - Event details shown on page load
-   ═══════════════════════════════════════════════════════════════════════ */
-
-.bubble-connectors {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 900;
-}
-
-.bubble-connector-line {
-    stroke: var(--color-primary);
-    stroke-width: 2;
-    stroke-linecap: round;
-    opacity: 0.85;
-    filter: drop-shadow(0 0 4px rgba(255, 105, 180, 0.6));
-}
-
-.speech-bubble {
-    position: absolute;
-    background: rgba(13, 17, 23, 0.95);
-    backdrop-filter: blur(10px);
-    border: 2px solid var(--color-primary);
-    border-radius: 12px;
-    padding: 12px;
-    width: 220px;
-    z-index: 1000;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
-                0 0 15px rgba(255, 105, 180, 0.4);
-    cursor: grab;
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
-                box-shadow 0.3s ease, 
-                opacity 0.4s ease,
-                filter 0.3s ease;
-    opacity: 0;
-    pointer-events: auto;
-    font-size: 0.85rem;
-    /* Organic appearance */
-    transform-origin: center;
-    will-change: transform;
-    /* Touch action for mobile drag */
-    touch-action: none;
-    user-select: none;
-}
-
-/* Dragging state - overrides hover and animation */
-.speech-bubble.dragging {
-    cursor: grabbing;
-    z-index: 1100;
-    transform: scale(1.08);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7),
-                0 0 30px rgba(255, 105, 180, 0.8);
-    transition: transform 0.1s ease, box-shadow 0.1s ease;
-    animation: none; /* Cancel appear animation during drag */
-}
-
-/* Prevent hover effects during drag */
-.speech-bubble.dragging:hover {
-    transform: scale(1.08); /* Keep dragging transform, don't apply hover */
-    filter: none;
-}
-
-/* Add subtle animation on appear */
-.speech-bubble.visible {
-    opacity: 1;
-    animation: bubbleAppear 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-@keyframes bubbleAppear {
-    0% {
-        opacity: 0;
-        transform: scale(0.8) translateY(10px);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
-}
-
-/* Natural hover with slight rotation */
-.speech-bubble:hover {
-    transform: scale(1.05) rotate(0.5deg);
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6),
-                0 0 20px rgba(255, 105, 180, 0.6);
-    filter: brightness(1.1);
-}
-
-/* Add nth-child variations for organic feel */
-.speech-bubble:nth-child(3n+1) {
-    animation-delay: 0.05s;
-}
-
-.speech-bubble:nth-child(3n+2) {
-    animation-delay: 0.1s;
-}
-
-.speech-bubble:nth-child(3n) {
-    animation-delay: 0.15s;
-}
-
-/* Subtle rotation variations on hover for different bubbles */
-.speech-bubble:nth-child(even):hover {
-    transform: scale(1.05) rotate(-0.5deg);
-}
-
-.speech-bubble:nth-child(3n):hover {
-    transform: scale(1.05) rotate(1deg);
-}
-
-/* Speech bubble headline - START TIME */
-.bubble-time-headline {
-    color: var(--color-primary);
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 4px;
-    line-height: 1.2;
-}
-
-/* Speech bubble date */
-.bubble-date {
-    color: var(--color-text-secondary);
-    font-size: 0.75rem;
-    margin-bottom: 8px;
-    line-height: 1.2;
-}
-
-/* Speech bubble title */
-.bubble-title {
-    color: var(--color-text-primary);
-    font-size: 0.9rem;
-    font-weight: 500;
-    margin-bottom: 6px;
-    line-height: 1.3;
-}
-
-/* Speech bubble location */
-.bubble-location {
-    color: var(--color-text-secondary);
-    font-size: 0.8rem;
-    margin-bottom: 4px;
-    line-height: 1.2;
-}
-
-/* Speech bubble distance */
-.bubble-distance {
-    color: var(--color-text-tertiary);
-    font-size: 0.75rem;
-    margin-bottom: 8px;
-    line-height: 1.2;
-}
-
-/* Bookmark button in speech bubble */
-.bubble-bookmark {
-    position: absolute;
-    bottom: 8px;
-    right: 8px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
-    line-height: 1;
-    transition: transform 0.2s ease, color 0.2s ease;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Lucide heart icon styling */
-.bubble-bookmark i[data-lucide="heart"] {
-    width: 20px;
-    height: 20px;
-    stroke: var(--color-text-tertiary); /* Default unbookmarked stroke color */
-    fill: none; /* Outlined by default */
-    transition: stroke 0.2s ease, fill 0.2s ease;
-}
-
-.bubble-bookmark:hover i[data-lucide="heart"] {
-    transform: scale(1.2);
-    stroke: #D689B8; /* EcoBarbie Light Tone on hover */
-}
-
-.bubble-bookmark.bookmarked i[data-lucide="heart"] {
-    stroke: #D689B8; /* EcoBarbie Light Tone stroke when bookmarked */
-    fill: #D689B8; /* Filled with EcoBarbie Light Tone when bookmarked */
-}
-
-.bubble-bookmark.bookmarked {
-    animation: heartbeat 0.3s ease;
-}
-
-@keyframes heartbeat {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.3); }
-}
-
-/* Duplicate count badge */
-.bubble-duplicate-badge {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background: var(--color-warning);
-    color: var(--color-bg-primary);
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 12px;
-    border: 2px solid var(--color-bg-primary);
-    z-index: 10;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    line-height: 1.2;
-    white-space: nowrap;
-}
-
-/* Bookmark feedback notification */
-.bookmark-feedback {
-    position: fixed;
-    bottom: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255, 105, 180, 0.95);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    z-index: 2500;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    animation: slideUpFadeIn 0.3s ease;
-}
-
-.bookmark-feedback.fade-out {
-    animation: fadeOut 0.3s ease;
-    opacity: 0;
-}
-
-@keyframes slideUpFadeIn {
-    from {
-        opacity: 0;
-        transform: translateX(-50%) translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-    }
-}
-
-@keyframes fadeOut {
-    from {
-        opacity: 1;
-    }
-    to {
-        opacity: 0;
-    }
-}
-
-/* Mobile adjustments for speech bubbles */
-@media (max-width: 768px) {
-    .speech-bubble {
-        width: 180px;
-        padding: 10px;
-        font-size: 0.75rem;
-    }
-    
-    .bubble-time-headline {
-        font-size: 1rem;
-    }
-    
-    .bubble-date {
-        font-size: 0.7rem;
-    }
-    
-    .bubble-title {
-        font-size: 0.8rem;
-    }
-    
-    .bubble-location,
-    .bubble-distance {
-        font-size: 0.7rem;
-    }
-    
-    .bubble-bookmark {
-        font-size: 1.1rem;
-    }
-}
+/* Speech bubble styles are now in assets/css/bubbles.css */
 </style>
 </head>
 
@@ -2057,7 +2983,7 @@ window.EMBEDDED_CONTENT_EN = {"locale": "en", "app": {"title": "KRWL HOF Communi
 window.EMBEDDED_CONTENT_DE = {"locale": "de", "app": {"title": "KRWL HOF Community-Veranstaltungen", "tagline": "Entdecke Community-Veranstaltungen in deiner Nähe"}, "filters": {"event_count": {"singular": "{count} Veranstaltung", "plural": "{count} Veranstaltungen", "none": "Keine Veranstaltungen"}, "event_word": {"singular": "veranstaltung", "plural": "veranstaltungen"}, "categories": {"all": "veranstaltungen", "music": "musik", "sports": "sport", "arts": "kunst & kultur", "food": "essen & trinken", "festivals": "festivals", "workshops": "workshops & kurse", "community": "gemeinschaft & soziales"}, "categories_singular": {"festivals": "festival"}, "time_ranges": {"sunrise": "bis sonnenaufgang", "sunday-primetime": "bis sonntag zur primetime", "full-moon": "bis zum nächsten vollmond", "6h": "in den nächsten 6 stunden", "12h": "in den nächsten 12 stunden", "24h": "in den nächsten 24 stunden", "48h": "in den nächsten 48 stunden", "all": "bevorstehend"}, "distances": {"1.25": "maximal 15 minuten zu fuß", "3.33": "10 minuten maximalentfernung mit dem fahrrad", "11.25": "45 minuten maximalentfernung mit öffentlichen verkehrsmitteln"}, "locations": {"geolocation": "von hier", "prefix": "von"}, "predefined_locations": {"location.no1": "Hof Hauptbahnhof", "location.no2": "Sonnenplatz"}}, "burger_menu": {"actions": {"bookmark": {"icon": "⭐", "label": "merken", "label_active": "entfernen", "aria_label": "Diese Veranstaltung merken"}, "copy": {"icon": "📋", "label": "daten_kopieren", "label_success": "kopiert!", "aria_label": "Veranstaltungsdetails kopieren"}, "share": {"icon": "📤", "label": "teilen", "label_success": "geteilt!", "aria_label": "Diese Veranstaltung teilen"}, "url": {"icon": "🔗", "label": "url_öffnen", "aria_label": "Veranstaltungs-URL öffnen"}, "navigate": {"icon": "🧭", "label": "navigation", "aria_label": "Route anzeigen"}, "calendar": {"icon": "📅", "label": "zum_kalender", "aria_label": "Zum Kalender hinzufügen"}, "views": {"icon": "👁️", "label": "aufrufe: ", "aria_label": "Aufrufanzahl"}, "exit": {"icon": "✕", "label": "schließen", "aria_label": "Menü schließen"}}}, "event_detail": {"no_description": "Keine Beschreibung verfügbar.", "distance_unknown": "Unbekannt", "distance_format": "{distance} km entfernt", "location_label": "Ort:", "time_label": "Zeit:", "distance_label": "Entfernung:"}, "time": {"today": "Heute", "tomorrow": "Morgen"}, "messages": {"geolocation": {"denied": "Standortzugriff verweigert", "unavailable": "Standortdienst nicht verfügbar", "timeout": "Standortabfrage überschritten", "error": "Fehler beim Abrufen des Standorts"}, "events": {"loading": "Lade Veranstaltungen...", "no_events": "Keine Veranstaltungen gefunden, die deinen Filtern entsprechen", "error": "Fehler beim Laden der Veranstaltungen"}, "share": {"cancelled": "Teilen abgebrochen", "not_supported": "Teilen wird nicht unterstützt", "success": "Erfolgreich geteilt"}, "copy": {"success": "In Zwischenablage kopiert", "error": "Kopieren fehlgeschlagen"}, "library": {"leaflet_error": "Kartenbibliothek konnte nicht geladen werden. Bitte überprüfe deine Internetverbindung und lade die Seite neu."}}, "accessibility": {"screen_reader": {"welcome": "Willkommen bei KRWL HOF Community-Veranstaltungen. Dies ist eine interaktive Vollbild-Kartenoberfläche.", "map_description": "Veranstaltungsfilter befinden sich oben auf der Karte. Klicke auf Kartenmarkierungen, um Veranstaltungsdetails anzuzeigen.", "marker_info": "Alle Veranstaltungen werden als Markierungen auf der Karte mit Zeitangaben angezeigt. Es ist keine separate Navigation erforderlich.", "keyboard_nav": "Tastaturnavigation: Verwende die Pfeiltasten, um durch Veranstaltungen zu navigieren, Eingabetaste oder Leertaste zum Öffnen von Details, Escape zum Schließen."}, "announcements": {"filters_changed": "Filter aktualisiert. Zeige {count} Veranstaltungen.", "event_opened": "Veranstaltungsdetails geöffnet: {title}", "event_closed": "Veranstaltungsdetails geschlossen"}, "labels": {"skip_to_map": "Zur Karte springen", "filter_heading": "Veranstaltungen filtern", "event_count_display": "Veranstaltungsanzahl-Anzeige", "category_filter": "Nach Veranstaltungskategorie filtern", "time_filter": "Nach Zeitraum filtern", "distance_filter": "Nach Entfernung vom Standort filtern", "location_selector": "Referenzstandort auswählen", "imprint_link": "Impressum und rechtliche Informationen anzeigen", "map_main": "Interaktive Karte zeigt Community-Veranstaltungen in deiner Nähe", "close_detail": "Veranstaltungsdetails schließen", "event_dialog": "Veranstaltungsdetails"}}, "noscript": {"heading": "KRWL HOF Community-Veranstaltungen", "warning": "⚠️ JavaScript ist deaktiviert. Zeige statische Veranstaltungsliste.", "info": "Aktiviere JavaScript für die interaktive Kartenerfahrung mit Filtern und Geolokalisierung.", "upcoming_events": "Kommende Veranstaltungen", "loading": "Lade Veranstaltungen...", "no_events": "Keine kommenden Veranstaltungen gefunden.", "footer": "Für die beste Erfahrung aktiviere bitte JavaScript, um auf die interaktive Karte zuzugreifen.", "happening_now": "LÄUFT JETZT", "view_details": "Veranstaltungsdetails ansehen →"}, "event_list": {"date_format": "{date}", "time_format": "{time}", "location_format": "📍 {location}", "actions": {"view": "ansehen", "navigate": "navigation", "copy": "kopieren", "share": "teilen", "copied": "✓ kopiert!", "failed": "✗ fehlgeschlagen"}}, "calendar": {"title": "{event_title}", "description": "{event_description}", "location": "{venue_name}", "filename": "veranstaltung-{event_id}.ics"}, "map": {"user_location_popup": "Du bist hier", "attribution": "Kartendaten © OpenStreetMap-Mitwirkende", "zoom_in": "Vergrößern", "zoom_out": "Verkleinern"}, "imprint": {"title": "KRWL HOF Projektstandort", "operator": {"name": "KRWL HOF Community Events", "type": "Gemeinschaftsprojekt"}, "address": {"city": "Hof", "postal_code": "95028", "state": "Bayern", "country": "Deutschland"}, "contact": {"website": "Webseite", "github": "GitHub"}, "responsible": {"label": "Verantwortlich", "role": "Projektbetreuer"}, "legal": {"disclaimer": "Alle Veranstaltungsinformationen werden aus öffentlichen Quellen gesammelt. Wir übernehmen keine Gewähr für Richtigkeit oder Vollständigkeit. Bitte überprüfen Sie Details bei den Veranstaltern.", "privacy_policy": "Diese Anwendung verwendet Browser-Geolokalisierung mit Ihrer ausdrücklichen Erlaubnis. Standortdaten werden lokal verarbeitet und nicht an einen Server übermittelt. Veranstaltungslesezeichen werden im Browser-localStorage gespeichert.", "data_sources": "Veranstaltungsdaten werden aus öffentlichen Quellen aggregiert, einschließlich Stadtwebsites, Kultureinrichtungen und Community-Veranstaltungskalendern. Siehe Scraping-Konfiguration für vollständige Quellenliste.", "license": "Open-Source-Projekt - Siehe GitHub-Repository für Lizenzdetails", "copyright": "© 2024 KRWL HOF Community. Kartendaten © OpenStreetMap-Mitwirkende."}, "technical": {"label": "Technisch", "hosting": "Hosting", "domain": "Domain", "open_source": "Open-Source-Projekt"}}};
 window.MARKER_ICONS = {"marker-on-stage": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBkcmFtYSBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTEwIDExaC4wMSIgLz4KICA8cGF0aCBkPSJNMTQgNmguMDEiIC8+CiAgPHBhdGggZD0iTTE4IDZoLjAxIiAvPgogIDxwYXRoIGQ9Ik02LjUgMTMuMWguMDEiIC8+CiAgPHBhdGggZD0iTTIyIDVjMCA5LTQgMTItNiAxMnMtNi0zLTYtMTJjMC0yIDItMyA2LTNzNiAxIDYgMyIgLz4KICA8cGF0aCBkPSJNMTcuNCA5LjljLS44LjgtMiAuOC0yLjggMCIgLz4KICA8cGF0aCBkPSJNMTAuMSA3LjFDOSA3LjIgNy43IDcuNyA2IDguNmMtMy41IDItNC43IDMuOS0zLjcgNS42IDQuNSA3LjggOS41IDguNCAxMS4yIDcuNC45LS41IDEuOS0yLjEgMS45LTQuNyIgLz4KICA8cGF0aCBkPSJNOS4xIDE2LjVjLjMtMS4xIDEuNC0xLjcgMi40LTEuNCIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-music": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBtdXNpYyBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTkgMThWNWwxMi0ydjEzIiAvPgogIDxjaXJjbGUgY3g9IjYiIGN5PSIxOCIgcj0iMyIgLz4KICA8Y2lyY2xlIGN4PSIxOCIgY3k9IjE2IiByPSIzIiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-opera-house": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBsYW5kbWFyayBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTEwIDE4di03IiAvPgogIDxwYXRoIGQ9Ik0xMS4xMiAyLjE5OGEyIDIgMCAwIDEgMS43Ni4wMDZsNy44NjYgMy44NDdjLjQ3Ni4yMzMuMzEuOTQ5LS4yMi45NDlIMy40NzRjLS41MyAwLS42OTUtLjcxNi0uMjItLjk0OXoiIC8+CiAgPHBhdGggZD0iTTE0IDE4di03IiAvPgogIDxwYXRoIGQ9Ik0xOCAxOHYtNyIgLz4KICA8cGF0aCBkPSJNMyAyMmgxOCIgLz4KICA8cGF0aCBkPSJNNiAxOHYtNyIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-pub-games": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBiZWVyIG1hcmtlciAtIHVuaWZpZWQgZ3lybyBzaGFwZSAtLT4KICAKICA8IS0tIERyb3Agc2hhZG93IC0tPgogIDxlbGxpcHNlIGN4PSIxNiIgY3k9IjQ2IiByeD0iNiIgcnk9IjIiIGZpbGw9IiMwMDAiIG9wYWNpdHk9IjAuNSIvPgogIAogIDwhLS0gU1RBTkRBUkQgR1lSTyBTSEFQRSAoc2FtZSBmb3IgYWxsKSAtLT4KICA8cGF0aCBkPSJNMTYgMiBDOSAyIDMgOCAzIDE1IEMzIDI0IDE2IDQ2IDE2IDQ2IEMxNiA0NiAyOSAyNCAyOSAxNSBDMjkgOCAyMyAyIDE2IDIgWiIgCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEx1Y2lkZSBpY29uIChzY2FsZWQgYW5kIHBvc2l0aW9uZWQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2LCAxNSkgc2NhbGUoMC41KSIgc3Ryb2tlPSIjMDBmZjAwIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTIsIC0xMikiPgo8cGF0aCBkPSJNMTcgMTFoMWEzIDMgMCAwIDEgMCA2aC0xIiAvPgogIDxwYXRoIGQ9Ik05IDEydjYiIC8+CiAgPHBhdGggZD0iTTEzIDEydjYiIC8+CiAgPHBhdGggZD0iTTE0IDcuNWMtMSAwLTEuNDQuNS0zIC41cy0yLS41LTMtLjUtMS43Mi41LTIuNS41YTIuNSAyLjUgMCAwIDEgMC01Yy43OCAwIDEuNTcuNSAyLjUuNVM5LjQ0IDIgMTEgMnMyIDEuNSAzIDEuNSAxLjcyLS41IDIuNS0uNWEyLjUgMi41IDAgMCAxIDAgNWMtLjc4IDAtMS41LS41LTIuNS0uNVoiIC8+CiAgPHBhdGggZD0iTTUgOHYxMmEyIDIgMCAwIDAgMiAyaDhhMiAyIDAgMCAwIDItMlY4IiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-festivals": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBzdGFyIG1hcmtlciAtIHVuaWZpZWQgZ3lybyBzaGFwZSAtLT4KICAKICA8IS0tIERyb3Agc2hhZG93IC0tPgogIDxlbGxpcHNlIGN4PSIxNiIgY3k9IjQ2IiByeD0iNiIgcnk9IjIiIGZpbGw9IiMwMDAiIG9wYWNpdHk9IjAuNSIvPgogIAogIDwhLS0gU1RBTkRBUkQgR1lSTyBTSEFQRSAoc2FtZSBmb3IgYWxsKSAtLT4KICA8cGF0aCBkPSJNMTYgMiBDOSAyIDMgOCAzIDE1IEMzIDI0IDE2IDQ2IDE2IDQ2IEMxNiA0NiAyOSAyNCAyOSAxNSBDMjkgOCAyMyAyIDE2IDIgWiIgCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEx1Y2lkZSBpY29uIChzY2FsZWQgYW5kIHBvc2l0aW9uZWQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2LCAxNSkgc2NhbGUoMC41KSIgc3Ryb2tlPSIjMDBmZjAwIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTIsIC0xMikiPgo8cGF0aCBkPSJNMTEuNTI1IDIuMjk1YS41My41MyAwIDAgMSAuOTUgMGwyLjMxIDQuNjc5YTIuMTIzIDIuMTIzIDAgMCAwIDEuNTk1IDEuMTZsNS4xNjYuNzU2YS41My41MyAwIDAgMSAuMjk0LjkwNGwtMy43MzYgMy42MzhhMi4xMjMgMi4xMjMgMCAwIDAtLjYxMSAxLjg3OGwuODgyIDUuMTRhLjUzLjUzIDAgMCAxLS43NzEuNTZsLTQuNjE4LTIuNDI4YTIuMTIyIDIuMTIyIDAgMCAwLTEuOTczIDBMNi4zOTYgMjEuMDFhLjUzLjUzIDAgMCAxLS43Ny0uNTZsLjg4MS01LjEzOWEyLjEyMiAyLjEyMiAwIDAgMC0uNjExLTEuODc5TDIuMTYgOS43OTVhLjUzLjUzIDAgMCAxIC4yOTQtLjkwNmw1LjE2NS0uNzU1YTIuMTIyIDIuMTIyIDAgMCAwIDEuNTk3LTEuMTZ6IiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-workshops": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBwcmVzZW50YXRpb24gbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0yIDNoMjAiIC8+CiAgPHBhdGggZD0iTTIxIDN2MTFhMiAyIDAgMCAxLTIgMkg1YTIgMiAwIDAgMS0yLTJWMyIgLz4KICA8cGF0aCBkPSJtNyAyMSA1LTUgNSA1IiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-school": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBncmFkdWF0aW9uLWNhcCBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTIxLjQyIDEwLjkyMmExIDEgMCAwIDAtLjAxOS0xLjgzOEwxMi44MyA1LjE4YTIgMiAwIDAgMC0xLjY2IDBMMi42IDkuMDhhMSAxIDAgMCAwIDAgMS44MzJsOC41NyAzLjkwOGEyIDIgMCAwIDAgMS42NiAweiIgLz4KICA8cGF0aCBkPSJNMjIgMTB2NiIgLz4KICA8cGF0aCBkPSJNNiAxMi41VjE2YTYgMyAwIDAgMCAxMiAwdi0zLjUiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-shopping": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBzaG9wcGluZy1iYWcgbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xNiAxMGE0IDQgMCAwIDEtOCAwIiAvPgogIDxwYXRoIGQ9Ik0zLjEwMyA2LjAzNGgxNy43OTQiIC8+CiAgPHBhdGggZD0iTTMuNCA1LjQ2N2EyIDIgMCAwIDAtLjQgMS4yVjIwYTIgMiAwIDAgMCAyIDJoMTRhMiAyIDAgMCAwIDItMlY2LjY2N2EyIDIgMCAwIDAtLjQtMS4ybC0yLTIuNjY3QTIgMiAwIDAgMCAxNyAySDdhMiAyIDAgMCAwLTEuNi44eiIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-sports": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSB0cm9waHkgbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xMCAxNC42NnYxLjYyNmEyIDIgMCAwIDEtLjk3NiAxLjY5NkE1IDUgMCAwIDAgNyAyMS45NzgiIC8+CiAgPHBhdGggZD0iTTE0IDE0LjY2djEuNjI2YTIgMiAwIDAgMCAuOTc2IDEuNjk2QTUgNSAwIDAgMSAxNyAyMS45NzgiIC8+CiAgPHBhdGggZD0iTTE4IDloMS41YTEgMSAwIDAgMCAwLTVIMTgiIC8+CiAgPHBhdGggZD0iTTQgMjJoMTYiIC8+CiAgPHBhdGggZD0iTTYgOWE2IDYgMCAwIDAgMTIgMFYzYTEgMSAwIDAgMC0xLTFIN2ExIDEgMCAwIDAtMSAxeiIgLz4KICA8cGF0aCBkPSJNNiA5SDQuNWExIDEgMCAwIDEgMC01SDYiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-sports-field": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSB0aWNrZXQgbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0yIDlhMyAzIDAgMCAxIDAgNnYyYTIgMiAwIDAgMCAyIDJoMTZhMiAyIDAgMCAwIDItMnYtMmEzIDMgMCAwIDEgMC02VjdhMiAyIDAgMCAwLTItMkg0YTIgMiAwIDAgMC0yIDJaIiAvPgogIDxwYXRoIGQ9Ik0xMyA1djIiIC8+CiAgPHBhdGggZD0iTTEzIDE3djIiIC8+CiAgPHBhdGggZD0iTTEzIDExdjIiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-swimming": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSB3YXZlcyBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTIgNmMuNi41IDEuMiAxIDIuNSAxQzcgNyA3IDUgOS41IDVjMi42IDAgMi40IDIgNSAyIDIuNSAwIDIuNS0yIDUtMiAxLjMgMCAxLjkuNSAyLjUgMSIgLz4KICA8cGF0aCBkPSJNMiAxMmMuNi41IDEuMiAxIDIuNSAxIDIuNSAwIDIuNS0yIDUtMiAyLjYgMCAyLjQgMiA1IDIgMi41IDAgMi41LTIgNS0yIDEuMyAwIDEuOS41IDIuNSAxIiAvPgogIDxwYXRoIGQ9Ik0yIDE4Yy42LjUgMS4yIDEgMi41IDEgMi41IDAgMi41LTIgNS0yIDIuNiAwIDIuNCAyIDUgMiAyLjUgMCAyLjUtMiA1LTIgMS4zIDAgMS45LjUgMi41IDEiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-community": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSB1c2VycyBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTE2IDIxdi0yYTQgNCAwIDAgMC00LTRINmE0IDQgMCAwIDAtNCA0djIiIC8+CiAgPHBhdGggZD0iTTE2IDMuMTI4YTQgNCAwIDAgMSAwIDcuNzQ0IiAvPgogIDxwYXRoIGQ9Ik0yMiAyMXYtMmE0IDQgMCAwIDAtMy0zLjg3IiAvPgogIDxjaXJjbGUgY3g9IjkiIGN5PSI3IiByPSI0IiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-arts": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBwYWxldHRlIG1hcmtlciAtIHVuaWZpZWQgZ3lybyBzaGFwZSAtLT4KICAKICA8IS0tIERyb3Agc2hhZG93IC0tPgogIDxlbGxpcHNlIGN4PSIxNiIgY3k9IjQ2IiByeD0iNiIgcnk9IjIiIGZpbGw9IiMwMDAiIG9wYWNpdHk9IjAuNSIvPgogIAogIDwhLS0gU1RBTkRBUkQgR1lSTyBTSEFQRSAoc2FtZSBmb3IgYWxsKSAtLT4KICA8cGF0aCBkPSJNMTYgMiBDOSAyIDMgOCAzIDE1IEMzIDI0IDE2IDQ2IDE2IDQ2IEMxNiA0NiAyOSAyNCAyOSAxNSBDMjkgOCAyMyAyIDE2IDIgWiIgCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEx1Y2lkZSBpY29uIChzY2FsZWQgYW5kIHBvc2l0aW9uZWQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2LCAxNSkgc2NhbGUoMC41KSIgc3Ryb2tlPSIjMDBmZjAwIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTIsIC0xMikiPgo8cGF0aCBkPSJNMTIgMjJhMSAxIDAgMCAxIDAtMjAgMTAgOSAwIDAgMSAxMCA5IDUgNSAwIDAgMS01IDVoLTIuMjVhMS43NSAxLjc1IDAgMCAwLTEuNCAyLjhsLjMuNGExLjc1IDEuNzUgMCAwIDEtMS40IDIuOHoiIC8+CiAgPGNpcmNsZSBjeD0iMTMuNSIgY3k9IjYuNSIgcj0iLjUiIGZpbGw9ImN1cnJlbnRDb2xvciIgLz4KICA8Y2lyY2xlIGN4PSIxNy41IiBjeT0iMTAuNSIgcj0iLjUiIGZpbGw9ImN1cnJlbnRDb2xvciIgLz4KICA8Y2lyY2xlIGN4PSI2LjUiIGN5PSIxMi41IiByPSIuNSIgZmlsbD0iY3VycmVudENvbG9yIiAvPgogIDxjaXJjbGUgY3g9IjguNSIgY3k9IjcuNSIgcj0iLjUiIGZpbGw9ImN1cnJlbnRDb2xvciIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-museum": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBsYW5kbWFyayBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTEwIDE4di03IiAvPgogIDxwYXRoIGQ9Ik0xMS4xMiAyLjE5OGEyIDIgMCAwIDEgMS43Ni4wMDZsNy44NjYgMy44NDdjLjQ3Ni4yMzMuMzEuOTQ5LS4yMi45NDlIMy40NzRjLS41MyAwLS42OTUtLjcxNi0uMjItLjk0OXoiIC8+CiAgPHBhdGggZD0iTTE0IDE4di03IiAvPgogIDxwYXRoIGQ9Ik0xOCAxOHYtNyIgLz4KICA8cGF0aCBkPSJNMyAyMmgxOCIgLz4KICA8cGF0aCBkPSJNNiAxOHYtNyIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-food": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSB1dGVuc2lscyBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTMgMnY3YzAgMS4xLjkgMiAyIDJoNGEyIDIgMCAwIDAgMi0yVjIiIC8+CiAgPHBhdGggZD0iTTcgMnYyMCIgLz4KICA8cGF0aCBkPSJNMjEgMTVWMmE1IDUgMCAwIDAtNSA1djZjMCAxLjEuOSAyIDIgMmgzWm0wIDB2NyIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-church": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBjaHVyY2ggbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xMCA5aDQiIC8+CiAgPHBhdGggZD0iTTEyIDd2NSIgLz4KICA8cGF0aCBkPSJNMTQgMjF2LTNhMiAyIDAgMCAwLTQgMHYzIiAvPgogIDxwYXRoIGQ9Im0xOCA5IDMuNTIgMi4xNDdhMSAxIDAgMCAxIC40OC44NTRWMTlhMiAyIDAgMCAxLTIgMkg0YTIgMiAwIDAgMS0yLTJ2LTYuOTk5YTEgMSAwIDAgMSAuNDgtLjg1NEw2IDkiIC8+CiAgPHBhdGggZD0iTTYgMjFWN2ExIDEgMCAwIDEgLjM3Ni0uNzgybDUtMy45OTlhMSAxIDAgMCAxIDEuMjQ5LjAwMWw1IDRBMSAxIDAgMCAxIDE4IDd2MTQiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-traditional-oceanic": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBmbGFtZSBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTEyIDNxMSA0IDQgNi41dDMgNS41YTEgMSAwIDAgMS0xNCAwIDUgNSAwIDAgMSAxLTMgMSAxIDAgMCAwIDUgMGMwLTItMS41LTMtMS41LTVxMC0yIDIuNS00IiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-castle": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBjYXN0bGUgbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xMCA1VjMiIC8+CiAgPHBhdGggZD0iTTE0IDVWMyIgLz4KICA8cGF0aCBkPSJNMTUgMjF2LTNhMyAzIDAgMCAwLTYgMHYzIiAvPgogIDxwYXRoIGQ9Ik0xOCAzdjgiIC8+CiAgPHBhdGggZD0iTTE4IDVINiIgLz4KICA8cGF0aCBkPSJNMjIgMTFIMiIgLz4KICA8cGF0aCBkPSJNMjIgOXYxMGEyIDIgMCAwIDEtMiAySDRhMiAyIDAgMCAxLTItMlY5IiAvPgogIDxwYXRoIGQ9Ik02IDN2OCIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-monument": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBwaWxjcm93IG1hcmtlciAtIHVuaWZpZWQgZ3lybyBzaGFwZSAtLT4KICAKICA8IS0tIERyb3Agc2hhZG93IC0tPgogIDxlbGxpcHNlIGN4PSIxNiIgY3k9IjQ2IiByeD0iNiIgcnk9IjIiIGZpbGw9IiMwMDAiIG9wYWNpdHk9IjAuNSIvPgogIAogIDwhLS0gU1RBTkRBUkQgR1lSTyBTSEFQRSAoc2FtZSBmb3IgYWxsKSAtLT4KICA8cGF0aCBkPSJNMTYgMiBDOSAyIDMgOCAzIDE1IEMzIDI0IDE2IDQ2IDE2IDQ2IEMxNiA0NiAyOSAyNCAyOSAxNSBDMjkgOCAyMyAyIDE2IDIgWiIgCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEx1Y2lkZSBpY29uIChzY2FsZWQgYW5kIHBvc2l0aW9uZWQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2LCAxNSkgc2NhbGUoMC41KSIgc3Ryb2tlPSIjMDBmZjAwIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTIsIC0xMikiPgo8cGF0aCBkPSJNMTMgNHYxNiIgLz4KICA8cGF0aCBkPSJNMTcgNHYxNiIgLz4KICA8cGF0aCBkPSJNMTkgNEg5LjVhNC41IDQuNSAwIDAgMCAwIDlIMTMiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-tower": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSB0cmlhbmdsZSBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTEzLjczIDRhMiAyIDAgMCAwLTMuNDYgMGwtOCAxNEEyIDIgMCAwIDAgNCAyMWgxNmEyIDIgMCAwIDAgMS43My0zWiIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-ruins": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBibG9ja3MgbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xMCAyMlY3YTEgMSAwIDAgMC0xLTFINGEyIDIgMCAwIDAtMiAydjEyYTIgMiAwIDAgMCAyIDJoMTJhMiAyIDAgMCAwIDItMnYtNWExIDEgMCAwIDAtMS0xSDIiIC8+CiAgPHJlY3QgeD0iMTQiIHk9IjIiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIHJ4PSIxIiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-palace": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBjcm93biBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTExLjU2MiAzLjI2NmEuNS41IDAgMCAxIC44NzYgMEwxNS4zOSA4Ljg3YTEgMSAwIDAgMCAxLjUxNi4yOTRMMjEuMTgzIDUuNWEuNS41IDAgMCAxIC43OTguNTE5bC0yLjgzNCAxMC4yNDZhMSAxIDAgMCAxLS45NTYuNzM0SDUuODFhMSAxIDAgMCAxLS45NTctLjczNEwyLjAyIDYuMDJhLjUuNSAwIDAgMSAuNzk4LS41MTlsNC4yNzYgMy42NjRhMSAxIDAgMCAwIDEuNTE2LS4yOTR6IiAvPgogIDxwYXRoIGQ9Ik01IDIxaDE0IiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-park": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSB0cmVlLXBpbmUgbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Im0xNyAxNCAzIDMuM2ExIDEgMCAwIDEtLjcgMS43SDQuN2ExIDEgMCAwIDEtLjctMS43TDcgMTRoLS4zYTEgMSAwIDAgMS0uNy0xLjdMOSA5aC0uMkExIDEgMCAwIDEgOCA3LjNMMTIgM2w0IDQuM2ExIDEgMCAwIDEtLjggMS43SDE1bDMgMy4zYTEgMSAwIDAgMS0uNyAxLjdIMTdaIiAvPgogIDxwYXRoIGQ9Ik0xMiAyMnYtMyIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-parliament": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBsYW5kbWFyayBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTEwIDE4di03IiAvPgogIDxwYXRoIGQ9Ik0xMS4xMiAyLjE5OGEyIDIgMCAwIDEgMS43Ni4wMDZsNy44NjYgMy44NDdjLjQ3Ni4yMzMuMzEuOTQ5LS4yMi45NDlIMy40NzRjLS41MyAwLS42OTUtLjcxNi0uMjItLjk0OXoiIC8+CiAgPHBhdGggZD0iTTE0IDE4di03IiAvPgogIDxwYXRoIGQ9Ik0xOCAxOHYtNyIgLz4KICA8cGF0aCBkPSJNMyAyMmgxOCIgLz4KICA8cGF0aCBkPSJNNiAxOHYtNyIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-mayors-office": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBidWlsZGluZyBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTEyIDEwaC4wMSIgLz4KICA8cGF0aCBkPSJNMTIgMTRoLjAxIiAvPgogIDxwYXRoIGQ9Ik0xMiA2aC4wMSIgLz4KICA8cGF0aCBkPSJNMTYgMTBoLjAxIiAvPgogIDxwYXRoIGQ9Ik0xNiAxNGguMDEiIC8+CiAgPHBhdGggZD0iTTE2IDZoLjAxIiAvPgogIDxwYXRoIGQ9Ik04IDEwaC4wMSIgLz4KICA8cGF0aCBkPSJNOCAxNGguMDEiIC8+CiAgPHBhdGggZD0iTTggNmguMDEiIC8+CiAgPHBhdGggZD0iTTkgMjJ2LTNhMSAxIDAgMCAxIDEtMWg0YTEgMSAwIDAgMSAxIDF2MyIgLz4KICA8cmVjdCB4PSI0IiB5PSIyIiB3aWR0aD0iMTYiIGhlaWdodD0iMjAiIHJ4PSIyIiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-library": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBib29rLW9wZW4gbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xMiA3djE0IiAvPgogIDxwYXRoIGQ9Ik0zIDE4YTEgMSAwIDAgMS0xLTFWNGExIDEgMCAwIDEgMS0xaDVhNCA0IDAgMCAxIDQgNCA0IDQgMCAwIDEgNC00aDVhMSAxIDAgMCAxIDEgMXYxM2ExIDEgMCAwIDEtMSAxaC02YTMgMyAwIDAgMC0zIDMgMyAzIDAgMCAwLTMtM3oiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-national-archive": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBhcmNoaXZlIG1hcmtlciAtIHVuaWZpZWQgZ3lybyBzaGFwZSAtLT4KICAKICA8IS0tIERyb3Agc2hhZG93IC0tPgogIDxlbGxpcHNlIGN4PSIxNiIgY3k9IjQ2IiByeD0iNiIgcnk9IjIiIGZpbGw9IiMwMDAiIG9wYWNpdHk9IjAuNSIvPgogIAogIDwhLS0gU1RBTkRBUkQgR1lSTyBTSEFQRSAoc2FtZSBmb3IgYWxsKSAtLT4KICA8cGF0aCBkPSJNMTYgMiBDOSAyIDMgOCAzIDE1IEMzIDI0IDE2IDQ2IDE2IDQ2IEMxNiA0NiAyOSAyNCAyOSAxNSBDMjkgOCAyMyAyIDE2IDIgWiIgCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEx1Y2lkZSBpY29uIChzY2FsZWQgYW5kIHBvc2l0aW9uZWQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2LCAxNSkgc2NhbGUoMC41KSIgc3Ryb2tlPSIjMDBmZjAwIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTIsIC0xMikiPgo8cmVjdCB3aWR0aD0iMjAiIGhlaWdodD0iNSIgeD0iMiIgeT0iMyIgcng9IjEiIC8+CiAgPHBhdGggZD0iTTQgOHYxMWEyIDIgMCAwIDAgMiAyaDEyYTIgMiAwIDAgMCAyLTJWOCIgLz4KICA8cGF0aCBkPSJNMTAgMTJoNCIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-default": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBtYXAtcGluIG1hcmtlciAtIHVuaWZpZWQgZ3lybyBzaGFwZSAtLT4KICAKICA8IS0tIERyb3Agc2hhZG93IC0tPgogIDxlbGxpcHNlIGN4PSIxNiIgY3k9IjQ2IiByeD0iNiIgcnk9IjIiIGZpbGw9IiMwMDAiIG9wYWNpdHk9IjAuNSIvPgogIAogIDwhLS0gU1RBTkRBUkQgR1lSTyBTSEFQRSAoc2FtZSBmb3IgYWxsKSAtLT4KICA8cGF0aCBkPSJNMTYgMiBDOSAyIDMgOCAzIDE1IEMzIDI0IDE2IDQ2IDE2IDQ2IEMxNiA0NiAyOSAyNCAyOSAxNSBDMjkgOCAyMyAyIDE2IDIgWiIgCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEx1Y2lkZSBpY29uIChzY2FsZWQgYW5kIHBvc2l0aW9uZWQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2LCAxNSkgc2NhbGUoMC41KSIgc3Ryb2tlPSIjMDBmZjAwIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTIsIC0xMikiPgo8cGF0aCBkPSJNMjAgMTBjMCA0Ljk5My01LjUzOSAxMC4xOTMtNy4zOTkgMTEuNzk5YTEgMSAwIDAgMS0xLjIwMiAwQzkuNTM5IDIwLjE5MyA0IDE0Ljk5MyA0IDEwYTggOCAwIDAgMSAxNiAwIiAvPgogIDxjaXJjbGUgY3g9IjEyIiBjeT0iMTAiIHI9IjMiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-geolocation": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBsb2NhdGUgbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxsaW5lIHgxPSIyIiB4Mj0iNSIgeTE9IjEyIiB5Mj0iMTIiIC8+CiAgPGxpbmUgeDE9IjE5IiB4Mj0iMjIiIHkxPSIxMiIgeTI9IjEyIiAvPgogIDxsaW5lIHgxPSIxMiIgeDI9IjEyIiB5MT0iMiIgeTI9IjUiIC8+CiAgPGxpbmUgeDE9IjEyIiB4Mj0iMTIiIHkxPSIxOSIgeTI9IjIyIiAvPgogIDxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjciIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4="};
 window.DASHBOARD_ICONS = {"alert-triangle": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"none\"><path d=\"M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z\"/><path d=\"M12 9v4\"/><path d=\"M12 17h.01\"/></svg>", "book-open": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"none\"><path d=\"M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z\"/><path d=\"M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z\"/></svg>", "bug": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"none\"><path d=\"m8 2 1.88 1.88\"/><path d=\"M14.12 3.88 16 2\"/><path d=\"M9 7.13v-1a3.003 3.003 0 1 1 6 0v1\"/><path d=\"M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6\"/><path d=\"M12 20v-9\"/><path d=\"M6.53 9C4.6 8.8 3 7.1 3 5\"/><path d=\"M6 13H2\"/><path d=\"M3 21c0-2.1 1.7-3.9 3.8-4\"/><path d=\"M20.97 5c0 2.1-1.6 3.8-3.5 4\"/><path d=\"M22 13h-4\"/><path d=\"M17.2 17c2.1.1 3.8 1.9 3.8 4\"/></svg>", "user": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"none\"><circle cx=\"12\" cy=\"8\" r=\"5\"/><path d=\"M20 21a8 8 0 1 0-16 0\"/></svg>", "book-text": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"none\"><path d=\"M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20\"/><path d=\"M8 7h6\"/><path d=\"M8 11h8\"/></svg>", "heart": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"none\"><path d=\"M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z\"/></svg>"};
-window.DEBUG_INFO = {"event_counts": {"published": 27, "pending": 2, "archived": 2, "total": 31}, "environment": "ci", "cache_enabled": false, "cache_file_size": null, "deployment_time": "2026-01-14T21:58:35.303152", "git_commit": {"hash": "aa21550", "author": "copilot-swe-agent[bot]", "date": "2026-01-14 21:53:09 +0000", "message": "fix: reposition bubbles with connectors"}, "html_sizes": {"total": 247998, "events_data": 15808, "translations": 13405, "stylesheets": 41533, "scripts": 0, "marker_icons": 36073, "other": 141179}, "language": "de"};
+window.DEBUG_INFO = {"event_counts": {"published": 27, "pending": 2, "archived": 2, "total": 31}, "environment": "ci", "cache_enabled": false, "cache_file_size": null, "deployment_time": "2026-01-14T22:25:34.080058", "git_commit": {"hash": "07d0e00", "author": "copilot-swe-agent[bot]", "date": "2026-01-14 22:00:26 +0000", "message": "fix: refine bubble connector layout"}, "html_sizes": {"total": 271520, "events_data": 15808, "translations": 13405, "stylesheets": 62376, "scripts": 0, "marker_icons": 36073, "other": 143858}, "language": "de"};
 
 
 /* Leaflet JS: Load from CDN at runtime */
@@ -3196,7 +4122,7 @@ class MapManager {
 // SOURCE: assets/js/speech-bubbles.js
 // ============================================================================
 /**
- * SpeechBubbles Module (Simplified)
+ * SpeechBubbles Module
  * 
  * Handles speech bubble UI components for events on the map.
  * Collision-aware positioning with organic spread around markers.
@@ -3216,8 +4142,9 @@ const BASE_SPREAD_OFFSET = 60;         // Minimum distance from marker
 const SPREAD_FACTOR = 40;              // Additional spread per bubble
 const HORIZONTAL_SPREAD_MULTIPLIER = 1.2; // Wider horizontal spread
 const MARKER_CLEARANCE = 18;
-const MAX_POSITION_ATTEMPTS = 40;
-const GOLDEN_ANGLE = 2.399963229728653; // ~137.5 degrees
+const MAX_POSITION_ATTEMPTS = 30;
+const GOLDEN_ANGLE = 2.399963229728653; // Golden ratio angle (≈137.5°) in radians
+const SPREAD_BASE = 1;                 // Avoid sqrt(0) spacing
 
 // Filter bar constants
 const FILTER_BAR_PADDING = 20;         // Extra padding below filter bar
@@ -3641,7 +4568,7 @@ class SpeechBubbles {
         const occupiedRects = [];
         
         this.bubbleData.forEach(({ bubble, marker, index, userOffset, connector }) => {
-            if (!marker || typeof marker.getLatLng !== 'function' || !marker._map) {
+            if (!this.isValidMarker(marker)) {
                 return;
             }
             // Get updated marker position in screen coordinates
@@ -3687,6 +4614,9 @@ class SpeechBubbles {
         });
     }
 
+    /**
+     * Create or reset the SVG layer for bubble connectors.
+     */
     setupConnectorLayer() {
         if (!this.map) return;
         const mapContainer = document.getElementById('map');
@@ -3705,11 +4635,22 @@ class SpeechBubbles {
         this.connectorLayer = svg;
     }
 
+    /**
+     * Update SVG connector viewbox to match the current viewport.
+     * @param {number} width - Map container width.
+     * @param {number} height - Map container height.
+     */
     updateConnectorViewport(width, height) {
         if (!this.connectorLayer) return;
         this.connectorLayer.setAttribute('viewBox', `0 0 ${width} ${height}`);
     }
 
+    /**
+     * Create a connector line element between a marker and bubble.
+     * @param {Object} markerPos - Marker position in container coordinates.
+     * @param {Object} bubbleRect - Bubble rectangle bounds.
+     * @returns {SVGLineElement|null} Connector line element.
+     */
     createConnectorLine(markerPos, bubbleRect) {
         if (!this.connectorLayer) return null;
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -3719,6 +4660,10 @@ class SpeechBubbles {
         return line;
     }
 
+    /**
+     * Update connector line for a single bubble (used during drag).
+     * @param {HTMLElement} bubble - Bubble element being moved.
+     */
     updateConnectorLineForBubble(bubble) {
         if (!bubble || !this.map) return;
         const entry = this.bubbleData.find(data => data.bubble === bubble);
@@ -3728,6 +4673,13 @@ class SpeechBubbles {
         this.updateConnectorLine(entry, bubbleRect, markerPos, true);
     }
 
+    /**
+     * Update connector coordinates between a marker and bubble.
+     * @param {Object} entry - Bubble data entry.
+     * @param {Object} bubbleRect - Bubble rectangle bounds.
+     * @param {Object} markerPos - Marker position in container coordinates.
+     * @param {boolean} isVisible - Whether the bubble is visible.
+     */
     updateConnectorLine(entry, bubbleRect, markerPos, isVisible) {
         const connector = entry.connector;
         if (!connector) return;
@@ -3739,6 +4691,12 @@ class SpeechBubbles {
         connector.style.opacity = isVisible ? '' : '0';
     }
 
+    /**
+     * Build a rectangle object for collision checks.
+     * @param {number} x - Left position.
+     * @param {number} y - Top position.
+     * @returns {Object} Rectangle bounds.
+     */
     getBubbleRect(x, y) {
         return {
             x,
@@ -3748,18 +4706,36 @@ class SpeechBubbles {
         };
     }
 
+    /**
+     * Extract bubble rectangle bounds from a DOM element.
+     * @param {HTMLElement} bubble - Bubble element.
+     * @returns {Object} Rectangle bounds.
+     */
     getBubbleRectFromElement(bubble) {
         const x = parseFloat(bubble.style.left) || 0;
         const y = parseFloat(bubble.style.top) || 0;
         return this.getBubbleRect(x, y);
     }
 
+    /**
+     * Get the closest point on a rectangle to a target point.
+     * @param {Object} point - Target point.
+     * @param {Object} rect - Rectangle bounds.
+     * @returns {Object} Closest point.
+     */
     getClosestPointOnRect(point, rect) {
         const x = Math.max(rect.x, Math.min(point.x, rect.x + rect.width));
         const y = Math.max(rect.y, Math.min(point.y, rect.y + rect.height));
         return { x, y };
     }
 
+    /**
+     * Check if two rectangles overlap with optional padding.
+     * @param {Object} rectA - First rectangle.
+     * @param {Object} rectB - Second rectangle.
+     * @param {number} padding - Extra gutter between rectangles.
+     * @returns {boolean} True if rectangles overlap.
+     */
     rectanglesOverlap(rectA, rectB, padding = 0) {
         return !(rectA.x + rectA.width + padding < rectB.x ||
                  rectB.x + rectB.width + padding < rectA.x ||
@@ -3767,6 +4743,11 @@ class SpeechBubbles {
                  rectB.y + rectB.height + padding < rectA.y);
     }
 
+    /**
+     * Get filter bar bounds and safe height within the map container.
+     * @param {HTMLElement} mapContainer - Map container element.
+     * @returns {Object} Metrics including height and rect.
+     */
     getFilterBarMetrics(mapContainer) {
         const filterBar = document.getElementById('event-filter-bar');
         if (!filterBar || !mapContainer) {
@@ -3787,10 +4768,25 @@ class SpeechBubbles {
         };
     }
 
+    /**
+     * Validate marker instance before accessing its position.
+     * @param {Object} marker - Leaflet marker.
+     * @returns {boolean} True if marker can be used.
+     */
+    isValidMarker(marker) {
+        return !!(marker && typeof marker.getLatLng === 'function' && marker._map);
+    }
+
+    /**
+     * Build bounding boxes around markers for collision avoidance.
+     * @param {Array} markers - Leaflet markers.
+     * @param {Object} map - Leaflet map instance.
+     * @returns {Array} Marker rectangles.
+     */
     getMarkerBounds(markers, map) {
         if (!markers || !map) return [];
         return markers.map(marker => {
-            if (!marker || !marker.getLatLng || !marker._map) return null;
+            if (!this.isValidMarker(marker)) return null;
             const pos = map.latLngToContainerPoint(marker.getLatLng());
             return {
                 x: pos.x - MARKER_CLEARANCE,
@@ -3820,7 +4816,7 @@ class SpeechBubbles {
 
         for (let attempt = 0; attempt < MAX_POSITION_ATTEMPTS; attempt++) {
             const angle = startAngle + attempt * GOLDEN_ANGLE;
-            const offset = BASE_SPREAD_OFFSET + Math.sqrt(attempt + index + 1) * SPREAD_FACTOR;
+            const offset = BASE_SPREAD_OFFSET + Math.sqrt(attempt + index + SPREAD_BASE) * SPREAD_FACTOR;
             const offsetX = Math.cos(angle) * offset * HORIZONTAL_SPREAD_MULTIPLIER;
             const offsetY = -Math.abs(Math.sin(angle) * offset) - MARKER_VERTICAL_OFFSET;
 
