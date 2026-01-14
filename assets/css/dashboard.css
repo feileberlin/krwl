@@ -152,7 +152,7 @@
 }
 
 .env-production {
-    color: #4CAF50;
+    color: #D689B8; /* EcoBarbie Light Tone - no green in EcoBarbie design */
 }
 
 .debug-enabled {

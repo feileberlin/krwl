@@ -710,7 +710,7 @@ strong, b {
 }
 
 .env-production {
-    color: #4CAF50;
+    color: #D689B8; /* EcoBarbie Light Tone - no green in EcoBarbie design */
 }
 
 .env-ci {
@@ -969,8 +969,8 @@ strong, b {
 }
 
 .debug-duplicates.ok {
-    background: rgba(34, 197, 94, 0.15); /* Success green */
-    border: 1px solid rgba(34, 197, 94, 0.3);
+    background: rgba(214, 137, 184, 0.15); /* EcoBarbie Light Tone - no green in EcoBarbie design */
+    border: 1px solid rgba(214, 137, 184, 0.3);
 }
 
 .duplicate-warning {
@@ -980,7 +980,7 @@ strong, b {
 }
 
 .duplicate-ok {
-    color: #22c55e; /* Success color */
+    color: #D689B8; /* EcoBarbie Light Tone - no green in EcoBarbie design */
 }
 
 .duplicate-details {
@@ -1567,12 +1567,12 @@ strong, b {
 
 .bubble-bookmark:hover i[data-lucide="heart"] {
     transform: scale(1.2);
-    stroke: var(--color-primary); /* Barbie pink on hover */
+    stroke: #D689B8; /* EcoBarbie Light Tone on hover */
 }
 
 .bubble-bookmark.bookmarked i[data-lucide="heart"] {
-    stroke: var(--color-primary); /* Barbie pink stroke when bookmarked */
-    fill: var(--color-primary); /* Filled with Barbie pink when bookmarked */
+    stroke: #D689B8; /* EcoBarbie Light Tone stroke when bookmarked */
+    fill: #D689B8; /* Filled with EcoBarbie Light Tone when bookmarked */
 }
 
 .bubble-bookmark.bookmarked {

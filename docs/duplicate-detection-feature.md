@@ -55,9 +55,9 @@ The duplicate detection feature automatically scans all loaded events and displa
 ## 🎨 Color Coding
 
 **Success State (No Duplicates):**
-- Background: Green tint (rgba(34, 197, 94, 0.15))
-- Border: Green (rgba(34, 197, 94, 0.3))
-- Text: Green (#22c55e)
+- Background: EcoBarbie Light Tone tint (rgba(214, 137, 184, 0.15))
+- Border: EcoBarbie Light Tone (rgba(214, 137, 184, 0.3))
+- Text: EcoBarbie Light Tone (#D689B8)
 - Icon: ✓ (checkmark)
 
 **Warning State (Duplicates Found):**
