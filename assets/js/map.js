@@ -17,6 +17,7 @@ class MapManager {
         this.map = null;
         this.markers = [];
         this.userLocation = null;
+        this.locationCounts = {}; // Track markers at same location for offset
     }
     
     /**
@@ -203,7 +204,7 @@ class MapManager {
     addEventMarker(event, onClick) {
         if (!this.map || !event.location) return null;
         
-        // Get marker icon based on category
+        // Get marker icon based on category (uses SVG filename pattern: marker-{category})
         const category = event.category || 'default';
         const iconUrl = window.MARKER_ICONS && window.MARKER_ICONS[`marker-${category}`] || 
             window.MARKER_ICONS && window.MARKER_ICONS['marker-default'] ||
@@ -216,7 +217,25 @@ class MapManager {
             popupAnchor: [0, -48]
         });
         
-        const marker = L.marker([event.location.lat, event.location.lon], {
+        // Calculate offset for markers at same location (spiderfying)
+        const locationKey = `${event.location.lat.toFixed(4)}_${event.location.lon.toFixed(4)}`;
+        if (!this.locationCounts[locationKey]) {
+            this.locationCounts[locationKey] = 0;
+        }
+        const offsetIndex = this.locationCounts[locationKey];
+        this.locationCounts[locationKey]++;
+        
+        // Apply circular offset if there are multiple markers at same location
+        let lat = event.location.lat;
+        let lon = event.location.lon;
+        if (offsetIndex > 0) {
+            const offsetRadius = 0.0003; // ~30 meters offset
+            const angle = (offsetIndex * 60) * (Math.PI / 180); // 60 degree increments
+            lat += offsetRadius * Math.cos(angle);
+            lon += offsetRadius * Math.sin(angle);
+        }
+        
+        const marker = L.marker([lat, lon], {
             icon: markerIcon,
             customData: { id: event.id }
         }).addTo(this.map);
@@ -265,6 +284,7 @@ class MapManager {
             this.markers[i].remove();
         }
         this.markers = [];
+        this.locationCounts = {}; // Reset location tracking for offset calculation
         this.log('All markers cleared');
     }
     
