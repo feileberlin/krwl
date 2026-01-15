@@ -9,15 +9,21 @@ Facebook API credentials. It respects rate limits and follows ethical
 scraping practices.
 """
 
-from typing import Dict, Any, List, Optional
+from __future__ import annotations
+
+from typing import Dict, Any, List, Optional, TYPE_CHECKING
 from pathlib import Path
 from datetime import datetime, timedelta
 from urllib.parse import urljoin, urlparse, parse_qs
 import re
+import json
 import hashlib
 from ...base import BaseSource, SourceOptions
 from ...date_utils import resolve_relative_date, extract_time_from_text, resolve_year_for_date
 from ...source_cache import SourceCache
+
+if TYPE_CHECKING:
+    from bs4 import BeautifulSoup
 
 try:
     import requests
@@ -25,7 +31,6 @@ try:
     SCRAPING_AVAILABLE = True
 except ImportError:
     SCRAPING_AVAILABLE = False
-    BeautifulSoup = Any
 
 # Import image analyzer for OCR-based flyer extraction
 try:
@@ -250,13 +255,20 @@ class FacebookSource(BaseSource):
         """Build a stable cache key for a post."""
         text = post.get('text', '') or ''
         timestamp = post.get('timestamp') or ''
-        links = '|'.join(post.get('links', []) or [])
-        images = '|'.join(post.get('images', []) or [])
+        links = post.get('links', []) or []
+        images = post.get('images', []) or []
         if not any([text, timestamp, links, images]):
             return None
         
-        hash_input = f"{self.name}|{timestamp}|{text[:200]}|{links[:200]}|{images[:200]}"
-        return hashlib.md5(hash_input.encode()).hexdigest()
+        payload = {
+            "name": self.name,
+            "timestamp": timestamp,
+            "text": text,
+            "links": links,
+            "images": images
+        }
+        hash_input = json.dumps(payload, sort_keys=True, ensure_ascii=False)
+        return hashlib.md5(hash_input.encode("utf-8")).hexdigest()
     
     def _should_skip_post(self, post_key: Optional[str]) -> bool:
         """Check if post should be skipped based on cache."""
@@ -293,7 +305,7 @@ class FacebookSource(BaseSource):
         try:
             event_date = datetime.fromisoformat(str(start_time).replace('Z', '+00:00'))
         except (ValueError, TypeError, AttributeError):
-            return True
+            return False
         
         if event_date.tzinfo is None:
             now = datetime.now()
@@ -602,6 +614,9 @@ class FacebookSource(BaseSource):
         if not start_time:
             start_time = self._extract_datetime_from_text(post.get('text', ''))
         
+        if start_time and not self._is_future_event(start_time):
+            return None
+        
         if not start_time:
             ai_text = ' '.join(
                 value for value in [
@@ -614,9 +629,8 @@ class FacebookSource(BaseSource):
                 start_time = ai_details.get('start_time')
                 if title == self._default_event_title() and ai_details.get('title'):
                     title = ai_details['title']
-        
-        if start_time and not self._is_future_event(start_time):
-            return None
+                if start_time and not self._is_future_event(start_time):
+                    return None
         
         # Default to next week if no date found
         if not start_time:
@@ -643,6 +657,8 @@ class FacebookSource(BaseSource):
         # Generate ID
         event_id = self._generate_event_id(title, start_time)
         
+        link_url = self._get_post_link(post)
+        
         return {
             'id': event_id,
             'title': title[:200],
@@ -650,7 +666,7 @@ class FacebookSource(BaseSource):
             'location': self._get_default_location(),
             'start_time': start_time,
             'end_time': None,
-            'url': next(iter(post.get('links', [])), None) or self.url,
+            'url': link_url or self.url,
             'source': self.name,
             'category': category,
             'scraped_at': datetime.now().isoformat(),
@@ -662,6 +678,11 @@ class FacebookSource(BaseSource):
     def _default_event_title(self) -> str:
         """Build the default event title string."""
         return f"{self.DEFAULT_TITLE_PREFIX}{self.name}"
+    
+    def _get_post_link(self, post: Dict[str, Any]) -> Optional[str]:
+        """Get first link from post data."""
+        links = post.get('links') or []
+        return links[0] if links else None
     
     def _get_ai_provider(self):
         """Get configured AI provider for extraction."""
