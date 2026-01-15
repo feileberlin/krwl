@@ -1229,6 +1229,42 @@
       ],
       "test_method": "check_code_patterns",
       "test_instructions": "1. Run AI categorization tests: python3 tests/test_ai_categorization.py\n2. Test keyword fallback (no Ollama): All 7 test events should categorize correctly\n3. Optional AI test (requires Ollama):\n   a. Install Ollama: https://ollama.ai/\n   b. Run: ollama pull llama3.2\n   c. Start Ollama service\n   d. Enable in config.json: ai.categorization.enabled = true\n   e. Run scraper: python3 src/event_manager.py scrape\n   f. Verify events get categorized (check logs for 'AI categorized')\n4. Test status: python3 -c 'from modules.ai_categorizer import *; from modules.utils import *; c = AICategorizer(load_config(Path(\".\")), Path(\".\")); print(c.get_status())'\n5. Verify fallback works if Ollama unavailable"
+    },
+    {
+      "id": "ai-event-extraction",
+      "name": "Local AI Event Extraction",
+      "description": "Aggregates post text, OCR output, and image metadata into a local LLM prompt to extract event details (title, times, URL, location). Uses only local providers (Ollama/local_llm) and enriches social scraping when available.",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/modules/smart_scraper/ai_event_extractor.py",
+        "src/modules/smart_scraper/ai_providers/local_llm.py",
+        "src/modules/smart_scraper/sources/social/facebook.py"
+      ],
+      "config_keys": [
+        "ai.ollama.host",
+        "ai.ollama.model",
+        "ai.ollama.timeout"
+      ],
+      "code_patterns": [
+        {
+          "file": "src/modules/smart_scraper/ai_event_extractor.py",
+          "pattern": "class LocalEventExtractor|build_context|extract_event_details",
+          "description": "Aggregates context and extracts event details via local AI"
+        },
+        {
+          "file": "src/modules/smart_scraper/ai_providers/local_llm.py",
+          "pattern": "class LocalLLMProvider|_build_event_extraction_prompt",
+          "description": "Local LLM provider with extraction prompt"
+        },
+        {
+          "file": "src/modules/smart_scraper/sources/social/facebook.py",
+          "pattern": "event_extractor|_ai_extract_event_details|ai_details",
+          "description": "Facebook scraper AI enrichment path"
+        }
+      ],
+      "test_method": "check_code_patterns",
+      "test_instructions": "1. Run AI extraction tests: python3 tests/test_ai_event_extraction.py\n2. Optional: run smart scraper tests: python3 tests/test_smart_scraper.py\n3. With Ollama running, scrape a Facebook source and confirm AI-enriched fields populate"
     }
   ]
 }

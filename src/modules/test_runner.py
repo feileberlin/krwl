@@ -38,6 +38,7 @@ class TestRunner:
             'test_rejected_events',
             'test_scheduler',
             'test_smart_scraper',
+            'test_ai_event_extraction',
         ],
         'infrastructure': [
             'test_cdn_fallback',

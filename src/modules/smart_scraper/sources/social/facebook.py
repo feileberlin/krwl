@@ -22,6 +22,7 @@ import time
 from ...base import BaseSource, SourceOptions
 from ...date_utils import resolve_relative_date, extract_time_from_text, resolve_year_for_date
 from ...source_cache import SourceCache
+from ...ai_event_extractor import LocalEventExtractor
 
 if TYPE_CHECKING:
     from bs4 import BeautifulSoup
@@ -110,6 +111,7 @@ class FacebookSource(BaseSource):
         # OCR settings
         self.ocr_enabled = options_config.get('ocr_enabled', True)
         self.min_ocr_confidence = options_config.get('min_ocr_confidence', 0.3)
+        self.event_extractor = LocalEventExtractor(self.ai_providers)
     
     def scrape(self) -> List[Dict[str, Any]]:
         """Scrape events from Facebook page.
@@ -751,16 +753,18 @@ class FacebookSource(BaseSource):
         if self._is_past_start_time(start_time):
             return None
         
-        if not start_time:
-            ai_text = ' '.join(
-                value for value in [
-                    post.get('text', ''),
-                    image_data.get('ocr_text') if image_data else ''
-                ] if value
-            )
-            ai_details = self._ai_extract_event_details(ai_text)
+        ai_details = None
+        needs_ai = (
+            not start_time
+            or title == self._default_event_title()
+            or not self._get_post_link(post)
+            or not self.options.category
+        )
+        ai_available = self.event_extractor and self.event_extractor.is_available(self.options.ai_provider)
+        if needs_ai and ai_available:
+            ai_details = self._ai_extract_event_details(post, image_data)
             if ai_details:
-                start_time = ai_details.get('start_time')
+                start_time = start_time or ai_details.get('start_time')
                 if title == self._default_event_title() and ai_details.get('title'):
                     title = ai_details['title']
                 if self._is_past_start_time(start_time):
@@ -776,6 +780,9 @@ class FacebookSource(BaseSource):
             description_parts.append(post['text'][:300])
         if image_data and image_data.get('ocr_text'):
             description_parts.append(f"\n[From flyer]: {image_data['ocr_text'][:200]}")
+        if image_data and image_data.get('prices_found'):
+            prices = ', '.join(image_data.get('prices_found')[:3])
+            description_parts.append(f"\n[Prices]: {prices}")
         
         description = '\n'.join(description_parts)[:500]
         
@@ -787,19 +794,36 @@ class FacebookSource(BaseSource):
                 category = keywords['event_type'][0]
             elif keywords.get('music_genre'):
                 category = 'music'
+        if not category and ai_details:
+            category = ai_details.get('category')
         
         # Generate ID
         event_id = self._generate_event_id(title, start_time)
         
         link_url = self._get_post_link(post)
+        if not link_url and image_data:
+            urls = image_data.get('urls_found') or []
+            if urls:
+                link_url = urls[0]
+        if not link_url and ai_details:
+            link_url = ai_details.get('url')
+
+        location = self._get_default_location() or {}
+        if image_data and image_data.get('location'):
+            location = image_data['location']
+        if ai_details and isinstance(ai_details.get('location'), dict):
+            for key, value in ai_details['location'].items():
+                existing_value = location.get(key)
+                if value is not None and (key not in location or existing_value in (None, "")):
+                    location[key] = value
         
         return {
             'id': event_id,
             'title': title[:200],
             'description': description,
-            'location': self._get_default_location(),
+            'location': location,
             'start_time': start_time,
-            'end_time': None,
+            'end_time': ai_details.get('end_time') if ai_details else None,
             'url': link_url or self.url,
             'source': self.name,
             'category': category,
@@ -836,23 +860,21 @@ class FacebookSource(BaseSource):
         
         return provider
     
-    def _ai_extract_event_details(self, text: str) -> Optional[Dict[str, Any]]:
-        """Use AI provider to extract event details from text."""
-        if not text:
+    def _ai_extract_event_details(self, post: Dict[str, Any],
+                                  image_data: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+        """Use local AI to extract event details from post and OCR context."""
+        if not self.event_extractor:
             return None
-        
-        provider = self._get_ai_provider()
-        if not provider:
-            return None
-        
-        prompt = self.options.ai_prompt or (
-            "Extract event details and return JSON with fields: title, start_time, "
-            "end_time, url, location. Convert relative dates like 'tomorrow' to "
-            "ISO datetime."
-        )
-        
+
         try:
-            return provider.extract_event_info(text, prompt)
+            return self.event_extractor.extract_event_details(
+                post_text=post.get('text', ''),
+                image_data=image_data,
+                image_metadata=post.get('image_metadata'),
+                post_links=post.get('links'),
+                provider_name=self.options.ai_provider,
+                prompt_override=self.options.ai_prompt
+            )
         except Exception as e:
             print(f"      AI extraction error: {e}")
             return None
