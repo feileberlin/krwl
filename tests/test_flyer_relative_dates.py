@@ -29,14 +29,19 @@ class FakeAIProvider:
         }
 
 
-def build_source(ai_providers=None, options=None):
+def build_source(ai_providers=None, options=None, base_path=None):
     """Create a FacebookSource instance for tests."""
     source_config = {
         "name": "Test Source",
         "url": "https://facebook.com/test",
         "type": "facebook"
     }
-    return FacebookSource(source_config, options or SourceOptions(), ai_providers=ai_providers)
+    return FacebookSource(
+        source_config,
+        options or SourceOptions(),
+        base_path=base_path,
+        ai_providers=ai_providers
+    )
 
 
 def test_relative_date_parsing_from_text():
@@ -93,6 +98,7 @@ def test_scan_posts_for_event_pages():
         def __init__(self, source_config, options):
             super().__init__(source_config, options, ai_providers=None)
             self.posts_called_with = None
+            self.available = True
 
         def _scrape_events_page(self):
             return []
@@ -111,3 +117,21 @@ def test_scan_posts_for_event_pages():
     source.scrape()
 
     assert source.posts_called_with == source._get_page_url(source_config["url"])
+
+
+def test_post_cache_skips_processed_posts(tmp_path):
+    """Ensure processed posts are skipped unless forced."""
+    source = build_source(base_path=tmp_path)
+    posts = [
+        {"text": "Morgen 19 Uhr", "images": [], "links": [], "timestamp": "1"}
+    ]
+
+    first_run = source._process_posts(posts)
+    second_run = source._process_posts(posts)
+
+    assert len(first_run) == 1
+    assert second_run == []
+
+    source.force_scan = True
+    third_run = source._process_posts(posts)
+    assert len(third_run) == 1

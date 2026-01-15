@@ -16,6 +16,7 @@ import re
 import hashlib
 from ...base import BaseSource, SourceOptions
 from ...date_utils import resolve_relative_date, extract_time_from_text, resolve_year_for_date
+from ...source_cache import SourceCache
 
 try:
     import requests
@@ -23,6 +24,7 @@ try:
     SCRAPING_AVAILABLE = True
 except ImportError:
     SCRAPING_AVAILABLE = False
+    BeautifulSoup = Any
 
 # Import image analyzer for OCR-based flyer extraction
 try:
@@ -56,6 +58,8 @@ class FacebookSource(BaseSource):
         self.ai_providers = ai_providers or {}
         options_config = source_config.get('options') or {}
         self.scan_posts = bool(options_config.get('scan_posts', False))
+        self.force_scan = bool(options_config.get('force_scan', False))
+        self.post_cache = self._init_post_cache()
         
         # Initialize session with realistic headers
         if self.available:
@@ -190,10 +194,7 @@ class FacebookSource(BaseSource):
             posts = self._extract_posts(soup)
             
             # Process each post for event information
-            for post in posts:
-                event = self._convert_post_to_event(post)
-                if event:
-                    events.append(event)
+            events.extend(self._process_posts(posts))
             
         except Exception as e:
             print(f"    ⚠ Page posts scrape error: {e}")
@@ -231,6 +232,70 @@ class FacebookSource(BaseSource):
         new_path = f"/{'/'.join(path_parts)}" if path_parts else ''
         return parsed._replace(path=new_path, params='', query='', fragment='').geturl()
     
+    def _init_post_cache(self) -> Optional[SourceCache]:
+        """Initialize persistent cache for processed posts."""
+        if not self.base_path:
+            return None
+        
+        cache_dir = self.base_path / "data" / "scraper_cache"
+        source_slug = self.name.lower().replace(' ', '_')
+        cache_path = cache_dir / f"facebook_posts_{source_slug}.json"
+        cache = SourceCache(cache_path=cache_path)
+        cache.load()
+        return cache
+    
+    def _get_post_cache_key(self, post: Dict[str, Any]) -> Optional[str]:
+        """Build a stable cache key for a post."""
+        text = post.get('text', '') or ''
+        timestamp = post.get('timestamp') or ''
+        links = '|'.join(post.get('links', []) or [])
+        images = '|'.join(post.get('images', []) or [])
+        if not any([text, timestamp, links, images]):
+            return None
+        
+        hash_input = f"{self.name}|{timestamp}|{text[:200]}|{links[:200]}|{images[:200]}"
+        return hashlib.md5(hash_input.encode()).hexdigest()
+    
+    def _should_skip_post(self, post_key: Optional[str]) -> bool:
+        """Check if post should be skipped based on cache."""
+        if not post_key or not self.post_cache or self.force_scan:
+            return False
+        return self.post_cache.is_processed(post_key)
+    
+    def _process_posts(self, posts: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Convert posts to events with caching."""
+        events = []
+        
+        for post in posts:
+            post_key = self._get_post_cache_key(post)
+            if self._should_skip_post(post_key):
+                continue
+            
+            event = self._convert_post_to_event(post)
+            if self.post_cache and post_key:
+                self.post_cache.mark_processed(post_key)
+            
+            if event:
+                events.append(event)
+        
+        if self.post_cache:
+            self.post_cache.save()
+        
+        return events
+    
+    def _is_future_event(self, start_time: Optional[str]) -> bool:
+        """Check if start_time is in the future."""
+        if not start_time:
+            return True
+        
+        try:
+            event_date = datetime.fromisoformat(start_time.replace('Z', '+00:00'))
+        except (ValueError, TypeError):
+            return True
+        
+        now = datetime.now(event_date.tzinfo)
+        return event_date >= now
+    
     def _extract_events_from_html(self, soup: BeautifulSoup) -> List[Dict[str, Any]]:
         """Extract events from HTML soup.
         
@@ -253,7 +318,7 @@ class FacebookSource(BaseSource):
         for selector in selectors:
             items = soup.select(selector)
             if items:
-                for item in items[:20]:  # Limit to 20
+                for item in items:
                     event = self._parse_event_element(item)
                     if event:
                         events.append(event)
@@ -285,7 +350,7 @@ class FacebookSource(BaseSource):
         for selector in selectors:
             items = soup.select(selector)
             if items:
-                for item in items[:10]:  # Limit posts to analyze
+                for item in items:
                     post = self._parse_post_element(item)
                     if post:
                         posts.append(post)
@@ -545,6 +610,9 @@ class FacebookSource(BaseSource):
                 if title == self._default_event_title() and ai_details.get('title'):
                     title = ai_details['title']
         
+        if start_time and not self._is_future_event(start_time):
+            return None
+        
         # Default to next week if no date found
         if not start_time:
             start_time = (datetime.now() + timedelta(days=7)).replace(hour=20, minute=0).isoformat()
@@ -577,7 +645,7 @@ class FacebookSource(BaseSource):
             'location': self._get_default_location(),
             'start_time': start_time,
             'end_time': None,
-            'url': post.get('links', [None])[0] or self.url,
+            'url': (post.get('links') or [None])[0] or self.url,
             'source': self.name,
             'category': category,
             'scraped_at': datetime.now().isoformat(),

@@ -44,7 +44,7 @@ def extract_time_from_text(text: str) -> Optional[Tuple[int, int]]:
     for pattern in time_patterns:
         for time_match in re.finditer(pattern, text.lower()):
             hour = int(time_match.group(1))
-            minute = int(time_match.group(2)) if time_match.lastindex and time_match.group(2) else 0
+            minute = int(time_match.group(2)) if time_match.lastindex and time_match.lastindex >= 2 and time_match.group(2) else 0
             if 0 <= hour <= 23 and 0 <= minute <= 59:
                 return hour, minute
     
