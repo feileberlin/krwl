@@ -243,6 +243,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: discover-capabilities
     if: |
+      github.event_name == 'schedule' ||
       github.event.inputs.task == 'scrape-weather' ||
       github.event.inputs.task == 'scrape-and-deploy'
     
