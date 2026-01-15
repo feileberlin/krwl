@@ -75,13 +75,13 @@ class SmartScraper:
             
             # Register with factory functions
             self.registry.register('rss', 
-                lambda cfg, opts: rss.RSSSource(cfg, opts))
+                lambda cfg, opts, base_path=self.base_path: rss.RSSSource(cfg, opts, base_path=base_path))
             self.registry.register('html', 
-                lambda cfg, opts: html.HTMLSource(cfg, opts))
+                lambda cfg, opts, base_path=self.base_path: html.HTMLSource(cfg, opts, base_path=base_path))
             self.registry.register('api', 
-                lambda cfg, opts: api.APISource(cfg, opts))
+                lambda cfg, opts, base_path=self.base_path: api.APISource(cfg, opts, base_path=base_path))
             self.registry.register('atom', 
-                lambda cfg, opts: atom.AtomSource(cfg, opts))
+                lambda cfg, opts, base_path=self.base_path: atom.AtomSource(cfg, opts, base_path=base_path))
         except ImportError as e:
             print(f"⚠ Some web sources unavailable: {e}", file=sys.stderr)
     
@@ -108,14 +108,16 @@ class SmartScraper:
                         if class_name == 'FacebookSource':
                             self.registry.register(
                                 platform_type,
-                                lambda cfg, opts, cls=source_class, ai_providers=self.ai_providers: cls(
-                                    cfg, opts, ai_providers=ai_providers
+                                lambda cfg, opts, cls=source_class, base_path=self.base_path,
+                                ai_providers=self.ai_providers: cls(
+                                    cfg, opts, base_path=base_path, ai_providers=ai_providers
                                 )
                             )
                         else:
                             self.registry.register(
                                 platform_type,
-                                lambda cfg, opts, cls=source_class: cls(cfg, opts)
+                                lambda cfg, opts, cls=source_class,
+                                base_path=self.base_path: cls(cfg, opts, base_path=base_path)
                             )
                 except AttributeError:
                     pass  # Platform not yet implemented

@@ -15,6 +15,7 @@ from urllib.parse import urljoin, urlparse, parse_qs
 import re
 import hashlib
 from ...base import BaseSource, SourceOptions
+from ...date_utils import resolve_relative_date, extract_time_from_text, resolve_year_for_date
 
 try:
     import requests
@@ -46,9 +47,11 @@ class FacebookSource(BaseSource):
     - German and English language support
     """
     
+    DEFAULT_TITLE_PREFIX = "Event from "
+    
     def __init__(self, source_config: Dict[str, Any], options: SourceOptions,
-                 ai_providers: Optional[Dict[str, Any]] = None):
-        super().__init__(source_config, options)
+                 base_path=None, ai_providers: Optional[Dict[str, Any]] = None):
+        super().__init__(source_config, options, base_path=base_path)
         self.available = SCRAPING_AVAILABLE
         self.ai_providers = ai_providers or {}
         options_config = source_config.get('options') or {}
@@ -79,8 +82,8 @@ class FacebookSource(BaseSource):
                 print(f"    ⚠ Image analyzer init failed: {e}")
         
         # OCR settings
-        self.ocr_enabled = source_config.get('options', {}).get('ocr_enabled', True)
-        self.min_ocr_confidence = source_config.get('options', {}).get('min_ocr_confidence', 0.3)
+        self.ocr_enabled = options_config.get('ocr_enabled', True)
+        self.min_ocr_confidence = options_config.get('min_ocr_confidence', 0.3)
     
     def scrape(self) -> List[Dict[str, Any]]:
         """Scrape events from Facebook page.
@@ -513,7 +516,7 @@ class FacebookSource(BaseSource):
                     break
         
         if not title:
-            title = f"Event from {self.name}"
+            title = self._default_event_title()
         
         # Extract date/time - combine text and image data
         start_time = None
@@ -539,7 +542,7 @@ class FacebookSource(BaseSource):
             ai_details = self._ai_extract_event_details(ai_text)
             if ai_details:
                 start_time = ai_details.get('start_time')
-                if title.startswith("Event from " + str(self.name)) and ai_details.get('title'):
+                if title == self._default_event_title() and ai_details.get('title'):
                     title = ai_details['title']
         
         # Default to next week if no date found
@@ -583,56 +586,9 @@ class FacebookSource(BaseSource):
             'ocr_confidence': image_data.get('ocr_confidence') if image_data else None
         }
     
-    def _resolve_relative_date(self, text: str) -> Optional[datetime]:
-        """Resolve relative date expressions like "tomorrow" into a date."""
-        if not text:
-            return None
-        
-        text_lower = text.lower()
-        relative_offsets = [
-            ('übermorgen', 2),
-            ('uebermorgen', 2),
-            ('day after tomorrow', 2),
-            ('tomorrow', 1),
-            ('morgen', 1),
-            ('today', 0),
-            ('heute', 0)
-        ]
-        
-        for phrase, offset in relative_offsets:
-            if re.search(rf'\b{re.escape(phrase)}\b', text_lower):
-                base_date = datetime.now() + timedelta(days=offset)
-                return datetime(base_date.year, base_date.month, base_date.day)
-        
-        return None
-    
-    def _extract_time_from_text(self, text: str) -> Optional[tuple]:
-        """Extract time from text, returning (hour, minute) if found."""
-        if not text:
-            return None
-        
-        time_patterns = [
-            r'(\d{1,2})[:\.](\d{2})\s*(?:uhr)?',
-            r'(\d{1,2})\s*uhr',
-        ]
-        
-        for pattern in time_patterns:
-            for time_match in re.finditer(pattern, text.lower()):
-                groups = time_match.groups()
-                hour = int(groups[0])
-                minute = int(groups[1]) if len(groups) > 1 and groups[1] else 0
-                if 0 <= hour <= 23 and 0 <= minute <= 59:
-                    return hour, minute
-        
-        return None
-    
-    def _resolve_year_for_date(self, month: int, day: int) -> int:
-        """Resolve year for dates missing year, preferring upcoming dates."""
-        today = datetime.now()
-        year = today.year
-        if (month, day) < (today.month, today.day):
-            year += 1
-        return year
+    def _default_event_title(self) -> str:
+        """Build the default event title string."""
+        return f"{self.DEFAULT_TITLE_PREFIX}{self.name}"
     
     def _get_ai_provider(self):
         """Get configured AI provider for extraction."""
@@ -704,12 +660,12 @@ class FacebookSource(BaseSource):
                 break
         
         if not date_match:
-            relative_date = self._resolve_relative_date(text)
+            relative_date = resolve_relative_date(text)
             if not relative_date:
                 return None
             
             hour, minute = 20, 0  # Default time
-            time_match = self._extract_time_from_text(text)
+            time_match = extract_time_from_text(text)
             if time_match:
                 hour, minute = time_match
             
@@ -725,13 +681,13 @@ class FacebookSource(BaseSource):
                 day, month, year = int(groups[0]), int(groups[1]), 2000 + int(groups[2])
             elif date_format == 'DM':
                 day, month = int(groups[0]), int(groups[1])
-                year = self._resolve_year_for_date(month, day)
+                year = resolve_year_for_date(month, day)
             else:  # YMD
                 year, month, day = int(groups[0]), int(groups[1]), int(groups[2])
             
             # Extract time
             hour, minute = 20, 0  # Default time
-            time_match = self._extract_time_from_text(text)
+            time_match = extract_time_from_text(text)
             if time_match:
                 hour, minute = time_match
             
@@ -755,11 +711,11 @@ class FacebookSource(BaseSource):
             # Try to parse date
             day, month, year = None, None, None
             
-            relative_date = self._resolve_relative_date(date_str)
+            relative_date = resolve_relative_date(date_str)
             if relative_date:
                 hour, minute = 20, 0
                 if time_str:
-                    time_match = self._extract_time_from_text(time_str)
+                    time_match = extract_time_from_text(time_str)
                     if time_match:
                         hour, minute = time_match
                 
@@ -780,7 +736,7 @@ class FacebookSource(BaseSource):
                 if match:
                     day = int(match.group(1))
                     month = int(match.group(2))
-                    year = self._resolve_year_for_date(month, day)
+                    year = resolve_year_for_date(month, day)
             
             if not all([day, month, year]):
                 return None
@@ -788,10 +744,9 @@ class FacebookSource(BaseSource):
             # Parse time
             hour, minute = 20, 0
             if time_str:
-                time_match = re.search(r'(\d{1,2})[:\.]?(\d{2})?', time_str)
+                time_match = extract_time_from_text(time_str)
                 if time_match:
-                    hour = int(time_match.group(1))
-                    minute = int(time_match.group(2)) if time_match.group(2) else 0
+                    hour, minute = time_match
             
             dt = datetime(year, month, day, hour, minute)
             return dt.isoformat()

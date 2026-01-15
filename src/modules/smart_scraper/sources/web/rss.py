@@ -14,8 +14,9 @@ except ImportError:
 class RSSSource(BaseSource):
     """Scraper for RSS feeds."""
     
-    def __init__(self, source_config: Dict[str, Any], options: SourceOptions):
-        super().__init__(source_config, options)
+    def __init__(self, source_config: Dict[str, Any], options: SourceOptions,
+                 base_path=None):
+        super().__init__(source_config, options, base_path=base_path)
         self.available = FEEDPARSER_AVAILABLE
     
     def scrape(self) -> List[Dict[str, Any]]:

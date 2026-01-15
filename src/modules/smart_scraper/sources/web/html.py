@@ -17,8 +17,9 @@ except ImportError:
 class HTMLSource(BaseSource):
     """Scraper for HTML pages."""
     
-    def __init__(self, source_config: Dict[str, Any], options: SourceOptions):
-        super().__init__(source_config, options)
+    def __init__(self, source_config: Dict[str, Any], options: SourceOptions,
+                 base_path=None):
+        super().__init__(source_config, options, base_path=base_path)
         self.available = SCRAPING_AVAILABLE
         
         if self.available:
