@@ -53,6 +53,7 @@ class FacebookSource(BaseSource):
     - OCR scanning of posted images for event flyers
     - Date/time extraction from post text and images
     - German and English language support
+    - When scan_posts is enabled, processes the full timeline feed
     """
     
     DEFAULT_TITLE_PREFIX = "Event from "
@@ -60,9 +61,13 @@ class FacebookSource(BaseSource):
     def __init__(self, source_config: Dict[str, Any], options: SourceOptions,
                  base_path: Optional[Path] = None,
                  ai_providers: Optional[Dict[str, Any]] = None):
-        super().__init__(source_config, options, base_path=base_path)
+        super().__init__(
+            source_config,
+            options,
+            base_path=base_path,
+            ai_providers=ai_providers
+        )
         self.available = SCRAPING_AVAILABLE
-        self.ai_providers = ai_providers or {}
         options_config = source_config.get('options') or {}
         self.scan_posts = bool(options_config.get('scan_posts', False))
         self.force_scan = bool(options_config.get('force_scan', False))
@@ -286,11 +291,10 @@ class FacebookSource(BaseSource):
                 continue
             
             event = self._convert_post_to_event(post)
-            if self.post_cache and post_key:
-                self.post_cache.mark_processed(post_key)
-            
             if event:
                 events.append(event)
+                if self.post_cache and post_key:
+                    self.post_cache.mark_processed(post_key)
         
         if self.post_cache:
             self.post_cache.save()
@@ -312,6 +316,10 @@ class FacebookSource(BaseSource):
         else:
             now = datetime.now(event_date.tzinfo)
         return event_date >= now
+    
+    def _is_past_start_time(self, start_time: Optional[str]) -> bool:
+        """Check if start_time exists and is in the past."""
+        return bool(start_time) and not self._is_future_event(start_time)
     
     def _extract_events_from_html(self, soup: BeautifulSoup) -> List[Dict[str, Any]]:
         """Extract events from HTML soup.
@@ -614,7 +622,7 @@ class FacebookSource(BaseSource):
         if not start_time:
             start_time = self._extract_datetime_from_text(post.get('text', ''))
         
-        if start_time and not self._is_future_event(start_time):
+        if self._is_past_start_time(start_time):
             return None
         
         if not start_time:
@@ -629,7 +637,7 @@ class FacebookSource(BaseSource):
                 start_time = ai_details.get('start_time')
                 if title == self._default_event_title() and ai_details.get('title'):
                     title = ai_details['title']
-                if start_time and not self._is_future_event(start_time):
+                if self._is_past_start_time(start_time):
                     return None
         
         # Default to next week if no date found

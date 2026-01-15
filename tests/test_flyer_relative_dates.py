@@ -4,6 +4,7 @@ Tests for flyer relative date parsing and AI fallback extraction.
 """
 
 import sys
+import json
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -130,12 +131,23 @@ def test_post_cache_skips_processed_posts(tmp_path):
     posts = [
         {"text": "Morgen 19 Uhr", "images": [], "links": [], "timestamp": "1"}
     ]
+    post_key = source._get_post_cache_key(posts[0])
 
     first_run = source._process_posts(posts)
     second_run = source._process_posts(posts)
 
     assert len(first_run) == 1
     assert second_run == []
+
+    cache_path = (
+        tmp_path / "data" / "scraper_cache" / "facebook_posts_test_source.json"
+    )
+    assert cache_path.exists()
+    cached = json.loads(cache_path.read_text())
+    assert post_key in cached.get("processed_keys", [])
+
+    new_source = build_source(base_path=tmp_path)
+    assert new_source.post_cache.is_processed(post_key)
 
     source.force_scan = True
     third_run = source._process_posts(posts)

@@ -59,7 +59,10 @@ def resolve_year_for_date(month: int, day: int, base_date: Optional[datetime] = 
     """Resolve year for dates missing year, preferring upcoming dates."""
     base_date = base_date or datetime.now()
     year = base_date.year
-    candidate = datetime(year, month, day)
+    try:
+        candidate = datetime(year, month, day)
+    except ValueError:
+        return year
     if candidate.date() < base_date.date():
         return year + 1
     return year
