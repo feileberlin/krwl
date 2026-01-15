@@ -71,8 +71,10 @@ class CustomDropdown {
         itemEl.textContent = item.label;
         itemEl.addEventListener('click', (e) => {
             e.stopPropagation();
-            this.currentValue = item.value;
             this.onSelect(item.value);
+            this.currentValue = this.currentValueProvider
+                ? this.currentValueProvider()
+                : item.value;
             this.close();
         });
         
@@ -81,7 +83,15 @@ class CustomDropdown {
 
     refreshData() {
         if (this.itemsProvider) {
-            this.items = this.itemsProvider() || [];
+            const items = this.itemsProvider();
+            if (!Array.isArray(items)) {
+                console.warn('[Dropdown] Items provider did not return an array');
+                if (!Array.isArray(this.items)) {
+                    this.items = [];
+                }
+            } else {
+                this.items = items;
+            }
         }
         if (this.currentValueProvider) {
             this.currentValue = this.currentValueProvider();
