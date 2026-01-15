@@ -24,7 +24,7 @@ class LocalLLMProvider(OllamaProvider):
             "Extract key event details from the provided context and return ONLY JSON. "
             "Required fields: title, description, start_time, end_time, url, category, "
             "location (object with name, lat, lon), price. "
-            "Use ISO 8601 for times. Use null for unknown values."
+            "Use ISO 8601 for times. Use null (JSON) or None for unknown values."
         )
 
 

@@ -813,7 +813,8 @@ class FacebookSource(BaseSource):
             location = image_data['location']
         if ai_details and isinstance(ai_details.get('location'), dict):
             for key, value in ai_details['location'].items():
-                if value is not None and location.get(key) is None:
+                existing_value = location.get(key)
+                if value is not None and (key not in location or existing_value is None or existing_value == ""):
                     location[key] = value
         
         return {

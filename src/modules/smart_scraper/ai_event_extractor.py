@@ -148,7 +148,7 @@ class LocalEventExtractor:
             "Return ONLY JSON with these fields: "
             "title, description, start_time, end_time, url, category, "
             "location (object with name, lat, lon), and price. "
-            "Use ISO 8601 for times. Use null when unknown."
+            "Use ISO 8601 for times. Use null (JSON) or None for unknown values."
         )
 
     def _select_provider(self, provider_name: Optional[str] = None):
