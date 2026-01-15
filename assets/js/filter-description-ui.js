@@ -114,11 +114,8 @@ class FilterDescriptionUI {
             return 'from custom location';
         }
         
-        // Geolocation
+        // Geolocation - always show "from here" when geolocation is active
         if (filters.locationType === 'geolocation') {
-            if (!userLocation) {
-                return 'from default location';
-            }
             return window.i18n ? window.i18n.t('filters.locations.geolocation') : 'from here';
         }
         
