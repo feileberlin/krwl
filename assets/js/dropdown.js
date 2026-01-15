@@ -9,8 +9,10 @@
 class CustomDropdown {
     constructor(triggerEl, items, currentValue, onSelect) {
         this.triggerEl = triggerEl;
-        this.items = items;
-        this.currentValue = currentValue;
+        this.itemsProvider = typeof items === 'function' ? items : null;
+        this.currentValueProvider = typeof currentValue === 'function' ? currentValue : null;
+        this.items = this.itemsProvider ? this.itemsProvider() : items;
+        this.currentValue = this.currentValueProvider ? this.currentValueProvider() : currentValue;
         this.onSelect = onSelect;
         this.dropdownEl = null;
         this.isOpen = false;
@@ -39,6 +41,7 @@ class CustomDropdown {
     open() {
         this.isOpen = true;
         this.triggerEl.classList.add('editing');
+        this.refreshData();
         
         this.dropdownEl = this.createDropdownElement();
         this.positionDropdown();
@@ -69,10 +72,30 @@ class CustomDropdown {
         itemEl.addEventListener('click', (e) => {
             e.stopPropagation();
             this.onSelect(item.value);
+            this.currentValue = this.currentValueProvider
+                ? this.currentValueProvider()
+                : item.value;
             this.close();
         });
         
         return itemEl;
+    }
+
+    refreshData() {
+        if (this.itemsProvider) {
+            const items = this.itemsProvider();
+            if (!Array.isArray(items)) {
+                console.warn('[Dropdown] Items provider did not return an array');
+                if (!Array.isArray(this.items)) {
+                    this.items = [];
+                }
+            } else {
+                this.items = items;
+            }
+        }
+        if (this.currentValueProvider) {
+            this.currentValue = this.currentValueProvider();
+        }
     }
     
     positionDropdown() {
