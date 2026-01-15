@@ -9,7 +9,7 @@ from images (particularly event flyers). It combines:
 Designed to be reusable across all social media scrapers.
 """
 
-from typing import Dict, Any, Optional, Union
+from typing import Dict, Any, Optional, Union, List
 from io import BytesIO
 from .metadata import extract_metadata
 from .ocr import (

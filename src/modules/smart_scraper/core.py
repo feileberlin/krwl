@@ -105,8 +105,18 @@ class SmartScraper:
                 try:
                     source_class = getattr(social, class_name, None)
                     if source_class:
-                        self.registry.register(platform_type, 
-                            lambda cfg, opts, cls=source_class: cls(cfg, opts))
+                        if class_name == 'FacebookSource':
+                            self.registry.register(
+                                platform_type,
+                                lambda cfg, opts, cls=source_class, ai=self.ai_providers: cls(
+                                    cfg, opts, ai_providers=ai
+                                )
+                            )
+                        else:
+                            self.registry.register(
+                                platform_type,
+                                lambda cfg, opts, cls=source_class: cls(cfg, opts)
+                            )
                 except AttributeError:
                     pass  # Platform not yet implemented
         except ImportError:

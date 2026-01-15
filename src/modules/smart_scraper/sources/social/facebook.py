@@ -46,9 +46,11 @@ class FacebookSource(BaseSource):
     - German and English language support
     """
     
-    def __init__(self, source_config: Dict[str, Any], options: SourceOptions):
+    def __init__(self, source_config: Dict[str, Any], options: SourceOptions,
+                 ai_providers: Optional[Dict[str, Any]] = None):
         super().__init__(source_config, options)
         self.available = SCRAPING_AVAILABLE
+        self.ai_providers = ai_providers or {}
         
         # Initialize session with realistic headers
         if self.available:
@@ -70,7 +72,7 @@ class FacebookSource(BaseSource):
                     'ocr_enabled': True,
                     'languages': ['eng', 'deu']
                 }
-                self.image_analyzer = ImageAnalyzer(img_config)
+                self.image_analyzer = ImageAnalyzer(img_config, self.ai_providers)
             except Exception as e:
                 print(f"    ⚠ Image analyzer init failed: {e}")
         
@@ -510,6 +512,19 @@ class FacebookSource(BaseSource):
         if not start_time:
             start_time = self._extract_datetime_from_text(post.get('text', ''))
         
+        if not start_time:
+            ai_text = ' '.join(
+                value for value in [
+                    post.get('text', ''),
+                    image_data.get('ocr_text') if image_data else ''
+                ] if value
+            )
+            ai_details = self._ai_extract_event_details(ai_text)
+            if ai_details:
+                start_time = ai_details.get('start_time')
+                if title.startswith(f"Event from {self.name}") and ai_details.get('title'):
+                    title = ai_details['title']
+        
         # Default to next week if no date found
         if not start_time:
             start_time = (datetime.now() + timedelta(days=7)).replace(hour=20, minute=0).isoformat()
@@ -551,6 +566,68 @@ class FacebookSource(BaseSource):
             'ocr_confidence': image_data.get('ocr_confidence') if image_data else None
         }
     
+    def _resolve_relative_date(self, text: str) -> Optional[datetime]:
+        """Resolve relative date expressions like "tomorrow" into a date."""
+        if not text:
+            return None
+        
+        text_lower = text.lower()
+        relative_offsets = [
+            ('übermorgen', 2),
+            ('uebermorgen', 2),
+            ('day after tomorrow', 2),
+            ('tomorrow', 1),
+            ('morgen', 1),
+            ('today', 0),
+            ('heute', 0)
+        ]
+        
+        for phrase, offset in relative_offsets:
+            if phrase in text_lower:
+                base_date = datetime.now() + timedelta(days=offset)
+                return datetime(base_date.year, base_date.month, base_date.day)
+        
+        return None
+    
+    def _get_ai_provider(self):
+        """Get configured AI provider for extraction."""
+        if not self.ai_providers:
+            return None
+        
+        provider = None
+        if self.options.ai_provider:
+            provider = self.ai_providers.get(self.options.ai_provider)
+        if not provider:
+            provider = next(iter(self.ai_providers.values()), None)
+        if not provider:
+            return None
+        
+        if hasattr(provider, 'is_available') and not provider.is_available():
+            return None
+        
+        return provider
+    
+    def _ai_extract_event_details(self, text: str) -> Optional[Dict[str, Any]]:
+        """Use AI provider to extract event details from text."""
+        if not text:
+            return None
+        
+        provider = self._get_ai_provider()
+        if not provider:
+            return None
+        
+        prompt = self.options.ai_prompt or (
+            "Extract event details and return JSON with fields: title, start_time, "
+            "end_time, url, location. Convert relative dates like 'tomorrow' to "
+            "ISO datetime."
+        )
+        
+        try:
+            return provider.extract_event_info(text, prompt)
+        except Exception as e:
+            print(f"      AI extraction error: {e}")
+            return None
+    
     def _extract_datetime_from_text(self, text: str) -> Optional[str]:
         """Extract datetime from text.
         
@@ -569,6 +646,10 @@ class FacebookSource(BaseSource):
             (r'(\d{1,2})\.(\d{1,2})\.(\d{2})(?!\d)', 'DMY2'),
             (r'(\d{4})-(\d{2})-(\d{2})', 'YMD'),
         ]
+        time_patterns = [
+            r'(\d{1,2})[:\.](\d{2})\s*(?:uhr)?',
+            r'(\d{1,2})\s*uhr',
+        ]
         
         date_match = None
         date_format = None
@@ -581,7 +662,21 @@ class FacebookSource(BaseSource):
                 break
         
         if not date_match:
-            return None
+            relative_date = self._resolve_relative_date(text)
+            if not relative_date:
+                return None
+            
+            hour, minute = 20, 0  # Default time
+            for pattern in time_patterns:
+                time_match = re.search(pattern, text.lower())
+                if time_match:
+                    groups = time_match.groups()
+                    hour = int(groups[0])
+                    minute = int(groups[1]) if len(groups) > 1 else 0
+                    break
+            
+            dt = datetime(relative_date.year, relative_date.month, relative_date.day, hour, minute)
+            return dt.isoformat()
         
         # Parse date
         try:
@@ -595,11 +690,6 @@ class FacebookSource(BaseSource):
             
             # Extract time
             hour, minute = 20, 0  # Default time
-            time_patterns = [
-                r'(\d{1,2})[:\.](\d{2})\s*(?:uhr)?',
-                r'(\d{1,2})\s*uhr',
-            ]
-            
             for pattern in time_patterns:
                 time_match = re.search(pattern, text.lower())
                 if time_match:
@@ -627,6 +717,18 @@ class FacebookSource(BaseSource):
         try:
             # Try to parse date
             day, month, year = None, None, None
+            
+            relative_date = self._resolve_relative_date(date_str)
+            if relative_date:
+                hour, minute = 20, 0
+                if time_str:
+                    time_match = re.search(r'(\d{1,2})[:\.]?(\d{2})?', time_str)
+                    if time_match:
+                        hour = int(time_match.group(1))
+                        minute = int(time_match.group(2)) if time_match.group(2) else 0
+                
+                dt = datetime(relative_date.year, relative_date.month, relative_date.day, hour, minute)
+                return dt.isoformat()
             
             # DD.MM.YYYY or DD.MM.YY
             match = re.match(r'(\d{1,2})\.(\d{1,2})\.(\d{2,4})', date_str)
