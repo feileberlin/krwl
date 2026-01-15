@@ -11,10 +11,12 @@ feedparser>=6.0.10  # For RSS feed parsing
 pydantic>=2.0.0  # Data validation and schema enforcement
 tenacity>=8.2.0  # Retry logic with exponential backoff
 
-# Image Analysis (optional - install as needed)
-# Pillow>=10.0.0  # Image processing
-# pytesseract>=0.3.10  # OCR with Tesseract
-# exifread>=3.0.0  # EXIF metadata extraction
+# Image Analysis (required for Facebook flyer scraping)
+Pillow>=10.0.0  # Image processing
+pytesseract>=0.3.10  # OCR with Tesseract (requires system tesseract-ocr)
+exifread>=3.0.0  # EXIF metadata extraction
+
+# Alternative OCR engines (optional - install as needed for better results)
 # easyocr>=1.7.0  # Alternative OCR (GPU recommended)
 # paddleocr>=2.7.0  # Another OCR alternative
 

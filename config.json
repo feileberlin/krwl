@@ -203,6 +203,7 @@
         "options": {
           "filter_ads": true,
           "scan_posts": true,
+          "ocr_enabled": true,
           "max_days_ahead": 90,
           "category": "art",
           "default_location": {
@@ -221,6 +222,7 @@
         "options": {
           "filter_ads": true,
           "scan_posts": true,
+          "ocr_enabled": true,
           "max_days_ahead": 90,
           "category": "art",
           "default_location": {
@@ -239,6 +241,7 @@
         "options": {
           "filter_ads": true,
           "scan_posts": true,
+          "ocr_enabled": true,
           "max_days_ahead": 120,
           "category": "music",
           "default_location": {
@@ -311,6 +314,7 @@
         "options": {
           "filter_ads": true,
           "scan_posts": true,
+          "ocr_enabled": true,
           "max_days_ahead": 90,
           "category": "art",
           "default_location": {
@@ -329,6 +333,7 @@
         "options": {
           "filter_ads": true,
           "scan_posts": true,
+          "ocr_enabled": true,
           "max_days_ahead": 120,
           "category": "theater",
           "default_location": {
@@ -365,6 +370,7 @@
         "options": {
           "filter_ads": true,
           "scan_posts": true,
+          "ocr_enabled": true,
           "max_days_ahead": 120,
           "category": "food-drink",
           "default_location": {

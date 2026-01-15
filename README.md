@@ -41,6 +41,12 @@ Want to run it locally or contribute?
 git clone https://github.com/feileberlin/krwl-hof.git
 cd krwl-hof
 
+# Install system dependencies (for Facebook flyer OCR)
+# Ubuntu/Debian:
+sudo apt-get install tesseract-ocr tesseract-ocr-deu tesseract-ocr-eng
+# macOS:
+brew install tesseract tesseract-lang
+
 # Install Python dependencies
 pip install -r requirements.txt
 
@@ -53,6 +59,38 @@ python3 -m http.server 8000
 ```
 
 Open http://localhost:8000 in your browser
+
+### 📸 Facebook Flyer Scraping with OCR
+
+This project includes **automatic event extraction from Facebook page flyer images** using Optical Character Recognition (OCR). When you scrape Facebook pages like "Punk in Hof", the system:
+
+1. **Scans posts** - Downloads images from Facebook posts
+2. **OCR Analysis** - Extracts text from flyer images (dates, times, event names)
+3. **Smart Detection** - Identifies event-related keywords and patterns
+4. **Auto-Creation** - Creates pending events from flyer data
+
+**Requirements:**
+- Tesseract OCR system library (see installation above)
+- Python packages: `Pillow`, `pytesseract`, `exifread` (included in requirements.txt)
+
+**How to enable:**
+Facebook sources in `config.json` should have `scan_posts: true`:
+
+```json
+{
+  "name": "Punkrock in Hof",
+  "url": "https://www.facebook.com/people/Punk-in-Hof/100090512583516/",
+  "type": "facebook",
+  "enabled": true,
+  "options": {
+    "scan_posts": true,
+    "ocr_enabled": true,
+    "category": "music"
+  }
+}
+```
+
+**Note:** Facebook scraping works without API credentials but may be limited by Facebook's page structure changes.
 
 ## 📚 Documentation Philosophy
 
