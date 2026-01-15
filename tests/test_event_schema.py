@@ -93,13 +93,13 @@ EVENT_SCHEMA = {
         },
         "category": {
             "type": "string",
-            "description": "Event category for filtering",
+            "description": "Event category for filtering (optional field - not required)",
             "enum": ["on-stage", "pub-game", "festival", "workshop", "market", "sports", "community", "other", 
                      "art", "arts", "music", "theater", "culture", "education", "food", "food-drink", "palace"]
         },
         "source": {
             "type": "string",
-            "description": "Source name of the event data (e.g., 'Frankenpost', 'Galeriehaus', 'manual')",
+            "description": "Source of the event data as a free-form string, typically a human-readable source name (e.g., 'Frankenpost', 'Galeriehaus') or a technical identifier such as 'manual', 'rss', 'api', 'html', or 'facebook'.",
             "minLength": 1
         },
         "status": {
@@ -131,7 +131,8 @@ EVENT_SCHEMA = {
                 "duration_hours": {
                     "type": "number"
                 }
-            }
+            },
+            "required": ["type"]
         },
         "marker_icon": {
             "type": "string",

@@ -84,13 +84,13 @@ Facebook sources in `config.json` should have `scan_posts: true`:
   "enabled": true,
   "options": {
     "scan_posts": true,
-    "ocr_enabled": true,
+    "ocr_enabled": true,  // Optional - defaults to true when scan_posts is enabled
     "category": "music"
   }
 }
 ```
 
-**Note:** Facebook scraping works without API credentials but may be limited by Facebook's page structure changes.
+**Note:** `ocr_enabled` defaults to `true` if not specified, so it's optional. Facebook scraping works without API credentials but may be limited by Facebook's page structure changes.
 
 ## 📚 Documentation Philosophy
 
