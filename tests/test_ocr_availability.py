@@ -18,15 +18,19 @@ def test_ocr_dependencies_installed():
     """Verify OCR Python dependencies are installed."""
     try:
         import pytesseract
-        print(f"✓ pytesseract installed: {pytesseract.__version__}")
+        try:
+            version = pytesseract.get_tesseract_version()
+            print(f"✓ pytesseract installed (Tesseract version: {version})")
+        except:
+            print(f"✓ pytesseract installed")
     except ImportError as e:
         print(f"✗ pytesseract not installed: {e}")
         print("  Install with: pip install pytesseract")
         return False
     
     try:
-        from PIL import Image
-        print(f"✓ Pillow installed: {Image.__version__}")
+        from PIL import __version__ as pillow_version
+        print(f"✓ Pillow installed: {pillow_version}")
     except ImportError as e:
         print(f"✗ Pillow not installed: {e}")
         print("  Install with: pip install Pillow")

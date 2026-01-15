@@ -455,13 +455,17 @@ class FacebookSource(BaseSource):
                 'text': '',
                 'images': [],
                 'links': [],
-                'timestamp': None
+                'timestamp': None,
+                'post_id': None
             }
             
             # Extract text content
             text_elem = element.find(['p', 'div', 'span'])
             if text_elem:
                 post['text'] = text_elem.get_text(strip=True)
+            
+            # Extract post ID from links or data attributes
+            post['post_id'] = self._extract_post_id(element)
             
             # Extract images
             for img in element.find_all('img', src=True):
@@ -486,6 +490,48 @@ class FacebookSource(BaseSource):
             print(f"      Error parsing post element: {e}")
             return None
     
+    def _extract_post_id(self, element) -> Optional[str]:
+        """Extract Facebook post ID from element.
+        
+        Args:
+            element: BeautifulSoup element
+            
+        Returns:
+            Post ID string or None
+        """
+        # Try to extract from data-ft attribute (Facebook tracking data)
+        data_ft = element.get('data-ft')
+        if data_ft:
+            try:
+                ft_data = json.loads(data_ft)
+                if 'mf_story_key' in ft_data:
+                    return str(ft_data['mf_story_key'])
+                if 'top_level_post_id' in ft_data:
+                    return str(ft_data['top_level_post_id'])
+            except (json.JSONDecodeError, TypeError):
+                pass
+        
+        # Try to extract from links that contain story_fbid or post IDs
+        for link in element.find_all('a', href=True):
+            href = link['href']
+            # Extract from story_fbid parameter
+            if 'story_fbid=' in href:
+                match = re.search(r'story_fbid=(\d+)', href)
+                if match:
+                    return match.group(1)
+            # Extract from posts/ URL pattern
+            if '/posts/' in href:
+                match = re.search(r'/posts/(\d+)', href)
+                if match:
+                    return match.group(1)
+            # Extract from permalink.php
+            if 'permalink.php' in href:
+                match = re.search(r'story_fbid=(\d+)|id=(\d+)', href)
+                if match:
+                    return match.group(1) or match.group(2)
+        
+        return None
+    
     def _convert_post_to_event(self, post: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Convert a post to an event if it contains event information.
         
@@ -505,7 +551,8 @@ class FacebookSource(BaseSource):
         # Analyze images for event flyers using OCR
         image_event_data = None
         if self.ocr_enabled and self.image_analyzer and post.get('images'):
-            image_event_data = self._analyze_post_images(post['images'])
+            post_id = post.get('post_id')
+            image_event_data = self._analyze_post_images(post['images'], post_id)
         
         # Decide if this is an event
         if not has_event_indicators and not image_event_data:
@@ -550,11 +597,15 @@ class FacebookSource(BaseSource):
         
         return keyword_count >= 2 or (keyword_count >= 1 and (has_date or has_time))
     
-    def _analyze_post_images(self, image_urls: List[str]) -> Optional[Dict[str, Any]]:
+    def _analyze_post_images(self, image_urls: List[str], post_id: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """Analyze post images for event flyer content using OCR.
+        
+        Images are cached by post_id to avoid re-downloading and re-processing
+        the same images on subsequent scrapes.
         
         Args:
             image_urls: List of image URLs
+            post_id: Optional Facebook post ID for caching images
             
         Returns:
             Best event data extracted from images or None
@@ -562,15 +613,45 @@ class FacebookSource(BaseSource):
         if not self.image_analyzer:
             return None
         
+        # Setup image cache directory
+        image_cache_dir = None
+        if self.base_path and post_id:
+            image_cache_dir = self.base_path / "data" / "image_cache" / "facebook"
+            image_cache_dir.mkdir(parents=True, exist_ok=True)
+        
         best_result = None
         best_confidence = 0.0
         
-        for url in image_urls[:3]:  # Limit to first 3 images
+        for idx, url in enumerate(image_urls[:3]):  # Limit to first 3 images
             try:
+                # Check if we have a cached version of this image
+                cached_image_path = None
+                if image_cache_dir and post_id:
+                    cached_image_path = image_cache_dir / f"{post_id}_{idx}.jpg"
+                    if cached_image_path.exists():
+                        # Use cached image
+                        result = self.image_analyzer.analyze(str(cached_image_path))
+                        if result and result.get('ocr_confidence', 0) > best_confidence:
+                            best_confidence = result.get('ocr_confidence', 0)
+                            best_result = result
+                        continue
+                
+                # Download and analyze new image
                 result = self.image_analyzer.analyze_url(url, timeout=10)
                 if result and result.get('ocr_confidence', 0) > best_confidence:
                     best_confidence = result.get('ocr_confidence', 0)
                     best_result = result
+                    
+                    # Cache the image for future use
+                    if cached_image_path:
+                        try:
+                            import requests
+                            response = requests.get(url, timeout=10)
+                            response.raise_for_status()
+                            cached_image_path.write_bytes(response.content)
+                        except Exception as e:
+                            print(f"      Failed to cache image: {e}")
+                            
             except Exception as e:
                 print(f"      OCR analysis error: {e}")
                 continue
