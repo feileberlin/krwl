@@ -10,6 +10,7 @@ import unittest
 import json
 import tempfile
 import shutil
+import re
 from pathlib import Path
 
 # Add src to path
@@ -104,7 +105,6 @@ window.APP_CONFIG = {json.dumps(app_config, indent=2)};
             html = f.read()
         
         # Parse APP_CONFIG
-        import re
         match = re.search(r'window\.APP_CONFIG\s*=\s*(\{.+?\});', html, re.DOTALL)
         self.assertIsNotNone(match, "APP_CONFIG should be found in HTML")
         
@@ -129,7 +129,6 @@ window.APP_CONFIG = {json.dumps(app_config, indent=2)};
             html = f.read()
         
         # Parse APP_CONFIG
-        import re
         match = re.search(r'window\.APP_CONFIG\s*=\s*(\{.+?\});', html, re.DOTALL)
         config = json.loads(match.group(1))
         

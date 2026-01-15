@@ -103,6 +103,10 @@ DEPENDENCIES = {
 class SiteGenerator:
     """Generates static site with runtime-configurable behavior"""
     
+    # Constants for HTML parsing markers
+    APP_CONFIG_MARKER = 'window.APP_CONFIG = '
+    APP_CONFIG_END_PATTERN = r';\s*\n'  # Pattern to find end of APP_CONFIG assignment
+    
     def __init__(self, base_path):
         """
         Initialize SiteGenerator.
@@ -2095,22 +2099,24 @@ window.DEBUG_INFO = {debug_info_json};'''
         
         print(f"Found weather data: {weather_data.get('dresscode', 'N/A')}")
         
-        # Find the APP_CONFIG object and update weather.data field within it
-        # We need to parse and modify the JSON within window.APP_CONFIG
-        app_config_marker = 'window.APP_CONFIG = '
-        app_config_start = html.find(app_config_marker)
+        # Find the APP_CONFIG object using the class constant marker
+        app_config_start = html.find(self.APP_CONFIG_MARKER)
         
         if app_config_start == -1:
             print("\n❌ Error: APP_CONFIG not found in HTML")
             return False
         
-        app_config_start += len(app_config_marker)
+        app_config_start += len(self.APP_CONFIG_MARKER)
         
-        # Find the end of the APP_CONFIG object (look for the closing brace and semicolon)
-        app_config_end = html.find(';\n', app_config_start)
-        if app_config_end == -1:
+        # Find the end of the APP_CONFIG object using regex pattern
+        # This handles both minified (;) and formatted (;\n) cases
+        import re
+        match = re.search(self.APP_CONFIG_END_PATTERN, html[app_config_start:])
+        if not match:
             print("\n❌ Error: Could not find end of APP_CONFIG")
             return False
+        
+        app_config_end = app_config_start + match.start()
         
         # Extract current APP_CONFIG JSON
         app_config_json_str = html[app_config_start:app_config_end]
