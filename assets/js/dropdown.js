@@ -9,8 +9,10 @@
 class CustomDropdown {
     constructor(triggerEl, items, currentValue, onSelect) {
         this.triggerEl = triggerEl;
-        this.items = items;
-        this.currentValue = currentValue;
+        this.itemsProvider = typeof items === 'function' ? items : null;
+        this.currentValueProvider = typeof currentValue === 'function' ? currentValue : null;
+        this.items = this.itemsProvider ? this.itemsProvider() : items;
+        this.currentValue = this.currentValueProvider ? this.currentValueProvider() : currentValue;
         this.onSelect = onSelect;
         this.dropdownEl = null;
         this.isOpen = false;
@@ -39,6 +41,7 @@ class CustomDropdown {
     open() {
         this.isOpen = true;
         this.triggerEl.classList.add('editing');
+        this.refreshData();
         
         this.dropdownEl = this.createDropdownElement();
         this.positionDropdown();
@@ -68,11 +71,21 @@ class CustomDropdown {
         itemEl.textContent = item.label;
         itemEl.addEventListener('click', (e) => {
             e.stopPropagation();
+            this.currentValue = item.value;
             this.onSelect(item.value);
             this.close();
         });
         
         return itemEl;
+    }
+
+    refreshData() {
+        if (this.itemsProvider) {
+            this.items = this.itemsProvider() || [];
+        }
+        if (this.currentValueProvider) {
+            this.currentValue = this.currentValueProvider();
+        }
     }
     
     positionDropdown() {

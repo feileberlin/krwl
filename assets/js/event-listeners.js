@@ -173,10 +173,28 @@ class EventListeners {
             { label: 'cultural events', value: 'culture' }
         ];
         
+        const getCategoryItems = () => {
+            const location = this.app.getReferenceLocation();
+            const categoryCounts = this.app.eventFilter.countCategoriesUnderFilters(
+                this.app.events || [],
+                this.app.filters,
+                location
+            );
+            const totalCount = Object.values(categoryCounts).reduce((sum, count) => sum + count, 0);
+            
+            return categories.map((item) => {
+                const count = item.value === 'all' ? totalCount : (categoryCounts[item.value] || 0);
+                return {
+                    ...item,
+                    label: `${item.label} (${count})`
+                };
+            });
+        };
+        
         new CustomDropdown(
             categoryTextEl,
-            categories,
-            this.app.filters.category,
+            getCategoryItems,
+            () => this.app.filters.category,
             (value) => {
                 this.app.filters.category = value;
                 this.app.storage.saveFiltersToCookie(this.app.filters);
