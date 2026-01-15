@@ -202,7 +202,7 @@ class FacebookSource(BaseSource):
         Returns:
             List of event dictionaries
         """
-        # Similar to page posts
+        # Similar to page posts, but normalize to base profile URL
         return self._scrape_page_posts(page_url=self._get_page_url(self.url))
     
     def _get_mobile_url(self, url: str) -> str:
@@ -538,7 +538,7 @@ class FacebookSource(BaseSource):
             ai_details = self._ai_extract_event_details(ai_text)
             if ai_details:
                 start_time = ai_details.get('start_time')
-                if title.startswith(f"Event from {self.name}") and ai_details.get('title'):
+                if title.startswith("Event from " + str(self.name)) and ai_details.get('title'):
                     title = ai_details['title']
         
         # Default to next week if no date found

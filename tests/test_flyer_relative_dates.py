@@ -78,7 +78,7 @@ def test_scan_posts_for_event_pages():
     """Ensure scan_posts enables post scraping for /events URLs."""
     class SpyFacebookSource(FacebookSource):
         def __init__(self, source_config, options):
-            super().__init__(source_config, options)
+            super().__init__(source_config, options, ai_providers=None)
             self.posts_called_with = None
 
         def _scrape_events_page(self):

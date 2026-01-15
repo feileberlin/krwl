@@ -108,8 +108,8 @@ class SmartScraper:
                         if class_name == 'FacebookSource':
                             self.registry.register(
                                 platform_type,
-                                lambda cfg, opts, cls=source_class, ai=self.ai_providers: cls(
-                                    cfg, opts, ai_providers=ai
+                                lambda cfg, opts, cls=source_class, ai_providers=self.ai_providers: cls(
+                                    cfg, opts, ai_providers=ai_providers
                                 )
                             )
                         else:
