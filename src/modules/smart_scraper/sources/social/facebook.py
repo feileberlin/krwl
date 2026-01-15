@@ -814,7 +814,7 @@ class FacebookSource(BaseSource):
         if ai_details and isinstance(ai_details.get('location'), dict):
             for key, value in ai_details['location'].items():
                 existing_value = location.get(key)
-                if value is not None and (key not in location or existing_value is None or existing_value == ""):
+                if value is not None and (key not in location or existing_value in (None, "")):
                     location[key] = value
         
         return {

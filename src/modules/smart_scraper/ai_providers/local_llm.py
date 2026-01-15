@@ -28,5 +28,6 @@ class LocalLLMProvider(OllamaProvider):
         )
 
 
-# Deprecated alias for legacy imports (remove in next major release).
+# Deprecated aliases for legacy imports (remove in next major release).
+LocalLlmProvider = LocalLLMProvider
 Local_llmProvider = LocalLLMProvider
