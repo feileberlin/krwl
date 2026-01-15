@@ -161,7 +161,7 @@ Design tokens are centralized design values stored in `config.json` that enable 
 ### Design Token Categories
 
 #### Colors
-- `primary` - Primary brand color (Barbie Pink: #FF69B4)
+- `primary` - Primary brand color (ecoBarbie: #D689B8)
 - `primary_hover` - Primary color hover state
 - `bg_primary`, `bg_secondary`, `bg_tertiary` - Background colors
 - `text_primary`, `text_secondary`, `text_tertiary` - Text colors
@@ -259,7 +259,7 @@ Open `config.json` and modify the `design` section at the top:
 {
   "design": {
     "colors": {
-      "primary": "#FF69B4",  // Change to your brand color
+      "primary": "#D689B8",  // Change to your brand color (default: ecoBarbie)
       "bg_primary": "#0d1117",
       ...
     },
@@ -468,7 +468,7 @@ This component system follows strict KISS (Keep It Simple, Stupid) principles:
 ❌ **Don't:**
 ```css
 .button {
-  background: #FF69B4;
+  background: #D689B8;  /* Hardcoded color - bad! */
   padding: 16px;
 }
 ```
