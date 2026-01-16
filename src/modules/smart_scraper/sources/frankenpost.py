@@ -219,13 +219,18 @@ class FrankenpostSource(BaseSource):
                 text = heading.get_text(strip=True)
                 # Look for venue indicators (Museum, Halle, Schloss, etc.)
                 venue_indicators = ['Museum', 'Halle', 'Schloss', 'Galerie', 'Theater', 
-                                  'Kirche', 'Zentrum', 'Haus', 'Platz', 'Rathaus']
+                                  'Kirche', 'Zentrum', 'Haus', 'Platz', 'Rathaus', 
+                                  'Saal', 'Kulturzentrum', 'Bibliothek']
                 if any(indicator in text for indicator in venue_indicators):
                     location_name = text
                     break
         
-        # If still no location, use default from config
-        if not location_name:
+        # Parse location to extract coordinates if possible
+        # Check if we have a full address or just a venue name
+        location = self._estimate_coordinates(location_name if location_name else '')
+        
+        # If no location found at all, use default from config
+        if not location_name and not full_address:
             default_loc = self.options.default_location
             if default_loc:
                 return default_loc
@@ -236,18 +241,9 @@ class FrankenpostSource(BaseSource):
                     'lon': 11.9167
                 }
         
-        # Parse location to extract coordinates if possible
-        # For now, we return the location name with estimated coordinates
-        # TODO: Add geocoding service integration for precise coordinates
-        location = {
-            'name': location_name,
-            'lat': 50.3167,  # Default Hof coordinates
-            'lon': 11.9167
-        }
-        
-        # Try to estimate coordinates based on city name in address
-        if full_address or location_name:
-            location = self._estimate_coordinates(location_name or full_address)
+        # If we have a full address, use it as the name
+        if full_address and not location_name:
+            location = self._estimate_coordinates(full_address)
         
         return location
     
