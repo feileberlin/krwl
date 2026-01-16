@@ -1927,7 +1927,8 @@ window.DEBUG_INFO = {debug_info_json};'''
                 )
             except (KeyError, ValueError) as exc:
                 logger.warning(
-                    "Failed to format index.html template, falling back to default layout: %s",
+                    "Failed to format index.html template (missing placeholders or invalid braces), "
+                    "falling back to default layout: %s",
                     exc,
                     exc_info=True,
                 )
