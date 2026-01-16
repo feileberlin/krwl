@@ -10,11 +10,18 @@ import sys
 from collections import Counter
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from src.tools.generate_demo_events import (
+    DEMO_PLACEHOLDER_DESCRIPTION_PHRASE,
+    DEMO_PLACEHOLDER_TITLE,
+)
+
 
 DEMO_FILE = Path(__file__).parent.parent / "assets" / "json" / "events.demo.json"
-PLACEHOLDER_TITLE = "Test Community Gathering"
+PLACEHOLDER_TITLE = DEMO_PLACEHOLDER_TITLE
 PLACEHOLDER_DESCRIPTION_PHRASES = [
-    "test event for approval flow testing",
+    DEMO_PLACEHOLDER_DESCRIPTION_PHRASE,
 ]
 PLACEHOLDER_TITLE_LOWER = PLACEHOLDER_TITLE.lower()
 PLACEHOLDER_DESCRIPTION_PHRASES_LOWER = [

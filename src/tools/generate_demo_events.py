@@ -148,6 +148,19 @@ def create_demo_event_from_template(template, event_id, time_offset, now):
     
     return demo_event
 
+def normalize_demo_template(template):
+    """Normalize template text for more appealing demo content."""
+    title = template.get("title", "Demo Event")
+    description = template.get("description", "Demo event based on real data.")
+
+    if DEMO_PLACEHOLDER_TITLE in title:
+        title = DEMO_PLACEHOLDER_TITLE_REPLACEMENT
+
+    if DEMO_PLACEHOLDER_DESCRIPTION_PHRASE in description.lower():
+        description = DEMO_PLACEHOLDER_DESCRIPTION_REPLACEMENT
+
+    return title, description
+
 def generate_demo_events_from_templates(real_events, now):
     """Generate demo events using real events as templates with relative time specifications."""
     
@@ -166,19 +179,6 @@ def generate_demo_events_from_templates(real_events, now):
             minutes = int((abs(tz_offset_hours) % 1) * 60)
             return dt.strftime(f"%Y-%m-%dT%H:%M:%S{sign}{hours:02d}:{minutes:02d}")
     
-    def normalize_demo_template(template):
-        """Normalize template text for more appealing demo content."""
-        title = template.get("title", "Demo Event")
-        description = template.get("description", "Demo event based on real data.")
-
-        if DEMO_PLACEHOLDER_TITLE in title:
-            title = DEMO_PLACEHOLDER_TITLE_REPLACEMENT
-
-        if DEMO_PLACEHOLDER_DESCRIPTION_PHRASE in description.lower():
-            description = DEMO_PLACEHOLDER_DESCRIPTION_REPLACEMENT
-
-        return title, description
-
     # Calculate next sunrise (simplified: 6 AM)
     next_sunrise = (now + timedelta(days=1)).replace(hour=6, minute=0, second=0, microsecond=0)
     if now.hour < 6:
