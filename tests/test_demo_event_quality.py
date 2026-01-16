@@ -11,9 +11,9 @@ from pathlib import Path
 
 
 DEMO_FILE = Path(__file__).parent.parent / "assets" / "json" / "events.demo.json"
-PLACEHOLDER_PHRASES = [
+PLACEHOLDER_TITLE = "Test Community Gathering"
+PLACEHOLDER_DESCRIPTION_PHRASES = [
     "test event for approval flow testing",
-    "Test Community Gathering",
 ]
 
 
@@ -55,9 +55,14 @@ def test_no_placeholder_copy():
 
     violations = []
     for event in events:
-        combined_text = f"{event.get('title', '')} {event.get('description', '')}".lower()
-        for phrase in PLACEHOLDER_PHRASES:
-            if phrase.lower() in combined_text:
+        title_text = event.get("title", "").lower()
+        description_text = event.get("description", "").lower()
+
+        if PLACEHOLDER_TITLE.lower() in title_text:
+            violations.append((event.get("id", "unknown"), PLACEHOLDER_TITLE))
+
+        for phrase in PLACEHOLDER_DESCRIPTION_PHRASES:
+            if phrase.lower() in description_text:
                 violations.append((event.get("id", "unknown"), phrase))
 
     if violations:

@@ -83,7 +83,6 @@ def load_real_events(base_dir="."):
         base_path / "data" / "events.json",
         base_path / "assets" / "json" / "events.json",
         base_path / "static" / "events.json",
-        base_path / "data" / "events.json",
         base_path / "events.json",
     ]
     
@@ -224,12 +223,12 @@ def generate_demo_events_from_templates(real_events, now):
     # Use real events as templates, cycling through them
     for i, scenario in enumerate(time_scenarios):
         if len(scenario) == 6:
-            offset, suffix, title_label, description, tz_offset, relative_spec = scenario
+            offset, suffix, title_label, scenario_description, tz_offset, relative_spec = scenario
         elif len(scenario) == 5:
-            offset, suffix, title_label, description, tz_offset = scenario
+            offset, suffix, title_label, scenario_description, tz_offset = scenario
             relative_spec = None
         else:
-            offset, suffix, title_label, description = scenario
+            offset, suffix, title_label, scenario_description = scenario
             tz_offset = 0
             relative_spec = None
             
@@ -291,7 +290,7 @@ def generate_demo_events_from_templates(real_events, now):
             demo_event = {
                 "id": event_id,
                 "title": f"[DEMO] {template_title}{title_suffix}{tz_suffix}",
-                "description": f"{description}. {template_description}",
+                "description": f"{scenario_description}. {template_description}",
                 "location": template.get('location', {
                     "name": "Demo Location",
                     "lat": 50.3167,
@@ -327,7 +326,7 @@ def generate_demo_events_from_templates(real_events, now):
             demo_event = {
                 "id": event_id,
                 "title": f"[DEMO] {template_title}{title_suffix}{tz_suffix}",
-                "description": f"{description}. {template_description}",
+                "description": f"{scenario_description}. {template_description}",
                 "location": template.get('location', {
                     "name": "Demo Location",
                     "lat": 50.3167,
