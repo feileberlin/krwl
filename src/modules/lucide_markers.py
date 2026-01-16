@@ -51,7 +51,9 @@ LUCIDE_MARKER_BASE64_MAP = {
 }
 # Dashboard icons - Lucide icons for dashboard menu and UI elements
 # Icons are rendered either as filled SVG or stroked SVG depending on icon design.
-# Note: git-commit and megaphone are stroke-based icons (designed without fill)
+# Note: git-commit and megaphone are stroke-based icons (designed without fill) by Lucide.
+# This is intentional: they should remain stroke-based (no fill) to stay consistent
+# with the official Lucide design system and must not be converted to filled variants.
 DASHBOARD_ICONS_MAP = {
     "alert-triangle": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
     "book-open": '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
