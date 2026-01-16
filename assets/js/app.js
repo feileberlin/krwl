@@ -136,6 +136,7 @@ class EventsApp {
         
         // Check for pending events
         await this.checkPendingEvents();
+        this.updateDebugUnpublishedWarnings();
         this.startPendingEventsPolling();
         
         // Mark app as ready
@@ -409,6 +410,88 @@ class EventsApp {
         } catch (error) {
             this.log('Could not check pending events:', error.message);
             // Fail silently - this is a non-critical feature
+        }
+    }
+
+    updateDebugUnpublishedWarnings() {
+        /**
+         * Update debug section with unpublished events and unverified locations warnings
+         * 
+         * Shows warnings in the debug area (bottom of dashboard) when:
+         * - There are pending events awaiting review
+         * - There are unverified locations needing verification
+         * - Debug mode is enabled (config.debug === true)
+         */
+        try {
+            // Only show in debug mode
+            if (!this.config || !this.config.debug) {
+                return;
+            }
+            
+            const eventsData = window.__EVENTS_DATA__ || null;
+            
+            if (!eventsData) {
+                return;
+            }
+            
+            const pendingCount = eventsData.pending_count || 0;
+            const unverifiedCount = eventsData.unverified_locations_count || 0;
+            const warningBox = document.getElementById('debug-unpublished-warnings');
+            const warningContent = document.getElementById('debug-unpublished-content');
+            
+            if (!warningBox || !warningContent) {
+                return;
+            }
+            
+            // Show warnings if either count > 0
+            if (pendingCount > 0 || unverifiedCount > 0) {
+                let messages = [];
+                
+                // Get repository URL from config (fallback to hardcoded for backward compatibility)
+                const repoUrl = this.config?.app?.repository?.url || 'https://github.com/feileberlin/krwl-hof';
+                
+                // Pending events warning
+                if (pendingCount > 0) {
+                    messages.push(`
+                        <div class="debug-warning-message">
+                            <strong>${pendingCount} unpublished event${pendingCount > 1 ? 's' : ''}</strong> 
+                            ${pendingCount > 1 ? 'are' : 'is'} awaiting editorial review.
+                        </div>
+                        <div class="debug-warning-hint">
+                            Events must be reviewed and approved before appearing on the map.
+                            <a href="${repoUrl}/actions/workflows/scrape-events.yml" 
+                               target="_blank" 
+                               rel="noopener noreferrer"
+                               class="debug-warning-link">→ Review Events in GitHub Actions</a>
+                        </div>
+                    `);
+                }
+                
+                // Unverified locations warning
+                if (unverifiedCount > 0) {
+                    const unverifiedMessageClass = `debug-warning-message${pendingCount > 0 ? ' with-spacing' : ''}`;
+                    messages.push(`
+                        <div class="${unverifiedMessageClass}">
+                            <strong>${unverifiedCount} unverified location${unverifiedCount > 1 ? 's' : ''}</strong> 
+                            ${unverifiedCount > 1 ? 'need' : 'needs'} verification.
+                        </div>
+                        <div class="debug-warning-hint">
+                            Locations should be added to <code>verified_locations.json</code> to prevent duplicates.
+                            <a href="${repoUrl}/blob/main/assets/json/unverified_locations.json" 
+                               target="_blank" 
+                               rel="noopener noreferrer"
+                               class="debug-warning-link">→ View Unverified Locations</a>
+                        </div>
+                    `);
+                }
+                
+                warningContent.innerHTML = messages.join('');
+                warningBox.style.display = 'block';
+            } else {
+                warningBox.style.display = 'none';
+            }
+        } catch (error) {
+            this.log('Could not update debug unpublished warnings:', error.message);
         }
     }
 

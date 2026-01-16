@@ -159,6 +159,16 @@ class EventEditor:
     def _approve_event(self, event):
         """Approve and publish an event with validation"""
         try:
+            # Check minimal requirements first (clearer error messages)
+            # Import the validation function from event_manager using package-relative import
+            from ..event_manager import minimal_eventdata_requirements_check
+            
+            is_valid, error_msg = minimal_eventdata_requirements_check(event)
+            if not is_valid:
+                print(f"\n⚠ WARNING: Cannot publish event - {error_msg}")
+                print("Please edit the event to add the missing information.")
+                raise ValueError(error_msg)
+            
             # Validate event before publishing
             from .models import validate_event_data
             validated_event = validate_event_data(event)

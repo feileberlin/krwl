@@ -1,0 +1,37 @@
+{
+  "_comment": "Verified locations database for coordinate normalization",
+  "_description": "Maps location names to verified geocoordinates to prevent duplicates from slightly different coordinates",
+  "_coordinate_precision": "All coordinates MUST have exactly 4 decimal places (≈10m accuracy). Example: 50.3200, not 50.32 or 50.32001",
+  "locations": {
+    "Kunstmuseum Bayreuth": {
+      "name": "Kunstmuseum Bayreuth",
+      "lat": 49.9440,
+      "lon": 11.5760,
+      "address": "Maximilianstraße 33, 95444 Bayreuth"
+    },
+    "Theater Hof": {
+      "name": "Theater Hof",
+      "lat": 50.3200,
+      "lon": 11.9180,
+      "address": "Kulmbacher Str., 95030 Hof"
+    },
+    "Freiheitshalle Hof": {
+      "name": "Freiheitshalle Hof",
+      "lat": 50.3167,
+      "lon": 11.9167,
+      "address": "Freiheitshalle, Hof"
+    },
+    "Rathaus Selb": {
+      "name": "Rathaus Selb",
+      "lat": 50.1705,
+      "lon": 12.1328,
+      "address": "Marktplatz 1, 95100 Selb"
+    },
+    "Rathaus Kulmbach": {
+      "name": "Rathaus Kulmbach",
+      "lat": 50.1050,
+      "lon": 11.4458,
+      "address": "Marktplatz 1, 95326 Kulmbach"
+    }
+  }
+}

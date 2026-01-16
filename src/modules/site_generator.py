@@ -1463,6 +1463,21 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
                 'archived': archived_count,
                 'total': len(events) + pending_count + archived_count
             }
+            
+            # Unverified locations count
+            unverified_file = self.data_path / 'unverified_locations.json'
+            unverified_count = 0
+            if unverified_file.exists():
+                try:
+                    with open(unverified_file, 'r', encoding='utf-8') as f:
+                        unverified_data = json.load(f)
+                        unverified_locations = unverified_data.get('locations', {})
+                        unverified_count = len(unverified_locations)
+                except Exception as e:
+                    logger.warning(f"Could not load unverified locations: {e}")
+            
+            debug_info['unverified_locations_count'] = unverified_count
+            
         except Exception as e:
             logger.warning(f"Could not calculate event counts: {e}")
             debug_info['event_counts'] = {

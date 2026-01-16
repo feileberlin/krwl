@@ -126,7 +126,13 @@
     "_comment_name": "App name is auto-adjusted: adds '[DEV]' suffix in development mode",
     "description": "Community events scraper and viewer with geolocation filtering",
     "environment": "auto-detected",
-    "_comment_environment": "This field is overridden at runtime based on actual environment detection"
+    "_comment_environment": "This field is overridden at runtime based on actual environment detection",
+    "repository": {
+      "owner": "feileberlin",
+      "name": "krwl-hof",
+      "url": "https://github.com/feileberlin/krwl-hof",
+      "_comment": "Repository information used for GitHub Actions links and unverified locations file links"
+    }
   },
   
   "data": {

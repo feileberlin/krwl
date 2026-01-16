@@ -4,6 +4,7 @@ Test for Frankenpost custom scraper location extraction
 """
 
 import sys
+import traceback
 from pathlib import Path
 
 # Add src to path
@@ -75,6 +76,95 @@ def test_location_extraction():
             ''',
             'expected_name_contains': 'Freiheitshalle'
         },
+        {
+            'name': 'H3 + Strong tag pattern (NEW)',
+            'html': '''
+            <html>
+                <body>
+                    <h1>Test Event</h1>
+                    <h3>Location</h3>
+                    <div>
+                        <strong>Kunsthalle Bayreuth</strong>
+                        <p>Weitere Informationen</p>
+                    </div>
+                </body>
+            </html>
+            ''',
+            'expected_name_contains': 'Kunsthalle'
+        },
+        {
+            'name': 'H3 Ort + Strong tag (German, NEW)',
+            'html': '''
+            <html>
+                <body>
+                    <h1>Test Event</h1>
+                    <h3>Ort</h3>
+                    <div>
+                        <strong>Museum Bayreuth</strong>
+                        <span>Maximilianstraße 33, 95444 Bayreuth</span>
+                    </div>
+                </body>
+            </html>
+            ''',
+            'expected_name_contains': 'Museum'
+        },
+        {
+            'name': 'Iframe with Google Maps coordinates (NEW)',
+            'html': '''
+            <html>
+                <body>
+                    <h1>Test Event</h1>
+                    <iframe src="https://maps.google.com/?q=50.3167,11.9167"></iframe>
+                </body>
+            </html>
+            ''',
+            'expected_lat': 50.3167,
+            'expected_lon': 11.9167
+        },
+        {
+            'name': 'Iframe with OpenStreetMap mlat/mlon (NEW)',
+            'html': '''
+            <html>
+                <body>
+                    <h1>Test Event</h1>
+                    <iframe src="https://www.openstreetmap.org/?mlat=49.9440&mlon=11.5760"></iframe>
+                </body>
+            </html>
+            ''',
+            'expected_lat': 49.9440,
+            'expected_lon': 11.5760
+        },
+        {
+            'name': 'Iframe with OpenStreetMap #map format (NEW)',
+            'html': '''
+            <html>
+                <body>
+                    <h1>Test Event</h1>
+                    <iframe src="https://www.openstreetmap.org/#map=15/50.1705/12.1328"></iframe>
+                </body>
+            </html>
+            ''',
+            'expected_lat': 50.1705,
+            'expected_lon': 12.1328
+        },
+        {
+            'name': 'Combined: H3+Strong + Iframe coordinates (NEW)',
+            'html': '''
+            <html>
+                <body>
+                    <h1>Test Event</h1>
+                    <h3>Location</h3>
+                    <div>
+                        <strong>Theater Hof</strong>
+                    </div>
+                    <iframe src="https://maps.google.com/@50.3200,11.9200,15z"></iframe>
+                </body>
+            </html>
+            ''',
+            'expected_name_contains': 'Theater',
+            'expected_lat': 50.3200,
+            'expected_lon': 11.9200
+        },
     ]
     
     passed = 0
@@ -94,19 +184,49 @@ def test_location_extraction():
                 continue
             
             location_name = location['name']
-            expected_substring = test_case['expected_name_contains']
+            test_passed = True
             
-            if expected_substring.lower() in location_name.lower():
-                print(f"  ✓ Location: {location_name}")
+            # Check name if expected
+            if 'expected_name_contains' in test_case:
+                expected_substring = test_case['expected_name_contains']
+                if expected_substring.lower() in location_name.lower():
+                    print(f"  ✓ Location: {location_name}")
+                else:
+                    print(f"  ✗ Expected '{expected_substring}' in location name")
+                    print(f"  ✗ Got: {location_name}")
+                    test_passed = False
+            
+            # Check coordinates if expected
+            if 'expected_lat' in test_case and 'expected_lon' in test_case:
+                expected_lat = test_case['expected_lat']
+                expected_lon = test_case['expected_lon']
+                actual_lat = location.get('lat')
+                actual_lon = location.get('lon')
+                
+                if abs(actual_lat - expected_lat) < 0.0001 and abs(actual_lon - expected_lon) < 0.0001:
+                    print(f"  ✓ Coordinates: {actual_lat}, {actual_lon}")
+                    if extraction_details.get('has_coordinates'):
+                        print(f"  ✓ Coordinates extracted from iframe")
+                else:
+                    print(f"  ✗ Expected coordinates ({expected_lat}, {expected_lon})")
+                    print(f"  ✗ Got: ({actual_lat}, {actual_lon})")
+                    test_passed = False
+            else:
                 print(f"  ✓ Coordinates: {location['lat']}, {location['lon']}")
+            
+            # Report extraction method
+            print(f"  ℹ Extraction method: {extraction_details.get('extraction_method')}")
+            if extraction_details.get('has_coordinates'):
+                print(f"  ℹ Has coordinates from iframe: Yes")
+            
+            if test_passed:
                 passed += 1
             else:
-                print(f"  ✗ Expected '{expected_substring}' in location name")
-                print(f"  ✗ Got: {location_name}")
                 failed += 1
                 
         except Exception as e:
             print(f"  ✗ Error: {e}")
+            traceback.print_exc()
             failed += 1
     
     print(f"\n{'='*60}")
@@ -187,6 +307,5 @@ if __name__ == '__main__':
             
     except Exception as e:
         print(f"\n✗ Test error: {e}")
-        import traceback
         traceback.print_exc()
         sys.exit(1)

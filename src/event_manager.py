@@ -732,6 +732,57 @@ def cli_scrape_weather(base_path, config, force_refresh=False):
         return 1
 
 
+def minimal_eventdata_requirements_check(event):
+    """
+    Check that an event has all minimal required fields before publishing.
+    
+    Required fields:
+    - title (name)
+    - location (with name, lat, lon)
+    - start_time (datetime_start)
+    - category
+    
+    Args:
+        event: Event dictionary to validate
+        
+    Returns:
+        Tuple of (is_valid: bool, error_message: str or None)
+    """
+    errors = []
+    
+    # Check title/name
+    if not event.get('title'):
+        errors.append("title (event name)")
+    
+    # Check location
+    location = event.get('location')
+    if not location:
+        errors.append("location")
+    elif isinstance(location, dict):
+        if not location.get('name'):
+            errors.append("location name")
+        if location.get('lat') is None:
+            errors.append("location latitude")
+        if location.get('lon') is None:
+            errors.append("location longitude")
+    else:
+        errors.append("location (invalid format)")
+    
+    # Check start_time (datetime_start)
+    if not event.get('start_time'):
+        errors.append("start_time (datetime)")
+    
+    # Check category
+    if not event.get('category'):
+        errors.append("category")
+    
+    if errors:
+        error_msg = f"Missing required fields: {', '.join(errors)}"
+        return False, error_msg
+    
+    return True, None
+
+
 def cli_list_events(base_path):
     """CLI: List published events"""
     events_data = load_events(base_path)
@@ -789,6 +840,14 @@ def cli_publish_event(base_path, event_id):
     
     if not event:
         print(f"Error: Event with ID '{event_id}' not found in pending queue.")
+        return 1
+    
+    # Validate event before publishing
+    is_valid, error_msg = minimal_eventdata_requirements_check(event)
+    if not is_valid:
+        print(f"⚠ WARNING: Cannot publish event '{event.get('title', event_id)}'")
+        print(f"  {error_msg}")
+        print(f"  Please edit the event to add the missing information before publishing.")
         return 1
     
     # Publish event
@@ -901,6 +960,14 @@ def _publish_events_batch(base_path, events_to_publish, events, events_data):
     
     for event_index, event_id, event in events_to_publish:
         try:
+            # Validate event before publishing
+            is_valid, error_msg = minimal_eventdata_requirements_check(event)
+            if not is_valid:
+                print(f"⚠ Skipped: {event.get('title', event_id)} - {error_msg}")
+                failed_count += 1
+                failed_ids.append(event_id)
+                continue
+            
             # Publish event
             event['status'] = 'published'
             event['published_at'] = datetime.now().isoformat()
