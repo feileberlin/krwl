@@ -204,6 +204,20 @@
       "test_method": "check_files_exist"
     },
     {
+      "id": "index-template-assembly",
+      "name": "Index Template Assembly",
+      "description": "Assemble the final HTML document from a top-level assets/html/index.html template with injected component sections.",
+      "category": "infrastructure",
+      "implemented": true,
+      "files": [
+        "assets/html/index.html",
+        "assets/html/README.md",
+        "src/modules/site_generator.py",
+        "tests/test_components.py"
+      ],
+      "test_method": "check_files_exist"
+    },
+    {
       "id": "debug-mode",
       "name": "Debug Mode",
       "description": "Debug mode with console logging for troubleshooting. Automatically enabled in development environment.",

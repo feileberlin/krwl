@@ -1901,21 +1901,39 @@ window.DEBUG_INFO = {debug_info_json};'''
         ])
         
         index_template_path = self.base_path / 'assets' / 'html' / 'index.html'
-        index_template = index_template_path.read_text(encoding='utf-8') if index_template_path.exists() else None
+        index_template = None
+        if index_template_path.exists():
+            try:
+                index_template = index_template_path.read_text(encoding='utf-8')
+            except (OSError, UnicodeDecodeError) as exc:
+                logger.warning(
+                    "Failed to read index.html template at %s, falling back to default layout: %s",
+                    index_template_path,
+                    exc,
+                    exc_info=True,
+                )
         
         if index_template:
-            return index_template.format(
-                generated_comment=generated_comment,
-                lang=lang,
-                html_head=html_head_section,
-                html_body_open=html_body_open_section,
-                map_main=map_main_section,
-                dashboard_aside=dashboard_aside_section,
-                filter_nav=filter_nav_section,
-                html_body_close=html_body_close_section
-            )
+            try:
+                return index_template.format(
+                    generated_comment=generated_comment,
+                    lang=lang,
+                    html_head=html_head_section,
+                    html_body_open=html_body_open_section,
+                    map_main=map_main_section,
+                    dashboard_aside=dashboard_aside_section,
+                    filter_nav=filter_nav_section,
+                    html_body_close=html_body_close_section
+                )
+            except (KeyError, ValueError) as exc:
+                logger.warning(
+                    "Failed to format index.html template, falling back to default layout: %s",
+                    exc,
+                    exc_info=True,
+                )
         
-        # Fallback for backward compatibility if index.html template is missing.
+        # Fallback for backward compatibility if index.html template is missing or invalid.
+        # NOTE: Keep this structure in sync with assets/html/index.html.
         html_parts = [
             generated_comment,
             '<!DOCTYPE html>',
