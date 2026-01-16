@@ -67,6 +67,9 @@ class SmartScraper:
         
         # Register social media sources
         self._register_social_sources()
+        
+        # Register custom source handlers
+        self._register_custom_sources()
     
     def _register_web_sources(self):
         """Register traditional web source handlers."""
@@ -129,6 +132,21 @@ class SmartScraper:
         except ImportError:
             pass  # Social sources not yet implemented
     
+    def _register_custom_sources(self):
+        """Register custom source handlers for specific sites."""
+        try:
+            from .sources import frankenpost
+            
+            # Register Frankenpost custom handler
+            # This will be used instead of generic HTML scraper for Frankenpost
+            self.registry.register('frankenpost',
+                lambda cfg, opts, base_path=self.base_path,
+                ai_providers=self.ai_providers: frankenpost.FrankenpostSource(
+                    cfg, opts, base_path=base_path, ai_providers=ai_providers
+                ))
+        except ImportError as e:
+            print(f"ℹ Custom sources unavailable: {e}", file=sys.stderr)
+    
     def scrape_all_sources(self) -> List[Dict[str, Any]]:
         """Scrape events from all enabled sources.
         
@@ -167,6 +185,13 @@ class SmartScraper:
             List of event dictionaries
         """
         source_type = source.get('type', 'html')
+        source_name = str(source.get('name', '')).strip().lower()
+        
+        # Check for custom source handlers first (by exact source name)
+        # This allows overriding default handlers for specific sites while
+        # avoiding accidental matches when names merely contain "frankenpost".
+        if source_name == 'frankenpost':
+            source_type = 'frankenpost'
         
         # Get source-specific options
         options = SourceOptions.from_dict(source.get('options', {}))
