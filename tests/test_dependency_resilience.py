@@ -31,8 +31,8 @@ class TestDependencyResilience(unittest.TestCase):
         self.generator = SiteGenerator(self.base_path)
         
         # Create necessary directories
+        # Note: Lucide is no longer fetched from CDN - it uses inline SVGs
         (self.base_path / 'lib' / 'leaflet' / 'images').mkdir(parents=True, exist_ok=True)
-        (self.base_path / 'lib' / 'lucide').mkdir(parents=True, exist_ok=True)
         (self.base_path / 'lib' / 'roboto').mkdir(parents=True, exist_ok=True)
     
     def tearDown(self):
@@ -63,13 +63,7 @@ class TestDependencyResilience(unittest.TestCase):
         for file_path in leaflet_files:
             self.create_dummy_file(self.base_path / 'lib' / file_path)
         
-        # Create Lucide files
-        lucide_files = [
-            'lucide/lucide.js',
-            'lucide/lucide.min.js'
-        ]
-        for file_path in lucide_files:
-            self.create_dummy_file(self.base_path / 'lib' / file_path)
+        # Note: Lucide files no longer needed - uses inline SVGs
         
         # Create Roboto files
         roboto_files = [
@@ -139,9 +133,7 @@ class TestDependencyResilience(unittest.TestCase):
         self.create_dummy_file(self.base_path / 'lib' / 'leaflet' / 'leaflet.js')
         # Missing: marker images
         
-        # Create all Lucide files
-        self.create_dummy_file(self.base_path / 'lib' / 'lucide' / 'lucide.js')
-        self.create_dummy_file(self.base_path / 'lib' / 'lucide' / 'lucide.min.js')
+        # Note: Lucide files no longer needed - uses inline SVGs
         
         # Should fail because not all Leaflet files exist
         result = self.generator.fetch_all_dependencies()

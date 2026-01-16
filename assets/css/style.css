@@ -502,7 +502,7 @@ strong, b {
 .dashboard-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 0.75rem;
     margin-bottom: 1rem;
 }
 
@@ -516,6 +516,7 @@ strong, b {
     width: 32px;
     height: 32px;
     filter: drop-shadow(0 0 8px rgba(214, 137, 184, 0.6));
+    flex-shrink: 0;
 }
 
 #close-dashboard {
@@ -539,10 +540,18 @@ strong, b {
 }
 
 .dashboard-content h2 {
-    margin-bottom: 1rem;
+    margin: 0;
     color: var(--color-primary);
     text-shadow: 0 0 10px rgba(214, 137, 184, 0.3);
     font-size: 1.5rem;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#dashboard-title {
+    flex: 1;
 }
 
 .dashboard-section {
@@ -1076,7 +1085,7 @@ strong, b {
     
     .dashboard-content h2 {
         font-size: 1.3rem;
-        margin-bottom: 0.75rem;
+        margin: 0;
     }
     
     .dashboard-section {
@@ -1104,6 +1113,7 @@ strong, b {
     
     .dashboard-content h2 {
         font-size: 1.2rem;
+        margin: 0;
     }
     
     .dashboard-section h3 {

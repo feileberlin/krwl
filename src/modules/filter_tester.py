@@ -264,7 +264,7 @@ class FilterTester:
             with open(config_file, 'r') as f:
                 config = json.load(f)
             
-            predefined = config.get('predefined_locations', [])
+            predefined = config.get('map', {}).get('predefined_locations', [])
             self.assert_test(
                 len(predefined) > 0,
                 "Predefined locations exist in config",
@@ -283,6 +283,14 @@ class FilterTester:
                     has_required_fields,
                     "Predefined locations have required fields",
                     "Must have: name, lat, lon"
+                )
+                
+                required_names = {"Hauptbahnhof Hof", "Sonnenplatz Hof"}
+                actual_names = {loc.get('display_name') for loc in predefined if loc.get('display_name')}
+                self.assert_test(
+                    required_names.issubset(actual_names),
+                    "Predefined locations include required defaults",
+                    f"Found: {sorted(actual_names)}"
                 )
         else:
             self.log("Config file not found, skipping predefined location tests")

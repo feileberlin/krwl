@@ -258,8 +258,77 @@ class EventListeners {
     }
     
     setupLocationFilterListener() {
-        // Location filter logic would go here
-        // This is a placeholder for the complex location handling
+        const locationTextEl = document.getElementById('filter-bar-location');
+        if (!locationTextEl) return;
+        
+        const resolveTranslation = (key, fallback) => {
+            if (!window.i18n || typeof window.i18n.t !== 'function') {
+                return fallback;
+            }
+            
+            const value = window.i18n.t(key);
+            return value === key ? fallback : value;
+        };
+        
+        const getLocationItems = () => {
+            const geolocationLabel = resolveTranslation('filters.locations.geolocation', 'from here');
+            const prefix = resolveTranslation('filters.locations.prefix', 'from');
+            const predefinedLocs = this.app.config?.map?.predefined_locations || [];
+            
+            const items = [{ label: geolocationLabel, value: 'geolocation' }];
+            
+            predefinedLocs.forEach((loc, index) => {
+                const translatedName = resolveTranslation(
+                    `filters.predefined_locations.${loc.name}`,
+                    loc.display_name
+                );
+                items.push({ label: `${prefix} ${translatedName}`, value: `predefined-${index}` });
+            });
+            
+            return items;
+        };
+        
+        const getCurrentValue = () => {
+            if (this.app.filters.locationType === 'predefined' && this.app.filters.selectedPredefinedLocation !== null) {
+                return `predefined-${this.app.filters.selectedPredefinedLocation}`;
+            }
+            return 'geolocation';
+        };
+        
+        new CustomDropdown(
+            locationTextEl,
+            getLocationItems,
+            getCurrentValue,
+            (value) => {
+                if (value === 'geolocation') {
+                    this.app.filters.locationType = 'geolocation';
+                    this.app.filters.selectedPredefinedLocation = null;
+                    this.app.storage.saveFiltersToCookie(this.app.filters);
+                    
+                    const userLocation = this.app.mapManager?.userLocation;
+                    if (userLocation) {
+                        this.app.mapManager.centerMap(userLocation.lat, userLocation.lon);
+                    }
+                    
+                    this.app.displayEvents();
+                    return;
+                }
+                
+                if (value.startsWith('predefined-')) {
+                    const index = Number.parseInt(value.replace('predefined-', ''), 10);
+                    const predefinedLocs = this.app.config?.map?.predefined_locations || [];
+                    const selectedLoc = predefinedLocs[index];
+                    if (!selectedLoc) return;
+                    
+                    this.app.filters.locationType = 'predefined';
+                    this.app.filters.selectedPredefinedLocation = index;
+                    this.app.storage.saveFiltersToCookie(this.app.filters);
+                    
+                    this.app.mapManager?.centerMap(selectedLoc.lat, selectedLoc.lon);
+                    this.app.displayEvents();
+                }
+            }
+        );
     }
     
     setupKeyboardShortcuts() {

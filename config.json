@@ -409,13 +409,13 @@
         "name": "location.no1",
         "lat": 50.308053,
         "lon": 11.9233,
-        "display_name": "Hof Hauptbahnhof"
+        "display_name": "Hauptbahnhof Hof"
       },
       {
         "name": "location.no2",
         "lat": 50.3164799,
         "lon": 11.9146205,
-        "display_name": "Sonnenplatz"
+        "display_name": "Sonnenplatz Hof"
       }
     ]
   },

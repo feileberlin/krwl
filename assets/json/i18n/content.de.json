@@ -47,8 +47,10 @@
       "prefix": "von"
     },
     "predefined_locations": {
-      "location.no1": "Hof Hauptbahnhof",
-      "location.no2": "Sonnenplatz"
+      "location": {
+        "no1": "Hauptbahnhof Hof",
+        "no2": "Sonnenplatz Hof"
+      }
     }
   },
   "burger_menu": {
