@@ -255,6 +255,16 @@ class EventSchema:
         """
         Validate event against canonical schema.
         
+        Required fields:
+        - id: unique event identifier
+        - title: event title
+        - teaser: short description (10-300 chars)
+        - description: full description (20+ chars)
+        - location: dict with name, address, lat, lon
+        - start_time: ISO 8601 datetime
+        - category: at least one category
+        - source: link/url to event source
+        
         Args:
             event: Event dictionary to validate
             
@@ -264,10 +274,31 @@ class EventSchema:
         errors = []
         
         # Required fields
-        required_fields = ['id', 'title', 'location', 'start_time', 'source']
+        required_fields = ['id', 'title', 'teaser', 'description', 'location', 'start_time', 'category', 'source']
         for field in required_fields:
             if field not in event:
                 errors.append(f"Missing required field: {field}")
+        
+        # Title validation
+        if 'title' in event:
+            if not isinstance(event['title'], str) or len(event['title']) < 3:
+                errors.append("Title must be a string with at least 3 characters")
+        
+        # Teaser validation
+        if 'teaser' in event:
+            if not isinstance(event['teaser'], str):
+                errors.append("Teaser must be a string")
+            elif len(event['teaser']) < 10:
+                errors.append("Teaser must be at least 10 characters")
+            elif len(event['teaser']) > 300:
+                errors.append("Teaser must be at most 300 characters")
+        
+        # Description validation
+        if 'description' in event:
+            if not isinstance(event['description'], str):
+                errors.append("Description must be a string")
+            elif len(event['description']) < 20:
+                errors.append("Description must be at least 20 characters")
         
         # Location structure
         if 'location' in event:
@@ -276,15 +307,35 @@ class EventSchema:
             else:
                 if 'name' not in event['location']:
                     errors.append("Location missing 'name' field")
+                # Address is required unless address_hidden=true
+                if not event['location'].get('address_hidden', False):
+                    if 'address' not in event['location'] or not event['location']['address']:
+                        errors.append("Location missing 'address' field (use address_hidden=true for secret events)")
                 if 'lat' not in event['location']:
                     errors.append("Location missing 'lat' field")
                 if 'lon' not in event['location']:
                     errors.append("Location missing 'lon' field")
         
-        # Category validation (if present)
+        # Category validation (required, at least one)
         if 'category' in event:
-            if event['category'] not in self.categories:
-                errors.append(f"Invalid category: {event['category']}. Must be one of {len(self.categories)} valid categories")
+            if isinstance(event['category'], str):
+                if event['category'] not in self.categories:
+                    errors.append(f"Invalid category: {event['category']}. Must be one of {len(self.categories)} valid categories")
+            elif isinstance(event['category'], list):
+                if len(event['category']) == 0:
+                    errors.append("Category list cannot be empty")
+                for cat in event['category']:
+                    if cat not in self.categories:
+                        errors.append(f"Invalid category in list: {cat}")
+            else:
+                errors.append("Category must be a string or list of strings")
+        
+        # Source validation (must be a URL)
+        if 'source' in event:
+            if not isinstance(event['source'], str):
+                errors.append("Source must be a string (URL)")
+            elif not (event['source'].startswith('http://') or event['source'].startswith('https://') or event['source'].startswith('www.')):
+                errors.append("Source must be a valid URL (http://, https://, or www.)")
         
         # Date format validation
         if 'start_time' in event:
@@ -458,16 +509,20 @@ class EventSchema:
         doc.append(json.dumps({
             "id": "unique_event_id",
             "title": "Event Title",
-            "description": "Event description",
+            "teaser": "Short description of the event (10-300 chars)",
+            "description": "Full event description with details (20+ chars)",
             "location": {
                 "name": "Venue Name",
+                "address": "Street Number, ZIP City",
                 "lat": 52.5200,
-                "lon": 13.4050
+                "lon": 13.4050,
+                "address_hidden": False,
+                "needs_review": False
             },
             "start_time": "2026-01-15T19:00:00",
             "end_time": "2026-01-15T22:00:00",
             "url": "https://example.com/event",
-            "source": "source_name",
+            "source": "https://source-website.com/event-page",
             "category": "music",
             "status": "published",
             "scraped_at": "2026-01-01T12:00:00",

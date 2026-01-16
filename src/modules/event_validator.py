@@ -5,9 +5,14 @@ Validates events have complete basic data before publishing.
 Prevents incomplete events from being published (individual or bulk).
 
 Required basic data:
-- Title (non-empty string)
-- Location with valid coordinates (lat/lon)
-- Start date/time (valid ISO format)
+- id (event identifier)
+- title (non-empty string)
+- teaser (short description)
+- description (full description)
+- location (name, address, lat, lon)
+- start_time (valid ISO format)
+- category (at least one category)
+- source (link/url to event source)
 """
 
 from typing import Dict, Any, List, Tuple, Optional
@@ -93,10 +98,10 @@ class EventValidator:
     """
     
     # Required fields that MUST be present and valid
-    REQUIRED_FIELDS = ['id', 'title', 'location', 'start_time', 'source']
+    REQUIRED_FIELDS = ['id', 'title', 'teaser', 'description', 'location', 'start_time', 'category', 'source']
     
     # Fields that should be present but can be empty/None
-    OPTIONAL_FIELDS = ['description', 'end_time', 'url', 'category']
+    OPTIONAL_FIELDS = ['end_time', 'url', 'image']
     
     def __init__(self, strict_mode: bool = True):
         """
@@ -141,6 +146,18 @@ class EventValidator:
             if title_error:
                 errors.append(title_error)
         
+        # Validate teaser
+        if 'teaser' in event:
+            teaser_error = self._validate_teaser(event['teaser'])
+            if teaser_error:
+                errors.append(teaser_error)
+        
+        # Validate description
+        if 'description' in event:
+            desc_error = self._validate_description(event['description'])
+            if desc_error:
+                errors.append(desc_error)
+        
         # Validate location (CRITICAL)
         if 'location' in event:
             location_errors, location_warnings = self._validate_location(event['location'])
@@ -172,6 +189,12 @@ class EventValidator:
                         ))
                 except:
                     pass  # Already caught by datetime validation
+        
+        # Validate category
+        if 'category' in event:
+            category_error = self._validate_category(event['category'])
+            if category_error:
+                errors.append(category_error)
         
         # Validate source
         if 'source' in event:
@@ -244,6 +267,63 @@ class EventValidator:
         
         if len(title) > 200:
             return ValidationError('title', f'Event title too long ({len(title)} chars, max 200)', severity='error')
+        
+        return None
+    
+    def _validate_teaser(self, teaser: Any) -> Optional[ValidationError]:
+        """Validate event teaser (short description)."""
+        if not teaser:
+            return ValidationError('teaser', 'Event teaser cannot be empty', severity='error')
+        
+        if not isinstance(teaser, str):
+            return ValidationError('teaser', f'Event teaser must be string, got {type(teaser).__name__}', severity='error')
+        
+        # Teaser should be short (10-300 chars)
+        if len(teaser) < 10:
+            return ValidationError('teaser', f'Event teaser too short ({len(teaser)} chars, min 10)', severity='error')
+        
+        if len(teaser) > 300:
+            return ValidationError('teaser', f'Event teaser too long ({len(teaser)} chars, max 300)', severity='error')
+        
+        return None
+    
+    def _validate_description(self, description: Any) -> Optional[ValidationError]:
+        """Validate event description (full description)."""
+        if not description:
+            return ValidationError('description', 'Event description cannot be empty', severity='error')
+        
+        if not isinstance(description, str):
+            return ValidationError('description', f'Event description must be string, got {type(description).__name__}', severity='error')
+        
+        # Description should be substantial (20+ chars)
+        if len(description) < 20:
+            return ValidationError('description', f'Event description too short ({len(description)} chars, min 20)', severity='error')
+        
+        if len(description) > 5000:
+            return ValidationError('description', f'Event description too long ({len(description)} chars, max 5000)', severity='error')
+        
+        return None
+    
+    def _validate_category(self, category: Any) -> Optional[ValidationError]:
+        """Validate event category (at least one category required)."""
+        if not category:
+            return ValidationError('category', 'Event must have at least one category', severity='error')
+        
+        # Category can be a string or list
+        if isinstance(category, str):
+            if len(category.strip()) == 0:
+                return ValidationError('category', 'Category cannot be empty string', severity='error')
+        elif isinstance(category, list):
+            if len(category) == 0:
+                return ValidationError('category', 'Category list cannot be empty', severity='error')
+            # Check that all categories are non-empty strings
+            for i, cat in enumerate(category):
+                if not isinstance(cat, str):
+                    return ValidationError('category', f'Category[{i}] must be string, got {type(cat).__name__}', severity='error')
+                if len(cat.strip()) == 0:
+                    return ValidationError('category', f'Category[{i}] cannot be empty string', severity='error')
+        else:
+            return ValidationError('category', f'Category must be string or list, got {type(category).__name__}', severity='error')
         
         return None
     
@@ -360,12 +440,17 @@ class EventValidator:
         return None
     
     def _validate_source(self, source: Any) -> Optional[ValidationError]:
-        """Validate event source."""
+        """Validate event source (link/url)."""
         if not source:
-            return ValidationError('source', 'Event source cannot be empty', severity='error')
+            return ValidationError('source', 'Event source (link/url) cannot be empty', severity='error')
         
         if not isinstance(source, str):
             return ValidationError('source', f'Event source must be string, got {type(source).__name__}', severity='error')
+        
+        # Check if source looks like a URL
+        source_lower = source.lower()
+        if not (source_lower.startswith('http://') or source_lower.startswith('https://') or source_lower.startswith('www.')):
+            return ValidationError('source', f'Event source should be a URL (http://, https://, or www.)', severity='error')
         
         return None
 

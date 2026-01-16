@@ -14,25 +14,82 @@ logger = logging.getLogger(__name__)
 
 
 class Location(BaseModel):
-    """Location model with coordinate validation"""
+    """Location model with coordinate and address validation"""
     name: str = Field(..., min_length=1, description="Location name")
+    address: Optional[str] = Field(None, description="Full address (required unless address_hidden=true)")
     lat: float = Field(..., ge=-90, le=90, description="Latitude (-90 to 90)")
     lon: float = Field(..., ge=-180, le=180, description="Longitude (-180 to 180)")
+    address_hidden: bool = Field(default=False, description="If true, address is intentionally hidden (underground events)")
+    needs_review: bool = Field(default=False, description="If true, location needs editor verification")
+    resolution_method: Optional[str] = Field(None, description="How coordinates were determined")
+    
+    @model_validator(mode='after')
+    def validate_address_or_hidden(self) -> 'Location':
+        """Validate that address is provided unless address_hidden is true"""
+        if not self.address_hidden and not self.address:
+            raise ValueError("Address is required unless address_hidden=true for underground/secret events")
+        return self
 
 
 class Event(BaseModel):
     """Event model with comprehensive validation"""
     id: str = Field(..., min_length=1, description="Unique event identifier")
-    title: str = Field(..., min_length=1, max_length=500, description="Event title")
-    description: Optional[str] = Field(None, max_length=5000, description="Event description")
+    title: str = Field(..., min_length=3, max_length=200, description="Event title")
+    teaser: str = Field(..., min_length=10, max_length=300, description="Short description/teaser")
+    description: str = Field(..., min_length=20, max_length=5000, description="Full event description")
     location: Location = Field(..., description="Event location with coordinates")
     start_time: str = Field(..., description="Event start time in ISO format")
     end_time: Optional[str] = Field(None, description="Event end time in ISO format")
+    category: str | List[str] = Field(..., description="Event category (at least one required)")
     status: str = Field(default="pending", description="Event status (pending/published)")
-    source: Optional[str] = Field(None, description="Source of the event")
-    url: Optional[str] = Field(None, description="Event URL")
-    category: Optional[str] = Field(None, description="Event category")
+    source: str = Field(..., description="Source URL of the event")
+    url: Optional[str] = Field(None, description="Additional event URL")
     tags: Optional[List[str]] = Field(default_factory=list, description="Event tags")
+    
+    @field_validator('teaser')
+    @classmethod
+    def validate_teaser(cls, v: str) -> str:
+        """Validate teaser length"""
+        if len(v) < 10:
+            raise ValueError(f"Teaser must be at least 10 characters, got {len(v)}")
+        if len(v) > 300:
+            raise ValueError(f"Teaser must be at most 300 characters, got {len(v)}")
+        return v
+    
+    @field_validator('description')
+    @classmethod
+    def validate_description(cls, v: str) -> str:
+        """Validate description length"""
+        if len(v) < 20:
+            raise ValueError(f"Description must be at least 20 characters, got {len(v)}")
+        return v
+    
+    @field_validator('category')
+    @classmethod
+    def validate_category(cls, v: str | List[str]) -> str | List[str]:
+        """Validate category is not empty"""
+        if isinstance(v, str):
+            if not v.strip():
+                raise ValueError("Category cannot be empty string")
+        elif isinstance(v, list):
+            if len(v) == 0:
+                raise ValueError("Category list cannot be empty")
+            for cat in v:
+                if not isinstance(cat, str) or not cat.strip():
+                    raise ValueError("All categories must be non-empty strings")
+        else:
+            raise ValueError("Category must be a string or list of strings")
+        return v
+    
+    @field_validator('source')
+    @classmethod
+    def validate_source_url(cls, v: str) -> str:
+        """Validate source is a URL"""
+        if not v:
+            raise ValueError("Source URL cannot be empty")
+        if not (v.startswith('http://') or v.startswith('https://') or v.startswith('www.')):
+            raise ValueError(f"Source must be a valid URL (http://, https://, or www.), got: {v}")
+        return v
     
     @field_validator('start_time', 'end_time')
     @classmethod

@@ -23,16 +23,18 @@ def test_valid_event():
     valid_event = {
         'id': 'test_event_123',
         'title': 'Test Event',
-        'description': 'This is a test event',
+        'teaser': 'This is a short teaser for the test event',
+        'description': 'This is a full test event description with enough details',
         'location': {
             'name': 'Test Venue',
-            'address': 'Teststraße 1, 95030 Hof',  # REQUIRED
+            'address': 'Teststraße 1, 95030 Hof',
             'lat': 50.3167,
             'lon': 11.9167
         },
         'start_time': '2026-01-20T18:00:00',
         'end_time': '2026-01-20T22:00:00',
-        'source': 'TestSource',
+        'category': 'music',
+        'source': 'https://example.com/event',
         'url': 'https://example.com/event'
     }
     
@@ -56,10 +58,10 @@ def test_missing_required_fields():
     print("="*60)
     
     test_cases = [
-        ({'title': 'Test'}, ['id', 'location', 'start_time', 'source']),
-        ({'id': 'test_1'}, ['title', 'location', 'start_time', 'source']),
-        ({'id': 'test_2', 'title': 'Test'}, ['location', 'start_time', 'source']),
-        ({'id': 'test_3', 'title': 'Test', 'location': {}}, ['start_time', 'source']),
+        ({'title': 'Test'}, ['id', 'teaser', 'description', 'location', 'start_time', 'category', 'source']),
+        ({'id': 'test_1'}, ['title', 'teaser', 'description', 'location', 'start_time', 'category', 'source']),
+        ({'id': 'test_2', 'title': 'Test'}, ['teaser', 'description', 'location', 'start_time', 'category', 'source']),
+        ({'id': 'test_3', 'title': 'Test', 'teaser': 'Short teaser', 'location': {}}, ['description', 'start_time', 'category', 'source']),
     ]
     
     passed = 0
@@ -228,32 +230,44 @@ def test_bulk_validation():
         {
             'id': 'valid_1',
             'title': 'Valid Event 1',
+            'teaser': 'Short teaser for event 1',
+            'description': 'Full description for valid event 1 with enough details',
+            'category': 'music',
             'location': {'name': 'Venue 1', 'address': 'Street 1, Hof', 'lat': 50.3, 'lon': 11.9},
             'start_time': '2026-01-20T18:00:00',
-            'source': 'Test'
+            'source': 'https://test.com/event1'
         },
         # Invalid event (missing address and coords)
         {
             'id': 'invalid_1',
             'title': 'Invalid Event 1',
+            'teaser': 'Short teaser for invalid event',
+            'description': 'Description for invalid event',
+            'category': 'music',
             'location': {'name': 'Venue 2'},  # Missing address and lat/lon
             'start_time': '2026-01-20T18:00:00',
-            'source': 'Test'
+            'source': 'https://test.com/event2'
         },
         # Valid event 2
         {
             'id': 'valid_2',
             'title': 'Valid Event 2',
+            'teaser': 'Short teaser for event 2',
+            'description': 'Full description for valid event 2 with enough details',
+            'category': 'concert',
             'location': {'name': 'Venue 3', 'address': 'Street 3, Bayreuth', 'lat': 49.9, 'lon': 11.6},
             'start_time': '2026-01-20T19:00:00',
-            'source': 'Test'
+            'source': 'https://test.com/event3'
         },
         # Invalid event (missing title and address)
         {
             'id': 'invalid_2',
+            'teaser': 'Short teaser',
+            'description': 'Description for event without title',
+            'category': 'music',
             'location': {'name': 'Venue 4', 'lat': 50.1, 'lon': 12.1},  # Missing address
             'start_time': '2026-01-20T20:00:00',
-            'source': 'Test'
+            'source': 'https://test.com/event4'
         },
     ]
     
@@ -291,22 +305,28 @@ def test_no_publish_incomplete():
         {
             'id': 'frankenpost_1',
             'title': 'Richard-Wagner-Museum Exhibition',
+            'teaser': 'Visit the Wagner museum exhibition',
+            'description': 'A comprehensive exhibition about Richard Wagner and his works',
+            'category': 'museum',
             'location': {'name': 'Hof', 'address': 'Hof', 'lat': 50.3167, 'lon': 11.9167},  # Generic city
             'start_time': '2026-01-20T10:00:00',
-            'source': 'Frankenpost'
+            'source': 'https://frankenpost.de/event1'
         },
         # Event with no coordinates or address
         {
             'id': 'frankenpost_2',
             'title': 'MAKkultur Concert',
-            'location': {'name': 'MAKkultur', 'lat': None, 'lon': None},  # Missing coords AND address
+            'location': {'name': 'MAKkultur', 'lat': None, 'lon': None},  # Missing coords AND address AND teaser/desc/category
             'start_time': '2026-01-21T19:00:00',
-            'source': 'Frankenpost'
+            'source': 'https://frankenpost.de/event2'
         },
         # Event with needs_review flag but complete data
         {
             'id': 'frankenpost_3',
             'title': 'Sportheim Event',
+            'teaser': 'Community sports event at the Sportheim',
+            'description': 'Join us for a fun community sports event at the local Sportheim',
+            'category': 'sports',
             'location': {
                 'name': 'Sportheim',
                 'address': 'Sportheim, Hof',
@@ -315,12 +335,15 @@ def test_no_publish_incomplete():
                 'needs_review': True
             },
             'start_time': '2026-01-22T15:00:00',
-            'source': 'Frankenpost'
+            'source': 'https://frankenpost.de/event3'
         },
         # Underground event with address_hidden flag (SHOULD BE VALID)
         {
             'id': 'underground_1',
             'title': 'Secret Underground Rave',
+            'teaser': 'Underground electronic music event',
+            'description': 'Join us for an underground electronic music event - location announced to attendees only',
+            'category': 'music',
             'location': {
                 'name': 'TBA (announced to attendees)',
                 'address_hidden': True,  # Address intentionally hidden
@@ -328,7 +351,7 @@ def test_no_publish_incomplete():
                 'lon': 11.9167
             },
             'start_time': '2026-01-30T23:00:00',
-            'source': 'Underground'
+            'source': 'https://underground.com/event'
         },
     ]
     
