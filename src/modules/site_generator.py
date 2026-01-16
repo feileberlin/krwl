@@ -865,7 +865,7 @@ class SiteGenerator:
                 
                 el.parentNode.replaceChild(svgElement, el);
             }} else {{
-                console.warn('[Lucide Mini] Icon not found:', iconName);
+                console.warn('[Lucide Minimal] Icon not found:', iconName);
             }}
         }});
     }}
