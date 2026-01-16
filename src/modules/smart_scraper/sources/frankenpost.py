@@ -57,17 +57,14 @@ class FrankenpostSource(BaseSource):
         # Known cities in the region for ambiguity detection
         self.known_cities = ['Bayreuth', 'Hof', 'Selb', 'Rehau', 'Kulmbach', 'Münchberg']
         
-        # Load verified locations database for coordinate normalization
-        self.verified_locations = self._load_verified_locations(base_path)
-        
-        # Initialize location tracker for collecting unverified locations
-        self.location_tracker = None
+        # Initialize modular location utilities (replaces duplicate logic)
+        self.location_normalizer = None
         if base_path:
             try:
-                from ...location_tracker import LocationTracker
-                self.location_tracker = LocationTracker(Path(base_path))
+                from ..scraper_utils import LocationNormalizer
+                self.location_normalizer = LocationNormalizer(Path(base_path))
             except ImportError:
-                pass  # Module not available, tracking disabled
+                pass
         
         if self.available:
             self.session = requests.Session()
@@ -105,10 +102,9 @@ class FrankenpostSource(BaseSource):
         except Exception as e:
             print(f"    Frankenpost scraping error: {str(e)}")
         
-        # Save tracked unverified locations and show hints
-        if self.location_tracker:
-            self.location_tracker.save()
-            hint = self.location_tracker.get_hint_message()
+        # Save tracked unverified locations and show hints (uses modular utility)
+        if self.location_normalizer:
+            hint = self.location_normalizer.save_tracked_locations()
             if hint:
                 print(f"\n  {hint}")
         
@@ -222,6 +218,8 @@ class FrankenpostSource(BaseSource):
         - Address patterns (Street Number, ZIP City)
         - Venue name patterns
         
+        Uses modular GeolocationResolver instead of hardcoded coordinate estimation.
+        
         Returns:
             Tuple of (location dict, extraction_details dict) for confidence scoring
         """
@@ -232,7 +230,6 @@ class FrankenpostSource(BaseSource):
         extraction_method = 'unknown'
         has_full_address = False
         has_venue_name = False
-        used_default = False
         
         # NEW Strategy 1: H3 + Strong Tag Pattern
         # Look for <h3>Location</h3> or <h3>Ort</h3> followed by <strong> tag
@@ -254,10 +251,10 @@ class FrankenpostSource(BaseSource):
                         if parent:
                             parent_text = parent.get_text(strip=True)
                             # Look for address pattern in the parent
-                            address_pattern = r'([A-ZÄÖÜ][a-zäöüß\-\s\.]+\s+\d+[a-z]?\s*,\s*\d{5}\s+[A-ZÄÖÜ][a-zäöüß\-\s]+)'
-                            address_match = re.search(address_pattern, parent_text)
-                            if address_match:
-                                full_address = address_match.group(1).strip()
+                            from ..scraper_utils import AddressExtractor
+                            address = AddressExtractor.extract_german_address(parent_text)
+                            if address:
+                                full_address = address
                                 has_full_address = True
                         break
         
@@ -274,47 +271,46 @@ class FrankenpostSource(BaseSource):
                     coords = CoordinateExtractor.extract_from_iframe(src_original)
                     if coords:
                         latitude, longitude = coords
+                        extraction_method = 'iframe_map'
                         break
         
         # Strategy 3: Look for location-related labels and fields
-        location_keywords = ['Ort:', 'Veranstaltungsort:', 'Location:', 'Adresse:', 'Venue:']
-        for keyword in location_keywords:
-            # Find label with keyword
-            label = soup.find(string=re.compile(keyword, re.IGNORECASE))
-            if label and label.parent:
-                # Try to find adjacent/sibling element with location value
-                parent = label.parent
-                
-                # Check next sibling
-                next_elem = parent.find_next_sibling()
-                if next_elem:
-                    location_text = next_elem.get_text(strip=True)
-                    if location_text and len(location_text) > 3:
-                        location_name = location_text
+        if not location_name:
+            location_keywords = ['Ort:', 'Veranstaltungsort:', 'Location:', 'Adresse:', 'Venue:']
+            for keyword in location_keywords:
+                # Find label with keyword
+                label = soup.find(string=re.compile(keyword, re.IGNORECASE))
+                if label and label.parent:
+                    # Try to find adjacent/sibling element with location value
+                    parent = label.parent
+                    
+                    # Check next sibling
+                    next_elem = parent.find_next_sibling()
+                    if next_elem:
+                        location_text = next_elem.get_text(strip=True)
+                        if location_text and len(location_text) > 3:
+                            location_name = location_text
+                            extraction_method = 'detail_page_label'
+                            has_venue_name = True
+                            break
+                    
+                    # Check within parent
+                    parent_text = parent.get_text(strip=True)
+                    # Remove the label itself from text
+                    parent_text = parent_text.replace(keyword, '').strip()
+                    if parent_text and len(parent_text) > 3:
+                        location_name = parent_text
                         extraction_method = 'detail_page_label'
                         has_venue_name = True
                         break
-                
-                # Check within parent
-                parent_text = parent.get_text(strip=True)
-                # Remove the label itself from text
-                parent_text = parent_text.replace(keyword, '').strip()
-                if parent_text and len(parent_text) > 3:
-                    location_name = parent_text
-                    extraction_method = 'detail_page_label'
-                    has_venue_name = True
-                    break
         
         # Strategy 4: Look for address patterns (German format)
-        # Pattern: Street Number, ZIP City (e.g., "Maximilianstraße 33, 95444 Bayreuth")
-        if not has_full_address:  # Only search if not already found
+        if not has_full_address:
+            from ..scraper_utils import AddressExtractor
             page_text = soup.get_text()
-            address_pattern = r'([A-ZÄÖÜ][a-zäöüß\-\s\.]+\s+\d+[a-z]?\s*,\s*\d{5}\s+[A-ZÄÖÜ][a-zäöüß\-\s]+)'
-            addresses = re.findall(address_pattern, page_text)
-            
-            if addresses:
-                # Use first address found
-                full_address = addresses[0].strip()
+            address = AddressExtractor.extract_german_address(page_text)
+            if address:
+                full_address = address
                 has_full_address = True
                 # If we don't have a location name yet, use the address
                 if not location_name:
@@ -323,161 +319,71 @@ class FrankenpostSource(BaseSource):
         
         # Strategy 5: Look for venue names in title/headings
         if not location_name:
-            # Check for venue patterns in headings
+            from ..scraper_utils import VenueDetector
             headings = soup.find_all(['h1', 'h2', 'h3', 'h4'])
-            for heading in headings:
-                text = heading.get_text(strip=True)
-                # Look for venue indicators (Museum, Halle, Schloss, etc.)
-                venue_indicators = ['Museum', 'Halle', 'Schloss', 'Galerie', 'Theater', 
-                                  'Kirche', 'Zentrum', 'Haus', 'Platz', 'Rathaus', 
-                                  'Saal', 'Kulturzentrum', 'Bibliothek']
-                if any(indicator in text for indicator in venue_indicators):
-                    location_name = text
-                    extraction_method = 'venue_in_heading'
-                    has_venue_name = True
-                    break
+            venue_name = VenueDetector.extract_venue_from_headings(headings)
+            if venue_name:
+                location_name = venue_name
+                extraction_method = 'venue_in_heading'
+                has_venue_name = True
         
-        # Coordinate handling: Use extracted coordinates if available, otherwise estimate
-        if latitude is not None and longitude is not None:
-            # Use coordinates extracted from iframe
-            location = {
-                'name': location_name if location_name else full_address if full_address else 'Unknown',
-                'lat': latitude,
-                'lon': longitude
-            }
+        # MODULAR COORDINATE RESOLUTION (replaces broken _estimate_coordinates)
+        # Use GeolocationResolver instead of hardcoded city lookup with silent Hof default
+        if self.location_normalizer:
+            location = self.location_normalizer.resolve_coordinates(
+                location_name=location_name,
+                address=full_address,
+                coordinates=(latitude, longitude) if latitude and longitude else None,
+                source_name=self.name
+            )
+            
+            # Check if coordinates need review
+            needs_review = location.get('needs_review', False)
+            resolution_method = location.get('resolution_method', 'unknown')
+            
+            # Update extraction method with resolution info
+            if resolution_method != 'unknown':
+                extraction_method = f"{extraction_method}+{resolution_method}"
         else:
-            # Fall back to coordinate estimation based on location text
-            if location_name or full_address:
-                location = self._estimate_coordinates(location_name if location_name else full_address)
+            # Fallback if location_normalizer not available
+            if latitude is not None and longitude is not None:
+                # Use coordinates extracted from iframe
+                location = {
+                    'name': location_name if location_name else full_address if full_address else 'Unknown',
+                    'lat': latitude,
+                    'lon': longitude
+                }
+            elif location_name or full_address:
+                # NO SILENT DEFAULT - Flag for editor review
+                location = {
+                    'name': location_name if location_name else full_address,
+                    'lat': None,  # No coordinates = editor must review
+                    'lon': None,
+                    'needs_review': True
+                }
             else:
-                # No location found at all, use default from config
-                used_default = True
-                extraction_method = 'default_fallback'
+                # Use default from config (only as last resort)
                 default_loc = self.options.default_location
                 if default_loc:
-                    location = default_loc
+                    location = default_loc.copy()
+                    location['needs_review'] = True  # Flag even default locations
                 else:
-                    # This should never happen if config is properly set, but provide minimal fallback
                     raise ValueError("No location found and no default_location configured")
-        
-        # Normalize location using verified locations database
-        # This prevents duplicate entries for same venue with slightly different coordinates
-        location = self._normalize_location_with_verified_data(location)
+            
+            needs_review = location.get('needs_review', False)
         
         # Build extraction details for confidence scoring
         extraction_details = {
             'has_full_address': has_full_address,
             'has_venue_name': has_venue_name,
             'has_coordinates': latitude is not None and longitude is not None,
-            'used_default': used_default,
-            'used_geocoding': False,  # We're using lookup table, not geocoding
+            'needs_review': needs_review,
             'extraction_method': extraction_method,
             'known_cities': self.known_cities
         }
         
         return location, extraction_details
     
-    def _estimate_coordinates(self, location_text: str) -> Dict[str, Any]:
-        """
-        Estimate coordinates based on known locations.
-        
-        For now, uses a simple lookup table for common cities in the region.
-        In the future, this could be replaced with a geocoding service.
-        """
-        location_text_lower = location_text.lower()
-        
-        # Known location coordinates (city centers)
-        known_locations = {
-            'bayreuth': {'lat': 49.9440, 'lon': 11.5760},
-            'hof': {'lat': 50.3167, 'lon': 11.9167},
-            'selb': {'lat': 50.1705, 'lon': 12.1328},
-            'rehau': {'lat': 50.2489, 'lon': 12.0364},
-            'kulmbach': {'lat': 50.1050, 'lon': 11.4458},
-            'münchberg': {'lat': 50.1900, 'lon': 11.7900},
-        }
-        
-        for city, coords in known_locations.items():
-            if city in location_text_lower:
-                return {
-                    'name': location_text,
-                    'lat': coords['lat'],
-                    'lon': coords['lon']
-                }
-        
-        # Default to Hof if city not recognized
-        return {
-            'name': location_text,
-            'lat': 50.3167,
-            'lon': 11.9167
-        }
-    
-    def _load_verified_locations(self, base_path: Optional[Path]) -> Dict[str, Dict[str, Any]]:
-        """
-        Load verified locations database from JSON file.
-        
-        This database stores canonical geocoordinates for known venues to prevent
-        duplicate location entries with slightly different coordinates.
-        
-        Args:
-            base_path: Repository root path
-            
-        Returns:
-            Dictionary mapping location names to verified location data
-        """
-        if not base_path:
-            return {}
-        
-        verified_locations_file = Path(base_path) / 'assets' / 'json' / 'verified_locations.json'
-        
-        try:
-            if verified_locations_file.exists():
-                with open(verified_locations_file, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                    return data.get('locations', {})
-            else:
-                return {}
-        except Exception as e:
-            print(f"  ⚠ Warning: Could not load verified locations: {e}")
-            return {}
-    
-    def _normalize_location_with_verified_data(self, location: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Normalize location using verified locations database.
-        
-        Checks verified_locations.json for exact or case-insensitive name match.
-        Returns verified coordinates if found, original location otherwise.
-        Tracks unverified locations via LocationTracker module.
-        
-        Args:
-            location: Location dict with name, lat, lon
-            
-        Returns:
-            Normalized location dict
-        """
-        if not location or not location.get('name') or not self.verified_locations:
-            return location
-        
-        location_name = location.get('name', '').strip()
-        
-        # Exact match
-        if location_name in self.verified_locations:
-            verified = self.verified_locations[location_name].copy()
-            print(f"    ℹ Using verified coordinates for: {location_name}")
-            return verified
-        
-        # Case-insensitive match
-        location_name_lower = location_name.lower()
-        for verified_name, verified_data in self.verified_locations.items():
-            if verified_name.lower() == location_name_lower:
-                verified = verified_data.copy()
-                print(f"    ℹ Using verified coordinates for: {location_name}")
-                return verified
-        
-        # No match - track as unverified for editor review
-        if self.location_tracker:
-            self.location_tracker.track_location(location, source='Frankenpost')
-        
-        return location
     def _extract_description(self, soup) -> str:
         """Extract event description from detail page."""
         # Look for description in common places
