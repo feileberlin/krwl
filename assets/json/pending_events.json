@@ -724,7 +724,58 @@
       "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
       "category": null,
       "tags": []
+    },
+    {
+      "id": "html_frankenpost_6690793164460313214",
+      "title": "Schaufensterausstellung Arquitectura",
+      "description": "16.Januar00:00",
+      "location": {
+        "name": "Hof",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-16T18:00:00",
+      "end_time": null,
+      "status": "pending",
+      "source": "Frankenpost",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3240115",
+      "category": "default",
+      "tags": []
+    },
+    {
+      "id": "html_frankenpost_-2155491189281099303",
+      "title": "Kunstausstellung: Stephan Klenner-Otto  - Von Jean Paul zu E.T.A. Hofmann",
+      "description": "Freitag,16.01.2026,08:00 Uhr",
+      "location": {
+        "name": "Hof",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-16T18:00:00",
+      "end_time": null,
+      "status": "pending",
+      "source": "Frankenpost",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3236166",
+      "category": "default",
+      "tags": []
+    },
+    {
+      "id": "html_frankenpost_3915312680127180278",
+      "title": "Madame Butterfly in Walhall \u201eFest\u2013Spiele\" 1945\u20131950",
+      "description": "Freitag,16.01.2026,10:00 Uhr",
+      "location": {
+        "name": "Hof",
+        "lat": 50.3167,
+        "lon": 11.9167
+      },
+      "start_time": "2026-01-16T18:00:00",
+      "end_time": null,
+      "status": "pending",
+      "source": "Frankenpost",
+      "url": "https://event.frankenpost.de/detail.php?event_id=3153008",
+      "category": "default",
+      "tags": []
     }
   ],
-  "last_scraped": "2026-01-14T23:50:36.543086"
+  "last_scraped": "2026-01-16T03:57:54.433250"
 }
