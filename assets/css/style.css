@@ -511,13 +511,13 @@ strong, b {
     align-items: center;
     color: var(--color-primary);
     gap: 0.75rem;
-    min-width: 0;
 }
 
 .dashboard-logo svg {
     width: 32px;
     height: 32px;
     filter: drop-shadow(0 0 8px rgba(214, 137, 184, 0.6));
+    flex-shrink: 0;
 }
 
 #close-dashboard {
@@ -545,6 +545,7 @@ strong, b {
     color: var(--color-primary);
     text-shadow: 0 0 10px rgba(214, 137, 184, 0.3);
     font-size: 1.5rem;
+    min-width: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
