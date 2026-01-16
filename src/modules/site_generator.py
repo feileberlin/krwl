@@ -1907,8 +1907,7 @@ window.DEBUG_INFO = {debug_info_json};'''
                 index_template = index_template_path.read_text(encoding='utf-8')
             except (OSError, UnicodeDecodeError) as exc:
                 logger.warning(
-                    f"Failed to read index.html template at {index_template_path}, "
-                    f"falling back to default layout: {exc}",
+                    f"Failed to read index.html template at {index_template_path}, falling back to default layout: {exc}",
                     exc_info=True,
                 )
         
@@ -1926,8 +1925,7 @@ window.DEBUG_INFO = {debug_info_json};'''
                 )
             except (KeyError, ValueError) as exc:
                 logger.warning(
-                    "Failed to format index.html template (missing placeholder key or malformed format syntax), "
-                    f"falling back to default layout: {exc}",
+                    f"Failed to format index.html template (missing placeholder key or malformed format syntax), falling back to default layout: {exc}",
                     exc_info=True,
                 )
         
