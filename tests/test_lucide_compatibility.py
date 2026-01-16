@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 """
-Test Lucide Compatibility - Ensures Lucide updates won't break our icon system
+Test Lucide Compatibility - Ensures Lucide inline implementation works correctly
 
 This test suite validates:
-1. Our icon usage matches Lucide's official API
-2. No conflicts between our code and Lucide's library
-3. Version compatibility checks
-4. Icon availability and usage patterns
+1. Our icon usage matches the inline DASHBOARD_ICONS_MAP
+2. No conflicts between our code and the minimal Lucide implementation
+3. Icon availability and usage patterns
+4. The inline implementation provides the expected API
+
+Note: Since we no longer use the full Lucide CDN library, this test validates
+the inline SVG implementation in lucide_markers.py and site_generator.py.
 """
 
 import re
@@ -18,78 +21,57 @@ sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))
 
 
 class LucideCompatibilityTester:
-    """Test suite for Lucide icon library compatibility"""
+    """Test suite for Lucide inline icon implementation compatibility"""
     
-    # Lucide icons we use in the application
-    # Update this list when adding new icons
-    USED_ICONS = {
+    # Lucide icons provided by our inline implementation (DASHBOARD_ICONS_MAP)
+    # These are the only icons available in the minimal implementation
+    INLINE_ICONS = {
         'alert-triangle',  # Dashboard: Pending events notification
         'book-open',       # Dashboard: About section
-        'bug',             # Dashboard: Debug info
-        'user',            # Dashboard: Maintainer
         'book-text',       # Dashboard: Documentation
-        'heart',           # Dashboard: Thanks to
-        'calendar',
-        'clock',
-        'map-pin',
-        'navigation',
-        'filter',
-        'x',
-        'menu',
-        'info',
-        'settings',
-        'github',
-        'external-link',
-        'chevron-down',
-        'chevron-up',
-        'search',
-        'home',
-        'star',
-        'trash',
-        'edit',
-        'check',
-        'alert-circle',
-        'help-circle',
+        'bug',             # Dashboard: Debug info
+        'git-commit',      # Dashboard: Git info
+        'heart',           # Dashboard: Thanks to / Bookmarks
+        'megaphone',       # Filter bar: Events button
+        'user',            # Dashboard: Maintainer
     }
     
-    # Lucide API methods we use
-    # Source: https://lucide.dev/guide/packages/lucide
-    OFFICIAL_API_METHODS = {
+    # Lucide API methods we provide in our minimal implementation
+    MINIMAL_API_METHODS = {
         'createIcons',      # Initialize all icons
-        'createElement',    # Create single icon element
         'icons',           # Icon data object
     }
     
     def __init__(self, base_path):
         self.base_path = Path(base_path)
-        self.lucide_js_path = self.base_path / 'static' / 'lucide' / 'lucide.min.js'
         self.app_js_path = self.base_path / 'assets' / 'js' / 'app.js'
+        self.lucide_markers_path = self.base_path / 'src' / 'modules' / 'lucide_markers.py'
         self.errors = []
         self.warnings = []
         
     def run_all_tests(self):
         """Run all compatibility tests"""
-        print("🧪 Testing Lucide Icon Library Compatibility\n")
+        print("🧪 Testing Lucide Inline Icon Implementation Compatibility\n")
         print("=" * 70)
         
-        self.test_lucide_library_exists()
+        self.test_lucide_markers_exists()
         self.test_app_js_exists()
-        self.test_official_api_used()
+        self.test_minimal_api_used()
         self.test_icon_availability()
         self.test_no_deprecated_methods()
         self.test_initialization_pattern()
-        self.test_version_compatibility()
+        self.test_inline_icons_defined()
         
         print("\n" + "=" * 70)
         self.print_results()
         
         return len(self.errors) == 0
     
-    def test_lucide_library_exists(self):
-        """Test that Lucide library file exists"""
-        print("📁 Test: Lucide library file exists...")
-        if not self.lucide_js_path.exists():
-            self.errors.append(f"Lucide library not found: {self.lucide_js_path}")
+    def test_lucide_markers_exists(self):
+        """Test that lucide_markers.py file exists"""
+        print("📁 Test: Lucide markers module exists...")
+        if not self.lucide_markers_path.exists():
+            self.errors.append(f"Lucide markers not found: {self.lucide_markers_path}")
             print("   ❌ FAILED")
         else:
             print("   ✅ PASSED")
@@ -103,9 +85,9 @@ class LucideCompatibilityTester:
         else:
             print("   ✅ PASSED")
     
-    def test_official_api_used(self):
-        """Test that we only use official Lucide API methods"""
-        print("🔍 Test: Only official Lucide API methods used...")
+    def test_minimal_api_used(self):
+        """Test that we only use methods available in our minimal API"""
+        print("🔍 Test: Only minimal Lucide API methods used...")
         
         if not self.app_js_path.exists():
             return
@@ -116,20 +98,21 @@ class LucideCompatibilityTester:
         # Find all lucide.* or window.lucide.* method calls
         lucide_calls = set(re.findall(r'(?:window\.)?lucide\.(\w+)', content))
         
-        # Check for unofficial methods
-        unofficial = lucide_calls - self.OFFICIAL_API_METHODS
+        # Check for methods not in our minimal implementation
+        unsupported = lucide_calls - self.MINIMAL_API_METHODS
         
-        if unofficial:
-            self.warnings.append(
-                f"Unofficial Lucide API methods found: {', '.join(unofficial)}"
+        if unsupported:
+            self.errors.append(
+                f"API methods used but not in minimal implementation: {', '.join(unsupported)}. "
+                f"Available methods: {', '.join(self.MINIMAL_API_METHODS)}"
             )
-            print("   ⚠️  WARNING")
+            print("   ❌ FAILED")
         else:
-            print(f"   ✅ PASSED ({len(lucide_calls)} official methods used)")
+            print(f"   ✅ PASSED ({len(lucide_calls)} API methods used)")
     
     def test_icon_availability(self):
-        """Test that all icons we use are available in Lucide"""
-        print("🎨 Test: All used icons are official Lucide icons...")
+        """Test that all icons used are available in our inline implementation"""
+        print("🎨 Test: All used icons are in inline implementation...")
         
         if not self.app_js_path.exists():
             return
@@ -140,24 +123,16 @@ class LucideCompatibilityTester:
         # Find all data-lucide="icon-name" attributes
         found_icons = set(re.findall(r'data-lucide=["\']([^"\']+)["\']', content))
         
-        # Also find createElement calls with icon names
-        createElement_icons = set(re.findall(
-            r'createElement\(["\']([^"\']+)["\']',
-            content
-        ))
-        
-        all_found_icons = found_icons | createElement_icons
-        
-        # Check if we're tracking all icons we use
-        untracked = all_found_icons - self.USED_ICONS
-        if untracked:
-            self.warnings.append(
-                f"Icons used but not tracked in test: {', '.join(untracked)}. "
-                f"Update USED_ICONS in test_lucide_compatibility.py"
+        # Check if any icons are used that aren't in our inline implementation
+        unavailable = found_icons - self.INLINE_ICONS
+        if unavailable:
+            self.errors.append(
+                f"Icons used but not in inline implementation: {', '.join(unavailable)}. "
+                f"Add these to DASHBOARD_ICONS_MAP in lucide_markers.py"
             )
-            print(f"   ⚠️  WARNING ({len(untracked)} untracked icons)")
+            print(f"   ❌ FAILED ({len(unavailable)} icons missing)")
         else:
-            print(f"   ✅ PASSED ({len(all_found_icons)} icons tracked)")
+            print(f"   ✅ PASSED ({len(found_icons)} icons available)")
     
     def test_no_deprecated_methods(self):
         """Test that we don't use deprecated Lucide methods"""
@@ -169,10 +144,11 @@ class LucideCompatibilityTester:
         with open(self.app_js_path, 'r', encoding='utf-8') as f:
             content = f.read()
         
-        # Deprecated patterns (update as Lucide evolves)
+        # Deprecated patterns (these were never in our minimal implementation anyway)
         deprecated_patterns = {
-            'lucide.replace': 'Deprecated in v0.263.0+ (use createIcons instead)',
-            'new lucide.Icon': 'Deprecated (use createElement instead)',
+            'lucide.replace': 'Deprecated (use createIcons instead)',
+            'new lucide.Icon': 'Deprecated (not supported in minimal implementation)',
+            'lucide.createElement': 'Not supported in minimal implementation',
         }
         
         deprecated_found = []
@@ -182,7 +158,7 @@ class LucideCompatibilityTester:
         
         if deprecated_found:
             self.errors.append(
-                f"Deprecated Lucide methods found: {'; '.join(deprecated_found)}"
+                f"Deprecated/unsupported Lucide methods found: {'; '.join(deprecated_found)}"
             )
             print("   ❌ FAILED")
         else:
@@ -215,29 +191,29 @@ class LucideCompatibilityTester:
         else:
             print("   ✅ PASSED")
     
-    def test_version_compatibility(self):
-        """Test Lucide version is documented"""
-        print("📌 Test: Lucide version documented...")
+    def test_inline_icons_defined(self):
+        """Test that DASHBOARD_ICONS_MAP contains all expected icons"""
+        print("📌 Test: Inline icons properly defined...")
         
-        # Check site_generator.py for version
-        site_gen_path = self.base_path / 'src' / 'modules' / 'site_generator.py'
-        
-        if not site_gen_path.exists():
-            self.warnings.append("site_generator.py not found - can't check version")
+        if not self.lucide_markers_path.exists():
+            self.warnings.append("lucide_markers.py not found - can't check icons")
             print("   ⚠️  WARNING")
             return
         
-        with open(site_gen_path, 'r', encoding='utf-8') as f:
-            content = f.read()
-        
-        # Look for version in DEPENDENCIES
-        version_match = re.search(r'"lucide"[^}]+?"version":\s*"([^"]+)"', content)
-        
-        if version_match:
-            version = version_match.group(1)
-            print(f"   ✅ PASSED (version {version} documented)")
-        else:
-            self.warnings.append("Lucide version not found in DEPENDENCIES")
+        try:
+            from modules.lucide_markers import DASHBOARD_ICONS_MAP
+            
+            # Check that all expected icons are present
+            missing = self.INLINE_ICONS - set(DASHBOARD_ICONS_MAP.keys())
+            
+            if missing:
+                self.errors.append(f"Missing icons in DASHBOARD_ICONS_MAP: {', '.join(missing)}")
+                print("   ❌ FAILED")
+            else:
+                print(f"   ✅ PASSED ({len(DASHBOARD_ICONS_MAP)} icons defined)")
+                
+        except ImportError as e:
+            self.warnings.append(f"Could not import lucide_markers: {e}")
             print("   ⚠️  WARNING")
     
     def print_results(self):
@@ -256,13 +232,13 @@ class LucideCompatibilityTester:
                 print(f"   {i}. {warning}")
         
         if not self.errors and not self.warnings:
-            print("\n✅ All tests passed! Lucide integration is safe.")
+            print("\n✅ All tests passed! Lucide inline implementation is working correctly.")
         elif not self.errors:
             print("\n✅ No errors, but please review warnings.")
         else:
-            print("\n❌ Tests failed! Fix errors before updating Lucide.")
+            print("\n❌ Tests failed! Fix errors in lucide_markers.py or app.js.")
         
-        print("\n💡 Tip: Run this test before updating Lucide to ensure compatibility.")
+        print("\n💡 Tip: To add new icons, update DASHBOARD_ICONS_MAP in lucide_markers.py")
 
 
 def main():

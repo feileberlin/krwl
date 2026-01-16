@@ -54,9 +54,10 @@ except ImportError:
     load_config = None
 
 
-# Third-party dependencies to fetch
-# Note: Lucide icons are no longer fetched - we use a minimal inline implementation
-# with only the 8 icons actually used (saves ~500KB)
+# Third-party dependencies to fetch (stored under lib/)
+# Note: Lucide icons are NOT part of these dependencies anymore – they are provided
+# via the inline lucide_markers module and SVGs, with only the small set of icons
+# actually used by the app. We no longer fetch Lucide from a CDN or into lib/lucide/.
 DEPENDENCIES = {
     "leaflet": {
         "version": "1.9.4",
@@ -815,8 +816,8 @@ class SiteGenerator:
         
         Instead of loading the full Lucide library (~500+ KB), this generates
         a tiny (~3 KB) replacement that contains only the icons actually used
-        in the application (8 icons: alert-triangle, book-open, book-text, bug,
-        git-commit, heart, megaphone, user).
+        in the application. Icons are sourced from DASHBOARD_ICONS_MAP in
+        lucide_markers.py (see that module for the current list).
         
         The generated code provides a window.lucide.createIcons() function that
         replaces <i data-lucide="icon-name"> elements with inline SVG.
