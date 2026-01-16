@@ -1,9 +1,13 @@
 """SmartScraper orchestrator - coordinates scrapers, AI, and image analysis."""
 
+import logging
 import sys
 from datetime import datetime
 from typing import Dict, List, Optional, Any
 from .base import SourceOptions, ScraperRegistry
+
+# Configure module logger
+logger = logging.getLogger(__name__)
 
 
 class SmartScraper:
@@ -39,11 +43,11 @@ class SmartScraper:
             providers = get_available_providers(ai_config)
             self.ai_providers = providers
             if providers:
-                print(f"✓ Initialized {len(providers)} AI provider(s)")
+                logger.info(f"Initialized {len(providers)} AI provider(s)")
         except ImportError:
-            print("ℹ AI providers not available (optional)", file=sys.stderr)
+            logger.debug("AI providers not available (optional)")
         except Exception as e:
-            print(f"⚠ AI provider initialization warning: {e}", file=sys.stderr)
+            logger.warning(f"AI provider initialization warning: {e}")
     
     def _init_image_analyzer(self):
         """Initialize image analyzer if enabled."""
@@ -54,11 +58,11 @@ class SmartScraper:
         try:
             from .image_analyzer import ImageAnalyzer
             self.image_analyzer = ImageAnalyzer(img_config, self.ai_providers)
-            print("✓ Initialized image analyzer")
+            logger.info("Initialized image analyzer")
         except ImportError:
-            print("ℹ Image analysis not available (optional)", file=sys.stderr)
+            logger.debug("Image analysis not available (optional)")
         except Exception as e:
-            print(f"⚠ Image analyzer initialization warning: {e}", file=sys.stderr)
+            logger.warning(f"Image analyzer initialization warning: {e}")
     
     def _register_sources(self):
         """Register all available source types."""
@@ -98,7 +102,7 @@ class SmartScraper:
                     cfg, opts, base_path=base_path, ai_providers=ai_providers
                 ))
         except ImportError as e:
-            print(f"⚠ Some web sources unavailable: {e}", file=sys.stderr)
+            logger.warning(f"Some web sources unavailable: {e}")
     
     def _register_social_sources(self):
         """Register social media source handlers."""
@@ -145,7 +149,7 @@ class SmartScraper:
                     cfg, opts, base_path=base_path, ai_providers=ai_providers
                 ))
         except ImportError as e:
-            print(f"ℹ Custom sources unavailable: {e}", file=sys.stderr)
+            logger.debug(f"Custom sources unavailable: {e}")
     
     def scrape_all_sources(self) -> List[Dict[str, Any]]:
         """Scrape events from all enabled sources.

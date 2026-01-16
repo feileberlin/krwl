@@ -94,8 +94,17 @@ jobs:
         run: |
           echo "🔍 Discovering scraper capabilities..."
           
-          # Get scraper capabilities via CLI
-          CAPABILITIES=$(python3 src/event_manager.py scraper-info)
+          # Get scraper capabilities via CLI (filter stderr to avoid log contamination)
+          CAPABILITIES=$(python3 src/event_manager.py scraper-info 2>/dev/null)
+          
+          # Validate JSON before proceeding
+          if ! echo "$CAPABILITIES" | jq . > /dev/null 2>&1; then
+            echo "❌ Error: scraper-info did not output valid JSON"
+            echo "Raw output:"
+            python3 src/event_manager.py scraper-info
+            exit 1
+          fi
+          
           echo "capabilities<<EOF" >> $GITHUB_OUTPUT
           echo "$CAPABILITIES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
