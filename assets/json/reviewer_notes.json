@@ -4,6 +4,11 @@
       "note": "Location extraction confidence: medium. venue name found; Venue name without full address: 'Richard-Wagner-Museum'. Coordinates may be imprecise.",
       "reviewer": "auto_scraper",
       "timestamp": "2026-01-16T19:19:34.106708"
+    },
+    {
+      "note": "Location extraction confidence: medium. venue name found; Venue name without full address: 'Richard-Wagner-Museum'. Coordinates may be imprecise.",
+      "reviewer": "auto_scraper",
+      "timestamp": "2026-01-16T19:23:44.362460"
     }
   ],
   "html_frankenpost_e968e9ac3af851cc": [
@@ -11,6 +16,11 @@
       "note": "Location extraction confidence: medium. venue name found; Venue name without full address: 'Richard-Wagner-Museum'. Coordinates may be imprecise.",
       "reviewer": "auto_scraper",
       "timestamp": "2026-01-16T19:19:34.478657"
+    },
+    {
+      "note": "Location extraction confidence: medium. venue name found; Venue name without full address: 'Richard-Wagner-Museum'. Coordinates may be imprecise.",
+      "reviewer": "auto_scraper",
+      "timestamp": "2026-01-16T19:23:44.728465"
     }
   ],
   "html_frankenpost_a3bd0dbcc7e70e56": [
@@ -18,6 +28,11 @@
       "note": "Location extraction confidence: medium. venue name found; Venue name without full address: 'KunstWandelhalle'. Coordinates may be imprecise.",
       "reviewer": "auto_scraper",
       "timestamp": "2026-01-16T19:19:35.229962"
+    },
+    {
+      "note": "Location extraction confidence: medium. venue name found; Venue name without full address: 'KunstWandelhalle'. Coordinates may be imprecise.",
+      "reviewer": "auto_scraper",
+      "timestamp": "2026-01-16T19:23:45.442488"
     }
   ],
   "html_frankenpost_7e00d4102c2b6ad6": [
@@ -25,6 +40,11 @@
       "note": "Location extraction confidence: medium. venue name found; Venue name without full address: 'Feuerwehrhaus Querenbach'. Coordinates may be imprecise.",
       "reviewer": "auto_scraper",
       "timestamp": "2026-01-16T19:19:38.994848"
+    },
+    {
+      "note": "Location extraction confidence: medium. venue name found; Venue name without full address: 'Feuerwehrhaus Querenbach'. Coordinates may be imprecise.",
+      "reviewer": "auto_scraper",
+      "timestamp": "2026-01-16T19:23:48.893381"
     }
   ],
   "html_frankenpost_449beeb898807da1": [
@@ -32,6 +52,11 @@
       "note": "Location extraction confidence: medium. venue name found; Venue name without full address: 'K\u00f6nig Albert Theater'. Coordinates may be imprecise.",
       "reviewer": "auto_scraper",
       "timestamp": "2026-01-16T19:19:40.117251"
+    },
+    {
+      "note": "Location extraction confidence: medium. venue name found; Venue name without full address: 'K\u00f6nig Albert Theater'. Coordinates may be imprecise.",
+      "reviewer": "auto_scraper",
+      "timestamp": "2026-01-16T19:23:49.958984"
     }
   ]
 }

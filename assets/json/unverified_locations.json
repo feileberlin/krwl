@@ -3,7 +3,7 @@
   "_description": "Review these and add verified entries to verified_locations.json",
   "_stats": {
     "total_locations": 17,
-    "total_occurrences": 20
+    "total_occurrences": 40
   },
   "locations": {
     "ehem. Seifen-Ott": {
@@ -11,204 +11,204 @@
       "lat": 50.3167,
       "lon": 11.9167,
       "address": null,
-      "occurrence_count": 2,
+      "occurrence_count": 4,
       "sources": [
         "Frankenpost"
       ],
       "first_seen": "2026-01-16T19:19:32.990408",
-      "last_seen": "2026-01-16T19:19:33.350042"
+      "last_seen": "2026-01-16T19:23:43.635450"
     },
     "Richard-Wagner-Museum": {
       "name": "Richard-Wagner-Museum",
       "lat": 50.3167,
       "lon": 11.9167,
       "address": null,
-      "occurrence_count": 2,
+      "occurrence_count": 4,
       "sources": [
         "Frankenpost"
       ],
       "first_seen": "2026-01-16T19:19:34.103211",
-      "last_seen": "2026-01-16T19:19:34.475058"
+      "last_seen": "2026-01-16T19:23:44.724868"
     },
     "MAKkultur": {
       "name": "MAKkultur",
       "lat": 50.3167,
       "lon": 11.9167,
       "address": null,
-      "occurrence_count": 2,
+      "occurrence_count": 4,
       "sources": [
         "Frankenpost"
       ],
       "first_seen": "2026-01-16T19:19:37.151834",
-      "last_seen": "2026-01-16T19:19:37.538432"
+      "last_seen": "2026-01-16T19:23:47.466610"
     },
     "Eintritt: kostenlos": {
       "name": "Eintritt: kostenlos",
       "lat": 50.3167,
       "lon": 11.9167,
       "address": null,
-      "occurrence_count": 1,
+      "occurrence_count": 2,
       "sources": [
         "Frankenpost"
       ],
       "first_seen": "2026-01-16T19:19:33.725286",
-      "last_seen": "2026-01-16T19:19:33.725293"
+      "last_seen": "2026-01-16T19:23:43.988224"
     },
     "ATSV-Heim am Eisteich": {
       "name": "ATSV-Heim am Eisteich",
       "lat": 50.3167,
       "lon": 11.9167,
       "address": null,
-      "occurrence_count": 1,
+      "occurrence_count": 2,
       "sources": [
         "Frankenpost"
       ],
       "first_seen": "2026-01-16T19:19:34.848914",
-      "last_seen": "2026-01-16T19:19:34.848920"
+      "last_seen": "2026-01-16T19:23:45.090136"
     },
     "KunstWandelhalle": {
       "name": "KunstWandelhalle",
       "lat": 50.3167,
       "lon": 11.9167,
       "address": null,
-      "occurrence_count": 1,
+      "occurrence_count": 2,
       "sources": [
         "Frankenpost"
       ],
       "first_seen": "2026-01-16T19:19:35.226464",
-      "last_seen": "2026-01-16T19:19:35.226470"
+      "last_seen": "2026-01-16T19:23:45.439009"
     },
     "BRK-Kindertagesstätte Lindenstraße": {
       "name": "BRK-Kindertagesstätte Lindenstraße",
       "lat": 50.3167,
       "lon": 11.9167,
       "address": null,
-      "occurrence_count": 1,
+      "occurrence_count": 2,
       "sources": [
         "Frankenpost"
       ],
       "first_seen": "2026-01-16T19:19:35.618357",
-      "last_seen": "2026-01-16T19:19:35.618364"
+      "last_seen": "2026-01-16T19:23:45.816200"
     },
     "Schützengilde Bayreuth - Kegelbahnanlage": {
       "name": "Schützengilde Bayreuth - Kegelbahnanlage",
       "lat": 49.944,
       "lon": 11.576,
       "address": null,
-      "occurrence_count": 1,
+      "occurrence_count": 2,
       "sources": [
         "Frankenpost"
       ],
       "first_seen": "2026-01-16T19:19:36.006957",
-      "last_seen": "2026-01-16T19:19:36.006964"
+      "last_seen": "2026-01-16T19:23:46.172755"
     },
     "Eisteich": {
       "name": "Eisteich",
       "lat": 50.3167,
       "lon": 11.9167,
       "address": null,
-      "occurrence_count": 1,
+      "occurrence_count": 2,
       "sources": [
         "Frankenpost"
       ],
       "first_seen": "2026-01-16T19:19:36.384830",
-      "last_seen": "2026-01-16T19:19:36.384836"
+      "last_seen": "2026-01-16T19:23:46.453291"
     },
     "Hopfenhäusla": {
       "name": "Hopfenhäusla",
       "lat": 50.3167,
       "lon": 11.9167,
       "address": null,
-      "occurrence_count": 1,
+      "occurrence_count": 2,
       "sources": [
         "Frankenpost"
       ],
       "first_seen": "2026-01-16T19:19:36.771951",
-      "last_seen": "2026-01-16T19:19:36.771957"
+      "last_seen": "2026-01-16T19:23:46.818393"
     },
     "FCK-Sportheim": {
       "name": "FCK-Sportheim",
       "lat": 50.3167,
       "lon": 11.9167,
       "address": null,
-      "occurrence_count": 1,
+      "occurrence_count": 2,
       "sources": [
         "Frankenpost"
       ],
       "first_seen": "2026-01-16T19:19:37.834882",
-      "last_seen": "2026-01-16T19:19:37.834889"
+      "last_seen": "2026-01-16T19:23:47.824201"
     },
     "Siedlerhaisla am Hopfengarten": {
       "name": "Siedlerhaisla am Hopfengarten",
       "lat": 50.3167,
       "lon": 11.9167,
       "address": null,
-      "occurrence_count": 1,
+      "occurrence_count": 2,
       "sources": [
         "Frankenpost"
       ],
       "first_seen": "2026-01-16T19:19:38.219346",
-      "last_seen": "2026-01-16T19:19:38.219352"
+      "last_seen": "2026-01-16T19:23:48.165785"
     },
     "Sportheim": {
       "name": "Sportheim",
       "lat": 50.3167,
       "lon": 11.9167,
       "address": null,
-      "occurrence_count": 1,
+      "occurrence_count": 2,
       "sources": [
         "Frankenpost"
       ],
       "first_seen": "2026-01-16T19:19:38.609733",
-      "last_seen": "2026-01-16T19:19:38.609751"
+      "last_seen": "2026-01-16T19:23:48.535172"
     },
     "Feuerwehrhaus Querenbach": {
       "name": "Feuerwehrhaus Querenbach",
       "lat": 50.3167,
       "lon": 11.9167,
       "address": null,
-      "occurrence_count": 1,
+      "occurrence_count": 2,
       "sources": [
         "Frankenpost"
       ],
       "first_seen": "2026-01-16T19:19:38.991604",
-      "last_seen": "2026-01-16T19:19:38.991610"
+      "last_seen": "2026-01-16T19:23:48.890121"
     },
     "Meister Bär Hotel": {
       "name": "Meister Bär Hotel",
       "lat": 50.3167,
       "lon": 11.9167,
       "address": null,
-      "occurrence_count": 1,
+      "occurrence_count": 2,
       "sources": [
         "Frankenpost"
       ],
       "first_seen": "2026-01-16T19:19:39.376118",
-      "last_seen": "2026-01-16T19:19:39.376124"
+      "last_seen": "2026-01-16T19:23:49.235889"
     },
     "Kuhstall": {
       "name": "Kuhstall",
       "lat": 50.3167,
       "lon": 11.9167,
       "address": null,
-      "occurrence_count": 1,
+      "occurrence_count": 2,
       "sources": [
         "Frankenpost"
       ],
       "first_seen": "2026-01-16T19:19:39.746073",
-      "last_seen": "2026-01-16T19:19:39.746079"
+      "last_seen": "2026-01-16T19:23:49.599374"
     },
     "König Albert Theater": {
       "name": "König Albert Theater",
       "lat": 50.3167,
       "lon": 11.9167,
       "address": null,
-      "occurrence_count": 1,
+      "occurrence_count": 2,
       "sources": [
         "Frankenpost"
       ],
       "first_seen": "2026-01-16T19:19:40.113700",
-      "last_seen": "2026-01-16T19:19:40.113707"
+      "last_seen": "2026-01-16T19:23:49.955454"
     }
   }
 }
