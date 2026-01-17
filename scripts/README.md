@@ -8,6 +8,9 @@ This directory contains shell scripts for hosting setup and configuration.
 - **setup-hosting-gitignore.sh** - Setup .gitignore for different hosting platforms (GitHub Pages, Netlify, Vercel)
 - **sync-to-wiki.sh** - Sync documentation to GitHub Wiki
 
+### Python Scripts
+- **validate_config.py** - Validate config.json to prevent production issues (e.g., demo events on production)
+
 ### Configuration Templates
 - **.gitignore.hosting.example** - Example .gitignore configurations for various hosting platforms
 
@@ -41,6 +44,27 @@ bash scripts/setup-hosting-gitignore.sh netlify
 # Sync docs to wiki
 bash scripts/sync-to-wiki.sh
 ```
+
+### Config Validation (CRITICAL)
+
+**ALWAYS run before committing changes to config.json:**
+
+```bash
+# Validate config.json
+python3 scripts/validate_config.py
+```
+
+**What it checks:**
+- ✅ `environment` field must be `"auto"` (not `"development"` or `"production"`)
+- ✅ Prevents demo events from appearing on production
+- ✅ Ensures proper environment auto-detection
+
+**Why this matters:**
+- `environment: "development"` → Demo events load in production/CI ❌
+- `environment: "production"` → Real events load in local dev ❌
+- `environment: "auto"` → Automatic detection (correct) ✅
+
+This validation runs automatically in CI (see `.github/workflows/config-validation.yml`).
 
 ### Python Tools (Use from src/tools/)
 

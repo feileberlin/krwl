@@ -1,0 +1,42 @@
+name: Config Validation
+
+on:
+  pull_request:
+    paths:
+      - 'config.json'
+      - 'scripts/validate_config.py'
+      - '.github/workflows/config-validation.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'config.json'
+      - 'scripts/validate_config.py'
+      - '.github/workflows/config-validation.yml'
+
+jobs:
+  validate:
+    name: Validate config.json
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      
+      - name: Run config validation
+        run: |
+          echo "Validating config.json to prevent production issues..."
+          python3 scripts/validate_config.py
+      
+      - name: Check result
+        if: failure()
+        run: |
+          echo "❌ Config validation failed!"
+          echo "This prevents issues like demo events appearing on production."
+          echo "Please fix the errors above before merging."
+          exit 1

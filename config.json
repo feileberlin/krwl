@@ -86,7 +86,7 @@
   "_comment_override_values3": "  • 'auto' - Use auto-detection (default behavior, detects from hosting platform)",
   "_comment_kiss": "KEEP IT SIMPLE: Change this ONE line to switch environments completely!",
   "_comment_separator": "═══════════════════════════════════════════════════════════════════════════════",
-  "environment": "development",
+  "environment": "auto",
   "_comment_environment_detection": "═══════════════════════════════════════════════════════════════════════════════",
   "_comment_auto_behavior": "AUTO-DETECTION (when environment='auto') - Behavior changes based on detected environment",
   "_comment_detection_logic": "Environment is detected automatically using Python os.environ checks:",
