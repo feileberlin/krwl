@@ -92,28 +92,51 @@ jobs:
       - name: Introspect scraper capabilities
         id: introspect
         run: |
+          set -e  # Exit on error
+          
           echo "🔍 Discovering scraper capabilities..."
           
-          # Get scraper capabilities via CLI (filter stderr to avoid log contamination)
-          CAPABILITIES=$(python3 src/event_manager.py scraper-info 2>/dev/null)
-          
-          # Validate JSON before proceeding
-          if ! echo "$CAPABILITIES" | jq . > /dev/null 2>&1; then
-            echo "❌ Error: scraper-info did not output valid JSON"
-            echo "Raw output:"
-            python3 src/event_manager.py scraper-info
+          # Get scraper capabilities via CLI with --json flag for clean output
+          # The --json flag suppresses all logging to ensure pure JSON
+          if ! CAPABILITIES=$(python3 src/event_manager.py scraper-info --json 2>&1); then
+            echo "❌ Error: scraper-info command failed"
+            echo "Exit code: $?"
+            echo "Output: $CAPABILITIES"
             exit 1
           fi
           
+          # Validate JSON before proceeding
+          if ! echo "$CAPABILITIES" | jq empty 2>/dev/null; then
+            echo "❌ Error: scraper-info did not output valid JSON"
+            echo "Raw output:"
+            echo "$CAPABILITIES"
+            echo ""
+            echo "Attempting to extract JSON from output..."
+            # Try to extract JSON from mixed output (fallback)
+            CAPABILITIES=$(echo "$CAPABILITIES" | grep -A 9999 '^{' | head -n -0)
+            if ! echo "$CAPABILITIES" | jq empty 2>/dev/null; then
+              echo "❌ Could not extract valid JSON. Using safe defaults."
+              # Use safe fallback values
+              echo "enabled_sources=0" >> $GITHUB_OUTPUT
+              echo "source_count=0" >> $GITHUB_OUTPUT
+              echo "scraping_enabled=false" >> $GITHUB_OUTPUT
+              echo "schedule_timezone=Europe/Berlin" >> $GITHUB_OUTPUT
+              echo "schedule_times=04:00, 16:00" >> $GITHUB_OUTPUT
+              echo "capabilities={}" >> $GITHUB_OUTPUT
+              exit 0  # Don't fail the whole workflow
+            fi
+          fi
+          
+          # Store capabilities for other jobs
           echo "capabilities<<EOF" >> $GITHUB_OUTPUT
           echo "$CAPABILITIES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
           
-          # Extract specific fields for conditional logic
-          ENABLED_SOURCES=$(echo "$CAPABILITIES" | jq -r '.enabled_sources | length')
-          SCRAPING_ENABLED=$(echo "$CAPABILITIES" | jq -r '.scraping_libraries_installed')
-          SCHEDULE_TZ=$(echo "$CAPABILITIES" | jq -r '.schedule.timezone // "Europe/Berlin"')
-          SCHEDULE_TIMES=$(echo "$CAPABILITIES" | jq -r '.schedule.times | join(", ")')
+          # Extract specific fields for conditional logic with error handling
+          ENABLED_SOURCES=$(echo "$CAPABILITIES" | jq -r '.enabled_sources | length' 2>/dev/null || echo "0")
+          SCRAPING_ENABLED=$(echo "$CAPABILITIES" | jq -r '.scraping_libraries_installed' 2>/dev/null || echo "false")
+          SCHEDULE_TZ=$(echo "$CAPABILITIES" | jq -r '.schedule.timezone // "Europe/Berlin"' 2>/dev/null)
+          SCHEDULE_TIMES=$(echo "$CAPABILITIES" | jq -r '.schedule.times | join(", ")' 2>/dev/null || echo "04:00, 16:00")
           
           echo "enabled_sources=$ENABLED_SOURCES" >> $GITHUB_OUTPUT
           echo "source_count=$ENABLED_SOURCES" >> $GITHUB_OUTPUT

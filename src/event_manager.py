@@ -289,11 +289,14 @@ COMMANDS:
     load-examples             Load example data for development
     clear-data                Clear all event data
     scraper-info              Show scraper capabilities (JSON output for workflows)
+    scraper-info --json       Show scraper capabilities with pure JSON (no logs)
     
 OPTIONS:
     -h, --help               Show this help message
     -v, --version            Show version information
     -c, --config PATH        Use custom config file
+    --json                   Output pure JSON (suppresses all logging)
+    --debug                  Enable debug logging
     
 EXAMPLES:
     # Launch interactive TUI
@@ -316,6 +319,9 @@ EXAMPLES:
     
     # Show scraper capabilities (for workflow introspection)
     python3 event_manager.py scraper-info
+    
+    # Show scraper capabilities with pure JSON (no logs - for CI/CD)
+    python3 event_manager.py scraper-info --json
     
     # List all published events
     python3 event_manager.py list
@@ -1764,10 +1770,26 @@ def _execute_command(args, base_path, config):
     
     if command == 'scraper-info':
         # Output scraper capabilities as JSON for workflow consumption
-        scraper = EventScraper(config, base_path)
-        capabilities = scraper.get_scraper_capabilities()
-        print(json.dumps(capabilities, indent=2))
-        return 0
+        # Ensure clean JSON output by suppressing all logging temporarily
+        import logging
+        
+        # Save current logging level
+        root_logger = logging.getLogger()
+        original_level = root_logger.level
+        
+        # Temporarily silence all logging for clean JSON output
+        # This ensures no INFO/ERROR messages contaminate the JSON
+        root_logger.setLevel(logging.CRITICAL)
+        
+        try:
+            scraper = EventScraper(config, base_path)
+            capabilities = scraper.get_scraper_capabilities()
+            # Output pure JSON to stdout only
+            print(json.dumps(capabilities, indent=2))
+            return 0
+        finally:
+            # Restore original logging level
+            root_logger.setLevel(original_level)
     
     # Production Optimization Commands
     if command == 'schema':
@@ -1905,6 +1927,8 @@ def main():
                        help='Custom config file path')
     parser.add_argument('--debug', action='store_true',
                        help='Enable debug logging')
+    parser.add_argument('--json', action='store_true',
+                       help='Output pure JSON (suppresses all logging)')
     
     # Parse known args first, then capture remaining args
     args, remaining = parser.parse_known_args()
@@ -1928,6 +1952,13 @@ def main():
     if args.command is None:
         # TUI mode - log to file only
         configure_for_tui()
+    elif getattr(args, 'json', False):
+        # JSON mode - suppress ALL logging for clean JSON output
+        import logging
+        logging.basicConfig(level=logging.CRITICAL, handlers=[])
+        # Ensure no handlers are active
+        for handler in logging.root.handlers[:]:
+            logging.root.removeHandler(handler)
     else:
         # CLI mode - log to console
         configure_for_cli(debug=args.debug)

@@ -37,7 +37,7 @@ try:
     
 except ImportError as e:
     SCRAPING_ENABLED = False
-    logger.warning(f"Scraping libraries not available: {e}")
+    SCRAPING_IMPORT_ERROR = e  # Store error for later reporting
     # Note: Warning is printed only when scraping is actually attempted,
     # not at import time to avoid interference with other modules
     
@@ -62,6 +62,7 @@ class EventScraper:
         self.config = config
         self.base_path = base_path
         self.failed_sources = []  # Track failed sources for reporting
+        self._scraping_warning_shown = False  # Track if warning has been shown
         
         # Try to initialize SmartScraper for enhanced functionality
         self.smart_scraper = None
@@ -74,10 +75,7 @@ class EventScraper:
                 self.smart_scraper = None
         
         if not SCRAPING_ENABLED:
-            # Print warning when scraper is instantiated without required libraries
-            logger.error("Scraping libraries not installed.")
-            logger.error("Install with: pip install -r requirements.txt")
-            logger.error("Or install directly: pip install requests beautifulsoup4 lxml feedparser")
+            # Delay warning until scraping is actually attempted (not during capabilities check)
             self.session = None
         else:
             self.session = requests.Session()
@@ -86,6 +84,16 @@ class EventScraper:
             })
             # Set default timeout for all requests
             self.timeout = 30
+    
+    def _check_scraping_available(self):
+        """Check if scraping libraries are available and show warning if not."""
+        if not SCRAPING_ENABLED and not self._scraping_warning_shown:
+            logger.error("Scraping libraries not installed.")
+            logger.error("Install with: pip install -r requirements.txt")
+            logger.error("Or install directly: pip install requests beautifulsoup4 lxml feedparser")
+            self._scraping_warning_shown = True
+            return False
+        return SCRAPING_ENABLED
         
     def _write_scrape_status(self, scraped_count, added_count, duplicate_count, rejected_count, error=None):
         """Write scrape status file for workflow automation"""
@@ -118,10 +126,7 @@ class EventScraper:
     
     def scrape_all_sources(self):
         """Scrape events from all configured sources with graceful degradation"""
-        if not SCRAPING_ENABLED:
-            logger.error("Scraping libraries not installed. Cannot scrape events.")
-            logger.error("Install with: pip install -r requirements.txt")
-            
+        if not self._check_scraping_available():
             # Write status file even if scraping is disabled
             self._write_scrape_status(0, 0, 0, 0, error='Scraping libraries not installed')
             # Still generate pending count JSON even if scraping failed
