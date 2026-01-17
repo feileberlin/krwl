@@ -596,16 +596,24 @@ class SiteGenerator:
         )
         
         # Load modular app CSS with debug comments (Leaflet CSS stays separate)
+        # CSS files reorganized to max 50 selectors each for KISS compliance
         app_css_modules = [
             ('assets/css/base.css', 'Base styles'),
             ('assets/css/map.css', 'Map styles'),
             ('assets/css/leaflet-custom.css', 'Leaflet custom overrides'),
-            ('assets/css/filters.css', 'Filter bar styles'),
-            ('assets/css/dashboard.css', 'Dashboard styles'),
+            ('assets/css/filters-1.css', 'Filter bar styles (part 1)'),
+            ('assets/css/filters-2.css', 'Filter bar styles (part 2)'),
+            ('assets/css/dashboard-1.css', 'Dashboard styles (part 1)'),
+            ('assets/css/dashboard-2.css', 'Dashboard styles (part 2)'),
+            ('assets/css/debug-1.css', 'Debug cockpit (part 1)'),
+            ('assets/css/debug-2.css', 'Debug cockpit (part 2)'),
             ('assets/css/scrollbar.css', 'Scrollbar styles'),
             ('assets/css/bubbles.css', 'Speech bubble styles'),
+            ('assets/css/locations.css', 'Location management'),
+            ('assets/css/notifications.css', 'Notifications and alerts'),
             ('assets/css/noscript.css', 'Noscript fallback styles'),
-            ('assets/css/mobile.css', 'Mobile overrides')
+            ('assets/css/utilities-1.css', 'Utility classes (part 1)'),
+            ('assets/css/utilities-2.css', 'Utility classes (part 2)')
         ]
         module_css_parts = []
         for module_path, description in app_css_modules:
