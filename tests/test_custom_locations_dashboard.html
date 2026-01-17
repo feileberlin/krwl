@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Locations Dashboard Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #0d1117;
+            color: #c9d1d9;
+        }
+        
+        h1 {
+            color: #FF69B4;
+        }
+        
+        .test-section {
+            background: #161b22;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+        }
+        
+        .success {
+            color: #D689B8;
+        }
+        
+        .info {
+            color: #58a6ff;
+        }
+        
+        button {
+            background: #FF69B4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background: #ff4da6;
+        }
+        
+        button.secondary {
+            background: #30363d;
+        }
+        
+        button.secondary:hover {
+            background: #484f58;
+        }
+        
+        .location-item {
+            background: #0d1117;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 4px;
+            border: 1px solid #30363d;
+        }
+        
+        .location-name {
+            font-weight: bold;
+            color: #FF69B4;
+        }
+        
+        .location-coords {
+            font-size: 0.85rem;
+            color: #8b949e;
+            font-family: Monaco, 'Courier New', monospace;
+        }
+        
+        pre {
+            background: #0d1117;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>📍 Custom Locations Dashboard Test</h1>
+    
+    <div class="test-section">
+        <h2>Test Storage Module</h2>
+        <p>Test the EventStorage class custom location methods.</p>
+        <button onclick="testAddLocation()">Add Test Location</button>
+        <button onclick="testEditLocation()">Edit Location</button>
+        <button onclick="testDeleteLocation()">Delete Location</button>
+        <button onclick="showAllLocations()" class="secondary">Show All</button>
+        <button onclick="clearAll()" class="secondary">Clear All</button>
+        <div id="testResults"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Saved Custom Locations</h2>
+        <div id="locationsList"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>localStorage State</h2>
+        <button onclick="showLocalStorage()">Show localStorage</button>
+        <div id="localStorageState"></div>
+    </div>
+    
+    <script src="../assets/js/storage.js"></script>
+    <script>
+        // Initialize storage with test config
+        const testConfig = {
+            debug: true,
+            map: {
+                predefined_locations: [
+                    {
+                        name: "location.no1",
+                        lat: 50.308053,
+                        lon: 11.9233,
+                        display_name: "Hauptbahnhof Hof"
+                    },
+                    {
+                        name: "location.no2",
+                        lat: 50.3164799,
+                        lon: 11.9146205,
+                        display_name: "Sonnenplatz Hof"
+                    }
+                ]
+            }
+        };
+        
+        const storage = new EventStorage(testConfig);
+        
+        function testAddLocation() {
+            const name = prompt('Enter location name:', 'Test Location ' + Date.now());
+            if (!name) return;
+            
+            const lat = 50.3167 + (Math.random() - 0.5) * 0.1;
+            const lon = 11.9167 + (Math.random() - 0.5) * 0.1;
+            
+            const success = storage.addCustomLocation({
+                name: name,
+                lat: lat,
+                lon: lon
+            });
+            
+            const resultsDiv = document.getElementById('testResults');
+            if (success) {
+                resultsDiv.innerHTML = `<div class="success">✅ Location "${name}" added successfully!</div>`;
+                updateLocationsList();
+            } else {
+                resultsDiv.innerHTML = `<div class="error">❌ Failed to add location (limit: 10)</div>`;
+            }
+        }
+        
+        function testEditLocation() {
+            const locations = storage.getCustomLocations();
+            if (locations.length === 0) {
+                alert('No custom locations to edit!');
+                return;
+            }
+            
+            let message = 'Select location to edit:\n\n';
+            locations.forEach((loc, index) => {
+                message += `${index + 1}. ${loc.name}\n`;
+            });
+            
+            const choice = prompt(message, '1');
+            const index = parseInt(choice) - 1;
+            
+            if (isNaN(index) || index < 0 || index >= locations.length) {
+                return;
+            }
+            
+            const loc = locations[index];
+            const newName = prompt('Enter new name:', loc.name);
+            if (!newName) return;
+            
+            const success = storage.updateCustomLocation(loc.id, {
+                name: newName
+            });
+            
+            const resultsDiv = document.getElementById('testResults');
+            if (success) {
+                resultsDiv.innerHTML = `<div class="success">✅ Location updated!</div>`;
+                updateLocationsList();
+            }
+        }
+        
+        function testDeleteLocation() {
+            const locations = storage.getCustomLocations();
+            if (locations.length === 0) {
+                alert('No custom locations to delete!');
+                return;
+            }
+            
+            let message = 'Select location to delete:\n\n';
+            locations.forEach((loc, index) => {
+                message += `${index + 1}. ${loc.name}\n`;
+            });
+            
+            const choice = prompt(message, '1');
+            const index = parseInt(choice) - 1;
+            
+            if (isNaN(index) || index < 0 || index >= locations.length) {
+                return;
+            }
+            
+            const loc = locations[index];
+            if (!confirm(`Delete "${loc.name}"?`)) {
+                return;
+            }
+            
+            const success = storage.deleteCustomLocation(loc.id);
+            const resultsDiv = document.getElementById('testResults');
+            if (success) {
+                resultsDiv.innerHTML = `<div class="success">✅ Location deleted!</div>`;
+                updateLocationsList();
+            }
+        }
+        
+        function showAllLocations() {
+            const locations = storage.getCustomLocations();
+            const resultsDiv = document.getElementById('testResults');
+            
+            if (locations.length === 0) {
+                resultsDiv.innerHTML = '<div class="info">No custom locations saved</div>';
+            } else {
+                resultsDiv.innerHTML = `<div class="success">Found ${locations.length} custom location(s)</div>`;
+            }
+            
+            updateLocationsList();
+        }
+        
+        function updateLocationsList() {
+            const predefinedLocs = testConfig.map.predefined_locations;
+            const customLocs = storage.getCustomLocations();
+            const listDiv = document.getElementById('locationsList');
+            
+            let html = '';
+            
+            // Predefined locations
+            if (predefinedLocs.length > 0) {
+                html += '<h3 style="color: #58a6ff;">Default Locations</h3>';
+                predefinedLocs.forEach(loc => {
+                    html += `
+                        <div class="location-item">
+                            <div class="location-name">${loc.display_name}</div>
+                            <div class="location-coords">${loc.lat.toFixed(4)}°, ${loc.lon.toFixed(4)}°</div>
+                        </div>
+                    `;
+                });
+            }
+            
+            // Custom locations
+            if (customLocs.length > 0) {
+                html += '<h3 style="color: #D689B8; margin-top: 1.5rem;">Custom Locations</h3>';
+                customLocs.forEach(loc => {
+                    html += `
+                        <div class="location-item">
+                            <div class="location-name">${loc.name} 📍</div>
+                            <div class="location-coords">${loc.lat.toFixed(4)}°, ${loc.lon.toFixed(4)}°</div>
+                            <div style="font-size: 0.75rem; color: #6e7681; margin-top: 4px;">
+                                Added: ${new Date(loc.created).toLocaleString()}
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                html += '<div style="text-align: center; padding: 2rem; color: #8b949e;">No custom locations saved yet</div>';
+            }
+            
+            listDiv.innerHTML = html;
+        }
+        
+        function showLocalStorage() {
+            const locations = localStorage.getItem('krwl_custom_locations');
+            const filters = localStorage.getItem('krwl_filters');
+            const stateDiv = document.getElementById('localStorageState');
+            
+            let html = '<h3 style="color: #58a6ff;">Custom Locations</h3>';
+            if (locations) {
+                html += `<pre>${JSON.stringify(JSON.parse(locations), null, 2)}</pre>`;
+            } else {
+                html += '<div class="info">No custom locations in localStorage</div>';
+            }
+            
+            html += '<h3 style="color: #58a6ff; margin-top: 1.5rem;">Filters</h3>';
+            if (filters) {
+                html += `<pre>${JSON.stringify(JSON.parse(filters), null, 2)}</pre>`;
+            } else {
+                html += '<div class="info">No filters in localStorage</div>';
+            }
+            
+            stateDiv.innerHTML = html;
+        }
+        
+        function clearAll() {
+            if (confirm('Clear all custom locations from localStorage?')) {
+                localStorage.removeItem('krwl_custom_locations');
+                storage.customLocations = [];
+                updateLocationsList();
+                document.getElementById('testResults').innerHTML = '<div class="success">✅ All custom locations cleared!</div>';
+            }
+        }
+        
+        // Initial render
+        updateLocationsList();
+        
+        // Auto-check on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const locations = storage.getCustomLocations();
+            if (locations.length > 0) {
+                console.log('✅ Custom locations survived page reload:', locations);
+            }
+        });
+    </script>
+</body>
+</html>
