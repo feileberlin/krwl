@@ -194,7 +194,10 @@ class SpeechBubbles {
         
         // Create bubble element
         const bubble = document.createElement('div');
-        bubble.className = 'speech-bubble';
+        
+        // Check bookmark status for both bubble and bookmark button
+        const isBookmarked = this.storage.isBookmarked(event.id);
+        bubble.className = isBookmarked ? 'speech-bubble bubble-is-bookmarked' : 'speech-bubble';
         bubble.setAttribute('data-event-id', event.id);
         bubble.setAttribute('data-bubble-index', index);
         
@@ -212,7 +215,6 @@ class SpeechBubbles {
         });
         
         // Bookmark button
-        const isBookmarked = this.storage.isBookmarked(event.id);
         const bookmarkClass = isBookmarked ? 'bookmarked' : '';
         const bookmarkingSupported = this.storage.isBookmarkingSupported();
         

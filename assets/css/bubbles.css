@@ -49,6 +49,25 @@
     user-select: none;
 }
 
+/* Bookmarked bubble - different border color */
+.speech-bubble.bubble-is-bookmarked {
+    border-color: #ffb3b3; /* Light/bright red border for bookmarked bubbles */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
+                0 0 15px rgba(255, 179, 179, 0.4); /* Match border color in shadow */
+}
+
+/* Bookmarked bubble hover state */
+.speech-bubble.bubble-is-bookmarked:hover {
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6),
+                0 0 20px rgba(255, 179, 179, 0.6); /* Match border color in shadow */
+}
+
+/* Bookmarked bubble dragging state */
+.speech-bubble.bubble-is-bookmarked.dragging {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7),
+                0 0 30px rgba(255, 179, 179, 0.8); /* Match border color in shadow */
+}
+
 /* Dragging state - overrides hover and animation */
 .speech-bubble.dragging {
     cursor: grabbing;
@@ -176,7 +195,7 @@
 .bubble-bookmark i[data-lucide="heart"] {
     width: 20px;
     height: 20px;
-    stroke: var(--color-text-tertiary); /* Default unbookmarked stroke color */
+    stroke: #ffb3b3; /* Light/bright red stroke for unbookmarked */
     stroke-width: 2; /* Outlined by default */
     fill: none; /* No fill when unbookmarked */
     transition: stroke 0.2s ease, fill 0.2s ease, stroke-width 0.2s ease;
@@ -184,13 +203,13 @@
 
 .bubble-bookmark:hover i[data-lucide="heart"] {
     transform: scale(1.2);
-    stroke: #D689B8; /* EcoBarbie Light Tone on hover */
+    stroke: #ffb3b3; /* Light/bright red on hover */
 }
 
 .bubble-bookmark.bookmarked i[data-lucide="heart"] {
     stroke: none; /* No stroke when bookmarked - KISS approach */
     stroke-width: 0; /* Remove stroke completely */
-    fill: #D689B8; /* Filled with EcoBarbie Light Tone when bookmarked */
+    fill: #ffb3b3; /* Filled with light/bright red when bookmarked */
 }
 
 .bubble-bookmark.bookmarked {
