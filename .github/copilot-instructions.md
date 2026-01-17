@@ -410,7 +410,8 @@ After coding:
 - [ ] Run relevant tests: `python3 tests/test_*.py --verbose`
 - [ ] Verify KISS compliance: `python3 src/modules/kiss_checker.py`
 - [ ] Run feature verification: `python3 src/modules/feature_verifier.py --verbose`
-- [ ] If frontend changes: `python3 src/event_manager.py build production`
+- [ ] **Validate config.json**: `python3 scripts/validate_config.py` (prevents demo events on production)
+- [ ] If frontend changes: `python3 src/event_manager.py generate`
 - [ ] Test manually (run TUI, check generated HTML, etc.)
 - [ ] Update documentation if needed
 
@@ -418,6 +419,7 @@ After coding:
 
 Before submitting PR:
 - [ ] All tests pass
+- [ ] Config validation passes (`python3 scripts/validate_config.py`)
 - [ ] No references to `src/main.py` exist
 - [ ] `features.json` is up to date
 - [ ] Auto-generated files are committed if changed
@@ -482,7 +484,35 @@ python3 check_kiss.py --verbose
 
 # Scheduler tests
 python3 test_scheduler.py --verbose
+
+# Config validation (prevents demo events on production)
+python3 scripts/validate_config.py
 ```
+
+#### Config Validation (CRITICAL)
+
+**ALWAYS run config validation before committing to prevent demo events on production:**
+
+```bash
+python3 scripts/validate_config.py
+```
+
+**What it checks:**
+- ✅ `environment` field must be set to `"auto"` (not `"development"` or `"production"`)
+- ✅ Prevents demo events from appearing on production map
+- ✅ Ensures proper environment auto-detection across all hosting platforms
+
+**Why this matters:**
+- Setting `environment: "development"` forces demo events to load in production/CI
+- Setting `environment: "production"` forces real events to load in local development
+- Using `environment: "auto"` (required) enables automatic environment detection
+
+**CI Integration:**
+- GitHub Actions automatically runs this check on every PR
+- PRs will be blocked if config validation fails
+- This is a **hard requirement** before merging to main branch
+
+See `.github/workflows/config-validation.yml` for the CI workflow.
 
 #### Documentation
 ```bash
