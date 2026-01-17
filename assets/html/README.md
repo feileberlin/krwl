@@ -70,20 +70,18 @@ Contains the opening `<body>` tag and noscript fallback:
 
 #### html-body-close.html
 Contains closing scripts and tags:
-- Embedded data (events, configs, translations)
-- JavaScript libraries (Leaflet, Lucide, i18n)
-- Application logic
+- Embedded data (events, configs)
+- JavaScript libraries (Leaflet, Lucide)
+- Application logic (concatenated modules)
 - Closing body and html tags
 
 **Template Variables:**
-- `{embedded_data}` - Embedded JSON data
+- `{embedded_data}` - Embedded JSON data (events, config, weather)
 - `{config_loader}` - Legacy placeholder (not currently used)
 - `{fetch_interceptor}` - Legacy placeholder (not currently used)
 - `{leaflet_js}` - Leaflet.js library
-- `{lucide_js}` - Lucide icons library
-- `{i18n_js}` - Internationalization module
-- `{time_drawer_js}` - Time drawer component
-- `{app_js}` - Main application logic
+- `{lucide_js}` - Lucide icons library (minimal, only icons used by app)
+- `{app_js}` - Main application logic (11 concatenated modules, see assets/js/README.md)
 
 #### map-main.html
 **Semantic Tag:** `<main>`  
