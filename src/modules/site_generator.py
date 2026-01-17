@@ -604,6 +604,7 @@ class SiteGenerator:
             ('assets/css/dashboard.css', 'Dashboard styles'),
             ('assets/css/scrollbar.css', 'Scrollbar styles'),
             ('assets/css/bubbles.css', 'Speech bubble styles'),
+            ('assets/css/noscript.css', 'Noscript fallback styles'),
             ('assets/css/mobile.css', 'Mobile overrides')
         ]
         module_css_parts = []
@@ -1221,7 +1222,7 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
         return future_events
     
     def build_noscript_html(self, events: List[Dict], app_name: str) -> str:
-        """Build complete noscript HTML with event list."""
+        """Build complete noscript HTML with event list using CSS classes."""
         import locale
         
         future_events = self.filter_and_sort_future_events(events)
@@ -1235,41 +1236,41 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
             except locale.Error:
                 pass  # Use system default if neither works
         
-        # Header
+        # Header with CSS classes instead of inline styles
         html_parts = [
-            '<div style="max-width:1200px;margin:0 auto;padding:2rem;background:#1a1a1a;color:#fff;font-family:sans-serif">',
-            f'<h1 style="color:#D689B8;margin-bottom:1rem">{html.escape(app_name)}</h1>',
-            '<div style="background:#401B2D;padding:1rem;border-radius:8px;margin-bottom:1.5rem;border-left:4px solid #D689B8">',
-            '<p style="margin:0;color:#E8A5C8"><strong>⚠️ JavaScript is disabled.</strong></p>',
-            '<p style="margin:0.5rem 0 0 0;color:#ccc;font-size:0.9rem">Enable JavaScript for interactive map.</p>',
+            '<div class="noscript-container">',
+            f'<h1 class="noscript-title">{html.escape(app_name)}</h1>',
+            '<div class="noscript-warning">',
+            '<p class="noscript-warning-title"><strong>⚠️ JavaScript is disabled.</strong></p>',
+            '<p class="noscript-warning-text">Enable JavaScript for interactive map.</p>',
             '</div>'
         ]
         
         # Events or empty message
         if not future_events:
-            html_parts.append('<p style="color:#888;text-align:center;padding:2rem">No upcoming events.</p>')
+            html_parts.append('<p class="noscript-empty">No upcoming events.</p>')
         else:
-            html_parts.append(f'<h2 style="color:#D689B8;font-size:1.5rem;margin-bottom:1.5rem">Upcoming Events <span style="color:#888;font-size:1rem">({len(future_events)} events)</span></h2>')
-            html_parts.append('<div style="display:flex;flex-direction:column;gap:1.5rem">')
+            html_parts.append(f'<h2 class="noscript-section-title">Upcoming Events <span class="noscript-event-count">({len(future_events)} events)</span></h2>')
+            html_parts.append('<div class="noscript-events-list">')
             
             for event_item in future_events:
                 event_data = event_item['event']
                 event_start_time = event_item['start_time']
                 event_is_running = event_item['is_running']
                 
-                # Badge and link text (hardcoded English)
-                running_badge = '<span style="background:#D689B8;color:#fff;padding:0.25rem 0.75rem;border-radius:4px;font-size:0.85rem;font-weight:600;margin-left:0.5rem">HAPPENING NOW</span>' if event_is_running else ''
+                # Badge and link using CSS classes
+                running_badge = '<span class="noscript-badge-running">HAPPENING NOW</span>' if event_is_running else ''
                 
-                event_link = f'<a href="{html.escape(event_data.get("url", ""))}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:#D689B8;color:#fff;padding:0.5rem 1rem;border-radius:5px;text-decoration:none;font-weight:600">View Event Details →</a>' if event_data.get('url') else ''
+                event_link = f'<a href="{html.escape(event_data.get("url", ""))}" class="noscript-event-link" target="_blank" rel="noopener noreferrer">View Event Details →</a>' if event_data.get('url') else ''
                 
-                html_parts.append(f'''<article style="background:#2a2a2a;border-radius:8px;padding:1.5rem;border-left:4px solid #D689B8">
-<h3 style="color:#D689B8;margin:0 0 0.75rem 0;font-size:1.25rem">{html.escape(event_data.get('title', 'Untitled'))}{running_badge}</h3>
-<div style="color:#ccc;margin-bottom:1rem">
-<p style="margin:0.25rem 0"><strong style="color:#E8A5C8">📅 Date:</strong> {html.escape(event_start_time.strftime('%A, %B %d, %Y'))}</p>
-<p style="margin:0.25rem 0"><strong style="color:#E8A5C8">🕐 Time:</strong> {html.escape(event_start_time.strftime('%I:%M %p').lstrip('0'))}</p>
-<p style="margin:0.25rem 0"><strong style="color:#E8A5C8">📍 Location:</strong> {html.escape(event_data.get('location', {}).get('name', 'Unknown'))}</p>
+                html_parts.append(f'''<article class="noscript-event-card">
+<h3 class="noscript-event-title">{html.escape(event_data.get('title', 'Untitled'))}{running_badge}</h3>
+<div class="noscript-event-meta">
+<p><strong>📅 Date:</strong> {html.escape(event_start_time.strftime('%A, %B %d, %Y'))}</p>
+<p><strong>🕐 Time:</strong> {html.escape(event_start_time.strftime('%I:%M %p').lstrip('0'))}</p>
+<p><strong>📍 Location:</strong> {html.escape(event_data.get('location', {}).get('name', 'Unknown'))}</p>
 </div>
-<p style="color:#ddd;line-height:1.6;margin-bottom:1rem">{html.escape(event_data.get('description', ''))}</p>
+<p class="noscript-event-description">{html.escape(event_data.get('description', ''))}</p>
 {event_link}
 </article>''')
             
@@ -1277,12 +1278,13 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
         
         # Footer
         html_parts.extend([
-            '<footer style="margin-top:2rem;padding-top:2rem;border-top:1px solid #3a3a3a;color:#888;text-align:center">',
-            '<p style="margin:0">Enable JavaScript for best experience.</p>',
+            '<footer class="noscript-footer">',
+            '<p>Enable JavaScript for best experience.</p>',
             '</footer>',
             '</div>'
         ])
         
+        return '\n'.join(html_parts)
         return ''.join(html_parts)
     
     def load_component(self, component_path: str) -> str:
