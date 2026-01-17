@@ -206,40 +206,63 @@ class EventListeners {
     setupTimeFilter(timeTextEl) {
         // Function to generate time range options with calculated dates/times
         const getTimeRanges = () => {
-            const baseRanges = [
-                { label: 'til sunrise', value: 'sunrise', detailLabel: 'til sunrise (6 AM)' },
-                { label: "til Sunday's primetime", value: 'sunday-primetime' },
-                { label: 'til full moon', value: 'full-moon' },
-                { label: 'upcoming', value: 'all', detailLabel: 'upcoming (all events)' }
-            ];
+            const now = new Date();
             
-            // Add calculated dates/times from APP_CONFIG if available
-            if (window.APP_CONFIG && window.APP_CONFIG.time_filters) {
-                const timeFilters = window.APP_CONFIG.time_filters;
+            // Helper function to format time remaining
+            const formatTimeRemaining = (targetDate) => {
+                const msRemaining = targetDate - now;
+                const hoursRemaining = msRemaining / (1000 * 60 * 60);
                 
-                return baseRanges.map(range => {
-                    if (range.value === 'sunday-primetime' && timeFilters.sunday && timeFilters.sunday.enabled) {
-                        const date = timeFilters.sunday.date_formatted; // e.g., "January 18"
-                        return { ...range, label: `til Sunday's primetime (${date})` };
-                    } else if (range.value === 'full-moon' && timeFilters.full_moon && timeFilters.full_moon.enabled) {
-                        const days = timeFilters.full_moon.days_until;
-                        // Calculate actual date from days
-                        const fullMoonDate = new Date();
-                        fullMoonDate.setDate(fullMoonDate.getDate() + days);
-                        const dateStr = fullMoonDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
-                        return { ...range, label: `til full moon (${dateStr})` };
-                    } else if (range.detailLabel) {
-                        return { ...range, label: range.detailLabel };
-                    }
-                    return range;
-                });
-            }
+                if (hoursRemaining < 1) {
+                    const minutesRemaining = Math.round(msRemaining / (1000 * 60));
+                    return `${minutesRemaining} minute${minutesRemaining !== 1 ? 's' : ''}`;
+                } else if (hoursRemaining < 24) {
+                    const hours = Math.round(hoursRemaining);
+                    return `${hours} hour${hours !== 1 ? 's' : ''}`;
+                } else {
+                    const days = Math.round(hoursRemaining / 24);
+                    return `${days} day${days !== 1 ? 's' : ''}`;
+                }
+            };
             
-            // Fallback if APP_CONFIG not available
-            return baseRanges.map(r => ({
-                ...r,
-                label: r.detailLabel || r.label
-            }));
+            // Calculate actual dates/times for each filter
+            const ranges = [];
+            
+            // Sunrise
+            const sunrise = this.app.eventFilter.getNextSunrise();
+            ranges.push({
+                value: 'sunrise',
+                label: `til sunrise (${formatTimeRemaining(sunrise)})`,
+                timestamp: sunrise.getTime()
+            });
+            
+            // Sunday primetime
+            const sundayPrimetime = this.app.eventFilter.getNextSundayPrimetime();
+            ranges.push({
+                value: 'sunday-primetime',
+                label: `til Sunday's primetime (${formatTimeRemaining(sundayPrimetime)})`,
+                timestamp: sundayPrimetime.getTime()
+            });
+            
+            // Full moon
+            const fullMoon = this.app.eventFilter.getNextFullMoonMorning();
+            ranges.push({
+                value: 'full-moon',
+                label: `til full moon (${formatTimeRemaining(fullMoon)})`,
+                timestamp: fullMoon.getTime()
+            });
+            
+            // Sort by timestamp (earliest first)
+            ranges.sort((a, b) => a.timestamp - b.timestamp);
+            
+            // Add "upcoming (all events)" at the end
+            ranges.push({
+                value: 'all',
+                label: 'upcoming (all events)',
+                timestamp: Infinity
+            });
+            
+            return ranges;
         };
         
         new CustomDropdown(

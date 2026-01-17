@@ -123,13 +123,10 @@ class EventFilter {
     }
     
     /**
-     * Get morning after next full moon following next Sunday
-     * @returns {Date} 6am on day after next full moon
+     * Get next full moon (not tied to Sunday)
+     * @returns {Date} Next full moon
      */
     getNextFullMoonMorning() {
-        const nextSunday = new Date(this.getNextSundayPrimetime().getTime());
-        nextSunday.setHours(0, 0, 0, 0);
-        
         // Known full moon: January 6, 2000, 18:14 UTC
         const knownFullMoon = new Date(Date.UTC(2000, 0, 6, 18, 14, 0));
         
@@ -141,10 +138,10 @@ class EventFilter {
         const timeSinceKnownFullMoon = now.getTime() - knownFullMoon.getTime();
         const cyclesSinceKnown = Math.floor(timeSinceKnownFullMoon / lunarCycle);
         
-        // Find first full moon after next Sunday
+        // Find next full moon after now
         let fullMoon = new Date(knownFullMoon.getTime() + cyclesSinceKnown * lunarCycle);
         
-        while (fullMoon <= nextSunday) {
+        while (fullMoon <= now) {
             fullMoon = new Date(fullMoon.getTime() + lunarCycle);
         }
         
