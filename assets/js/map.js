@@ -323,16 +323,59 @@ class MapManager {
     }
     
     /**
-     * Center map on specific location
+     * Calculate appropriate zoom level based on distance radius
+     * @param {number} distanceKm - Distance in kilometers
+     * @returns {number} Appropriate zoom level
+     */
+    calculateZoomFromDistance(distanceKm) {
+        // Zoom level formula: Higher zoom = closer view
+        // At equator, zoom level N shows approximately (40075 / (256 * 2^N)) km per pixel
+        // We want to show the full radius, so calculate zoom to fit ~2x the distance
+        // 
+        // Approximate visible radius at different zoom levels (at mid-latitudes ~50°):
+        // Zoom 10: ~40km radius
+        // Zoom 11: ~20km radius
+        // Zoom 12: ~10km radius
+        // Zoom 13: ~5km radius (default)
+        // Zoom 14: ~2.5km radius
+        // Zoom 15: ~1.25km radius
+        // Zoom 16: ~0.6km radius
+        
+        // Use logarithmic formula: each zoom level halves the visible area
+        // Starting from zoom 13 (5km radius), calculate appropriate zoom
+        const baseZoom = 13;
+        const baseRadius = 5.0; // km at zoom 13
+        
+        // Calculate zoom adjustment: log2(baseRadius / desiredRadius)
+        const zoomAdjustment = Math.log2(baseRadius / distanceKm);
+        const calculatedZoom = baseZoom + zoomAdjustment;
+        
+        // Clamp zoom level to reasonable range (10-16)
+        // Min zoom 10 for distances > 40km, max zoom 16 for very close distances
+        const zoom = Math.max(10, Math.min(16, Math.round(calculatedZoom)));
+        
+        this.log('Calculated zoom from distance', { distanceKm, zoom });
+        return zoom;
+    }
+    
+    /**
+     * Center map on specific location with optional distance-based zoom
      * @param {number} lat - Latitude
      * @param {number} lon - Longitude
-     * @param {number} zoom - Zoom level (optional)
+     * @param {number|null} zoom - Zoom level (optional, defaults to 13)
+     * @param {number|null} distanceKm - Distance in km to calculate zoom from (optional)
      */
-    centerMap(lat, lon, zoom = 13) {
-        if (this.map) {
-            this.map.setView([lat, lon], zoom);
-            this.log('Map centered', {lat, lon, zoom});
+    centerMap(lat, lon, zoom = null, distanceKm = null) {
+        if (!this.map) return;
+        
+        // If distance provided, calculate zoom from it (overrides manual zoom)
+        let finalZoom = zoom !== null ? zoom : 13;
+        if (distanceKm !== null) {
+            finalZoom = this.calculateZoomFromDistance(distanceKm);
         }
+        
+        this.map.setView([lat, lon], finalZoom);
+        this.log('Map centered', {lat, lon, zoom: finalZoom, distanceKm});
     }
     
     /**
