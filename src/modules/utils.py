@@ -339,9 +339,30 @@ def load_pending_events(base_path):
 
 
 def save_pending_events(base_path, pending_data):
-    """Save pending events to pending_events.json"""
+    """
+    Save pending events to pending_events.json.
+    
+    Applies schema migration to all events before saving to ensure:
+    - All events have teaser field (generated from description/title)
+    - Source field is URL not just name
+    - Location has address or address_hidden flag
+    """
+    from .event_schema import EventSchema
+    
     pending_path = base_path / 'assets' / 'json' / 'pending_events.json'
     pending_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    # Apply migration to all pending events (KISS: one place, automatic)
+    try:
+        schema = EventSchema()
+        for event in pending_data.get('pending_events', []):
+            # Migrate in-place
+            migrated = schema.migrate_event(event)
+            event.clear()
+            event.update(migrated)
+    except Exception as e:
+        logger.warning(f"Migration skipped during save: {e}")
+    
     pending_data['last_scraped'] = datetime.now().isoformat()
     with open(pending_path, 'w') as f:
         json.dump(pending_data, f, indent=2)
