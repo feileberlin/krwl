@@ -1,6 +1,106 @@
 /* Debug: Development tools */
 
 
+/* Debug groups */
+.debug-group {
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--color-border-secondary);
+    border-radius: var(--border-radius-medium);
+    overflow: hidden;
+}
+
+.debug-group-header {
+    background: var(--color-bg-tertiary);
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--color-border-secondary);
+}
+
+.debug-group-content {
+    padding: 1rem;
+}
+
+.debug-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.4rem 0;
+    gap: 1rem;
+}
+
+.debug-label {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    min-width: 120px;
+}
+
+.debug-value {
+    color: var(--color-text-primary);
+    font-size: 0.9rem;
+    text-align: right;
+    word-break: break-word;
+}
+
+.debug-commit-msg {
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+/* Debug details (collapsible) */
+.debug-details {
+    margin-top: 1rem;
+    border-top: 1px solid var(--color-border-secondary);
+    padding-top: 0.75rem;
+}
+
+.debug-details-summary {
+    cursor: pointer;
+    color: var(--color-primary);
+    font-size: 0.9rem;
+    user-select: none;
+    padding: 0.25rem 0;
+}
+
+.debug-details-summary:hover {
+    text-decoration: underline;
+}
+
+.debug-details-content {
+    margin-top: 0.75rem;
+}
+
+.debug-size-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.85rem;
+}
+
+.debug-size-list > li {
+    padding: 0.3rem 0;
+    color: var(--color-text-secondary);
+}
+
+.debug-duplicate-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0;
+    font-size: 0.85rem;
+}
+
+.debug-duplicate-warning-header {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.debug-warning-link {
+    color: var(--color-warning-alt);
+    text-decoration: underline;
+}
+
 .debug-group-header.warning {
     background: var(--color-warning-alpha-10);
  border-bottom-color: var(--color-warning-alpha-30);

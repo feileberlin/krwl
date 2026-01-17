@@ -1,6 +1,21 @@
 /* Utilities: Helper classes */
 
 
+/* General utility classes */
+.hidden {
+    display: none !important;
+}
+
+.highlight {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.monospace {
+    font-family: var(--font-family-mono);
+}
+
+/* Specific ID-based hidden states */
 #custom-location-inputs.hidden {
     display: none;
 }

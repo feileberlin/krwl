@@ -187,6 +187,13 @@
     font-size: 0.8rem;
 }
 
+.bubble-date {
+    color: var(--color-text-tertiary);
+    font-size: 0.75rem;
+    margin-top: 4px;
+    line-height: 1.2;
+}
+
 .bubble-bookmark {
     font-size: 1.1rem;
 }
