@@ -690,7 +690,6 @@ class GeolocationResolver:
             # If we have coordinates but no address, extract from location name
             if not result['address'] and location_name:
                 # Try to extract city and build basic address
-                from . import CityDetector
                 city = CityDetector.extract_from_text(location_name)
                 if city:
                     result['address'] = f"{location_name}, {city}"
@@ -708,7 +707,6 @@ class GeolocationResolver:
         
         # Strategy 3: Extract city from address and use city coordinates
         if address:
-            from . import CityDetector
             city = CityDetector.extract_from_address(address)
             if city:
                 city_coords = CityDetector.get_city_coordinates(city)
@@ -727,7 +725,6 @@ class GeolocationResolver:
         
         # Strategy 4: Extract city from venue name
         if location_name:
-            from . import CityDetector
             city = CityDetector.extract_from_text(location_name)
             if city:
                 city_coords = CityDetector.get_city_coordinates(city)
