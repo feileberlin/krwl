@@ -195,6 +195,8 @@
     width: 14px;
     height: 14px;
     stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
     flex-shrink: 0;
 }
 
@@ -214,6 +216,8 @@
     width: 14px;
     height: 14px;
     stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
     flex-shrink: 0;
 }
 
