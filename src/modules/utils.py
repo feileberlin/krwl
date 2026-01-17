@@ -178,13 +178,19 @@ def validate_config(config: dict) -> None:
     filter_sentence = config.get('filter_sentence')
     if filter_sentence:
         effect = filter_sentence.get('effect')
-        if effect and effect not in FILTER_SENTENCE_EFFECTS:
-            raise ConfigurationError(
-                'filter_sentence.effect',
-                "Effect must be 'terminal' or 'typewriter'"
-            )
+        if effect is not None:
+            if not effect or effect not in FILTER_SENTENCE_EFFECTS:
+                raise ConfigurationError(
+                    'filter_sentence.effect',
+                    "Effect must be 'terminal' or 'typewriter'"
+                )
         typing_speed = filter_sentence.get('typing_speed_ms')
         if typing_speed is not None:
+            if typing_speed == '':
+                raise ConfigurationError(
+                    'filter_sentence.typing_speed_ms',
+                    "Typing speed must be a positive number (ms)"
+                )
             if not isinstance(typing_speed, (int, float)) or typing_speed <= 0:
                 raise ConfigurationError(
                     'filter_sentence.typing_speed_ms',
