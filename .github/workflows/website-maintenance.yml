@@ -606,9 +606,14 @@ jobs:
               print(len(data.get('pending_events', [])))
           except (FileNotFoundError, json.JSONDecodeError, KeyError) as e:
               print('0')
-          " 2>/dev/null || echo "0")
+          " 2>/dev/null)
           
-          echo "pending_count=$PENDING_COUNT" >> $GITHUB_OUTPUT
+          # Validate the count is a valid number, default to 0 if not
+          if [[ -z "$PENDING_COUNT" || ! "$PENDING_COUNT" =~ ^[0-9]+$ ]]; then
+            PENDING_COUNT=0
+          fi
+          
+          echo "pending_count=${PENDING_COUNT}" >> "$GITHUB_OUTPUT"
           echo "ℹ Found $PENDING_COUNT pending events"
           
           # Add to summary
