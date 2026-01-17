@@ -382,6 +382,31 @@ MAX_DISTANCE = config['filtering']['max_distance_km']
 DEFAULT_LAT = config['map']['default_center']['lat']
 ```
 
+---
+
+### ❌ DON'T: Hardcode colors in CSS
+```css
+/* ❌ BAD: Hardcoded color values */
+.bubble-bookmark {
+    border: 2px solid #ffb3b3;
+    color: #D689B8;
+}
+```
+
+### ✅ DO: Use CSS variables from design system
+```css
+/* ✅ GOOD: Use design tokens */
+.bubble-bookmark {
+    border: 2px solid var(--color-bookmark);
+    color: var(--color-primary);
+}
+```
+
+**If you need a new color:**
+1. Add to `config.json` → `design.colors`
+2. Run: `python3 src/tools/generate_design_tokens.py`
+3. Use: `var(--color-your-new-color)`
+
 ## ✅ Quick Reference Checklists
 
 ### Pre-Implementation Checklist
@@ -721,6 +746,96 @@ def archive_events(self, dry_run=False):
 - **CSS Variables**: Use for theming (see `assets/css/style.css`)
 - **Responsive**: Use media queries, flexbox, grid
 - **Accessibility**: Ensure sufficient contrast, focus indicators
+
+### Design System & CSS Variables (CRITICAL)
+
+**This project uses a centralized design system with CSS custom properties (variables).**
+
+#### Rules for Colors and Styling
+
+1. **NEVER hardcode color values in CSS** (e.g., `color: #ffb3b3`)
+2. **ALWAYS use CSS variables from design-tokens.css** (e.g., `color: var(--color-bookmark)`)
+3. **To add new colors:**
+   - Add to `config.json` → `design.colors` section
+   - Run: `python3 src/tools/generate_design_tokens.py`
+   - Use the generated `--color-*` variable in your CSS
+
+#### Design Token Workflow
+
+```json
+// config.json
+{
+  "design": {
+    "colors": {
+      "primary": "#D689B8",
+      "bookmark": "#ffb3b3",
+      "bookmark_light": "#ffcccc"
+      // ... add your colors here
+    }
+  }
+}
+```
+
+```bash
+# Regenerate design tokens
+python3 src/tools/generate_design_tokens.py
+```
+
+```css
+/* CSS - Use the generated variables */
+.my-element {
+  color: var(--color-primary);        /* ✅ CORRECT */
+  border: 2px solid var(--color-bookmark); /* ✅ CORRECT */
+  
+  color: #D689B8;                     /* ❌ WRONG - hardcoded */
+  border: 2px solid #ffb3b3;          /* ❌ WRONG - hardcoded */
+}
+```
+
+#### Available Design Token Categories
+
+- **Colors**: `--color-primary`, `--color-bookmark`, `--color-text-primary`, etc.
+- **Typography**: `--font-family-base`, `--font-size-base`, `--line-height-base`, etc.
+- **Spacing**: `--spacing-xs`, `--spacing-sm`, `--spacing-md`, etc.
+- **Z-Index**: `--z-layer-1-map`, `--z-layer-2-event-popups`, etc.
+- **Borders**: `--border-width-thin`, `--border-radius-sm`, etc.
+- **Effects**: `--shadow-sm`, `--shadow-md`, `--transition-fast`, etc.
+
+#### Why This Matters
+
+- **Instant Rebranding**: Change one value in `config.json`, regenerate, done!
+- **Consistency**: All colors come from a single source of truth
+- **Maintainability**: No hunting for hardcoded values across 20+ CSS files
+- **Design System**: Professional approach to styling
+- **Theme Support**: Easy to add dark/light themes in the future
+
+#### When Suggesting CSS Changes
+
+**Before:**
+```css
+.bubble-bookmark svg {
+  fill: #ffb3b3;  /* ❌ Bad - hardcoded */
+}
+```
+
+**After:**
+```css
+.bubble-bookmark svg {
+  fill: var(--color-bookmark);  /* ✅ Good - uses design token */
+}
+```
+
+**If the color doesn't exist yet:**
+1. Add it to `config.json` → `design.colors`
+2. Run `python3 src/tools/generate_design_tokens.py`
+3. Use `var(--color-your-new-color)` in CSS
+
+#### Files Involved
+
+- **Source of Truth**: `config.json` → `design` section
+- **Generator Script**: `src/tools/generate_design_tokens.py`
+- **Generated Output**: `assets/html/design-tokens.css` (auto-generated, do not edit)
+- **Usage**: All CSS files in `assets/css/*.css`
 
 ## Project Configuration
 

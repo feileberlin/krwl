@@ -302,6 +302,13 @@ class EventsApp {
                     const eventId = btn.getAttribute('data-event-id');
                     const isBookmarked = this.storage.toggleBookmark(eventId);
                     btn.classList.toggle('bookmarked', isBookmarked);
+                    
+                    // Also toggle class on parent speech bubble for border styling
+                    const speechBubble = btn.closest('.speech-bubble');
+                    if (speechBubble) {
+                        speechBubble.classList.toggle('bubble-is-bookmarked', isBookmarked);
+                    }
+                    
                     this.mapManager.updateMarkerBookmarkState(eventId, isBookmarked);
                     this.utils.showBookmarkFeedback(isBookmarked);
                 });
