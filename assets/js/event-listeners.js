@@ -184,10 +184,11 @@ class EventListeners {
             
             return categories.map((item) => {
                 const count = item.value === 'all' ? totalCount : (categoryCounts[item.value] || 0);
-                // Show count at beginning without brackets: "7 sports events", "1 concert"
+                // For "all", show "20 events". For others, show "7 sports events"
+                const displayLabel = item.value === 'all' ? 'events' : item.label;
                 return {
                     ...item,
-                    label: `${count} ${item.label}`
+                    label: `${count} ${displayLabel}`
                 };
             });
         };
