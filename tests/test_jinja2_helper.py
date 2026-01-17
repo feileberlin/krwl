@@ -1,7 +1,7 @@
 """
-Test suite for jsonplate helper module.
+Test suite for Jinja2 template helper module.
 
-Tests the JSON templating functionality using jsonplate library.
+Tests the JSON templating functionality using Jinja2 library.
 """
 
 import json
@@ -12,26 +12,25 @@ from pathlib import Path
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))
 
-from modules.jsonplate_helper import (
-    JsonTemplateHelper,
+from modules.jinja2_helper import (
+    Jinja2TemplateHelper,
     render_json_template,
-    is_jsonplate_available
+    is_jinja2_available
 )
 
 
-class TestJsonplateHelper(unittest.TestCase):
-    """Test cases for JsonTemplateHelper class."""
+class TestJinja2Helper(unittest.TestCase):
+    """Test cases for Jinja2TemplateHelper class."""
     
     @classmethod
     def setUpClass(cls):
         """Set up test fixtures."""
         cls.base_path = Path(__file__).parent.parent
-        cls.helper = JsonTemplateHelper(cls.base_path)
+        cls.helper = Jinja2TemplateHelper(cls.base_path)
     
-    def test_jsonplate_available(self):
-        """Test that jsonplate library is available."""
-        # jsonplate should be installed
-        self.assertTrue(is_jsonplate_available())
+    def test_jinja2_available(self):
+        """Test that Jinja2 library is available."""
+        self.assertTrue(is_jinja2_available())
     
     def test_list_templates(self):
         """Test listing available templates."""
@@ -107,7 +106,7 @@ class TestJsonplateHelper(unittest.TestCase):
     
     def test_render_string_simple(self):
         """Test rendering a simple inline template."""
-        template = '{"name": "{{app_name}}", "count": event_count}'
+        template = '{"name": "{{ app_name }}", "count": {{ event_count }}}'
         
         result = self.helper.render_string(
             template,
@@ -120,7 +119,7 @@ class TestJsonplateHelper(unittest.TestCase):
     
     def test_render_string_boolean(self):
         """Test rendering template with boolean values."""
-        template = '{"enabled": is_enabled, "disabled": is_disabled}'
+        template = '{"enabled": {{ is_enabled | tojson }}, "disabled": {{ is_disabled | tojson }}}'
         
         result = self.helper.render_string(
             template,
@@ -133,36 +132,97 @@ class TestJsonplateHelper(unittest.TestCase):
     
     def test_render_string_nested(self):
         """Test rendering template with nested objects."""
-        template = '{"outer": {"inner": inner_value}}'
+        template = '{"outer": {{ inner_value | tojson }}}'
         
         result = self.helper.render_string(
             template,
             inner_value={'key': 'value'}
         )
         
-        self.assertEqual(result['outer']['inner']['key'], 'value')
-    
-    def test_cache_clearing(self):
-        """Test template cache clearing functionality."""
-        # Load a template to populate cache
-        template1 = self.helper.load_template('runtime_config_base')
-        self.assertIsNotNone(template1)
-        
-        # Load again - should be cached (same result)
-        template2 = self.helper.load_template('runtime_config_base')
-        self.assertEqual(template1, template2)
-        
-        # Clear cache
-        self.helper.clear_cache()
-        
-        # Load again - should work (cache cleared, reloads from file)
-        template3 = self.helper.load_template('runtime_config_base')
-        self.assertEqual(template1, template3)
+        self.assertEqual(result['outer']['key'], 'value')
     
     def test_template_not_found(self):
         """Test error handling for missing templates."""
         with self.assertRaises(FileNotFoundError):
-            self.helper.load_template('nonexistent_template')
+            self.helper.render('nonexistent_template')
+
+
+class TestJinja2Conditionals(unittest.TestCase):
+    """Test Jinja2's conditional capabilities (power over jsonplate)."""
+    
+    @classmethod
+    def setUpClass(cls):
+        """Set up test fixtures."""
+        cls.base_path = Path(__file__).parent.parent
+        cls.helper = Jinja2TemplateHelper(cls.base_path)
+    
+    def test_conditional_inclusion(self):
+        """Test conditional content inclusion."""
+        template = '''
+{
+    "base": "value"{% if include_extra %},
+    "extra": {{ extra_data | tojson }}{% endif %}
+}
+'''
+        # With extra
+        result = self.helper.render_string(
+            template,
+            include_extra=True,
+            extra_data={'key': 'value'}
+        )
+        self.assertIn('extra', result)
+        
+        # Without extra
+        result = self.helper.render_string(
+            template,
+            include_extra=False,
+            extra_data={}
+        )
+        self.assertNotIn('extra', result)
+
+
+class TestJinja2Loops(unittest.TestCase):
+    """Test Jinja2's loop capabilities (power over jsonplate)."""
+    
+    @classmethod
+    def setUpClass(cls):
+        """Set up test fixtures."""
+        cls.base_path = Path(__file__).parent.parent
+        cls.helper = Jinja2TemplateHelper(cls.base_path)
+    
+    def test_simple_loop(self):
+        """Test simple list loop."""
+        template = '''
+{
+    "items": [{% for item in items %}
+        {{ item | tojson }}{% if not loop.last %},{% endif %}{% endfor %}
+    ]
+}
+'''
+        result = self.helper.render_string(
+            template,
+            items=['apple', 'banana', 'cherry']
+        )
+        self.assertEqual(result['items'], ['apple', 'banana', 'cherry'])
+    
+    def test_object_loop(self):
+        """Test loop with objects."""
+        template = '''
+{
+    "events": [{% for event in events %}
+        {"name": "{{ event.name }}", "id": {{ event.id }}}{% if not loop.last %},{% endif %}{% endfor %}
+    ]
+}
+'''
+        result = self.helper.render_string(
+            template,
+            events=[
+                {'name': 'Event A', 'id': 1},
+                {'name': 'Event B', 'id': 2}
+            ]
+        )
+        self.assertEqual(len(result['events']), 2)
+        self.assertEqual(result['events'][0]['name'], 'Event A')
 
 
 class TestRenderJsonTemplateFunction(unittest.TestCase):
@@ -171,7 +231,7 @@ class TestRenderJsonTemplateFunction(unittest.TestCase):
     def test_simple_template(self):
         """Test simple template rendering."""
         result = render_json_template(
-            '{"key": "{{value}}"}',
+            '{"key": "{{ value }}"}',
             value='test'
         )
         
@@ -180,7 +240,7 @@ class TestRenderJsonTemplateFunction(unittest.TestCase):
     def test_numeric_values(self):
         """Test template with numeric values."""
         result = render_json_template(
-            '{"count": num, "ratio": ratio_val}',
+            '{"count": {{ num }}, "ratio": {{ ratio_val }}}',
             num=42,
             ratio_val=3.14
         )
@@ -190,9 +250,8 @@ class TestRenderJsonTemplateFunction(unittest.TestCase):
     
     def test_null_value(self):
         """Test template with null value passed as object."""
-        # jsonplate handles null via object values, not bare null keyword
         result = render_json_template(
-            '{"data": data_value}',
+            '{"data": {{ data_value | tojson }}}',
             data_value=None
         )
         
@@ -208,8 +267,8 @@ class TestSiteGeneratorIntegration(unittest.TestCase):
         cls.base_path = Path(__file__).parent.parent
         sys.path.insert(0, str(cls.base_path / 'src'))
     
-    def test_site_generator_jsonplate_method(self):
-        """Test SiteGenerator.build_runtime_config_with_jsonplate method."""
+    def test_site_generator_jinja2_method(self):
+        """Test SiteGenerator.build_runtime_config_with_jinja2 method."""
         from modules.site_generator import SiteGenerator
         
         gen = SiteGenerator(self.base_path)
@@ -223,7 +282,7 @@ class TestSiteGeneratorIntegration(unittest.TestCase):
             'weather': {'enabled': False}
         }
         
-        result = gen.build_runtime_config_with_jsonplate(primary_config, None)
+        result = gen.build_runtime_config_with_jinja2(primary_config, None)
         
         # Verify basic structure
         self.assertIn('debug', result)
@@ -265,7 +324,7 @@ class TestSiteGeneratorIntegration(unittest.TestCase):
             }
         }
         
-        result = gen.build_runtime_config_with_jsonplate(primary_config, weather_cache)
+        result = gen.build_runtime_config_with_jinja2(primary_config, weather_cache)
         
         # Verify weather is properly populated
         self.assertTrue(result['weather']['enabled'])

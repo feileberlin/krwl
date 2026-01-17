@@ -1233,34 +1233,35 @@
       "test_instructions": "1. Run AI extraction tests: python3 tests/test_ai_event_extraction.py\n2. Optional: run smart scraper tests: python3 tests/test_smart_scraper.py\n3. With Ollama running, scrape a Facebook source and confirm AI-enriched fields populate"
     },
     {
-      "id": "jsonplate-templating",
-      "name": "JSON Templating with jsonplate",
-      "description": "KISS-compliant JSON templating using jsonplate library. Replaces complex dict building with declarative JSON templates for runtime config generation.",
+      "id": "jinja2-templating",
+      "name": "Jinja2 Templating",
+      "description": "Industry-standard templating using Jinja2 for JSON and HTML generation. Supports loops, conditionals, filters, and template inheritance. Replaces complex dict/string building with declarative templates.",
       "category": "backend",
       "implemented": true,
       "files": [
-        "src/modules/jsonplate_helper.py",
+        "src/modules/jinja2_helper.py",
         "src/modules/site_generator.py",
         "assets/json/templates/runtime_config_base.json",
         "assets/json/templates/time_filters.json",
         "assets/json/templates/weather_config.json",
-        "assets/json/templates/lucide_icons.json"
+        "assets/json/templates/lucide_icons.json",
+        "assets/html/templates/noscript-content.html.j2"
       ],
       "config_keys": [],
       "code_patterns": [
         {
-          "file": "src/modules/jsonplate_helper.py",
-          "pattern": "class JsonTemplateHelper|render_json_template|jsonplate\\.parse",
-          "description": "JSON template helper with jsonplate integration"
+          "file": "src/modules/jinja2_helper.py",
+          "pattern": "class Jinja2TemplateHelper|class HtmlTemplateHelper|render_json_template|Environment",
+          "description": "Jinja2 template helpers for JSON and HTML"
         },
         {
           "file": "src/modules/site_generator.py",
-          "pattern": "build_runtime_config_with_jsonplate|render_json_template|JSONPLATE_AVAILABLE",
-          "description": "Site generator using jsonplate for config building"
+          "pattern": "build_runtime_config_with_jinja2|HtmlTemplateHelper|JINJA2_AVAILABLE",
+          "description": "Site generator using Jinja2 for templating"
         }
       ],
       "test_method": "check_code_patterns",
-      "test_instructions": "1. Test helper: python3 src/modules/jsonplate_helper.py test\n2. List templates: python3 src/modules/jsonplate_helper.py list\n3. Generate site: python3 src/event_manager.py generate"
+      "test_instructions": "1. Test helper: python3 src/modules/jinja2_helper.py test\n2. Run tests: python3 tests/test_jinja2_helper.py\n3. Generate site: python3 src/event_manager.py generate"
     }
   ]
 }

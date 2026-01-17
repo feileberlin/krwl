@@ -1,5 +1,5 @@
 {
-    "enabled": weather_enabled,
-    "display": display_config,
-    "data": weather_data
+    "enabled": {{ weather_enabled | tojson }},
+    "display": {{ display_config | tojson }},
+    "data": {{ weather_data | tojson }}
 }

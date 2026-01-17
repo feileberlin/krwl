@@ -53,14 +53,20 @@ except ImportError:
     # Fallback if utils is not available
     load_config = None
 
-# Import jsonplate for KISS JSON templating
+# Import Jinja2 helper for JSON and HTML templating
 try:
-    from .jsonplate_helper import render_json_template, is_jsonplate_available, JsonTemplateHelper
-    JSONPLATE_AVAILABLE = is_jsonplate_available()
+    from .jinja2_helper import (
+        render_json_template, 
+        is_jinja2_available, 
+        Jinja2TemplateHelper,
+        HtmlTemplateHelper
+    )
+    JINJA2_AVAILABLE = is_jinja2_available()
 except ImportError:
-    JSONPLATE_AVAILABLE = False
+    JINJA2_AVAILABLE = False
     render_json_template = None
-    JsonTemplateHelper = None
+    Jinja2TemplateHelper = None
+    HtmlTemplateHelper = None
 
 
 # Third-party dependencies to fetch (stored under lib/)
@@ -1230,7 +1236,14 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
         return future_events
     
     def build_noscript_html(self, events: List[Dict], app_name: str) -> str:
-        """Build complete noscript HTML with event list."""
+        """
+        Build complete noscript HTML with event list using Jinja2 template.
+        
+        Uses assets/html/templates/noscript-content.html.j2 template with:
+        - Loops for event list rendering
+        - Conditionals for running events badge
+        - Filters for safe HTML output
+        """
         import locale
         
         future_events = self.filter_and_sort_future_events(events)
@@ -1244,7 +1257,36 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
             except locale.Error:
                 pass  # Use system default if neither works
         
-        # Header
+        # Prepare event data with formatted dates for template
+        template_events = []
+        for event_item in future_events:
+            event_start_time = event_item['start_time']
+            template_events.append({
+                'event': event_item['event'],
+                'is_running': event_item['is_running'],
+                'date_formatted': event_start_time.strftime('%A, %B %d, %Y'),
+                'time_formatted': event_start_time.strftime('%I:%M %p').lstrip('0')
+            })
+        
+        # Try to use Jinja2 template
+        if JINJA2_AVAILABLE and HtmlTemplateHelper:
+            try:
+                html_helper = HtmlTemplateHelper(self.base_path)
+                return html_helper.render(
+                    'noscript-content.html.j2',
+                    app_name=app_name,
+                    events=template_events
+                )
+            except FileNotFoundError:
+                logger.warning("Noscript template not found, using fallback")
+            except Exception as e:
+                logger.warning(f"Jinja2 template error: {e}, using fallback")
+        
+        # Fallback to inline HTML building
+        return self._build_noscript_html_fallback(app_name, template_events)
+    
+    def _build_noscript_html_fallback(self, app_name: str, events: List[Dict]) -> str:
+        """Fallback noscript HTML builder when Jinja2 template unavailable."""
         html_parts = [
             '<div style="max-width:1200px;margin:0 auto;padding:2rem;background:#1a1a1a;color:#fff;font-family:sans-serif">',
             f'<h1 style="color:#D689B8;margin-bottom:1rem">{html.escape(app_name)}</h1>',
@@ -1254,28 +1296,22 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
             '</div>'
         ]
         
-        # Events or empty message
-        if not future_events:
+        if not events:
             html_parts.append('<p style="color:#888;text-align:center;padding:2rem">No upcoming events.</p>')
         else:
-            html_parts.append(f'<h2 style="color:#D689B8;font-size:1.5rem;margin-bottom:1.5rem">Upcoming Events <span style="color:#888;font-size:1rem">({len(future_events)} events)</span></h2>')
+            html_parts.append(f'<h2 style="color:#D689B8;font-size:1.5rem;margin-bottom:1.5rem">Upcoming Events <span style="color:#888;font-size:1rem">({len(events)} events)</span></h2>')
             html_parts.append('<div style="display:flex;flex-direction:column;gap:1.5rem">')
             
-            for event_item in future_events:
-                event_data = event_item['event']
-                event_start_time = event_item['start_time']
-                event_is_running = event_item['is_running']
-                
-                # Badge and link text (hardcoded English)
-                running_badge = '<span style="background:#D689B8;color:#fff;padding:0.25rem 0.75rem;border-radius:4px;font-size:0.85rem;font-weight:600;margin-left:0.5rem">HAPPENING NOW</span>' if event_is_running else ''
-                
+            for item in events:
+                event_data = item['event']
+                running_badge = '<span style="background:#D689B8;color:#fff;padding:0.25rem 0.75rem;border-radius:4px;font-size:0.85rem;font-weight:600;margin-left:0.5rem">HAPPENING NOW</span>' if item['is_running'] else ''
                 event_link = f'<a href="{html.escape(event_data.get("url", ""))}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:#D689B8;color:#fff;padding:0.5rem 1rem;border-radius:5px;text-decoration:none;font-weight:600">View Event Details →</a>' if event_data.get('url') else ''
                 
                 html_parts.append(f'''<article style="background:#2a2a2a;border-radius:8px;padding:1.5rem;border-left:4px solid #D689B8">
 <h3 style="color:#D689B8;margin:0 0 0.75rem 0;font-size:1.25rem">{html.escape(event_data.get('title', 'Untitled'))}{running_badge}</h3>
 <div style="color:#ccc;margin-bottom:1rem">
-<p style="margin:0.25rem 0"><strong style="color:#E8A5C8">📅 Date:</strong> {html.escape(event_start_time.strftime('%A, %B %d, %Y'))}</p>
-<p style="margin:0.25rem 0"><strong style="color:#E8A5C8">🕐 Time:</strong> {html.escape(event_start_time.strftime('%I:%M %p').lstrip('0'))}</p>
+<p style="margin:0.25rem 0"><strong style="color:#E8A5C8">📅 Date:</strong> {html.escape(item['date_formatted'])}</p>
+<p style="margin:0.25rem 0"><strong style="color:#E8A5C8">🕐 Time:</strong> {html.escape(item['time_formatted'])}</p>
 <p style="margin:0.25rem 0"><strong style="color:#E8A5C8">📍 Location:</strong> {html.escape(event_data.get('location', {}).get('name', 'Unknown'))}</p>
 </div>
 <p style="color:#ddd;line-height:1.6;margin-bottom:1rem">{html.escape(event_data.get('description', ''))}</p>
@@ -1284,7 +1320,6 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
             
             html_parts.append('</div>')
         
-        # Footer
         html_parts.extend([
             '<footer style="margin-top:2rem;padding-top:2rem;border-top:1px solid #3a3a3a;color:#888;text-align:center">',
             '<p style="margin:0">Enable JavaScript for best experience.</p>',
@@ -1596,16 +1631,17 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
         
         return debug_info
     
-    def build_runtime_config_with_jsonplate(
+    def build_runtime_config_with_jinja2(
         self,
         primary_config: Dict,
         weather_cache: Dict = None
     ) -> Dict:
         """
-        Build runtime config using jsonplate templates (KISS approach).
+        Build runtime config using Jinja2 templates.
         
         Uses declarative JSON templates instead of programmatic dict building.
-        Falls back to traditional approach if jsonplate is not available.
+        Jinja2 provides full templating power: loops, conditionals, filters.
+        Falls back to traditional approach if Jinja2 is not available.
         
         Args:
             primary_config: Primary configuration dict
@@ -1614,13 +1650,13 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
         Returns:
             Runtime config dictionary for frontend
         """
-        # Check if jsonplate is available
-        if not JSONPLATE_AVAILABLE or render_json_template is None or JsonTemplateHelper is None:
-            logger.debug("jsonplate not available, using traditional config building")
+        # Check if Jinja2 is available
+        if not JINJA2_AVAILABLE or render_json_template is None or Jinja2TemplateHelper is None:
+            logger.debug("Jinja2 not available, using traditional config building")
             return self._build_runtime_config_fallback(primary_config, weather_cache)
         
         try:
-            helper = JsonTemplateHelper(self.base_path)
+            helper = Jinja2TemplateHelper(self.base_path)
             
             # Build base runtime config using template
             runtime_config = helper.render(
@@ -1676,11 +1712,11 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
                     'sunday': {'enabled': False}
                 }
             
-            logger.debug("Built runtime config using jsonplate templates")
+            logger.debug("Built runtime config using Jinja2 templates")
             return runtime_config
             
         except Exception as e:
-            logger.warning(f"jsonplate template rendering failed: {e}, using fallback")
+            logger.warning(f"Jinja2 template rendering failed: {e}, using fallback")
             return self._build_runtime_config_fallback(primary_config, weather_cache)
     
     def _build_runtime_config_fallback(
@@ -1881,10 +1917,10 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
         # Build noscript HTML
         noscript_html = self.build_noscript_html(events, app_name)
         
-        # Build runtime config using jsonplate templates (KISS approach)
+        # Build runtime config using Jinja2 templates
         # This replaces the manual dict building with declarative templates
         primary_config = configs[0] if configs else {}
-        runtime_config = self.build_runtime_config_with_jsonplate(primary_config, weather_cache)
+        runtime_config = self.build_runtime_config_with_jinja2(primary_config, weather_cache)
         
         # Calculate debug information
         debug_info = self.calculate_debug_info(primary_config, events)

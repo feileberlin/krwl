@@ -1,11 +1,11 @@
 {
-    "debug": debug_enabled,
+    "debug": {{ debug_enabled | tojson }},
     "app": {
-        "environment": "{{environment}}"
+        "environment": "{{ environment }}"
     },
-    "map": map_config,
+    "map": {{ map_config | tojson }},
     "data": {
-        "source": "{{data_source}}",
-        "sources": data_sources
+        "source": "{{ data_source }}",
+        "sources": {{ data_sources | tojson }}
     }
 }

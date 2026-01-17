@@ -1,12 +1,12 @@
 {
     "full_moon": {
-        "days_until": days_until_full_moon,
-        "enabled": full_moon_enabled
+        "days_until": {{ days_until_full_moon }},
+        "enabled": {{ full_moon_enabled | tojson }}
     },
     "sunday": {
-        "days_until": days_until_sunday,
-        "date_iso": "{{sunday_date_iso}}",
-        "date_formatted": "{{sunday_date_formatted}}",
-        "enabled": sunday_enabled
+        "days_until": {{ days_until_sunday }},
+        "date_iso": "{{ sunday_date_iso }}",
+        "date_formatted": "{{ sunday_date_formatted }}",
+        "enabled": {{ sunday_enabled | tojson }}
     }
 }

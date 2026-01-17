@@ -1,0 +1,52 @@
+<!-- Noscript fallback content - Jinja2 template -->
+<!-- Displays event list when JavaScript is disabled -->
+<div style="max-width:1200px;margin:0 auto;padding:2rem;background:#1a1a1a;color:#fff;font-family:sans-serif">
+  <h1 style="color:#D689B8;margin-bottom:1rem">{{ app_name }}</h1>
+  
+  <div style="background:#401B2D;padding:1rem;border-radius:8px;margin-bottom:1.5rem;border-left:4px solid #D689B8">
+    <p style="margin:0;color:#E8A5C8"><strong>⚠️ JavaScript is disabled.</strong></p>
+    <p style="margin:0.5rem 0 0 0;color:#ccc;font-size:0.9rem">Enable JavaScript for interactive map.</p>
+  </div>
+
+{% if events %}
+  <h2 style="color:#D689B8;font-size:1.5rem;margin-bottom:1.5rem">
+    Upcoming Events <span style="color:#888;font-size:1rem">({{ events | length }} events)</span>
+  </h2>
+  
+  <div style="display:flex;flex-direction:column;gap:1.5rem">
+{% for item in events %}
+    <article style="background:#2a2a2a;border-radius:8px;padding:1.5rem;border-left:4px solid #D689B8">
+      <h3 style="color:#D689B8;margin:0 0 0.75rem 0;font-size:1.25rem">
+        {{ item.event.title | default('Untitled') }}
+        {% if item.is_running %}
+        <span style="background:#D689B8;color:#fff;padding:0.25rem 0.75rem;border-radius:4px;font-size:0.85rem;font-weight:600;margin-left:0.5rem">HAPPENING NOW</span>
+        {% endif %}
+      </h3>
+      
+      <div style="color:#ccc;margin-bottom:1rem">
+        <p style="margin:0.25rem 0"><strong style="color:#E8A5C8">📅 Date:</strong> {{ item.date_formatted }}</p>
+        <p style="margin:0.25rem 0"><strong style="color:#E8A5C8">🕐 Time:</strong> {{ item.time_formatted }}</p>
+        <p style="margin:0.25rem 0"><strong style="color:#E8A5C8">📍 Location:</strong> {{ item.event.location.name | default('Unknown') }}</p>
+      </div>
+      
+      {% if item.event.description %}
+      <p style="color:#ddd;line-height:1.6;margin-bottom:1rem">{{ item.event.description }}</p>
+      {% endif %}
+      
+      {% if item.event.url %}
+      <a href="{{ item.event.url }}" target="_blank" rel="noopener noreferrer" 
+         style="display:inline-block;background:#D689B8;color:#fff;padding:0.5rem 1rem;border-radius:5px;text-decoration:none;font-weight:600">
+        View Event Details →
+      </a>
+      {% endif %}
+    </article>
+{% endfor %}
+  </div>
+{% else %}
+  <p style="color:#888;text-align:center;padding:2rem">No upcoming events.</p>
+{% endif %}
+
+  <footer style="margin-top:2rem;padding-top:2rem;border-top:1px solid #3a3a3a;color:#888;text-align:center">
+    <p style="margin:0">Enable JavaScript for best experience.</p>
+  </footer>
+</div>

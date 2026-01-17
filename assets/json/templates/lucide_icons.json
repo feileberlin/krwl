@@ -1,5 +1,5 @@
 {
-    "icons": icons_map,
-    "count": icon_count,
-    "description": "{{description}}"
+    "icons": {{ icons_map | tojson }},
+    "count": {{ icon_count }},
+    "description": "{{ description }}"
 }
