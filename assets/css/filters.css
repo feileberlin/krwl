@@ -208,3 +208,30 @@
 #event-filter-bar > .weather-chip {
     cursor: help;
 }
+
+.weather-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.6rem;
+    background: var(--color-primary-alpha-15);
+    border: var(--border-width-thin) solid var(--color-primary-alpha-40);
+    border-radius: var(--border-radius-medium);
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.filter-bar-logo {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+    cursor: pointer;
+    padding: 0.2rem;
+    border-radius: var(--border-radius-small);
+    transition: var(--transition-normal);
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 0.95rem;
+}
