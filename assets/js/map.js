@@ -82,13 +82,19 @@ class MapManager {
         fallback.className = 'map-fallback';
         fallback.innerHTML = `
             <div class="map-fallback-content">
-                <div class="map-fallback-icon">🗺️</div>
+                <div class="map-fallback-icon"><i data-lucide="map" style="width: 48px; height: 48px;"></i></div>
                 <h2>Map Loading...</h2>
                 <p>The interactive map is loading. If this message persists, the map library may be blocked by your browser or network.</p>
                 <p class="map-fallback-note">Events are still available in the filter bar above.</p>
             </div>
         `;
         container.appendChild(fallback);
+        
+        // Initialize Lucide icon
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+            window.lucide.createIcons();
+        }
+        
         this.log('Map fallback displayed');
     }
     

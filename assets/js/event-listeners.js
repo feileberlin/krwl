@@ -379,20 +379,14 @@ class EventListeners {
         const getLocationItems = () => {
             const geolocationLabel = 'from here';
             const prefix = 'from';
-            const predefinedLocs = this.app.config?.map?.predefined_locations || [];
             const customLocs = this.app.storage.getCustomLocations();
             
             const items = [{ label: geolocationLabel, value: 'geolocation' }];
             
-            // Add predefined locations
-            predefinedLocs.forEach((loc, index) => {
-                items.push({ label: `${prefix} ${loc.display_name}`, value: `predefined-${index}` });
-            });
-            
-            // Add custom locations
+            // Add custom locations (includes initialized predefined locations)
             customLocs.forEach((loc) => {
                 items.push({ 
-                    label: `${prefix} ${loc.name} 📍`, 
+                    label: `${prefix} ${loc.name}`, 
                     value: `custom-${loc.id}`,
                     customLocation: true
                 });
@@ -402,9 +396,7 @@ class EventListeners {
         };
         
         const getCurrentValue = () => {
-            if (this.app.filters.locationType === 'predefined' && this.app.filters.selectedPredefinedLocation !== null) {
-                return `predefined-${this.app.filters.selectedPredefinedLocation}`;
-            } else if (this.app.filters.locationType === 'custom' && this.app.filters.selectedCustomLocation) {
+            if (this.app.filters.locationType === 'custom' && this.app.filters.selectedCustomLocation) {
                 return `custom-${this.app.filters.selectedCustomLocation}`;
             }
             return 'geolocation';
@@ -434,32 +426,6 @@ class EventListeners {
                             'You are here'
                         );
                     }
-                    
-                    this.app.displayEvents();
-                    return;
-                }
-                
-                if (value.startsWith('predefined-')) {
-                    const index = Number.parseInt(value.replace('predefined-', ''), 10);
-                    const predefinedLocs = this.app.config?.map?.predefined_locations || [];
-                    const selectedLoc = predefinedLocs[index];
-                    if (!selectedLoc) return;
-                    
-                    this.app.filters.locationType = 'predefined';
-                    this.app.filters.selectedPredefinedLocation = index;
-                    this.app.filters.selectedCustomLocation = null;
-                    this.app.storage.saveFiltersToCookie(this.app.filters);
-                    
-                    // Center map with zoom based on current distance filter
-                    const distanceKm = this.app.filters.maxDistance;
-                    this.app.mapManager?.centerMap(selectedLoc.lat, selectedLoc.lon, null, distanceKm);
-                    
-                    // Update reference marker to show predefined location
-                    this.app.mapManager.updateReferenceMarker(
-                        selectedLoc.lat, 
-                        selectedLoc.lon, 
-                        selectedLoc.display_name || 'Selected location'
-                    );
                     
                     this.app.displayEvents();
                     return;

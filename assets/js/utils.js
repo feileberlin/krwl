@@ -97,7 +97,7 @@ class EventUtils {
      * @param {boolean} bookmarked - True if bookmarked, false if unbookmarked
      */
     showBookmarkFeedback(bookmarked) {
-        const message = bookmarked ? '❤️ Event bookmarked!' : '🤍 Bookmark removed';
+        const message = bookmarked ? 'Event bookmarked!' : 'Bookmark removed';
         
         const feedback = document.createElement('div');
         feedback.className = 'bookmark-feedback';

@@ -54,50 +54,40 @@ class DashboardUI {
         }
         
         const customLocs = app.storage.getCustomLocations();
-        const predefinedLocs = this.config?.map?.predefined_locations || [];
         
-        if (customLocs.length === 0 && predefinedLocs.length === 0) {
-            container.innerHTML = '<div class="custom-locations-empty">No custom locations saved yet</div>';
+        if (customLocs.length === 0) {
+            container.innerHTML = '<div class="custom-locations-empty">No locations saved yet</div>';
             return;
         }
         
         let html = '';
         
-        // Show predefined locations (read-only)
-        if (predefinedLocs.length > 0) {
-            html += '<div style="margin-bottom: 1rem;"><strong style="font-size: 0.85rem; color: var(--text-secondary);">📍 Default Locations</strong></div>';
-            predefinedLocs.forEach((loc) => {
-                html += `
-                    <div class="custom-location-item">
-                        <div class="custom-location-header">
-                            <div class="custom-location-name">${loc.display_name}</div>
-                        </div>
-                        <div class="custom-location-coords">${loc.lat.toFixed(4)}°, ${loc.lon.toFixed(4)}°</div>
+        // Show all custom locations (includes initialized predefined locations)
+        customLocs.forEach((loc) => {
+            const locationLabel = loc.fromPredefined ? 
+                `<i data-lucide="map-pin" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle;"></i> ${loc.name}` : 
+                `<i data-lucide="edit-3" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle;"></i> ${loc.name}`;
+            
+            html += `
+                <div class="custom-location-item">
+                    <div class="custom-location-header">
+                        <div class="custom-location-name">${locationLabel}</div>
                     </div>
-                `;
-            });
-        }
-        
-        // Show custom locations (editable)
-        if (customLocs.length > 0) {
-            html += '<div style="margin: 1rem 0 0.5rem;"><strong style="font-size: 0.85rem; color: var(--text-secondary);">✏️ Custom Locations</strong></div>';
-            customLocs.forEach((loc) => {
-                html += `
-                    <div class="custom-location-item">
-                        <div class="custom-location-header">
-                            <div class="custom-location-name">${loc.name}</div>
-                        </div>
-                        <div class="custom-location-coords">${loc.lat.toFixed(4)}°, ${loc.lon.toFixed(4)}°</div>
-                        <div class="custom-location-actions">
-                            <button class="custom-location-btn" data-action="edit" data-id="${loc.id}">Edit</button>
-                            <button class="custom-location-btn delete" data-action="delete" data-id="${loc.id}">Delete</button>
-                        </div>
+                    <div class="custom-location-coords">${loc.lat.toFixed(4)}°, ${loc.lon.toFixed(4)}°</div>
+                    <div class="custom-location-actions">
+                        <button class="custom-location-btn" data-action="edit" data-id="${loc.id}">Edit</button>
+                        <button class="custom-location-btn delete" data-action="delete" data-id="${loc.id}">Delete</button>
                     </div>
-                `;
-            });
-        }
+                </div>
+            `;
+        });
         
         container.innerHTML = html;
+        
+        // Initialize Lucide icons for the newly added HTML
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+            window.lucide.createIcons();
+        }
         
         // Attach event listeners to action buttons
         container.querySelectorAll('.custom-location-btn').forEach(btn => {

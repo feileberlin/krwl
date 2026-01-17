@@ -14,9 +14,44 @@ class EventStorage {
         this.config = config;
         this.MAX_BOOKMARKS = 15;
         this.MAX_CUSTOM_LOCATIONS = 10;
-        this.bookmarks = this.loadBookmarks();
+        this.bookmarks = this.loadBookmarks();  // Load bookmarks BEFORE custom locations
         this.customLocations = this.loadCustomLocations();
         this.browserFeatures = this.detectBrowserFeatures();
+        
+        // Initialize custom locations with predefined locations if empty
+        this.initializeDefaultCustomLocations();
+    }
+    
+    /**
+     * Initialize custom locations with predefined locations from config
+     * Only runs once when localStorage is empty
+     */
+    initializeDefaultCustomLocations() {
+        // Only initialize if custom locations are empty
+        if (this.customLocations.length > 0) {
+            return;
+        }
+        
+        // Get predefined locations from config
+        const predefinedLocs = this.config?.map?.predefined_locations || [];
+        
+        // Copy predefined locations to custom locations
+        predefinedLocs.forEach((loc) => {
+            this.customLocations.push({
+                id: `custom_${loc.name}_${Date.now()}`,
+                name: loc.display_name,
+                lat: loc.lat,
+                lon: loc.lon,
+                created: new Date().toISOString(),
+                fromPredefined: true
+            });
+        });
+        
+        // Save if we added any
+        if (this.customLocations.length > 0) {
+            this.saveCustomLocations();
+            this.log('Initialized custom locations from predefined locations', this.customLocations);
+        }
     }
     
     /**
