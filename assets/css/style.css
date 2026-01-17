@@ -870,20 +870,14 @@ strong, b {
     padding: 0.75rem;
     font-family: 'Roboto Mono', 'Monaco', 'Courier New', monospace;
     font-size: 0.85em;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem 1rem;
 }
 
-/* Info Rows - Clean key-value pairs */
+/* Info Rows - Clean key-value pairs in 2-column grid */
 .debug-info-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding: 0.4rem 0;
-    border-bottom: 1px solid color-mix(in srgb, var(--color-ecobarbie-dark-tone) 10%, transparent);
-    gap: 1rem;
-}
-
-.debug-info-row:last-child {
-    border-bottom: none;
+    display: contents;
 }
 
 .debug-label {
@@ -891,15 +885,16 @@ strong, b {
     font-size: 0.9em;
     text-transform: uppercase;
     letter-spacing: 0.03em;
-    flex-shrink: 0;
-    min-width: 100px;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-ecobarbie-dark-tone) 10%, transparent);
 }
 
 .debug-value {
     color: var(--color-ecobarbie-light-tone);
     text-align: right;
     word-break: break-word;
-    flex-grow: 1;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-ecobarbie-dark-tone) 10%, transparent);
 }
 
 .debug-value.monospace {
@@ -1308,23 +1303,19 @@ strong, b {
     .debug-group-content {
         padding: 0.6rem;
         font-size: 0.8em;
-    }
-    
-    .debug-info-row {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 0.3rem 0;
+        grid-template-columns: 1fr;
         gap: 0.2rem;
     }
     
     .debug-label {
-        min-width: auto;
         font-size: 0.85em;
+        padding: 0.3rem 0;
     }
     
     .debug-value {
         text-align: left;
         font-size: 0.95em;
+        padding: 0.3rem 0 0.5rem 0;
     }
     
     .debug-commit-msg {
