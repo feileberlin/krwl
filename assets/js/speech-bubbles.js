@@ -233,15 +233,15 @@ class SpeechBubbles {
             <div class="bubble-time-headline">${timeStr}</div>
             <div class="bubble-date">${dateStr}</div>
             <div class="bubble-title">${this.truncateText(event.title, 50)}</div>
-            <div class="bubble-location">📍 ${this.truncateText(event.location.name, 30)}</div>
-            ${event.distance !== undefined ? `<div class="bubble-distance">🚶 ${event.distance.toFixed(1)} km</div>` : ''}
+            <div class="bubble-location"><i data-lucide="map-pin" aria-hidden="true"></i> ${this.truncateText(event.location.name, 30)}</div>
+            ${event.distance !== undefined ? `<div class="bubble-distance"><i data-lucide="footprints" aria-hidden="true"></i> ${event.distance.toFixed(1)} km</div>` : ''}
             ${bookmarkingSupported ? `<button class="bubble-bookmark ${bookmarkClass}" data-event-id="${event.id}" title="Bookmark this event">
                 <i data-lucide="heart" aria-hidden="true"></i>
             </button>` : ''}
         `;
         
         // Initialize Lucide icons
-        if (bookmarkingSupported && window.lucide && typeof window.lucide.createIcons === 'function') {
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
             setTimeout(() => window.lucide.createIcons(), 10);
         }
         

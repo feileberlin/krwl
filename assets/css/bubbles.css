@@ -185,6 +185,17 @@
     font-size: 0.8rem;
     margin-bottom: 4px;
     line-height: 1.2;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.bubble-location i[data-lucide="map-pin"],
+.bubble-location svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    flex-shrink: 0;
 }
 
 /* Speech bubble distance */
@@ -193,6 +204,17 @@
     font-size: 0.75rem;
     margin-bottom: 8px;
     line-height: 1.2;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.bubble-distance i[data-lucide="footprints"],
+.bubble-distance svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    flex-shrink: 0;
 }
 
 /* Bookmark button in speech bubble */
@@ -217,7 +239,7 @@
 .bubble-bookmark svg {
     width: 20px;
     height: 20px;
-    stroke: var(--color-bookmark); /* Light/bright red stroke for unbookmarked */
+    stroke: var(--color-text-secondary); /* Match other unbookmarked bubble elements */
     stroke-width: 2; /* Outlined by default */
     fill: none; /* No fill when unbookmarked */
     transition: stroke 0.2s ease, fill 0.2s ease, stroke-width 0.2s ease;
@@ -226,7 +248,7 @@
 .bubble-bookmark:hover i[data-lucide="heart"],
 .bubble-bookmark:hover svg {
     transform: scale(1.2);
-    stroke: var(--color-bookmark); /* Light/bright red on hover */
+    stroke: var(--color-text-secondary); /* Keep same color on hover for unbookmarked */
 }
 
 .bubble-bookmark.bookmarked i[data-lucide="heart"],
