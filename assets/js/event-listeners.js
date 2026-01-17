@@ -166,13 +166,6 @@ class EventListeners {
     }
     
     setupCategoryFilter(categoryTextEl) {
-        const categories = [
-            { label: 'all events', value: 'all' },
-            { label: 'music events', value: 'music' },
-            { label: 'sports events', value: 'sports' },
-            { label: 'cultural events', value: 'culture' }
-        ];
-        
         const getCategoryItems = () => {
             const location = this.app.getReferenceLocation();
             const categoryCounts = this.app.eventFilter.countCategoriesUnderFilters(
@@ -182,6 +175,21 @@ class EventListeners {
             );
             const totalCount = Object.values(categoryCounts).reduce((sum, count) => sum + count, 0);
             
+            // Build category list dynamically from actual event categories
+            const categories = [{ label: 'events', value: 'all' }];
+            
+            // Add categories that exist in the data with non-zero counts
+            Object.keys(categoryCounts).sort().forEach((categoryValue) => {
+                const count = categoryCounts[categoryValue];
+                if (count > 0) {
+                    categories.push({
+                        label: `${categoryValue} events`,
+                        value: categoryValue
+                    });
+                }
+            });
+            
+            // Map to items with counts at the beginning
             return categories.map((item) => {
                 const count = item.value === 'all' ? totalCount : (categoryCounts[item.value] || 0);
                 // For "all", show "20 events". For others, show "7 sports events"
