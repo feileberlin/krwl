@@ -406,6 +406,13 @@ class EventListeners {
                         // Center map with zoom based on current distance filter
                         const distanceKm = this.app.filters.maxDistance;
                         this.app.mapManager.centerMap(userLocation.lat, userLocation.lon, null, distanceKm);
+                        
+                        // Update reference marker to show geolocation
+                        this.app.mapManager.updateReferenceMarker(
+                            userLocation.lat, 
+                            userLocation.lon, 
+                            'You are here'
+                        );
                     }
                     
                     this.app.displayEvents();
@@ -425,6 +432,14 @@ class EventListeners {
                     // Center map with zoom based on current distance filter
                     const distanceKm = this.app.filters.maxDistance;
                     this.app.mapManager?.centerMap(selectedLoc.lat, selectedLoc.lon, null, distanceKm);
+                    
+                    // Update reference marker to show predefined location
+                    this.app.mapManager.updateReferenceMarker(
+                        selectedLoc.lat, 
+                        selectedLoc.lon, 
+                        selectedLoc.display_name || 'Selected location'
+                    );
+                    
                     this.app.displayEvents();
                 }
             }

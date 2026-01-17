@@ -23,6 +23,7 @@ class MapManager {
         this.markers = [];
         this.userLocation = null;
         this.locationCounts = {}; // Track markers at same location for offset
+        this.referenceMarker = null; // Track the reference location marker (user/predefined/custom)
     }
     
     /**
@@ -173,11 +174,32 @@ class MapManager {
     
     /**
      * Add user location marker to map
+     * @deprecated Use updateReferenceMarker() instead for better control
      */
     addUserMarker() {
         if (!this.map || !this.userLocation) return;
         
-        // Get user marker config
+        // Use the new unified method
+        this.updateReferenceMarker(this.userLocation.lat, this.userLocation.lon, 'You are here');
+    }
+    
+    /**
+     * Update or create the reference location marker
+     * This marker shows the reference point used for distance filtering
+     * @param {number} lat - Latitude
+     * @param {number} lon - Longitude
+     * @param {string} popupText - Popup text (optional, default: 'Reference location')
+     */
+    updateReferenceMarker(lat, lon, popupText = 'Reference location') {
+        if (!this.map) return;
+        
+        // Remove old reference marker if it exists
+        if (this.referenceMarker) {
+            this.referenceMarker.remove();
+            this.referenceMarker = null;
+        }
+        
+        // Get user marker config (use same icon for all reference locations)
         const userMarkerConfig = this.config.map.user_location_marker || {};
         const userIconUrl = userMarkerConfig.icon || 
             (window.MARKER_ICONS && window.MARKER_ICONS['marker-geolocation']) ||
@@ -193,11 +215,24 @@ class MapManager {
             popupAnchor: userPopupAnchor
         });
         
-        L.marker([this.userLocation.lat, this.userLocation.lon], {
-            icon: userIcon
-        }).addTo(this.map).bindPopup('You are here');
+        // Create new reference marker
+        this.referenceMarker = L.marker([lat, lon], {
+            icon: userIcon,
+            zIndexOffset: 1000 // Keep reference marker above event markers
+        }).addTo(this.map).bindPopup(popupText);
         
-        this.log('User marker added');
+        this.log('Reference marker updated', { lat, lon, popupText });
+    }
+    
+    /**
+     * Remove the reference location marker
+     */
+    removeReferenceMarker() {
+        if (this.referenceMarker) {
+            this.referenceMarker.remove();
+            this.referenceMarker = null;
+            this.log('Reference marker removed');
+        }
     }
     
     /**
