@@ -1,4 +1,10 @@
-name: Config Validation
+name: ✅ Validate Configuration (Prevent Production Issues)
+
+# Validates config.json to prevent common production issues such as:
+# - Demo events appearing on production site
+# - Invalid environment settings
+# - Missing required configuration fields
+# Runs automatically on PRs and commits affecting configuration files
 
 on:
   pull_request:
@@ -16,7 +22,7 @@ on:
 
 jobs:
   validate:
-    name: Validate config.json
+    name: 🔍 Validate config.json Schema & Settings
     runs-on: ubuntu-latest
     
     steps:

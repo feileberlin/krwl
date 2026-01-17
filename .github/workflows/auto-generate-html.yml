@@ -1,7 +1,9 @@
-name: Auto-Generate HTML and Deploy
+name: 🎨 Auto-Generate HTML from Source Files & Deploy
 
-# Automatically regenerate index.html when source files change and deploy to GitHub Pages
-# This ensures the deployed site is always up-to-date with latest changes
+# Automatically regenerates index.html when frontend source files change and deploys to GitHub Pages
+# Monitors: CSS, JavaScript, HTML components, translations, events data, and configuration
+# Ensures the production site always reflects the latest source code changes
+# Supports optional debug comment generation for troubleshooting
 
 on:
   push:
@@ -22,7 +24,7 @@ on:
   workflow_dispatch:
     inputs:
       force_debug_comments:
-        description: 'Force enable debug comments (true/false)'
+        description: '🐛 Enable debug comments in generated HTML - Useful for troubleshooting template issues (default: disabled in CI/production)'
         required: false
         default: 'false'
         type: choice
@@ -42,7 +44,7 @@ concurrency:
 
 jobs:
   generate-html:
-    name: Generate HTML Files
+    name: 🔨 Generate Static HTML from Source Components
     runs-on: ubuntu-latest
     
     outputs:
@@ -143,7 +145,7 @@ jobs:
           path: ./public
   
   deploy:
-    name: Deploy to GitHub Pages
+    name: 🚀 Deploy Generated HTML to GitHub Pages
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
