@@ -2,99 +2,11 @@
 
 /* ═══════════════════════════════════════════════════════════════════════
    FILTERS
-   Modular CSS - Deduplicated, ~50 selectors per file
+   Filters component styles
+   
+   Fully deduplicated - Each selector appears exactly once
    ═══════════════════════════════════════════════════════════════════════ */
 
-
-#event-filter-bar.dashboard-opening {
-top: 10px;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    width: auto;
-    max-width: none;
-}
-
-#event-filter-bar.dashboard-opening .filter-bar-item {
-opacity: 0;
-    transition: opacity 0.2s ease-out;
-}
-
-#event-filter-bar .filter-bar-item {
-cursor: pointer;
-    text-decoration: underline;
-    text-decoration-style: dotted;
-    text-underline-offset: 3px;
-    transition: var(--transition-normal);
-    position: relative;
-    display: inline-block;
-}
-
-#event-filter-bar .filter-bar-item:hover {
-color: var(--color-text-primary);
-    text-decoration-style: solid;
-}
-
-#event-filter-bar .filter-bar-item.editing {
-color: var(--color-text-primary);
-    background: var(--color-primary-alpha-30);
-    padding: 0.1rem 0.5rem;
-    border-radius: var(--border-radius-small);
-    text-decoration: none;
-    min-width: 150px;
-    text-align: center;
-}
-
-#event-filter-bar .filter-bar-logo {
-display: inline-flex;
-    align-items: center;
-    margin-right: 0.5rem;
-    vertical-align: middle;
-    cursor: pointer;
-    padding: 0.2rem;
-    border-radius: var(--border-radius-small);
-    transition: var(--transition-normal);
-    background: none;
-    border: none;
-    color: inherit;
-    font-size: 0.95rem;
-}
-
-#event-filter-bar .filter-bar-logo:hover {
-background: var(--color-primary-alpha-20);
-    transform: scale(1.1);
-}
-
-#event-filter-bar .filter-bar-logo:focus {
-outline: var(--border-width-medium) solid var(--color-primary);
-    outline-offset: 2px;
-}
-
-#event-filter-bar .filter-bar-logo svg {
-width: 1em; 
-    height: 1em; 
-    stroke: currentColor;
-    fill: none;
-    transition: filter 0.2s;
-}
-
-#event-filter-bar .filter-bar-logo:hover svg {
-stroke: currentColor;
-}
-
-.filter-bar-dropdown select,
-.filter-bar-dropdown input[type="range"],
-.filter-bar-dropdown input[type="number"],
-.filter-bar-dropdown button {
-width: 100%;
-    margin: 0.3rem 0;
-    padding: 0.5rem;
-    background: var(--color-bg-secondary);
-    color: var(--color-text-primary);
-    cursor: pointer;
-    transition: var(--transition-normal);
-    font-size: 0.9rem;
-}
 
 .filter-bar-dropdown-item:hover {
 background: var(--color-primary-alpha-20);
@@ -132,44 +44,6 @@ color: var(--color-text-secondary);
 .filter-bar-dropdown-item.current-selection .item-count {
 color: var(--color-primary);
     font-weight: 700;
-}
-
-#event-filter-bar .filter-chip {
-cursor: pointer;
-    background: none;
-    border: none;
-    color: var(--color-primary);
-    font: inherit;
-    font-size: 0.95rem;
-    font-weight: 500;
-    text-shadow: 0 0 10px var(--color-primary-alpha-50);
-    padding: 0;
-    transition: all 0.2s;
-}
-
-#event-filter-bar .filter-chip:hover {
-color: var(--color-text-primary);
-    text-shadow: 0 0 15px var(--color-primary-alpha-80);
-}
-
-#event-filter-bar .weather-chip {
-cursor: help;
-}
-
-#event-filter-bar .weather-chip:hover {
-opacity: 1;
-    color: var(--color-text-primary);
-    text-shadow: 0 0 10px var(--color-primary-alpha-30);
-    
-
-
-    height: 1em; 
-
-
-    stroke: currentColor;
-    fill: none;
-    filter: drop-shadow(0 0 4px var(--color-primary-alpha-60));
-    transition: filter 0.2s;
 }
 
 .filter-bar-dropdown .location-option:hover {

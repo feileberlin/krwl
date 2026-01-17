@@ -2,7 +2,9 @@
 
 /* ═══════════════════════════════════════════════════════════════════════
    BUBBLES
-   Modular CSS - Deduplicated, ~50 selectors per file
+   Bubbles component styles
+   
+   Fully deduplicated - Each selector appears exactly once
    ═══════════════════════════════════════════════════════════════════════ */
 
 
@@ -75,16 +77,6 @@ box-shadow: 0 6px 24px var(--color-black-alpha-60),
 .speech-bubble.bubble-is-bookmarked.dragging {
 box-shadow: 0 8px 32px var(--color-black-alpha-70),
                 0 0 30px var(--color-bookmark-alpha-80);
-}
-
-.speech-bubble.dragging {
-cursor: grabbing;
-    z-index: 1100;
-    transform: scale(1.08);
-    box-shadow: 0 8px 32px var(--color-black-alpha-70),
-                0 0 30px var(--color-primary-alpha-80);
-    transition: transform 0.1s ease, box-shadow 0.1s ease;
-    animation: none;
 }
 
 .speech-bubble.dragging:hover {

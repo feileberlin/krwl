@@ -1,0 +1,21 @@
+/* Debug */
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DEBUG
+   Development and debugging styles
+   
+   Fully deduplicated - Each selector appears exactly once
+   ═══════════════════════════════════════════════════════════════════════ */
+
+
+.env-dev {
+color: #FFB3DF;
+}
+
+.env-production {
+color: #D689B8;
+}
+
+.env-ci {
+color: #58a6ff;
+}

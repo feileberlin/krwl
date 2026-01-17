@@ -2,7 +2,9 @@
 
 /* ═══════════════════════════════════════════════════════════════════════
    MAP
-   Modular CSS - Deduplicated, ~50 selectors per file
+   Map component styles
+   
+   Fully deduplicated - Each selector appears exactly once
    ═══════════════════════════════════════════════════════════════════════ */
 
 
@@ -10,6 +12,12 @@
 background: var(--color-bg-secondary);
     color: var(--color-text-primary);
     border: 2px solid var(--color-border-primary);
+}
+
+.map-fallback h2 {
+color: var(--color-primary);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
 }
 
 .leaflet-popup-tip {
@@ -37,6 +45,31 @@ pointer-events: auto;
 filter: none !important;
 }
 
+.map-fallback-content {
+text-align: center;
+    padding: 2rem;
+    max-width: 400px;
+    color: var(--color-primary);
+}
+
+.map-fallback-icon {
+font-size: 4rem;
+    margin-bottom: 1rem;
+    filter: grayscale(0%);
+}
+
+.map-fallback p {
+color: var(--color-text-secondary);
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+.map-fallback-note {
+font-style: italic;
+    color: var(--color-primary);
+    margin-top: 1rem !important;
+}
+
 .leaflet-marker-icon.marker-bookmarked {
 filter: drop-shadow(0 0 6px var(--color-primary)) 
             drop-shadow(0 0 12px var(--color-primary))
@@ -47,21 +80,4 @@ filter: drop-shadow(0 0 6px var(--color-primary))
 filter: drop-shadow(0 0 1px var(--color-primary))
             brightness(0.7)
             opacity(0.85);
-}
-
-.leaflet-container,
-.leaflet-container * {
-box-sizing: content-box;
-}
-
-.leaflet-container {
-background: var(--barbie-shade-darkest);
-    
-
-
-    filter: grayscale(100%) brightness(0.5) sepia(100%) hue-rotate(290deg) saturate(200%);
-}
-
-.leaflet-tile-container {
-background: var(--barbie-shade-darkest);
 }

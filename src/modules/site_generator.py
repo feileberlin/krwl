@@ -596,23 +596,29 @@ class SiteGenerator:
         )
         
         # Load modular app CSS with debug comments (Leaflet CSS stays separate)
-        # Modular, deduplicated CSS - Each file has clear semantic purpose, ≤50 selectors
+        # Best Practice CSS Organization (ITCSS/Inverted Triangle methodology)
+        # Ordered by specificity: Foundation → Layout → Components → Utilities
         app_css_modules = [
-            # Core & Layout
-            ('assets/css/base.css', 'Base styles (typography, viewport, root)'),
-            ('assets/css/layout.css', 'Layout utilities and positioning'),
+            # Layer 1: Foundation (most general, lowest specificity)
+            ('assets/css/foundation.css', 'Foundation: Base elements and typography'),
             
-            # Features
-            ('assets/css/map.css', 'Map and Leaflet styles'),
-            ('assets/css/filters.css', 'Filter bar and components'),
-            ('assets/css/dashboard.css', 'Dashboard menu and sections'),
-            ('assets/css/bubbles.css', 'Speech bubbles'),
-            ('assets/css/locations.css', 'Location management'),
-            ('assets/css/notifications.css', 'Notifications and alerts'),
+            # Layer 2: Layout (structural patterns)
+            ('assets/css/layout.css', 'Layout: Grid and flexbox systems'),
+            ('assets/css/positioning.css', 'Positioning: Fixed/absolute positioning'),
             
-            # Components & Utilities
-            ('assets/css/ui-components.css', 'Reusable UI components'),
-            ('assets/css/utilities.css', 'Utility classes')
+            # Layer 3: Components (alphabetically organized for easy finding)
+            ('assets/css/bubbles.css', 'Component: Speech bubbles'),
+            ('assets/css/buttons.css', 'Component: Buttons'),
+            ('assets/css/dashboard.css', 'Component: Dashboard'),
+            ('assets/css/filters.css', 'Component: Filters'),
+            ('assets/css/forms.css', 'Component: Form elements'),
+            ('assets/css/map.css', 'Component: Map and Leaflet'),
+            ('assets/css/modals.css', 'Component: Modals and dialogs'),
+            ('assets/css/notifications.css', 'Component: Notifications'),
+            
+            # Layer 4: Utilities (most specific, highest specificity)
+            ('assets/css/utilities.css', 'Utilities: Helper classes'),
+            ('assets/css/debug.css', 'Debug: Development tools')
         ]
         module_css_parts = []
         for module_path, description in app_css_modules:

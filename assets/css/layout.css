@@ -2,28 +2,128 @@
 
 /* ═══════════════════════════════════════════════════════════════════════
    LAYOUT
-   Modular CSS - Deduplicated, ~50 selectors per file
+   Layout systems and structural styles
+   
+   Fully deduplicated - Each selector appears exactly once
    ═══════════════════════════════════════════════════════════════════════ */
 
 
-#map {
-position: fixed;
-    top: 0;
-    left: 0;
-    width: var(--app-width);
-    height: var(--app-height);
-    z-index: 1;
-    background: var(--barbie-shade-darkest);
-}
-
-#map-overlay {
-position: absolute;
-    top: 10px;
+#event-filter-bar.dashboard-opening {
+top: 10px;
     left: 10px;
     right: 10px;
     bottom: 10px;
-    pointer-events: none;
-    z-index: 1000;
+    width: auto;
+    max-width: none;
+}
+
+#event-filter-bar.dashboard-opening .filter-bar-item {
+opacity: 0;
+    transition: opacity 0.2s ease-out;
+}
+
+#event-filter-bar .filter-bar-item {
+cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 3px;
+    transition: var(--transition-normal);
+    position: relative;
+    display: inline-block;
+}
+
+#event-filter-bar .filter-bar-item:hover {
+color: var(--color-text-primary);
+    text-decoration-style: solid;
+}
+
+#event-filter-bar .filter-bar-item.editing {
+color: var(--color-text-primary);
+    background: var(--color-primary-alpha-30);
+    padding: 0.1rem 0.5rem;
+    border-radius: var(--border-radius-small);
+    text-decoration: none;
+    min-width: 150px;
+    text-align: center;
+}
+
+#event-filter-bar .filter-bar-logo {
+display: inline-flex;
+    align-items: center;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+    cursor: pointer;
+    padding: 0.2rem;
+    border-radius: var(--border-radius-small);
+    transition: var(--transition-normal);
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 0.95rem;
+}
+
+#event-filter-bar .filter-bar-logo:hover {
+background: var(--color-primary-alpha-20);
+    transform: scale(1.1);
+}
+
+#event-filter-bar .filter-bar-logo:focus {
+outline: var(--border-width-medium) solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+#event-filter-bar .filter-bar-logo svg {
+width: 1em; 
+    height: 1em; 
+    stroke: currentColor;
+    fill: none;
+    transition: filter 0.2s;
+}
+
+#event-filter-bar .filter-bar-logo:hover svg {
+stroke: currentColor;
+}
+
+#event-filter-bar .filter-chip {
+cursor: pointer;
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    font: inherit;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-shadow: 0 0 10px var(--color-primary-alpha-50);
+    padding: 0;
+    transition: all 0.2s;
+}
+
+#event-filter-bar .filter-chip:hover {
+color: var(--color-text-primary);
+    text-shadow: 0 0 15px var(--color-primary-alpha-80);
+}
+
+#event-filter-bar .weather-chip {
+cursor: help;
+}
+
+#event-filter-bar .weather-chip:hover {
+opacity: 1;
+    color: var(--color-text-primary);
+    text-shadow: 0 0 10px var(--color-primary-alpha-30);
+    
+
+
+    height: 1em; 
+
+
+    stroke: currentColor;
+    fill: none;
+    filter: drop-shadow(0 0 4px var(--color-primary-alpha-60));
+    transition: filter 0.2s;
+}
+
+.noscript-container {
+padding: 1rem;
 }
 
 .map-fallback {
@@ -64,19 +164,6 @@ position: fixed;
     overflow-x: auto;
     z-index: var(--z-layer-3-filter-bar);
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.filter-bar-dropdown {
-position: fixed;
-    background: var(--barbie-shade-darkest);
-    backdrop-filter: blur(10px);
-    border: var(--border-width-medium) solid var(--color-primary-alpha-50);
-    border-radius: var(--border-radius-large);
-    padding: 0.25rem 0;
-    box-shadow: var(--shadow-large); 
-    z-index: 3000;
-    min-width: 220px;
-    white-space: normal;
 }
 
 .filter-bar-dropdown-item {
@@ -167,43 +254,6 @@ background: none;
     justify-content: center;
 }
 
-.bubble-connectors {
-position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 900;
-}
-
-.speech-bubble {
-position: absolute;
-    background: var(--color-bg-primary-alpha-95);
-    backdrop-filter: blur(10px);
-    border: 2px solid var(--color-primary);
-    border-radius: 12px;
-    padding: 12px;
-    width: 220px;
-    z-index: 1000;
-    box-shadow: 0 4px 20px var(--color-black-alpha-50),
-                0 0 15px var(--color-primary-alpha-40);
-    cursor: grab;
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
-                box-shadow 0.3s ease, 
-                opacity 0.4s ease,
-                filter 0.3s ease;
-    opacity: 0;
-    pointer-events: auto;
-    font-size: 0.85rem;
-    
-    transform-origin: center;
-    will-change: transform;
-    
-    touch-action: none;
-    user-select: none;
-}
-
 .bubble-location {
 color: var(--color-text-secondary);
     font-size: 0.8rem;
@@ -224,62 +274,6 @@ color: var(--color-text-tertiary);
     gap: 4px;
 }
 
-.bubble-duplicate-badge {
-position: absolute;
-    top: -8px;
-    right: -8px;
-    background: var(--color-warning);
-    color: var(--color-bg-primary);
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 12px;
-    border: 2px solid var(--color-bg-primary);
-    z-index: 10;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    line-height: 1.2;
-    white-space: nowrap;
-}
-
-.bubble-demo-badge {
-position: absolute;
-    top: -8px;
-    left: -8px;
-    background: var(--color-error);  
-    color: white;
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 12px;
-    border: 2px solid var(--color-bg-primary);
-    z-index: 10;
-    box-shadow: 0 2px 8px var(--color-black-alpha-30);
-    line-height: 1.2;
-    white-space: nowrap;
-}
-
-position: fixed;
-    top: 10px;
-    left: 10px;
-    right: auto;
-    max-width: calc(var(--app-width) - 80px); 
-
-
-#event-filter-bar .filter-bar-logo {
-display: inline-flex;
-    align-items: center;
-    margin-right: 0.5rem;
-    vertical-align: middle;
-    cursor: pointer;
-    padding: 0.2rem;
-    border-radius: 4px;
-    transition: all 0.2s;
-    background: none;
-    border: none;
-    color: inherit;
-    font-size: 0.95rem;
-}
-
 .filter-bar-dropdown .location-option {
 display: flex;
     align-items: center;
@@ -292,34 +286,6 @@ display: flex;
 display: flex;
     flex-direction: column;
     gap: 1.5rem;
-}
-
-.event-detail-edge {
-position: fixed;
-    background: var(--barbie-shade-darkest);
-    backdrop-filter: blur(10px);
-    border: 2px solid var(--color-border-primary);
-    border-radius: 8px;
-    padding: 1rem;
-    max-width: 280px;
-    z-index: 1500;
-    box-shadow: 0 4px 20px var(--color-black-alpha-50),
-                0 0 10px var(--color-primary-alpha-30);
-    pointer-events: auto;
-}
-
-#event-list {
-position: fixed;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 350px;
-    background: var(--barbie-shade-darkest);
-    backdrop-filter: blur(10px);
-    padding: 1.5rem;
-    overflow-y: auto;
-    box-shadow: -5px 0 20px var(--color-black-alpha-30);
-    z-index: 999;
 }
 
 #event-detail {
@@ -335,31 +301,47 @@ position: fixed;
     z-index: 2000;
 }
 
-.bookmark-feedback {
-position: fixed;
-    bottom: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--color-primary-alpha-95);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    z-index: 2500;
-    box-shadow: 0 4px 12px var(--color-black-alpha-30);
-    animation: slideUpFadeIn 0.3s ease;
+.leaflet-container,
+.leaflet-container * {
+box-sizing: content-box;
 }
 
-#close-detail {
-position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    color: var(--color-text-secondary);
-    font-size: 2rem;
-    cursor: pointer;
-    line-height: 1;
-    transition: color 0.2s;
+.leaflet-container {
+background: var(--barbie-shade-darkest);
+    
+
+
+    filter: grayscale(100%) brightness(0.5) sepia(100%) hue-rotate(290deg) saturate(200%);
+}
+
+.leaflet-tile-container {
+background: var(--barbie-shade-darkest);
+}
+
+.distance-slider-container {
+padding: 1rem;
+}
+
+.distance-slider-container input[type="range"] {
+width: 100%;
+    margin: 0.5rem 0;
+}
+
+.distance-slider-container .distance-display {
+color: var(--color-primary);
+    font-weight: 600;
+    text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+#event-arrows-container svg {
+width: 100%;
+    height: 100%;
+}
+
+#app {
+height: var(--app-height);
+    width: var(--app-width);
+    position: relative;
 }
