@@ -28,19 +28,24 @@ def test_filter_sentence_config_invalid():
     config_path = Path(__file__).parent.parent / 'config.json'
     with open(config_path, 'r', encoding='utf-8') as handle:
         config = json.load(handle)
+    invalid_effect_rejected = False
+    invalid_speed_rejected = False
     config['filter_sentence']['effect'] = 'neon'
     try:
         validate_config(config)
         return False, "✗ invalid filter_sentence effect was accepted"
     except ConfigurationError:
-        pass
+        invalid_effect_rejected = True
     config['filter_sentence']['effect'] = 'terminal'
     config['filter_sentence']['typing_speed_ms'] = -5
     try:
         validate_config(config)
         return False, "✗ invalid typing_speed_ms was accepted"
     except ConfigurationError:
+        invalid_speed_rejected = True
+    if invalid_effect_rejected and invalid_speed_rejected:
         return True, "✓ invalid filter_sentence values rejected"
+    return False, "✗ invalid filter_sentence values were not rejected"
 
 
 def test_filter_sentence_ui_hooks():

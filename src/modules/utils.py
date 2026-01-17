@@ -184,10 +184,10 @@ def validate_config(config: dict) -> None:
             )
         typing_speed = filter_sentence.get('typing_speed_ms')
         if typing_speed is not None:
-            if not isinstance(typing_speed, int) or typing_speed <= 0:
+            if not isinstance(typing_speed, (int, float)) or typing_speed <= 0:
                 raise ConfigurationError(
                     'filter_sentence.typing_speed_ms',
-                    "Typing speed must be a positive integer (ms)"
+                    "Typing speed must be a positive number (ms)"
                 )
     
     logger.debug("Configuration validation passed")

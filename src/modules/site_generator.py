@@ -1753,12 +1753,12 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
 
         required_styles = ['leaflet_css', 'app_css']
         for key in required_styles:
-            if key not in stylesheets or not stylesheets.get(key):
+            if not stylesheets.get(key):
                 logger.warning(f"Missing stylesheet content for '{key}' during HTML build")
 
         required_scripts = ['leaflet_js', 'app_js']
         for key in required_scripts:
-            if key not in scripts or not scripts.get(key):
+            if not scripts.get(key):
                 logger.warning(f"Missing script content for '{key}' during HTML build")
 
         leaflet_css = stylesheets.get('leaflet_css', '')
