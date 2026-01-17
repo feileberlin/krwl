@@ -58,13 +58,24 @@ class EventStorage {
     
     /**
      * Save current filter settings to localStorage
+     * Note: category and timeFilter are NOT saved (reset to defaults on reload)
      * @param {Object} filters - Filter settings object
      */
     saveFiltersToCookie(filters) {
         try {
-            const filterData = JSON.stringify(filters);
+            // Only save distance and location preferences
+            // category and timeFilter are always reset to defaults on reload
+            const filtersToSave = {
+                maxDistance: filters.maxDistance,
+                locationType: filters.locationType,
+                selectedPredefinedLocation: filters.selectedPredefinedLocation,
+                useCustomLocation: filters.useCustomLocation,
+                customLat: filters.customLat,
+                customLon: filters.customLon
+            };
+            const filterData = JSON.stringify(filtersToSave);
             localStorage.setItem('krwl_filters', filterData);
-            this.log('Filters saved to localStorage');
+            this.log('Filters saved to localStorage (excluding category and timeFilter)');
         } catch (error) {
             console.warn('Failed to save filters:', error);
         }
@@ -72,14 +83,21 @@ class EventStorage {
     
     /**
      * Load filter settings from localStorage
+     * Always returns default values for category ('all') and timeFilter ('sunrise')
      * @returns {Object|null} Saved filter settings or null
      */
     loadFiltersFromCookie() {
         try {
             const filterData = localStorage.getItem('krwl_filters');
             if (filterData) {
-                const filters = JSON.parse(filterData);
-                this.log('Filters loaded from localStorage', filters);
+                const savedFilters = JSON.parse(filterData);
+                // Always reset category and timeFilter to defaults
+                const filters = {
+                    ...savedFilters,
+                    category: 'all',
+                    timeFilter: 'sunrise'
+                };
+                this.log('Filters loaded from localStorage (category and timeFilter reset to defaults)', filters);
                 return filters;
             }
         } catch (error) {
