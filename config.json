@@ -1,9 +1,9 @@
 {
-  "_comment_design_system": "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550",
-  "_comment_design_intro": "\ud83c\udfa8 DESIGN SYSTEM - Centralized design tokens for instant rebranding",
+  "_comment_design_system": "═══════════════════════════════════════════════════════════════════════════════",
+  "_comment_design_intro": "🎨 DESIGN SYSTEM - Centralized design tokens for instant rebranding",
   "_comment_design_usage": "Edit colors, fonts, spacing here and regenerate to rebrand the entire app!",
   "_comment_design_command": "Run: python3 src/tools/generate_design_tokens.py",
-  "_comment_design_separator": "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550",
+  "_comment_design_separator": "═══════════════════════════════════════════════════════════════════════════════",
   "design": {
     "colors": {
       "primary": "#D689B8",
@@ -76,38 +76,38 @@
     "branding": {
       "app_name": "KRWL HOF Community Events",
       "tagline": "Discover local events near you",
-      "footer_text": "Built with Leaflet.js | Icons by Lucide | \ud83d\udc96 ecoBarbie Theme"
+      "footer_text": "Built with Leaflet.js | Icons by Lucide | 💖 ecoBarbie Theme"
     }
   },
-  "_comment_environment_override": "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550",
+  "_comment_environment_override": "═══════════════════════════════════════════════════════════════════════════════",
   "_comment_override_help": "ENVIRONMENT OVERRIDE - Set to force a specific environment, bypassing auto-detection",
-  "_comment_override_values": "  \u2022 'development' - Force dev mode (debug=true, demo events, DEV watermark)",
-  "_comment_override_values2": "  \u2022 'production' - Force prod mode (debug=false, real events only, PRODUCTION watermark)",
-  "_comment_override_values3": "  \u2022 'auto' - Use auto-detection (default behavior, detects from hosting platform)",
+  "_comment_override_values": "  • 'development' - Force dev mode (debug=true, demo events, DEV watermark)",
+  "_comment_override_values2": "  • 'production' - Force prod mode (debug=false, real events only, PRODUCTION watermark)",
+  "_comment_override_values3": "  • 'auto' - Use auto-detection (default behavior, detects from hosting platform)",
   "_comment_kiss": "KEEP IT SIMPLE: Change this ONE line to switch environments completely!",
-  "_comment_separator": "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550",
+  "_comment_separator": "═══════════════════════════════════════════════════════════════════════════════",
   "environment": "development",
-  "_comment_environment_detection": "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550",
+  "_comment_environment_detection": "═══════════════════════════════════════════════════════════════════════════════",
   "_comment_auto_behavior": "AUTO-DETECTION (when environment='auto') - Behavior changes based on detected environment",
   "_comment_detection_logic": "Environment is detected automatically using Python os.environ checks:",
-  "_comment_detection_1": "  \u2022 Local Development: NOT in CI and NOT in production (default for developers)",
-  "_comment_detection_2": "  \u2022 CI: GitHub Actions, GitLab CI, Travis, CircleCI, Jenkins, etc.",
-  "_comment_detection_3": "  \u2022 Production: Vercel, Netlify, Heroku, Railway, Render, Fly.io, Google Cloud Run, AWS",
+  "_comment_detection_1": "  • Local Development: NOT in CI and NOT in production (default for developers)",
+  "_comment_detection_2": "  • CI: GitHub Actions, GitLab CI, Travis, CircleCI, Jenkins, etc.",
+  "_comment_detection_3": "  • Production: Vercel, Netlify, Heroku, Railway, Render, Fly.io, Google Cloud Run, AWS",
   "_comment_hardcoded": "HARDCODED BEHAVIOR - These settings are NOT in config.json, they're hardcoded in src/modules/utils.py:",
-  "_comment_hardcoded_1": "  \u2022 debug: true (dev) / false (prod/ci)",
-  "_comment_hardcoded_2": "  \u2022 watermark.text: 'DEV' (dev) / 'PRODUCTION' (prod/ci)",
-  "_comment_hardcoded_3": "  \u2022 data.source: 'both' (dev) / 'real' (prod/ci)",
-  "_comment_hardcoded_4": "  \u2022 performance.cache_enabled: false (dev) / true (prod/ci)",
-  "_comment_hardcoded_5": "  \u2022 performance.prefetch_events: false (dev) / true (prod/ci)",
+  "_comment_hardcoded_1": "  • debug: true (dev) / false (prod/ci)",
+  "_comment_hardcoded_2": "  • watermark.text: 'DEV' (dev) / 'PRODUCTION' (prod/ci)",
+  "_comment_hardcoded_3": "  • data.source: 'both' (dev) / 'real' (prod/ci)",
+  "_comment_hardcoded_4": "  • performance.cache_enabled: false (dev) / true (prod/ci)",
+  "_comment_hardcoded_5": "  • performance.prefetch_events: false (dev) / true (prod/ci)",
   "_comment_why": "WHY HARDCODED? To avoid confusion - these values are always overridden, so putting them in config creates false expectations",
   "_comment_no_manual_config": "NO MANUAL SWITCHING NEEDED - Just run the code and it adapts automatically!",
   "_comment_hosting_support": "WORKS WITH: GitHub Pages, Vercel, Netlify, Heroku, Railway, Render, Fly.io, Google Cloud, AWS, and more!",
-  "_comment_separator_2": "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550",
-  "_comment_debug_section": "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500",
+  "_comment_separator_2": "═══════════════════════════════════════════════════════════════════════════════",
+  "_comment_debug_section": "────────────────────────────────────────────────────────────────────────────────",
   "_comment_debug_help": "DEBUG COMMENTS - Control debug metadata in generated HTML",
   "_comment_debug_usage": "Set 'force_debug_comments' to override automatic environment detection",
-  "_comment_debug_values": "  \u2022 false (default) - Auto-detect based on environment (dev=on, prod/ci=off)",
-  "_comment_debug_values2": "  \u2022 true - Force debug comments ON regardless of environment",
+  "_comment_debug_values": "  • false (default) - Auto-detect based on environment (dev=on, prod/ci=off)",
+  "_comment_debug_values2": "  • true - Force debug comments ON regardless of environment",
   "_comment_debug_kiss": "KISS: One setting controls debug comments everywhere!",
   "_comment_debug_env": "GitHub Actions: Set environment variable DEBUG_COMMENTS=true to force enable",
   "debug_comments": {
@@ -147,7 +147,7 @@
       }
     }
   },
-  "_comment_scraping_section": "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500",
+  "_comment_scraping_section": "────────────────────────────────────────────────────────────────────────────────",
   "_comment_scraping_identical": "SCRAPING CONFIGURATION - Same in all environments, no auto-detection applied here",
   "_comment_scraping_schedule": "Schedule is only used in production/CI for automated scraping",
   "scraping": {
@@ -406,13 +406,13 @@
     ],
     "interval_minutes": 60
   },
-  "_comment_filtering_section": "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500",
+  "_comment_filtering_section": "────────────────────────────────────────────────────────────────────────────────",
   "_comment_filtering_identical": "FILTERING CONFIGURATION - Same in all environments",
   "filtering": {
     "max_distance_km": 5.0,
     "show_until": "next_sunrise"
   },
-  "_comment_map_section": "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500",
+  "_comment_map_section": "────────────────────────────────────────────────────────────────────────────────",
   "_comment_map_identical": "MAP CONFIGURATION - Same in all environments",
   "map": {
     "default_center": {
@@ -438,7 +438,7 @@
       }
     ]
   },
-  "_comment_categories_section": "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500",
+  "_comment_categories_section": "────────────────────────────────────────────────────────────────────────────────",
   "_comment_categories_help": "EVENT CATEGORIES & MARKER MAPPING - Define categories and their associated markers",
   "_comment_categories_usage": "Categories are used for filtering events and selecting marker icons",
   "categories": {
@@ -688,13 +688,13 @@
       }
     }
   },
-  "_comment_editor_section": "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500",
+  "_comment_editor_section": "────────────────────────────────────────────────────────────────────────────────",
   "_comment_editor_identical": "EDITORIAL WORKFLOW - Same in all environments",
   "editor": {
     "require_approval": true,
     "auto_publish": false
   },
-  "_comment_archiving_section": "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500",
+  "_comment_archiving_section": "────────────────────────────────────────────────────────────────────────────────",
   "_comment_archiving_help": "EVENT ARCHIVING - Configurable monthly archiving system",
   "_comment_archiving_usage": "Archive old events to keep active list manageable and improve performance",
   "archiving": {
@@ -721,7 +721,7 @@
       "_comment_path": "Directory where archived events are stored"
     }
   },
-  "_comment_ai_section": "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500",
+  "_comment_ai_section": "────────────────────────────────────────────────────────────────────────────────",
   "_comment_ai_help": "AI CATEGORIZATION - Local LLM for intelligent event categorization",
   "_comment_ai_usage": "Uses Ollama (local LLM) to categorize events into schema categories",
   "_comment_ai_install": "Install Ollama: https://ollama.ai/ | Run: ollama pull llama3.2",
@@ -749,7 +749,7 @@
       }
     }
   },
-  "_comment_weather_section": "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500",
+  "_comment_weather_section": "────────────────────────────────────────────────────────────────────────────────",
   "_comment_weather_help": "WEATHER SCRAPING - Current weather conditions and dresscode",
   "_comment_weather_usage": "Scrapes MSN Weather hourly for dresscode recommendations",
   "weather": {
