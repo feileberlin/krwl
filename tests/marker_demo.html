@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marker Movement Demo - KRWL HOF</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #0d1117;
+            color: #c9d1d9;
+        }
+        h1 {
+            color: #D689B8;
+        }
+        #map {
+            height: 500px;
+            width: 100%;
+            border: 2px solid #30363d;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        button {
+            background: #D689B8;
+            color: #0d1117;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #E8A5C8;
+        }
+        .info {
+            background: #161b22;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            border-left: 4px solid #D689B8;
+        }
+        .status {
+            background: #21262d;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>🗺️ Marker Movement Demo - KRWL HOF</h1>
+    
+    <div class="info">
+        <strong>Feature Test:</strong> This page demonstrates the reference marker movement functionality.
+        Click the buttons below to move the marker to different locations.
+    </div>
+
+    <div class="controls">
+        <button onclick="moveToGeolocation()">📍 Geolocation (Default Center)</button>
+        <button onclick="moveToPredefined1()">🚂 Hauptbahnhof Hof</button>
+        <button onclick="moveToPredefined2()">☀️ Sonnenplatz Hof</button>
+        <button onclick="moveToCustom()">📌 Custom Location (Random)</button>
+    </div>
+
+    <div id="map"></div>
+
+    <div class="status" id="status">
+        Status: Ready. Click a button to move the marker.
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Initialize map
+        const map = L.map('map').setView([50.3167, 11.9167], 13);
+        
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Reference marker (the one that moves)
+        let referenceMarker = null;
+
+        // Predefined locations from config
+        const locations = {
+            default: { lat: 50.3167, lon: 11.9167, name: 'Default Center' },
+            hauptbahnhof: { lat: 50.308053, lon: 11.9233, name: 'Hauptbahnhof Hof' },
+            sonnenplatz: { lat: 50.3164799, lon: 11.9146205, name: 'Sonnenplatz Hof' }
+        };
+
+        // Create user marker icon
+        const userIcon = L.icon({
+            iconUrl: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI4IiBmaWxsPSIjNENBRjUwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjMiIGZpbGw9IiNmZmYiLz48L3N2Zz4=',
+            iconSize: [32, 48],
+            iconAnchor: [16, 48],
+            popupAnchor: [0, -48]
+        });
+
+        // Function to update reference marker (mimics MapManager.updateReferenceMarker)
+        function updateReferenceMarker(lat, lon, popupText) {
+            // Remove old marker if exists
+            if (referenceMarker) {
+                referenceMarker.remove();
+                referenceMarker = null;
+            }
+
+            // Create new marker
+            referenceMarker = L.marker([lat, lon], {
+                icon: userIcon,
+                zIndexOffset: 1000
+            }).addTo(map).bindPopup(popupText).openPopup();
+
+            // Center map on new location
+            map.setView([lat, lon], 13);
+
+            // Update status
+            updateStatus(`Marker moved to ${popupText} (${lat.toFixed(4)}, ${lon.toFixed(4)})`);
+        }
+
+        function updateStatus(message) {
+            document.getElementById('status').textContent = `Status: ${message}`;
+        }
+
+        // Location button handlers
+        function moveToGeolocation() {
+            const loc = locations.default;
+            updateReferenceMarker(loc.lat, loc.lon, 'You are here');
+        }
+
+        function moveToPredefined1() {
+            const loc = locations.hauptbahnhof;
+            updateReferenceMarker(loc.lat, loc.lon, loc.name);
+        }
+
+        function moveToPredefined2() {
+            const loc = locations.sonnenplatz;
+            updateReferenceMarker(loc.lat, loc.lon, loc.name);
+        }
+
+        function moveToCustom() {
+            // Generate random location near Hof
+            const lat = 50.3167 + (Math.random() - 0.5) * 0.1;
+            const lon = 11.9167 + (Math.random() - 0.5) * 0.1;
+            updateReferenceMarker(lat, lon, 'Custom location');
+        }
+
+        // Initialize with default location
+        moveToGeolocation();
+    </script>
+</body>
+</html>
