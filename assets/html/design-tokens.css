@@ -29,6 +29,11 @@
   --color-bookmark: #ffb3b3;
   --color-bookmark-light: #ffcccc;
   --color-bookmark-lighter: #ffe6e6;
+  --color-ecobarbie-light-tone: #D689B8;
+  --color-ecobarbie-medium-tone: #B05F8E;
+  --color-ecobarbie-dark-tone: #8A4A70;
+  --color-ecobarbie-light-shade: #BF5087;
+  --color-ecobarbie-medium-tint: #FFB3DF;
 
   /* Typography */
   --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
