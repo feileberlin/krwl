@@ -1,18 +1,10 @@
-/* Locations Styles */
+/* Locations */
 
 /* ═══════════════════════════════════════════════════════════════════════
-   LOCATIONS - Semantic CSS organization
-   Max 50 selectors per file for KISS compliance
-   
-   Auto-generated from CSS reorganization
+   LOCATIONS
+   Modular CSS - Deduplicated, ~50 selectors per file
    ═══════════════════════════════════════════════════════════════════════ */
 
-
-.location-override label {
-display: flex;
-    align-items: center;
-    cursor: pointer;
-}
 
 .location-override input[type="checkbox"] {
 margin-right: 0.5rem;
@@ -37,13 +29,6 @@ background: var(--bg-tertiary);
     border: 1px solid var(--border-secondary);
 }
 
-.custom-location-header {
-display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.3rem;
-}
-
 .custom-location-name {
 font-weight: bold;
     color: var(--color-primary);
@@ -54,12 +39,6 @@ font-weight: bold;
 font-size: 0.8rem;
     color: var(--text-secondary);
     font-family: var(--font-family-mono);
-}
-
-.custom-location-actions {
-display: flex;
-    gap: 0.4rem;
-    margin-top: 0.5rem;
 }
 
 .custom-location-btn {
@@ -94,20 +73,6 @@ text-align: center;
     padding: 1.5rem;
     color: var(--text-secondary);
     font-size: 0.9rem;
-}
-
-.custom-location-dialog {
-position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--color-black-alpha-80);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 3000;
-    padding: 1rem;
 }
 
 .custom-location-content {
@@ -163,12 +128,6 @@ outline: none;
     box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-ecobarbie-light-tone) 20%, transparent);
 }
 
-.custom-location-buttons {
-display: flex;
-    gap: 0.75rem;
-    justify-content: flex-end;
-}
-
 .custom-location-buttons button {
 padding: 0.6rem 1.2rem;
     border-radius: 6px;
@@ -177,15 +136,4 @@ padding: 0.6rem 1.2rem;
     cursor: pointer;
     transition: all 0.2s;
     border: none;
-}
-
-.location-override label {
-display: flex;
-    align-items: center;
-    cursor: pointer;
-}
-
-.location-override input[type="checkbox"] {
-margin-right: 0.5rem;
-    cursor: pointer;
 }

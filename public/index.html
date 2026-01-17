@@ -205,13 +205,11 @@
 }
 </style>
 <style>/* Leaflet CSS: Load from CDN at runtime if needed */</style>
-<style>/* Core Styles */
+<style>/* Base Styles */
 
 /* ═══════════════════════════════════════════════════════════════════════
-   CORE - Semantic CSS organization
-   Max 50 selectors per file for KISS compliance
-   
-   Auto-generated from CSS reorganization
+   BASE - Core styles, typography, viewport, and layout foundations
+   Merged from base.css and base-2.css (deduplicated)
    ═══════════════════════════════════════════════════════════════════════ */
 
 
@@ -220,26 +218,8 @@
     --app-height: 100vh;
 }
 
-:root {
---app-width: 100dvw;
-        --app-height: 100dvh;
-}
-
 body {
 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: var(--color-bg-primary);
-    color: var(--color-text-primary);
-    overflow: hidden;
-}
-
-:root {
---app-width: 100dvw;
-        --app-height: 100dvh;
-}
-
-body {
-font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, sans-serif;
-    font-weight: 400;
     background: var(--color-bg-primary);
     color: var(--color-text-primary);
     overflow: hidden;
@@ -258,57 +238,6 @@ color: var(--color-primary);
     margin-bottom: 0.5rem;
 }
 
-.dashboard-section strong {
-color: var(--color-text-primary);
-}
-
-.dashboard-content h2 {
-margin: 0;
-    color: var(--color-primary);
-    text-shadow: 0 0 10px var(--color-primary-alpha-30);
-    font-size: 1.5rem;
-    min-width: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.dashboard-section strong {
-color: var(--color-text-primary);
-}
-
-.dashboard-content h2 {
-font-size: 1.2rem;
-        margin: 0;
-}
-
-.dashboard-section h3 {
-font-size: 0.9rem;
-}
-
-.dashboard-content h2 {
-font-size: 1.3rem;
-        margin-bottom: 0.75rem;
-}
-
-.dashboard-section h3 {
-font-size: 0.95rem;
-}
-
-.dashboard-content h2 {
-font-size: 1.2rem;
-}
-
-.dashboard-section h3 {
-font-size: 0.9rem;
-}
-
-.dashboard-section h3 {
-color: var(--color-primary);
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-}
-
 .dashboard-section h3:hover .dashboard-section-icon {
 color: var(--color-ecobarbie-light-shade); 
 
@@ -316,49 +245,6 @@ color: var(--color-ecobarbie-light-shade);
 
 
     transition: color 0.2s ease;
-}
-
-.dashboard-content h2 {
-font-size: 1.3rem;
-        margin: 0;
-}
-
-.dashboard-section h3 {
-font-size: 0.95rem;
-}
-
-.debug-group-header strong {
-color: var(--color-ecobarbie-light-shade);
-    font-size: 0.85em;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-weight: 700;
-}
-
-.debug-group-header.warning i,
-.debug-group-header.warning strong {
-color: var(--color-warning);
-}
-
-opacity: 0.8;
-    font-size: 0.85rem;
-    color: var(--color-text-secondary);
-    text-shadow: none;
-    font-style: italic;  
-
-
-
-
-.debug-info-row {
-display: contents;
-}
-
-.debug-warning-message strong {
-color: var(--color-warning);
-}
-
-.debug-duplicate-list li strong {
-color: var(--color-warning);
 }
 
 .event-detail-edge h3 {
@@ -380,10 +266,6 @@ color: var(--color-primary);
     font-size: 1.5rem;
 }
 
-.noscript-event-meta strong {
-color: var(--color-primary-hover);
-}
-
 .event-card h3 {
 font-size: 1rem;
     margin-bottom: 0.5rem;
@@ -396,130 +278,31 @@ margin-bottom: 1rem;
     text-shadow: 0 0 10px var(--color-primary-alpha-30);
 }
 
-.event-detail-edge h3 {
-color: var(--color-primary);
-    font-size: 0.95rem;
-    margin-bottom: 0.5rem;
-    line-height: 1.3;
+.debug-group-header.warning i,
+.debug-group-header.warning strong {
+color: var(--color-warning);
 }
 
-.event-detail-edge h3 {
-color: var(--color-primary);
-    font-size: 0.95rem;
-    margin-bottom: 0.5rem;
-    line-height: 1.3;
-}
-
-.event-card h3 {
-font-size: 1rem;
-    margin-bottom: 0.5rem;
-    color: var(--color-primary);
-}
-
-.detail-content h2 {
-margin-bottom: 1rem;
-    color: var(--color-primary);
-    text-shadow: 0 0 10px var(--color-primary-alpha-30);
+.debug-warning-message strong {
+color: var(--color-warning);
 }
 
 strong, b {
 font-weight: 700;
 }
 
-.font-medium {
-font-weight: 500;
+.noscript-container {
+padding: 1rem;
 }
 
-
-/* Layout Styles */
-
-/* ═══════════════════════════════════════════════════════════════════════
-   LAYOUT - Semantic CSS organization
-   Max 50 selectors per file for KISS compliance
-   
-   Auto-generated from CSS reorganization
-   ═══════════════════════════════════════════════════════════════════════ */
-
-
-#event-arrows-container {
-position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1400;
-}
-
-#event-arrows-container svg {
-width: 100%;
-    height: 100%;
-}
-
-#app {
-height: var(--app-height);
-    width: var(--app-width);
-    position: relative;
-}
-
-#event-arrows-container {
-position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1400;
-}
-
-#event-arrows-container svg {
-width: 100%;
-    height: 100%;
-}
-
-#app {
-height: var(--app-height);
-    width: var(--app-width);
-    position: relative;
-}
-
-#event-arrows-container {
-position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1400;
-}
-
-#event-arrows-container svg {
-width: 100%;
-    height: 100%;
-}
-
-
-/* Map Styles */
-
-/* ═══════════════════════════════════════════════════════════════════════
-   MAP - Semantic CSS organization
-   Max 50 selectors per file for KISS compliance
-   
-   Auto-generated from CSS reorganization
-   ═══════════════════════════════════════════════════════════════════════ */
-
-
-.leaflet-container,
-.leaflet-container * {
-box-sizing: content-box;
-}
-
-#map-overlay > * {
-pointer-events: auto;
-}
-
-#map-overlay > * {
-pointer-events: auto;
+.bubble-location i[data-lucide="map-pin"],
+.bubble-location svg {
+width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+    flex-shrink: 0;
 }
 
 .leaflet-popup-content-wrapper {
@@ -543,43 +326,14 @@ filter: drop-shadow(0 0 4px var(--color-primary))
             drop-shadow(0 0 8px var(--color-primary));
 }
 
-.leaflet-container {
-background: var(--barbie-shade-darkest);
-    
-
-
-    filter: grayscale(100%) brightness(0.5) sepia(100%) hue-rotate(290deg) saturate(200%);
-}
-
-.leaflet-tile-container {
-background: var(--barbie-shade-darkest);
+#map-overlay > * {
+pointer-events: auto;
 }
 
 .leaflet-control,
 .leaflet-marker-icon,
 .leaflet-popup {
 filter: none !important;
-}
-
-.leaflet-popup-content-wrapper {
-background: var(--color-bg-secondary);
-    color: var(--color-text-primary);
-    border: 2px solid var(--color-border-primary);
-}
-
-.leaflet-popup-tip {
-background: var(--color-bg-secondary);
-    border-color: var(--color-border-primary);
-}
-
-.leaflet-marker-icon {
-filter: drop-shadow(0 0 2px var(--color-primary));
-    transition: filter 0.2s ease;
-}
-
-.leaflet-marker-icon:hover {
-filter: drop-shadow(0 0 4px var(--color-primary)) 
-            drop-shadow(0 0 8px var(--color-primary));
 }
 
 #map {
@@ -590,22 +344,6 @@ position: fixed;
     height: var(--app-height);
     z-index: 1;
     background: var(--barbie-shade-darkest);
-}
-
-.leaflet-container {
-background: var(--barbie-shade-darkest);
-    
-    filter: grayscale(100%) brightness(0.5) sepia(100%) hue-rotate(290deg) saturate(200%);
-}
-
-.leaflet-tile-container {
-background: var(--barbie-shade-darkest);
-}
-
-.leaflet-control,
-.leaflet-marker-icon,
-.leaflet-popup {
-filter: none !important;
 }
 
 #map-overlay {
@@ -656,63 +394,6 @@ font-style: italic;
     margin-top: 1rem !important;
 }
 
-#map-overlay {
-position: absolute;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    pointer-events: none;
-    z-index: 1000;
-}
-
-.leaflet-popup-content-wrapper {
-background: var(--color-bg-secondary);
-    color: var(--color-text-primary);
-    border: 2px solid var(--color-border-primary);
-}
-
-.leaflet-popup-tip {
-background: var(--color-bg-secondary);
-    border-color: var(--color-border-primary);
-}
-
-#map {
-position: fixed;
-        top: 0;
-        left: 0;
-        width: var(--app-width);
-        height: var(--app-height);
-}
-
-#map {
-position: fixed;
-        top: 0;
-        left: 0;
-        width: var(--app-width);
-        height: var(--app-height);
-}
-
-#map {
-position: fixed;
-    top: 0;
-    left: 0;
-    width: var(--app-width);
-    height: var(--app-height);
-    z-index: 1;
-    background: var(--barbie-shade-darkest);
-}
-
-.leaflet-marker-icon {
-filter: drop-shadow(0 0 2px var(--color-primary));
-    transition: filter 0.2s ease, opacity 0.2s ease;
-}
-
-.leaflet-marker-icon:hover {
-filter: drop-shadow(0 0 4px var(--color-primary)) 
-            drop-shadow(0 0 8px var(--color-primary));
-}
-
 .leaflet-marker-icon.marker-bookmarked {
 filter: drop-shadow(0 0 6px var(--color-primary)) 
             drop-shadow(0 0 12px var(--color-primary))
@@ -724,99 +405,6 @@ filter: drop-shadow(0 0 1px var(--color-primary))
             brightness(0.7)
             opacity(0.85);
 }
-
-
-/* Leaflet Custom */
-
-/* Edge-positioned event details with arrows */
-.event-detail-edge {
-    position: fixed;
-    background: var(--barbie-shade-darkest);
-    backdrop-filter: blur(10px);
-    border: 2px solid var(--color-border-primary);
-    border-radius: 8px;
-    padding: 1rem;
-    max-width: 280px;
-    z-index: 1500;
-    box-shadow: 0 4px 20px var(--color-black-alpha-50),
-                0 0 10px var(--color-primary-alpha-30);
-    pointer-events: auto;
-}
-
-.event-detail-edge h3 {
-    color: var(--color-primary);
-    font-size: 0.95rem;
-    margin-bottom: 0.5rem;
-    line-height: 1.3;
-}
-
-.event-detail-edge p {
-    color: var(--color-text-secondary);
-    font-size: 0.85rem;
-    margin: 0.3rem 0;
-    line-height: 1.4;
-}
-
-.event-detail-edge .detail-time {
-    color: var(--color-text-tertiary);
-    font-size: 0.8rem;
-}
-
-.event-detail-edge .detail-distance {
-    color: var(--color-text-tertiary);
-    font-size: 0.75rem;
-    margin-top: 0.5rem;
-}
-
-/* SVG arrow container */
-#event-arrows-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1400;
-}
-
-#event-arrows-container svg {
-    width: 100%;
-    height: 100%;
-}
-
-/* Leaflet customization */
-.leaflet-popup-content-wrapper {
-    background: var(--color-bg-secondary);
-    color: var(--color-text-primary);
-    border: 2px solid var(--color-border-primary);
-}
-
-.leaflet-popup-tip {
-    background: var(--color-bg-secondary);
-    border-color: var(--color-border-primary);
-}
-
-/* Monochrome marker glow - barbie red */
-.leaflet-marker-icon {
-    filter: drop-shadow(0 0 2px var(--color-primary));
-    transition: filter 0.2s ease;
-}
-
-.leaflet-marker-icon:hover {
-    filter: drop-shadow(0 0 4px var(--color-primary)) 
-            drop-shadow(0 0 8px var(--color-primary));
-}
-
-
-/* Filters Bar Styles */
-
-/* ═══════════════════════════════════════════════════════════════════════
-   FILTERS BAR - Semantic CSS organization
-   Max 50 selectors per file for KISS compliance
-   
-   Auto-generated from CSS reorganization
-   ═══════════════════════════════════════════════════════════════════════ */
-
 
 #event-filter-bar {
 position: fixed;
@@ -964,36 +552,265 @@ background: var(--color-primary-alpha-20);
     border-left-color: var(--color-primary-alpha-50);
 }
 
-.filter-bar-dropdown-item.selected {
-background: var(--color-medium-tone-alpha-30);
-    color: var(--color-primary);
-    font-weight: 600;
-    border-left-color: var(--color-primary);
+
+/* Layout */
+
+/* ═══════════════════════════════════════════════════════════════════════
+   LAYOUT
+   Modular CSS - Deduplicated, ~50 selectors per file
+   ═══════════════════════════════════════════════════════════════════════ */
+
+
+#map {
+position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--app-width);
+    height: var(--app-height);
+    z-index: 1;
+    background: var(--barbie-shade-darkest);
 }
 
-.filter-bar-dropdown-item.current-selection {
-background: var(--color-medium-tone-alpha-35);
-    color: var(--color-text-primary);
-    font-weight: 700;
-    border-left-color: var(--color-primary);
-    border-bottom: var(--border-width-thin) solid var(--color-primary-alpha-30);
-    margin-bottom: 0.25rem;
+#map-overlay {
+position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    pointer-events: none;
+    z-index: 1000;
 }
 
-.filter-bar-dropdown-item .item-label {
-flex: 1;
+.map-fallback {
+position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--barbie-shade-darkest);
+    z-index: 0;
 }
 
-.filter-bar-dropdown-item .item-count {
-color: var(--color-text-secondary);
-    font-size: 0.85rem;
+#event-filter-bar {
+position: fixed;
+    
+    top: 10px;
+    left: 10px;
+    right: auto;
+    max-width: calc(var(--app-width) - 80px); 
+    font-size: 0.95rem;
     font-weight: 500;
-    margin-left: 1rem;
+    color: var(--color-primary);
+    padding: 0.8rem;
+    background: var(--barbie-shade-darkest);
+    backdrop-filter: blur(10px);
+    border-radius: var(--border-radius-large);
+    border: 0;
+    line-height: var(--line-height-base);
+    box-shadow: var(--shadow-large); 
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.3rem;
+    align-items: center;
+    white-space: nowrap;
+    overflow-x: auto;
+    z-index: var(--z-layer-3-filter-bar);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.filter-bar-dropdown-item.current-selection .item-count {
-color: var(--color-primary);
+.filter-bar-dropdown {
+position: fixed;
+    background: var(--barbie-shade-darkest);
+    backdrop-filter: blur(10px);
+    border: var(--border-width-medium) solid var(--color-primary-alpha-50);
+    border-radius: var(--border-radius-large);
+    padding: 0.25rem 0;
+    box-shadow: var(--shadow-large); 
+    z-index: 3000;
+    min-width: 220px;
+    white-space: normal;
+}
+
+.filter-bar-dropdown-item {
+padding: 0.6rem 1rem;
+    cursor: pointer;
+    transition: var(--transition-normal);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 3px solid transparent;
+}
+
+#event-arrows-container {
+position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1400;
+}
+
+.location-override label {
+display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.custom-location-header {
+display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.3rem;
+}
+
+.custom-location-actions {
+display: flex;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+}
+
+.custom-location-dialog {
+position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--color-black-alpha-80);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    padding: 1rem;
+}
+
+.custom-location-buttons {
+display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+}
+
+.dashboard-header {
+display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.dashboard-logo {
+display: flex;
+    align-items: center;
+    color: var(--color-primary);
+}
+
+#close-dashboard {
+background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    font-size: 1.8rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+    padding: 0.5rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bubble-connectors {
+position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 900;
+}
+
+.speech-bubble {
+position: absolute;
+    background: var(--color-bg-primary-alpha-95);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--color-primary);
+    border-radius: 12px;
+    padding: 12px;
+    width: 220px;
+    z-index: 1000;
+    box-shadow: 0 4px 20px var(--color-black-alpha-50),
+                0 0 15px var(--color-primary-alpha-40);
+    cursor: grab;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                box-shadow 0.3s ease, 
+                opacity 0.4s ease,
+                filter 0.3s ease;
+    opacity: 0;
+    pointer-events: auto;
+    font-size: 0.85rem;
+    
+    transform-origin: center;
+    will-change: transform;
+    
+    touch-action: none;
+    user-select: none;
+}
+
+.bubble-location {
+color: var(--color-text-secondary);
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+    line-height: 1.2;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.bubble-distance {
+color: var(--color-text-tertiary);
+    font-size: 0.75rem;
+    margin-bottom: 8px;
+    line-height: 1.2;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.bubble-duplicate-badge {
+position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--color-warning);
+    color: var(--color-bg-primary);
+    font-size: 0.75rem;
     font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 12px;
+    border: 2px solid var(--color-bg-primary);
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.bubble-demo-badge {
+position: absolute;
+    top: -8px;
+    left: -8px;
+    background: var(--color-error);  
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 12px;
+    border: 2px solid var(--color-bg-primary);
+    z-index: 10;
+    box-shadow: 0 2px 8px var(--color-black-alpha-30);
+    line-height: 1.2;
+    white-space: nowrap;
 }
 
 position: fixed;
@@ -1018,66 +835,6 @@ display: inline-flex;
     font-size: 0.95rem;
 }
 
-#event-filter-bar .filter-chip {
-cursor: pointer;
-    background: none;
-    border: none;
-    color: var(--color-primary);
-    font: inherit;
-    font-size: 0.95rem;
-    font-weight: 500;
-    text-shadow: 0 0 10px var(--color-primary-alpha-50);
-    padding: 0;
-    transition: all 0.2s;
-}
-
-#event-filter-bar .filter-chip:hover {
-color: var(--color-text-primary);
-    text-shadow: 0 0 15px var(--color-primary-alpha-80);
-}
-
-#event-filter-bar .weather-chip {
-cursor: help;
-}
-
-#event-filter-bar .weather-chip:hover {
-opacity: 1;
-    color: var(--color-text-primary);
-    text-shadow: 0 0 10px var(--color-primary-alpha-30);
-    
-
-
-    height: 1em; 
-
-
-    stroke: currentColor;
-    fill: none;
-    filter: drop-shadow(0 0 4px var(--color-primary-alpha-60));
-    transition: filter 0.2s;
-}
-
-#event-filter-bar .filter-bar-logo:hover svg {
-stroke: currentColor;
-    filter: drop-shadow(0 0 8px var(--color-primary-alpha-100));
-}
-
-.filter-bar-dropdown-item {
-padding: 0.5rem 1rem;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.filter-bar-dropdown-item:hover {
-background: var(--color-primary-alpha-20);
-    color: var(--color-primary);
-}
-
-.filter-bar-dropdown-item.selected {
-background: var(--color-primary-alpha-30);
-    color: var(--color-primary);
-    font-weight: 600;
-}
-
 .filter-bar-dropdown .location-option {
 display: flex;
     align-items: center;
@@ -1086,43 +843,172 @@ display: flex;
     transition: all 0.2s;
 }
 
-.filter-bar-dropdown .location-option:hover {
-background: var(--color-primary-alpha-10);
+.noscript-events-list {
+display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
-.filter-bar-dropdown .location-option input[type="radio"] {
-width: auto;
-    margin: 0 0.5rem 0 0;
+.event-detail-edge {
+position: fixed;
+    background: var(--barbie-shade-darkest);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--color-border-primary);
+    border-radius: 8px;
+    padding: 1rem;
+    max-width: 280px;
+    z-index: 1500;
+    box-shadow: 0 4px 20px var(--color-black-alpha-50),
+                0 0 10px var(--color-primary-alpha-30);
+    pointer-events: auto;
+}
+
+#event-list {
+position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 350px;
+    background: var(--barbie-shade-darkest);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    overflow-y: auto;
+    box-shadow: -5px 0 20px var(--color-black-alpha-30);
+    z-index: 999;
+}
+
+#event-detail {
+position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--color-black-alpha-80);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.bookmark-feedback {
+position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-primary-alpha-95);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    z-index: 2500;
+    box-shadow: 0 4px 12px var(--color-black-alpha-30);
+    animation: slideUpFadeIn 0.3s ease;
+}
+
+#close-detail {
+position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    font-size: 2rem;
     cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
 }
 
-#event-filter-bar {
-max-width: calc(var(--app-width) - 30px);
-        font-size: 0.8rem;
-        padding: 0.6rem;
-        gap: 0.2rem;
+
+/* Map */
+
+/* ═══════════════════════════════════════════════════════════════════════
+   MAP
+   Modular CSS - Deduplicated, ~50 selectors per file
+   ═══════════════════════════════════════════════════════════════════════ */
+
+
+.leaflet-popup-content-wrapper {
+background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    border: 2px solid var(--color-border-primary);
 }
 
-.filter-bar-dropdown {
-max-width: calc(var(--app-width) - 40px);
-        font-size: 0.85rem;
+.leaflet-popup-tip {
+background: var(--color-bg-secondary);
+    border-color: var(--color-border-primary);
 }
 
-#event-filter-bar {
-max-width: calc(var(--app-width) - 40px); 
-        font-size: 0.85rem;
+.leaflet-marker-icon {
+filter: drop-shadow(0 0 2px var(--color-primary));
+    transition: filter 0.2s ease;
 }
 
-#event-filter-bar {
-max-width: calc(var(--app-width) - 30px);
-        font-size: 0.8rem;
-        padding: 0.6rem;
-        gap: 0.2rem;
+.leaflet-marker-icon:hover {
+filter: drop-shadow(0 0 4px var(--color-primary)) 
+            drop-shadow(0 0 8px var(--color-primary));
 }
 
-.filter-bar-dropdown {
-max-width: calc(var(--app-width) - 40px);
-        font-size: 0.85rem;
+#map-overlay > * {
+pointer-events: auto;
+}
+
+.leaflet-control,
+.leaflet-marker-icon,
+.leaflet-popup {
+filter: none !important;
+}
+
+.leaflet-marker-icon.marker-bookmarked {
+filter: drop-shadow(0 0 6px var(--color-primary)) 
+            drop-shadow(0 0 12px var(--color-primary))
+            brightness(1.2);
+}
+
+.leaflet-marker-icon.marker-unbookmarked {
+filter: drop-shadow(0 0 1px var(--color-primary))
+            brightness(0.7)
+            opacity(0.85);
+}
+
+.leaflet-container,
+.leaflet-container * {
+box-sizing: content-box;
+}
+
+.leaflet-container {
+background: var(--barbie-shade-darkest);
+    
+
+
+    filter: grayscale(100%) brightness(0.5) sepia(100%) hue-rotate(290deg) saturate(200%);
+}
+
+.leaflet-tile-container {
+background: var(--barbie-shade-darkest);
+}
+
+
+/* Filters */
+
+/* ═══════════════════════════════════════════════════════════════════════
+   FILTERS
+   Modular CSS - Deduplicated, ~50 selectors per file
+   ═══════════════════════════════════════════════════════════════════════ */
+
+
+#event-filter-bar.dashboard-opening {
+top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    width: auto;
+    max-width: none;
+}
+
+#event-filter-bar.dashboard-opening .filter-bar-item {
+opacity: 0;
+    transition: opacity 0.2s ease-out;
 }
 
 #event-filter-bar .filter-bar-item {
@@ -1130,14 +1016,13 @@ cursor: pointer;
     text-decoration: underline;
     text-decoration-style: dotted;
     text-underline-offset: 3px;
-    transition: all 0.2s;
+    transition: var(--transition-normal);
     position: relative;
     display: inline-block;
 }
 
 #event-filter-bar .filter-bar-item:hover {
 color: var(--color-text-primary);
-    text-shadow: 0 0 15px var(--color-primary-alpha-80);
     text-decoration-style: solid;
 }
 
@@ -1145,10 +1030,25 @@ color: var(--color-text-primary);
 color: var(--color-text-primary);
     background: var(--color-primary-alpha-30);
     padding: 0.1rem 0.5rem;
-    border-radius: 4px;
+    border-radius: var(--border-radius-small);
     text-decoration: none;
     min-width: 150px;
     text-align: center;
+}
+
+#event-filter-bar .filter-bar-logo {
+display: inline-flex;
+    align-items: center;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+    cursor: pointer;
+    padding: 0.2rem;
+    border-radius: var(--border-radius-small);
+    transition: var(--transition-normal);
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 0.95rem;
 }
 
 #event-filter-bar .filter-bar-logo:hover {
@@ -1157,77 +1057,20 @@ background: var(--color-primary-alpha-20);
 }
 
 #event-filter-bar .filter-bar-logo:focus {
-outline: 2px solid var(--color-primary);
+outline: var(--border-width-medium) solid var(--color-primary);
     outline-offset: 2px;
 }
 
 #event-filter-bar .filter-bar-logo svg {
 width: 1em; 
-
-
-
-
-    border-radius: 4px; 
-
-
-
-
-    padding: 0.5rem 0;
-    box-shadow: 0 4px 20px var(--color-black-alpha-50); 
-
-
-
-
-    z-index: 3000;
-    min-width: 200px;
-    white-space: normal;
+    height: 1em; 
+    stroke: currentColor;
+    fill: none;
+    transition: filter 0.2s;
 }
 
-.filter-bar-dropdown select,
-.filter-bar-dropdown input[type="range"],
-.filter-bar-dropdown input[type="number"],
-.filter-bar-dropdown button {
-width: 100%;
-    margin: 0.3rem 0;
-    padding: 0.5rem;
-    background: var(--color-bg-secondary);
-    color: var(--color-text-primary);
-    cursor: pointer;
-    transition: all 0.2s;
-    font-size: 0.9rem;
-}
-
-#event-filter-bar {
-max-width: calc(var(--app-width) - 40px); 
-
-
-
-
-        font-size: 0.85rem;
-}
-
-
-/* Filters Components Styles */
-
-/* ═══════════════════════════════════════════════════════════════════════
-   FILTERS COMPONENTS - Semantic CSS organization
-   Max 50 selectors per file for KISS compliance
-   
-   Auto-generated from CSS reorganization
-   ═══════════════════════════════════════════════════════════════════════ */
-
-
-.filter-bar-dropdown {
-position: fixed;
-    background: var(--barbie-shade-darkest);
-    backdrop-filter: blur(10px);
-    border: var(--border-width-medium) solid var(--color-primary-alpha-50);
-    border-radius: var(--border-radius-large);
-    padding: 0.25rem 0;
-    box-shadow: var(--shadow-large); 
-    z-index: 3000;
-    min-width: 220px;
-    white-space: normal;
+#event-filter-bar .filter-bar-logo:hover svg {
+stroke: currentColor;
 }
 
 .filter-bar-dropdown select,
@@ -1242,16 +1085,6 @@ width: 100%;
     cursor: pointer;
     transition: var(--transition-normal);
     font-size: 0.9rem;
-}
-
-.filter-bar-dropdown-item {
-padding: 0.6rem 1rem;
-    cursor: pointer;
-    transition: var(--transition-normal);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-left: 3px solid transparent;
 }
 
 .filter-bar-dropdown-item:hover {
@@ -1292,100 +1125,6 @@ color: var(--color-primary);
     font-weight: 700;
 }
 
-.filter-bar-dropdown-item {
-padding: 0.5rem 1rem;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.filter-bar-dropdown-item:hover {
-background: var(--color-primary-alpha-20);
-    color: var(--color-primary);
-}
-
-.filter-bar-dropdown-item.selected {
-background: var(--color-primary-alpha-30);
-    color: var(--color-primary);
-    font-weight: 600;
-}
-
-.filter-bar-dropdown .location-option {
-display: flex;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.filter-bar-dropdown .location-option:hover {
-background: var(--color-primary-alpha-10);
-}
-
-.filter-bar-dropdown .location-option input[type="radio"] {
-width: auto;
-    margin: 0 0.5rem 0 0;
-    cursor: pointer;
-}
-
-.filter-bar-dropdown {
-max-width: calc(var(--app-width) - 40px);
-        font-size: 0.85rem;
-}
-
-.filter-bar-dropdown {
-max-width: calc(var(--app-width) - 40px);
-        font-size: 0.85rem;
-}
-
-.filter-bar-dropdown select,
-.filter-bar-dropdown input[type="range"],
-.filter-bar-dropdown input[type="number"],
-.filter-bar-dropdown button {
-width: 100%;
-    margin: 0.3rem 0;
-    padding: 0.5rem;
-    background: var(--color-bg-secondary);
-    color: var(--color-text-primary);
-    cursor: pointer;
-    transition: all 0.2s;
-    font-size: 0.9rem;
-}
-
-.filter-chip {
-cursor: pointer;
-    background: var(--color-primary-alpha-15); 
-    border: var(--border-width-thin) solid var(--color-primary-alpha-40);
-    border-radius: var(--border-radius-medium);
-    padding: 0.3rem 0.6rem;
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: var(--color-primary);
-    transition: var(--transition-normal);
-    position: relative;
-    display: inline-block;
-    white-space: nowrap;
-}
-
-.filter-chip:hover {
-background: var(--color-primary-alpha-25);
-    border-color: var(--color-primary-alpha-60);
-    color: var(--color-text-primary);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-small);
-}
-
-.filter-chip.active {
-background: var(--color-medium-tone-alpha-35); 
-    border-color: transparent;
-    color: var(--color-text-primary);
-    box-shadow: var(--shadow-small);
-}
-
-.filter-chip:focus {
-outline: var(--border-width-medium) solid var(--color-primary);
-    outline-offset: 2px;
-}
-
 #event-filter-bar .filter-chip {
 cursor: pointer;
     background: none;
@@ -1424,345 +1163,47 @@ opacity: 1;
     transition: filter 0.2s;
 }
 
+.filter-bar-dropdown .location-option:hover {
+background: var(--color-primary-alpha-10);
+}
 
-/* Filters Misc Styles */
-
-/* ═══════════════════════════════════════════════════════════════════════
-   FILTERS MISC - Semantic CSS organization
-   Max 50 selectors per file for KISS compliance
-   
-   Auto-generated from CSS reorganization
-   ═══════════════════════════════════════════════════════════════════════ */
-
-
-#reset-filters {
-background: var(--barbie-shade-dark);
-    color: var(--color-text-tertiary);
-    border: 1px solid var(--light-grey);
-    border-radius: 5px;
+.filter-bar-dropdown .location-option input[type="radio"] {
+width: auto;
+    margin: 0 0.5rem 0 0;
     cursor: pointer;
-    font-size: 0.85rem;
-    margin-top: 0.5rem;
-    transition: all 0.2s;
 }
 
-#reset-filters:hover {
-background: var(--barbie-shade-medium);
-    border-color: var(--color-text-tertiary);
-    color: var(--color-text-secondary);
-}
-
-#reset-filters {
-background: var(--barbie-shade-dark);
-    color: var(--color-text-tertiary);
-    border: 1px solid var(--light-grey);
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    margin-top: 0.5rem;
-    transition: all 0.2s;
-}
-
-#reset-filters:hover {
-background: var(--barbie-shade-medium);
-    border-color: var(--color-text-tertiary);
-    color: var(--color-text-secondary);
-}
-
-
-/* Dashboard Menu Styles */
-
-/* ═══════════════════════════════════════════════════════════════════════
-   DASHBOARD MENU - Semantic CSS organization
-   Max 50 selectors per file for KISS compliance
-   
-   Auto-generated from CSS reorganization
-   ═══════════════════════════════════════════════════════════════════════ */
-
-
-#dashboard-menu {
-position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--color-black-alpha-80);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-    padding: 1rem;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease-in;
-}
-
-#dashboard-menu.hidden {
-display: none;
-}
-
-#dashboard-menu.visible {
-opacity: 1;
-    pointer-events: auto;
-}
-
-#dashboard-menu.visible .dashboard-content {
-opacity: 1;
-    transform: scale(1);
-}
-
-#dashboard-menu {
-position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: var(--color-bg-secondary);
-    z-index: 2000;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 4px 20px var(--color-black-alpha-50);
-    transform: translateY(-100%);
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-#dashboard-menu.visible {
-transform: translateY(0);
-}
-
-#dashboard-menu.hidden {
-transform: translateY(-100%);
-    pointer-events: none;
-}
-
-#dashboard-menu::before {
-content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--color-black-alpha-70);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    pointer-events: none;
-    z-index: -1;
-}
-
-#dashboard-menu.visible::before {
-opacity: 1;
-    pointer-events: auto;
-}
-
-#dashboard-menu {
-padding: 0.5rem;
-}
-
-#dashboard-menu {
-padding: 0.5rem;
-}
-
-
-/* Dashboard Content Styles */
-
-/* ═══════════════════════════════════════════════════════════════════════
-   DASHBOARD CONTENT - Semantic CSS organization
-   Max 50 selectors per file for KISS compliance
-   
-   Auto-generated from CSS reorganization
-   ═══════════════════════════════════════════════════════════════════════ */
-
-
-.dashboard-content {
-background: var(--color-bg-secondary);
-    border-radius: 12px;
-    padding: 1.5rem;
-    max-width: 600px;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-    position: relative;
-    border: 2px solid var(--color-border-primary);
-    box-shadow: 0 0 20px var(--color-primary-alpha-30);
-    opacity: 0;
-    transform: scale(0.95);
-    transition: opacity 0.3s ease-in, transform 0.3s ease-in;
-}
-
-#dashboard-menu.visible .dashboard-content {
-opacity: 1;
-    transform: scale(1);
-}
-
-.dashboard-section {
-margin-bottom: 1rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--color-primary-alpha-20);
-}
-
-.dashboard-section:last-child {
-border-bottom: none;
-    margin-bottom: 0;
-}
-
-.dashboard-section p {
-line-height: 1.5;
-    margin-bottom: 0.5rem;
-    color: var(--color-text-secondary);
-    font-size: 0.9rem;
-}
-
-.dashboard-content {
-background: var(--color-bg-secondary);
-    border-radius: 0 0 12px 12px;
-    padding: 1.5rem;
-    max-width: 100%;
-    width: 100%;
-    position: relative;
-    border: 2px solid var(--color-border-primary);
-    border-top: none;
-    box-shadow: 0 0 20px var(--color-primary-alpha-30);
-}
-
-.dashboard-section {
-margin-bottom: 1rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--color-primary-alpha-20);
-}
-
-display: inline-block;
-    width: 20px;
-    height: 20px;
-    margin-right: 0.5rem;
-    vertical-align: middle;
-    color: var(--color-ecobarbie-medium-tint); 
-
-
-.dashboard-content [data-lucide] svg {
-fill: currentColor;
-    stroke: none;
-}
-
-.dashboard-section p {
-line-height: 1.5;
-    margin-bottom: 0.5rem;
-    color: var(--color-text-secondary);
-    font-size: 0.9rem;
-}
-
-.dashboard-section p {
-font-size: 0.85rem;
-}
-
-.dashboard-content {
-padding: 0.75rem;
-}
-
-.dashboard-content {
-padding: 1rem;
-        border-radius: 8px;
-        max-height: 95vh;
-}
-
-.dashboard-section {
-margin-bottom: 0.75rem;
-        padding-bottom: 0.75rem;
-}
-
-.dashboard-section p {
-font-size: 0.85rem;
-}
-
-.dashboard-content {
-padding: 0.75rem;
-}
-
-.dashboard-section-icon svg {
-fill: currentColor;
-    stroke: none;
-}
-
-.dashboard-content [data-lucide] {
-color: inherit;
-}
-
-.dashboard-content {
-padding: 1rem;
-        border-radius: 8px;
-        max-height: 95vh;
-}
-
-.dashboard-section {
-margin-bottom: 0.75rem;
-        padding-bottom: 0.75rem;
-}
-
-
-/* Dashboard Misc Styles */
-
-/* ═══════════════════════════════════════════════════════════════════════
-   DASHBOARD MISC - Semantic CSS organization
-   Max 50 selectors per file for KISS compliance
-   
-   Auto-generated from CSS reorganization
-   ═══════════════════════════════════════════════════════════════════════ */
-
-
-.dashboard-header {
-display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-}
-
-.dashboard-logo {
-display: flex;
-    align-items: center;
+.filter-chip {
+cursor: pointer;
+    background: var(--color-primary-alpha-15); 
+    border: var(--border-width-thin) solid var(--color-primary-alpha-40);
+    border-radius: var(--border-radius-medium);
+    padding: 0.3rem 0.6rem;
+    font-size: 0.95rem;
+    font-weight: 500;
     color: var(--color-primary);
-}
-
-.dashboard-logo svg {
-width: 32px;
-    height: 32px;
-    filter: drop-shadow(0 0 8px var(--color-primary-alpha-60));
-}
-
-#close-dashboard {
-background: none;
-    border: none;
-    color: var(--color-text-secondary);
-    font-size: 1.8rem;
-    cursor: pointer;
-    line-height: 1;
-    transition: color 0.2s;
-    padding: 0.5rem;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#close-dashboard:hover {
-color: var(--color-primary);
-}
-
-.dashboard-links {
-list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.dashboard-links li {
-margin-bottom: 0.4rem;
-}
-
-.dashboard-links a {
-color: var(--color-primary);
-    text-decoration: none;
-    transition: all 0.2s;
+    transition: var(--transition-normal);
+    position: relative;
     display: inline-block;
-    font-size: 0.9rem;
+    white-space: nowrap;
 }
+
+.filter-chip:hover {
+background: var(--color-primary-alpha-25);
+    border-color: var(--color-primary-alpha-60);
+    color: var(--color-text-primary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-small);
+}
+
+
+/* Dashboard */
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DASHBOARD
+   Modular CSS - Deduplicated, ~50 selectors per file
+   ═══════════════════════════════════════════════════════════════════════ */
+
 
 .dashboard-links a:hover {
 color: var(--color-primary-hover);
@@ -1770,40 +1211,11 @@ color: var(--color-primary-hover);
     transform: translateX(3px);
 }
 
-.dashboard-header {
-display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-}
-
-.dashboard-logo {
-display: flex;
-    align-items: center;
-    color: var(--color-primary);
-}
-
 .dashboard-logo svg {
 width: 32px;
     height: 32px;
     filter: drop-shadow(0 0 8px var(--color-primary-alpha-60));
     flex-shrink: 0;
-}
-
-#close-dashboard {
-background: none;
-    border: none;
-    color: var(--color-text-secondary);
-    font-size: 1.8rem;
-    cursor: pointer;
-    line-height: 1;
-    transition: color 0.2s;
-    padding: 0.5rem;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 #close-dashboard:hover {
@@ -1832,16 +1244,6 @@ color: var(--color-primary);
     font-size: 0.9rem;
 }
 
-.dashboard-links a:hover {
-color: var(--color-primary-hover);
-    text-shadow: 0 0 10px var(--color-primary-alpha-50);
-    transform: translateX(3px);
-}
-
-.dashboard-links a {
-font-size: 0.85rem;
-}
-
 .dashboard-action-btn {
 background: var(--color-primary);
     color: white;
@@ -1859,29 +1261,40 @@ background: var(--color-primary-hover);
     transform: translateY(-1px);
 }
 
-.dashboard-links a {
-font-size: 0.85rem;
-}
 
-
-/* Bubbles Styles */
+/* Bubbles */
 
 /* ═══════════════════════════════════════════════════════════════════════
-   BUBBLES - Semantic CSS organization
-   Max 50 selectors per file for KISS compliance
-   
-   Auto-generated from CSS reorganization
+   BUBBLES
+   Modular CSS - Deduplicated, ~50 selectors per file
    ═══════════════════════════════════════════════════════════════════════ */
 
 
-.bubble-connectors {
-position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 900;
+.bubble-location i[data-lucide="map-pin"],
+.bubble-location svg {
+width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+    flex-shrink: 0;
+}
+
+.bubble-date {
+font-size: 0.7rem;
+}
+
+.bubble-title {
+font-size: 0.8rem;
+}
+
+.bubble-location,
+    .bubble-distance {
+font-size: 0.7rem;
+}
+
+.bubble-bookmark {
+font-size: 1.1rem;
 }
 
 .bubble-connector-line {
@@ -1890,33 +1303,6 @@ stroke: var(--color-primary);
     stroke-linecap: round;
     opacity: 0.85;
     filter: drop-shadow(0 0 4px var(--color-primary-alpha-60));
-}
-
-.speech-bubble {
-position: absolute;
-    background: var(--color-bg-primary-alpha-95);
-    backdrop-filter: blur(10px);
-    border: 2px solid var(--color-primary);
-    border-radius: 12px;
-    padding: 12px;
-    width: 220px;
-    z-index: 1000;
-    box-shadow: 0 4px 20px var(--color-black-alpha-50),
-                0 0 15px var(--color-primary-alpha-40);
-    cursor: grab;
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
-                box-shadow 0.3s ease, 
-                opacity 0.4s ease,
-                filter 0.3s ease;
-    opacity: 0;
-    pointer-events: auto;
-    font-size: 0.85rem;
-    
-    transform-origin: center;
-    will-change: transform;
-    
-    touch-action: none;
-    user-select: none;
 }
 
 .speech-bubble.bubble-is-bookmarked {
@@ -2010,41 +1396,6 @@ color: var(--color-primary);
     line-height: 1.2;
 }
 
-.bubble-date {
-color: var(--color-text-secondary);
-    font-size: 0.75rem;
-    margin-bottom: 8px;
-    line-height: 1.2;
-}
-
-.bubble-title {
-color: var(--color-text-primary);
-    font-size: 0.9rem;
-    font-weight: 500;
-    margin-bottom: 6px;
-    line-height: 1.3;
-}
-
-.bubble-location {
-color: var(--color-text-secondary);
-    font-size: 0.8rem;
-    margin-bottom: 4px;
-    line-height: 1.2;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.bubble-distance {
-color: var(--color-text-tertiary);
-    font-size: 0.75rem;
-    margin-bottom: 8px;
-    line-height: 1.2;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
 .bubble-distance i[data-lucide="footprints"],
 .bubble-distance svg {
 width: 14px;
@@ -2053,22 +1404,6 @@ width: 14px;
     stroke-width: 2;
     fill: none;
     flex-shrink: 0;
-}
-
-.bubble-bookmark {
-position: absolute;
-    bottom: 8px;
-    right: 8px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
-    line-height: 1;
-    transition: transform 0.2s ease, color 0.2s ease;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .bubble-bookmark i[data-lucide="heart"],
@@ -2098,93 +1433,14 @@ stroke: none;
 animation: heartbeat 0.3s ease;
 }
 
-.bubble-duplicate-badge {
-position: absolute;
-    top: -8px;
-    right: -8px;
-    background: var(--color-warning);
-    color: var(--color-bg-primary);
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 12px;
-    border: 2px solid var(--color-bg-primary);
-    z-index: 10;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    line-height: 1.2;
-    white-space: nowrap;
-}
 
-.bubble-demo-badge {
-position: absolute;
-    top: -8px;
-    left: -8px;
-    background: var(--color-error);  
-    color: white;
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 12px;
-    border: 2px solid var(--color-bg-primary);
-    z-index: 10;
-    box-shadow: 0 2px 8px var(--color-black-alpha-30);
-    line-height: 1.2;
-    white-space: nowrap;
-}
-
-.speech-bubble {
-width: 180px;
-        padding: 10px;
-        font-size: 0.75rem;
-}
-
-.bubble-time-headline {
-font-size: 1rem;
-}
-
-.bubble-date {
-font-size: 0.7rem;
-}
-
-.bubble-title {
-font-size: 0.8rem;
-}
-
-.bubble-location,
-    .bubble-distance {
-font-size: 0.7rem;
-}
-
-.bubble-bookmark {
-font-size: 1.1rem;
-}
-
-.bubble-location i[data-lucide="map-pin"],
-.bubble-location svg {
-width: 14px;
-    height: 14px;
-    stroke: currentColor;
-    stroke-width: 2;
-    fill: none;
-    flex-shrink: 0;
-}
-
-
-/* Locations Styles */
+/* Locations */
 
 /* ═══════════════════════════════════════════════════════════════════════
-   LOCATIONS - Semantic CSS organization
-   Max 50 selectors per file for KISS compliance
-   
-   Auto-generated from CSS reorganization
+   LOCATIONS
+   Modular CSS - Deduplicated, ~50 selectors per file
    ═══════════════════════════════════════════════════════════════════════ */
 
-
-.location-override label {
-display: flex;
-    align-items: center;
-    cursor: pointer;
-}
 
 .location-override input[type="checkbox"] {
 margin-right: 0.5rem;
@@ -2209,13 +1465,6 @@ background: var(--bg-tertiary);
     border: 1px solid var(--border-secondary);
 }
 
-.custom-location-header {
-display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.3rem;
-}
-
 .custom-location-name {
 font-weight: bold;
     color: var(--color-primary);
@@ -2226,12 +1475,6 @@ font-weight: bold;
 font-size: 0.8rem;
     color: var(--text-secondary);
     font-family: var(--font-family-mono);
-}
-
-.custom-location-actions {
-display: flex;
-    gap: 0.4rem;
-    margin-top: 0.5rem;
 }
 
 .custom-location-btn {
@@ -2266,20 +1509,6 @@ text-align: center;
     padding: 1.5rem;
     color: var(--text-secondary);
     font-size: 0.9rem;
-}
-
-.custom-location-dialog {
-position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--color-black-alpha-80);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 3000;
-    padding: 1rem;
 }
 
 .custom-location-content {
@@ -2335,12 +1564,6 @@ outline: none;
     box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-ecobarbie-light-tone) 20%, transparent);
 }
 
-.custom-location-buttons {
-display: flex;
-    gap: 0.75rem;
-    justify-content: flex-end;
-}
-
 .custom-location-buttons button {
 padding: 0.6rem 1.2rem;
     border-radius: 6px;
@@ -2351,27 +1574,43 @@ padding: 0.6rem 1.2rem;
     border: none;
 }
 
-.location-override label {
-display: flex;
-    align-items: center;
-    cursor: pointer;
-}
 
-.location-override input[type="checkbox"] {
-margin-right: 0.5rem;
-    cursor: pointer;
-}
-
-
-/* Notifications Styles */
+/* Notifications */
 
 /* ═══════════════════════════════════════════════════════════════════════
-   NOTIFICATIONS - Semantic CSS organization
-   Max 50 selectors per file for KISS compliance
-   
-   Auto-generated from CSS reorganization
+   NOTIFICATIONS
+   Modular CSS - Deduplicated, ~50 selectors per file
    ═══════════════════════════════════════════════════════════════════════ */
 
+
+.noscript-warning {
+background: var(--color-ecobarbie-dark-shade);
+    padding: 1rem;
+    border-radius: var(--border-radius-large);
+    margin-bottom: 1.5rem;
+    border-left: 4px solid var(--color-primary);
+}
+
+.noscript-warning-title {
+margin: 0;
+    color: var(--color-primary-hover);
+}
+
+.noscript-warning-text {
+margin: 0.5rem 0 0 0;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-small);
+}
+
+.noscript-badge-running {
+background: var(--color-primary);
+    color: var(--color-text-white);
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--border-radius-small);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+}
 
 .debug-group-header.warning {
 background: var(--color-warning-alpha-10);
@@ -2455,114 +1694,22 @@ background: var(--color-black-alpha-30);
     color: var(--color-ecobarbie-medium-tint);
 }
 
-.debug-warning-link {
-color: var(--color-primary);
-    text-decoration: none;
-    font-weight: 600;
-    display: inline-block;
-    margin-top: 0.3rem;
-}
 
-.debug-warning-link:hover {
-text-decoration: underline;
-    color: var(--color-primary-hover);
-}
-
-.debug-duplicate-warning-header {
-color: var(--color-warning);
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.pending-notification {
-background: linear-gradient(135deg, var(--color-warning-alpha-15), var(--color-warning-alpha-05));
-    border: 2px solid var(--color-warning);
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    animation: subtle-pulse 3s ease-in-out infinite;
-}
-
-display: inline-block;
-    width: 24px;
-    height: 24px;
-    flex-shrink: 0;
-    color: var(--color-ecobarbie-light-tone); 
-
-
-
-.pending-notification-icon svg {
-fill: currentColor;
-    stroke: none;
-}
-
-.duplicate-warning {
-color: #f59e0b;
-    display: block;
-    margin-bottom: 0.5rem;
-}
-
-
-/* Noscript Styles */
+/* Ui Components */
 
 /* ═══════════════════════════════════════════════════════════════════════
-   NOSCRIPT - Semantic CSS organization
-   Max 50 selectors per file for KISS compliance
-   
-   Auto-generated from CSS reorganization
+   UI COMPONENTS
+   Modular CSS - Deduplicated, ~50 selectors per file
    ═══════════════════════════════════════════════════════════════════════ */
 
 
-noscript {
-display: block;
-    padding: 20px;
-    background: var(--color-warning);
-    color: var(--color-bg-primary);
-    text-align: center;
-    font-weight: bold;
-}
-
 .noscript-container {
-max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-    background: var(--color-bg-dark-grey-1);
-    color: var(--color-text-white);
-    font-family: var(--font-family-base);
-}
-
-.noscript-title {
-color: var(--color-primary);
-    margin-bottom: 1rem;
-}
-
-.noscript-empty {
-color: var(--color-text-lighter-grey);
-    text-align: center;
-    padding: 2rem;
-}
-
-.noscript-section-title {
-color: var(--color-primary);
-    font-size: var(--font-size-large);
-    margin-bottom: 1.5rem;
+padding: 1rem;
 }
 
 .noscript-event-count {
 color: var(--color-text-lighter-grey);
     font-size: 1rem;
-}
-
-.noscript-events-list {
-display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
 }
 
 .noscript-event-card {
@@ -2621,385 +1768,152 @@ margin-top: 2rem;
 margin: 0;
 }
 
-.noscript-container {
-padding: 1rem;
+::-webkit-scrollbar {
+width: 8px;
 }
 
-.noscript-event-card {
-padding: 1rem;
+::-webkit-scrollbar-track {
+background: var(--barbie-shade-darkest);
 }
 
-.noscript-event-title {
-font-size: 1.1rem;
+::-webkit-scrollbar-thumb {
+background: var(--color-primary);
+    border-radius: 4px;
 }
 
-.noscript-warning {
-background: var(--color-ecobarbie-dark-shade);
+::-webkit-scrollbar-thumb:hover {
+background: var(--color-primary-hover);
+}
+
+.event-card {
+background: var(--barbie-shade-dark);
+    border-radius: 8px;
     padding: 1rem;
-    border-radius: var(--border-radius-large);
-    margin-bottom: 1.5rem;
-    border-left: 4px solid var(--color-primary);
-}
-
-.noscript-warning-title {
-margin: 0;
-    color: var(--color-primary-hover);
-}
-
-.noscript-warning-text {
-margin: 0.5rem 0 0 0;
-    color: var(--color-text-muted);
-    font-size: var(--font-size-small);
-}
-
-.noscript-badge-running {
-background: var(--color-primary);
-    color: var(--color-text-white);
-    padding: 0.25rem 0.75rem;
-    border-radius: var(--border-radius-small);
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-left: 0.5rem;
-}
-
-
-/* Controls Styles */
-
-/* ═══════════════════════════════════════════════════════════════════════
-   CONTROLS - Semantic CSS organization
-   Max 50 selectors per file for KISS compliance
-   
-   Auto-generated from CSS reorganization
-   ═══════════════════════════════════════════════════════════════════════ */
-
-
-.distance-slider-container {
-padding: 1rem;
-}
-
-.distance-slider-container input[type="range"] {
-width: 100%;
-    margin: 0.5rem 0;
-}
-
-.distance-slider-container .distance-display {
-color: var(--color-primary);
-    font-weight: 600;
-    text-align: center;
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-}
-
-.distance-slider-container {
-padding: 1rem;
-}
-
-.distance-slider-container input[type="range"] {
-width: 100%;
-    margin: 0.5rem 0;
-}
-
-.distance-slider-container .distance-display {
-color: var(--color-primary);
-    font-weight: 600;
-    text-align: center;
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-}
-
-
-/* Scrollbar Styles */
-
-/* ═══════════════════════════════════════════════════════════════════════
-   SCROLLBAR - Semantic CSS organization
-   Max 50 selectors per file for KISS compliance
-   
-   Auto-generated from CSS reorganization
-   ═══════════════════════════════════════════════════════════════════════ */
-
-
-::-webkit-scrollbar {
-width: 8px;
-}
-
-::-webkit-scrollbar-track {
-background: var(--barbie-shade-darkest);
-}
-
-::-webkit-scrollbar-thumb {
-background: var(--color-primary);
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-background: var(--color-primary-hover);
-}
-
-::-webkit-scrollbar {
-width: 8px;
-}
-
-::-webkit-scrollbar-track {
-background: var(--barbie-shade-darkest);
-}
-
-::-webkit-scrollbar-thumb {
-background: var(--color-primary);
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-background: var(--color-primary-hover);
-}
-
-
-/* Debug Styles */
-
-/* ═══════════════════════════════════════════════════════════════════════
-   DEBUG - Semantic CSS organization
-   Max 50 selectors per file for KISS compliance
-   
-   Auto-generated from CSS reorganization
-   ═══════════════════════════════════════════════════════════════════════ */
-
-
-.debug-enabled {
-color: #FFB3DF;
-}
-
-.debug-disabled {
-color: #888;
-}
-
-color: var(--color-ecobarbie-light-tone); 
-
-
-
-
-
-
-.debug-group {
-background: rgba(13, 17, 23, 0.6);
-    border: 1px solid color-mix(in srgb, var(--color-ecobarbie-dark-tone) 30%, transparent);
-    border-radius: 6px;
     margin-bottom: 1rem;
-    overflow: hidden;
-}
-
-.debug-group-header {
-display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: color-mix(in srgb, var(--color-ecobarbie-dark-tone) 15%, transparent);
-    padding: 0.6rem 0.75rem;
-    border-bottom: 1px solid color-mix(in srgb, var(--color-ecobarbie-dark-tone) 30%, transparent);
-}
-
-.debug-group-header i {
-width: 1rem;
-    height: 1rem;
-    color: var(--color-ecobarbie-light-shade);
-}
-
-.debug-group-content {
-padding: 0.75rem;
-    font-family: 'Roboto Mono', 'Monaco', 'Courier New', monospace;
-    font-size: 0.85em;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem 1rem;
-}
-
-#debug-caching.cache-enabled {
-color: var(--color-ecobarbie-light-tone);
-    font-weight: 700;
-}
-
-#debug-caching.cache-disabled {
-color: #8b949e;
-}
-
-.debug-group {
-margin-bottom: 0.75rem;
-}
-
-.debug-group-header {
-padding: 0.5rem 0.6rem;
-        font-size: 0.9em;
-}
-
-.debug-group-content {
-padding: 0.6rem;
-        font-size: 0.8em;
-        grid-template-columns: 1fr;
-        gap: 0.2rem;
-}
-
-.debug-label {
-font-size: 0.85em;
-        padding: 0.3rem 0;
-}
-
-.debug-value {
-text-align: left;
-        font-size: 0.95em;
-        padding: 0.3rem 0 0.5rem 0;
-}
-
-.debug-commit-msg {
-max-width: 200px;
-}
-
-.debug-label {
-color: var(--color-ecobarbie-medium-tone);
-    font-size: 0.9em;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    padding: 0.4rem 0;
-    border-bottom: 1px solid color-mix(in srgb, var(--color-ecobarbie-dark-tone) 10%, transparent);
-}
-
-.debug-value {
-color: var(--color-ecobarbie-light-tone);
-    text-align: right;
-    word-break: break-word;
-    padding: 0.4rem 0;
-    border-bottom: 1px solid color-mix(in srgb, var(--color-ecobarbie-dark-tone) 10%, transparent);
-}
-
-.debug-value.monospace {
-font-family: 'Roboto Mono', 'Monaco', 'Courier New', monospace;
-    font-size: 0.9em;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.debug-value.highlight {
-color: var(--color-ecobarbie-medium-tint);
-    font-weight: 700;
-}
-
-.debug-commit-msg {
-font-style: italic;
-    opacity: 0.9;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 250px;
-}
-
-.debug-details {
-margin-top: 0.75rem;
-    border-top: 1px solid color-mix(in srgb, var(--color-ecobarbie-dark-tone) 20%, transparent);
-    padding-top: 0.75rem;
-}
-
-.debug-details-summary {
-color: var(--color-ecobarbie-medium-tone);
-    font-size: 0.85em;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
     cursor: pointer;
-    user-select: none;
-    list-style: none;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.4rem 0;
+    transition: all 0.2s;
+    border-left: 3px solid var(--color-primary);
 }
 
-.debug-details-summary::-webkit-details-marker {
-display: none;
+.event-card:hover {
+transform: translateX(-5px);
+    box-shadow: 0 5px 15px var(--color-primary-alpha-30);
+    background: var(--barbie-shade-medium);
 }
 
-.debug-details-summary::before {
-content: '▶';
-    font-size: 0.7em;
-    transition: transform 0.2s;
+.event-card p {
+font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.3rem;
 }
 
-.debug-details[open] .debug-details-summary::before {
-transform: rotate(90deg);
+.event-card .distance {
+color: var(--color-text-tertiary);
+    font-size: 0.8rem;
 }
 
-.debug-details-summary:hover {
-color: var(--color-ecobarbie-light-shade);
-}
-
-.debug-details-content {
-padding: 0.5rem 0;
-}
-
-.debug-size-list {
-list-style: none;
-    margin: 0;
-    padding: 0;
-    font-size: 0.85em;
-}
-
-.debug-size-list li {
-padding: 0.3rem 0;
-    color: var(--color-ecobarbie-light-tone);
-    border-bottom: 1px solid color-mix(in srgb, var(--color-ecobarbie-dark-tone) 10%, transparent);
-}
-
-.debug-size-list li:last-child {
-border-bottom: none;
-}
-
-.debug-duplicate-list {
-list-style: none;
-    margin: 0.5rem 0 0 0;
-    padding: 0;
-}
-
-.debug-duplicate-list li {
-padding: 0.3rem 0;
-    padding-left: 1rem;
+.detail-content {
+background: var(--color-bg-secondary);
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
     position: relative;
+    border: 2px solid var(--color-border-primary);
+    box-shadow: 0 0 20px var(--color-primary-alpha-30);
+}
+
+.detail-content p {
+line-height: 1.6;
+    margin-bottom: 1rem;
     color: var(--color-text-secondary);
 }
 
-.debug-duplicate-list li::before {
-content: '•';
-    position: absolute;
-    left: 0;
-    color: var(--color-warning);
-}
 
-.debug-enabled {
-color: var(--color-ecobarbie-medium-tint);
-}
-
-.debug-disabled {
-color: #888;
-}
-
-.debug-size-list li {
-color: var(--color-ecobarbie-light-tone); 
-
-
-
-
-    white-space: nowrap;
-}
-
-.debug-size-list li::before {
-content: '▸';
-    margin-right: 0.25rem;
-    color: var(--color-ecobarbie-medium-tone);
-}
-
-
-/* Utilities Env Styles */
+/* Utilities */
 
 /* ═══════════════════════════════════════════════════════════════════════
-   UTILITIES ENV - Semantic CSS organization
-   Max 50 selectors per file for KISS compliance
-   
-   Auto-generated from CSS reorganization
+   UTILITIES
+   Modular CSS - Deduplicated, ~50 selectors per file
    ═══════════════════════════════════════════════════════════════════════ */
 
+
+.map-fallback-content {
+text-align: center;
+    padding: 2rem;
+    max-width: 400px;
+    color: var(--color-primary);
+}
+
+.map-fallback-icon {
+font-size: 4rem;
+    margin-bottom: 1rem;
+    filter: grayscale(0%);
+}
+
+.map-fallback p {
+color: var(--color-text-secondary);
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+.map-fallback-note {
+font-style: italic;
+    color: var(--color-primary);
+    margin-top: 1rem !important;
+}
+
+.distance-slider-container {
+padding: 1rem;
+}
+
+.distance-slider-container input[type="range"] {
+width: 100%;
+    margin: 0.5rem 0;
+}
+
+.distance-slider-container .distance-display {
+color: var(--color-primary);
+    font-weight: 600;
+    text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+#event-arrows-container svg {
+width: 100%;
+    height: 100%;
+}
+
+#app {
+height: var(--app-height);
+    width: var(--app-width);
+    position: relative;
+}
+
+.font-medium {
+font-weight: 500;
+}
+
+.event-detail-edge p {
+color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    margin: 0.3rem 0;
+    line-height: 1.4;
+}
+
+.event-detail-edge .detail-time {
+color: var(--color-text-tertiary);
+    font-size: 0.8rem;
+}
+
+.event-detail-edge .detail-distance {
+color: var(--color-text-tertiary);
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
+}
 
 .env-dev {
 color: #FFB3DF;
@@ -3009,259 +1923,17 @@ color: #FFB3DF;
 color: #D689B8;
 }
 
-.env-dev {
-color: var(--color-ecobarbie-medium-tint);
-}
-
 .env-ci {
 color: #58a6ff;
 }
 
-
-/* Utilities Events Styles */
-
-/* ═══════════════════════════════════════════════════════════════════════
-   UTILITIES EVENTS - Semantic CSS organization
-   Max 50 selectors per file for KISS compliance
-   
-   Auto-generated from CSS reorganization
-   ═══════════════════════════════════════════════════════════════════════ */
-
-
-.event-detail-edge {
-position: fixed;
-    background: var(--barbie-shade-darkest);
-    backdrop-filter: blur(10px);
-    border: 2px solid var(--color-border-primary);
-    border-radius: 8px;
-    padding: 1rem;
-    max-width: 280px;
-    z-index: 1500;
-    box-shadow: 0 4px 20px var(--color-black-alpha-50),
-                0 0 10px var(--color-primary-alpha-30);
-    pointer-events: auto;
-}
-
-.event-detail-edge p {
-color: var(--color-text-secondary);
-    font-size: 0.85rem;
-    margin: 0.3rem 0;
-    line-height: 1.4;
-}
-
-.event-detail-edge .detail-time {
-color: var(--color-text-tertiary);
-    font-size: 0.8rem;
-}
-
-.event-detail-edge .detail-distance {
-color: var(--color-text-tertiary);
-    font-size: 0.75rem;
-    margin-top: 0.5rem;
-}
-
-#event-list {
-position: fixed;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 350px;
-    background: var(--barbie-shade-darkest);
-    backdrop-filter: blur(10px);
-    padding: 1.5rem;
-    overflow-y: auto;
-    box-shadow: -5px 0 20px var(--color-black-alpha-30);
-    z-index: 999;
-}
-
 #event-list.hidden {
 display: none;
-}
-
-.event-card {
-background: var(--barbie-shade-dark);
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    border-left: 3px solid var(--color-primary);
-}
-
-.event-card:hover {
-transform: translateX(-5px);
-    box-shadow: 0 5px 15px var(--color-primary-alpha-30);
-    background: var(--barbie-shade-medium);
-}
-
-.event-card p {
-font-size: 0.85rem;
-    color: var(--color-text-secondary);
-    margin-bottom: 0.3rem;
-}
-
-.event-card .distance {
-color: var(--color-text-tertiary);
-    font-size: 0.8rem;
-}
-
-#event-detail {
-position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--color-black-alpha-80);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
 }
 
 #event-detail.hidden {
 display: none;
 }
-
-.event-detail-edge {
-position: fixed;
-    background: var(--barbie-shade-darkest);
-    backdrop-filter: blur(10px);
-    border: 2px solid var(--color-border-primary);
-    border-radius: 8px;
-    padding: 1rem;
-    max-width: 280px;
-    z-index: 1500;
-    box-shadow: 0 4px 20px var(--color-black-alpha-50),
-                0 0 10px var(--color-primary-alpha-30);
-    pointer-events: auto;
-}
-
-.event-detail-edge p {
-color: var(--color-text-secondary);
-    font-size: 0.85rem;
-    margin: 0.3rem 0;
-    line-height: 1.4;
-}
-
-.event-detail-edge .detail-time {
-color: var(--color-text-tertiary);
-    font-size: 0.8rem;
-}
-
-.event-detail-edge .detail-distance {
-color: var(--color-text-tertiary);
-    font-size: 0.75rem;
-    margin-top: 0.5rem;
-}
-
-.event-detail-edge {
-position: fixed;
-    background: var(--barbie-shade-darkest);
-    backdrop-filter: blur(10px);
-    border: 2px solid var(--color-border-primary);
-    border-radius: 8px;
-    padding: 1rem;
-    max-width: 280px;
-    z-index: 1500;
-    box-shadow: 0 4px 20px var(--color-black-alpha-50),
-                0 0 10px var(--color-primary-alpha-30);
-    pointer-events: auto;
-}
-
-.event-detail-edge p {
-color: var(--color-text-secondary);
-    font-size: 0.85rem;
-    margin: 0.3rem 0;
-    line-height: 1.4;
-}
-
-.event-detail-edge .detail-time {
-color: var(--color-text-tertiary);
-    font-size: 0.8rem;
-}
-
-.event-detail-edge .detail-distance {
-color: var(--color-text-tertiary);
-    font-size: 0.75rem;
-    margin-top: 0.5rem;
-}
-
-#event-list {
-position: fixed;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 350px;
-    background: var(--barbie-shade-darkest);
-    backdrop-filter: blur(10px);
-    padding: 1.5rem;
-    overflow-y: auto;
-    box-shadow: -5px 0 20px var(--color-black-alpha-30);
-    z-index: 999;
-}
-
-#event-list.hidden {
-display: none;
-}
-
-.event-card {
-background: var(--barbie-shade-dark);
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    border-left: 3px solid var(--color-primary);
-}
-
-.event-card:hover {
-transform: translateX(-5px);
-    box-shadow: 0 5px 15px var(--color-primary-alpha-30);
-    background: var(--barbie-shade-medium);
-}
-
-.event-card p {
-font-size: 0.85rem;
-    color: var(--color-text-secondary);
-    margin-bottom: 0.3rem;
-}
-
-.event-card .distance {
-color: var(--color-text-tertiary);
-    font-size: 0.8rem;
-}
-
-#event-detail {
-position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--color-black-alpha-80);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-}
-
-#event-detail.hidden {
-display: none;
-}
-
-#event-list {
-display: none;
-}
-
-
-/* Utilities Misc Styles */
-
-/* ═══════════════════════════════════════════════════════════════════════
-   UTILITIES MISC - Semantic CSS organization
-   Max 50 selectors per file for KISS compliance
-   
-   Auto-generated from CSS reorganization
-   ═══════════════════════════════════════════════════════════════════════ */
-
 
 *:not([class*='leaflet']) {
 margin: 0;
@@ -3293,22 +1965,6 @@ transform: scale(1);
 transform: scale(1.3);
 }
 
-.bookmark-feedback {
-position: fixed;
-    bottom: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--color-primary-alpha-95);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    z-index: 2500;
-    box-shadow: 0 4px 12px var(--color-black-alpha-30);
-    animation: slideUpFadeIn 0.3s ease;
-}
-
 .bookmark-feedback.fade-out {
 animation: fadeOut 0.3s ease;
     opacity: 0;
@@ -3324,48 +1980,8 @@ opacity: 1;
         transform: translateX(-50%) translateY(0);
 }
 
-from {
-opacity: 1;
-}
-
-to {
-opacity: 0;
-}
-
-.detail-content {
-background: var(--color-bg-secondary);
-    border-radius: 12px;
-    padding: 2rem;
-    max-width: 600px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-    position: relative;
-    border: 2px solid var(--color-border-primary);
-    box-shadow: 0 0 20px var(--color-primary-alpha-30);
-}
-
-#close-detail {
-position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    color: var(--color-text-secondary);
-    font-size: 2rem;
-    cursor: pointer;
-    line-height: 1;
-    transition: color 0.2s;
-}
-
 #close-detail:hover {
 color: var(--color-primary);
-}
-
-.detail-content p {
-line-height: 1.6;
-    margin-bottom: 1rem;
-    color: var(--color-text-secondary);
 }
 
 #detail-info {
@@ -3454,116 +2070,8 @@ background: color-mix(in srgb, var(--color-ecobarbie-light-tone) 10%, transparen
     color: var(--color-text-primary);
 }
 
-.detail-content {
-background: var(--color-bg-secondary);
-    border-radius: 12px;
-    padding: 2rem;
-    max-width: 600px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-    position: relative;
-    border: 2px solid var(--color-border-primary);
-    box-shadow: 0 0 20px var(--color-primary-alpha-30);
-}
-
-#close-detail {
-position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    color: var(--color-text-secondary);
-    font-size: 2rem;
-    cursor: pointer;
-    line-height: 1;
-    transition: color 0.2s;
-}
-
-#close-detail:hover {
-color: var(--color-primary);
-}
-
-.detail-content p {
-line-height: 1.6;
-    margin-bottom: 1rem;
-    color: var(--color-text-secondary);
-}
-
-#detail-info {
-background: var(--barbie-shade-darkest);
-    padding: 1rem;
-    border-radius: 8px;
-    margin: 1rem 0;
-    border: 1px solid var(--color-primary-alpha-20);
-}
-
-#detail-link {
-display: inline-block;
-    background: var(--color-primary);
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: 5px;
-    text-decoration: none;
-    transition: all 0.2s;
-    box-shadow: 0 0 10px var(--color-primary-alpha-30);
-}
-
-#detail-link:hover {
-background: var(--color-primary-hover);
-    box-shadow: 0 0 15px var(--color-primary-alpha-50);
-}
-
 .duplicate-ok {
 color: var(--color-ecobarbie-light-tone);
-}
-
-#imprint-link {
-display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.2rem;
-    margin-right: 0.5rem;
-    background: none;
-    color: var(--color-text-secondary);
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    transition: all 0.2s;
-}
-
-#imprint-link:hover {
-background: var(--color-primary-alpha-10);
-    color: var(--color-primary);
-}
-
-#site-logo {
-height: 40px;
-    width: 40px;
-    display: inline-block;
-    vertical-align: middle;
-}
-
-#site-logo path {
-stroke: var(--color-primary) !important;
-    transition: stroke 0.2s;
-}
-
-#imprint-link:hover #site-logo path {
-stroke: var(--color-primary) !important;
-}
-
-#imprint-text {
-display: none;
-}
-
-.cache-enabled {
-color: var(--color-ecobarbie-light-tone);
-}
-
-.cache-disabled {
-color: #888;
 }
 
 
@@ -3812,7 +2320,7 @@ window.APP_CONFIG = {"debug": false, "app": {"environment": "ci"}, "map": {"defa
 window.__INLINE_EVENTS_DATA__ = { "events": [{"id": "html_frankenpost_-3959068800383208116", "title": "Kunst in Bayreuth - Werke der 1940er bis 1960er Jahre - aus den Sammlungen und Stiftungen im Kunstmuseum", "description": "Donnerstag,01.01.2026,", "location": {"name": "Kunstmuseum Bayreuth", "lat": 49.944, "lon": 11.5747, "address": "Maximilianstraße 33, 95444 Bayreuth"}, "start_time": "2026-01-01T18:00:00", "end_time": null, "url": "https://event.frankenpost.de/detail.php?event_id=3119599", "source": "https://event.frankenpost.de/detail.php?event_id=3119599", "scraped_at": "2026-01-01T13:27:18.685017", "status": "published", "published_at": "2026-01-01T13:42:00.700054", "category": "arts", "teaser": "Donnerstag,01.01."}, {"id": "html_frankenpost_4878466979842611893", "title": "Ausstellung zum Fotowettbewerb: Zeig mir deine Lebenswerte Stadt (bis 7. Januar 2026)", "description": "Donnerstag,01.01.2026,", "location": {"name": "RW21 Volkshochschule Bayreuth", "lat": 49.9454, "lon": 11.5771, "address": "Richard-Wagner-Str. 21, 95444 Bayreuth"}, "start_time": "2026-01-01T18:00:00", "end_time": null, "url": "https://event.frankenpost.de/detail.php?event_id=3202184", "source": "https://event.frankenpost.de/detail.php?event_id=3202184", "scraped_at": "2026-01-01T13:27:18.684482", "status": "published", "published_at": "2026-01-01T13:42:00.700226", "category": "arts", "teaser": "Donnerstag,01.01."}, {"id": "html_frankenpost_6710371282043762830", "title": "Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline", "description": "Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline am 01.01.2026 18:00", "location": {"name": "Schloss Carolinenruhe", "lat": 49.93047, "lon": 11.5674, "address": "Colmdorf 8, 95448 Bayreuth"}, "start_time": "2026-01-01T18:00:00", "end_time": null, "url": "https://event.frankenpost.de/detail.php?event_id=3185852", "source": "https://event.frankenpost.de/detail.php?event_id=3185852", "scraped_at": "2026-01-01T13:27:18.683791", "status": "published", "published_at": "2026-01-01T13:42:00.700343", "category": "palace", "teaser": "Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline"}, {"id": "test_event_001", "title": "Test Community Gathering", "description": "A test event for approval flow testing", "location": {"name": "Test Venue Berlin", "lat": 52.52, "lon": 13.405, "address_hidden": true}, "start_time": "2026-01-15T19:00:00", "end_time": null, "url": "https://example.com/test-event", "source": "https://example.com/test-event", "scraped_at": "2026-01-01T14:45:00", "status": "published", "published_at": "2026-01-01T14:45:54.237616", "category": "community", "teaser": "A test event for approval flow testing"}] };
 window.MARKER_ICONS = {"marker-on-stage": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBkcmFtYSBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTEwIDExaC4wMSIgLz4KICA8cGF0aCBkPSJNMTQgNmguMDEiIC8+CiAgPHBhdGggZD0iTTE4IDZoLjAxIiAvPgogIDxwYXRoIGQ9Ik02LjUgMTMuMWguMDEiIC8+CiAgPHBhdGggZD0iTTIyIDVjMCA5LTQgMTItNiAxMnMtNi0zLTYtMTJjMC0yIDItMyA2LTNzNiAxIDYgMyIgLz4KICA8cGF0aCBkPSJNMTcuNCA5LjljLS44LjgtMiAuOC0yLjggMCIgLz4KICA8cGF0aCBkPSJNMTAuMSA3LjFDOSA3LjIgNy43IDcuNyA2IDguNmMtMy41IDItNC43IDMuOS0zLjcgNS42IDQuNSA3LjggOS41IDguNCAxMS4yIDcuNC45LS41IDEuOS0yLjEgMS45LTQuNyIgLz4KICA8cGF0aCBkPSJNOS4xIDE2LjVjLjMtMS4xIDEuNC0xLjcgMi40LTEuNCIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-music": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBtdXNpYyBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTkgMThWNWwxMi0ydjEzIiAvPgogIDxjaXJjbGUgY3g9IjYiIGN5PSIxOCIgcj0iMyIgLz4KICA8Y2lyY2xlIGN4PSIxOCIgY3k9IjE2IiByPSIzIiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-opera-house": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBsYW5kbWFyayBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTEwIDE4di03IiAvPgogIDxwYXRoIGQ9Ik0xMS4xMiAyLjE5OGEyIDIgMCAwIDEgMS43Ni4wMDZsNy44NjYgMy44NDdjLjQ3Ni4yMzMuMzEuOTQ5LS4yMi45NDlIMy40NzRjLS41MyAwLS42OTUtLjcxNi0uMjItLjk0OXoiIC8+CiAgPHBhdGggZD0iTTE0IDE4di03IiAvPgogIDxwYXRoIGQ9Ik0xOCAxOHYtNyIgLz4KICA8cGF0aCBkPSJNMyAyMmgxOCIgLz4KICA8cGF0aCBkPSJNNiAxOHYtNyIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-pub-games": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBiZWVyIG1hcmtlciAtIHVuaWZpZWQgZ3lybyBzaGFwZSAtLT4KICAKICA8IS0tIERyb3Agc2hhZG93IC0tPgogIDxlbGxpcHNlIGN4PSIxNiIgY3k9IjQ2IiByeD0iNiIgcnk9IjIiIGZpbGw9IiMwMDAiIG9wYWNpdHk9IjAuNSIvPgogIAogIDwhLS0gU1RBTkRBUkQgR1lSTyBTSEFQRSAoc2FtZSBmb3IgYWxsKSAtLT4KICA8cGF0aCBkPSJNMTYgMiBDOSAyIDMgOCAzIDE1IEMzIDI0IDE2IDQ2IDE2IDQ2IEMxNiA0NiAyOSAyNCAyOSAxNSBDMjkgOCAyMyAyIDE2IDIgWiIgCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEx1Y2lkZSBpY29uIChzY2FsZWQgYW5kIHBvc2l0aW9uZWQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2LCAxNSkgc2NhbGUoMC41KSIgc3Ryb2tlPSIjMDBmZjAwIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTIsIC0xMikiPgo8cGF0aCBkPSJNMTcgMTFoMWEzIDMgMCAwIDEgMCA2aC0xIiAvPgogIDxwYXRoIGQ9Ik05IDEydjYiIC8+CiAgPHBhdGggZD0iTTEzIDEydjYiIC8+CiAgPHBhdGggZD0iTTE0IDcuNWMtMSAwLTEuNDQuNS0zIC41cy0yLS41LTMtLjUtMS43Mi41LTIuNS41YTIuNSAyLjUgMCAwIDEgMC01Yy43OCAwIDEuNTcuNSAyLjUuNVM5LjQ0IDIgMTEgMnMyIDEuNSAzIDEuNSAxLjcyLS41IDIuNS0uNWEyLjUgMi41IDAgMCAxIDAgNWMtLjc4IDAtMS41LS41LTIuNS0uNVoiIC8+CiAgPHBhdGggZD0iTTUgOHYxMmEyIDIgMCAwIDAgMiAyaDhhMiAyIDAgMCAwIDItMlY4IiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-festivals": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBzdGFyIG1hcmtlciAtIHVuaWZpZWQgZ3lybyBzaGFwZSAtLT4KICAKICA8IS0tIERyb3Agc2hhZG93IC0tPgogIDxlbGxpcHNlIGN4PSIxNiIgY3k9IjQ2IiByeD0iNiIgcnk9IjIiIGZpbGw9IiMwMDAiIG9wYWNpdHk9IjAuNSIvPgogIAogIDwhLS0gU1RBTkRBUkQgR1lSTyBTSEFQRSAoc2FtZSBmb3IgYWxsKSAtLT4KICA8cGF0aCBkPSJNMTYgMiBDOSAyIDMgOCAzIDE1IEMzIDI0IDE2IDQ2IDE2IDQ2IEMxNiA0NiAyOSAyNCAyOSAxNSBDMjkgOCAyMyAyIDE2IDIgWiIgCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEx1Y2lkZSBpY29uIChzY2FsZWQgYW5kIHBvc2l0aW9uZWQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2LCAxNSkgc2NhbGUoMC41KSIgc3Ryb2tlPSIjMDBmZjAwIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTIsIC0xMikiPgo8cGF0aCBkPSJNMTEuNTI1IDIuMjk1YS41My41MyAwIDAgMSAuOTUgMGwyLjMxIDQuNjc5YTIuMTIzIDIuMTIzIDAgMCAwIDEuNTk1IDEuMTZsNS4xNjYuNzU2YS41My41MyAwIDAgMSAuMjk0LjkwNGwtMy43MzYgMy42MzhhMi4xMjMgMi4xMjMgMCAwIDAtLjYxMSAxLjg3OGwuODgyIDUuMTRhLjUzLjUzIDAgMCAxLS43NzEuNTZsLTQuNjE4LTIuNDI4YTIuMTIyIDIuMTIyIDAgMCAwLTEuOTczIDBMNi4zOTYgMjEuMDFhLjUzLjUzIDAgMCAxLS43Ny0uNTZsLjg4MS01LjEzOWEyLjEyMiAyLjEyMiAwIDAgMC0uNjExLTEuODc5TDIuMTYgOS43OTVhLjUzLjUzIDAgMCAxIC4yOTQtLjkwNmw1LjE2NS0uNzU1YTIuMTIyIDIuMTIyIDAgMCAwIDEuNTk3LTEuMTZ6IiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-workshops": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBwcmVzZW50YXRpb24gbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0yIDNoMjAiIC8+CiAgPHBhdGggZD0iTTIxIDN2MTFhMiAyIDAgMCAxLTIgMkg1YTIgMiAwIDAgMS0yLTJWMyIgLz4KICA8cGF0aCBkPSJtNyAyMSA1LTUgNSA1IiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-school": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBncmFkdWF0aW9uLWNhcCBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTIxLjQyIDEwLjkyMmExIDEgMCAwIDAtLjAxOS0xLjgzOEwxMi44MyA1LjE4YTIgMiAwIDAgMC0xLjY2IDBMMi42IDkuMDhhMSAxIDAgMCAwIDAgMS44MzJsOC41NyAzLjkwOGEyIDIgMCAwIDAgMS42NiAweiIgLz4KICA8cGF0aCBkPSJNMjIgMTB2NiIgLz4KICA8cGF0aCBkPSJNNiAxMi41VjE2YTYgMyAwIDAgMCAxMiAwdi0zLjUiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-shopping": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBzaG9wcGluZy1iYWcgbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xNiAxMGE0IDQgMCAwIDEtOCAwIiAvPgogIDxwYXRoIGQ9Ik0zLjEwMyA2LjAzNGgxNy43OTQiIC8+CiAgPHBhdGggZD0iTTMuNCA1LjQ2N2EyIDIgMCAwIDAtLjQgMS4yVjIwYTIgMiAwIDAgMCAyIDJoMTRhMiAyIDAgMCAwIDItMlY2LjY2N2EyIDIgMCAwIDAtLjQtMS4ybC0yLTIuNjY3QTIgMiAwIDAgMCAxNyAySDdhMiAyIDAgMCAwLTEuNi44eiIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-sports": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSB0cm9waHkgbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xMCAxNC42NnYxLjYyNmEyIDIgMCAwIDEtLjk3NiAxLjY5NkE1IDUgMCAwIDAgNyAyMS45NzgiIC8+CiAgPHBhdGggZD0iTTE0IDE0LjY2djEuNjI2YTIgMiAwIDAgMCAuOTc2IDEuNjk2QTUgNSAwIDAgMSAxNyAyMS45NzgiIC8+CiAgPHBhdGggZD0iTTE4IDloMS41YTEgMSAwIDAgMCAwLTVIMTgiIC8+CiAgPHBhdGggZD0iTTQgMjJoMTYiIC8+CiAgPHBhdGggZD0iTTYgOWE2IDYgMCAwIDAgMTIgMFYzYTEgMSAwIDAgMC0xLTFIN2ExIDEgMCAwIDAtMSAxeiIgLz4KICA8cGF0aCBkPSJNNiA5SDQuNWExIDEgMCAwIDEgMC01SDYiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-sports-field": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSB0aWNrZXQgbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0yIDlhMyAzIDAgMCAxIDAgNnYyYTIgMiAwIDAgMCAyIDJoMTZhMiAyIDAgMCAwIDItMnYtMmEzIDMgMCAwIDEgMC02VjdhMiAyIDAgMCAwLTItMkg0YTIgMiAwIDAgMC0yIDJaIiAvPgogIDxwYXRoIGQ9Ik0xMyA1djIiIC8+CiAgPHBhdGggZD0iTTEzIDE3djIiIC8+CiAgPHBhdGggZD0iTTEzIDExdjIiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-swimming": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSB3YXZlcyBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTIgNmMuNi41IDEuMiAxIDIuNSAxQzcgNyA3IDUgOS41IDVjMi42IDAgMi40IDIgNSAyIDIuNSAwIDIuNS0yIDUtMiAxLjMgMCAxLjkuNSAyLjUgMSIgLz4KICA8cGF0aCBkPSJNMiAxMmMuNi41IDEuMiAxIDIuNSAxIDIuNSAwIDIuNS0yIDUtMiAyLjYgMCAyLjQgMiA1IDIgMi41IDAgMi41LTIgNS0yIDEuMyAwIDEuOS41IDIuNSAxIiAvPgogIDxwYXRoIGQ9Ik0yIDE4Yy42LjUgMS4yIDEgMi41IDEgMi41IDAgMi41LTIgNS0yIDIuNiAwIDIuNCAyIDUgMiAyLjUgMCAyLjUtMiA1LTIgMS4zIDAgMS45LjUgMi41IDEiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-community": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSB1c2VycyBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTE2IDIxdi0yYTQgNCAwIDAgMC00LTRINmE0IDQgMCAwIDAtNCA0djIiIC8+CiAgPHBhdGggZD0iTTE2IDMuMTI4YTQgNCAwIDAgMSAwIDcuNzQ0IiAvPgogIDxwYXRoIGQ9Ik0yMiAyMXYtMmE0IDQgMCAwIDAtMy0zLjg3IiAvPgogIDxjaXJjbGUgY3g9IjkiIGN5PSI3IiByPSI0IiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-arts": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBwYWxldHRlIG1hcmtlciAtIHVuaWZpZWQgZ3lybyBzaGFwZSAtLT4KICAKICA8IS0tIERyb3Agc2hhZG93IC0tPgogIDxlbGxpcHNlIGN4PSIxNiIgY3k9IjQ2IiByeD0iNiIgcnk9IjIiIGZpbGw9IiMwMDAiIG9wYWNpdHk9IjAuNSIvPgogIAogIDwhLS0gU1RBTkRBUkQgR1lSTyBTSEFQRSAoc2FtZSBmb3IgYWxsKSAtLT4KICA8cGF0aCBkPSJNMTYgMiBDOSAyIDMgOCAzIDE1IEMzIDI0IDE2IDQ2IDE2IDQ2IEMxNiA0NiAyOSAyNCAyOSAxNSBDMjkgOCAyMyAyIDE2IDIgWiIgCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEx1Y2lkZSBpY29uIChzY2FsZWQgYW5kIHBvc2l0aW9uZWQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2LCAxNSkgc2NhbGUoMC41KSIgc3Ryb2tlPSIjMDBmZjAwIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTIsIC0xMikiPgo8cGF0aCBkPSJNMTIgMjJhMSAxIDAgMCAxIDAtMjAgMTAgOSAwIDAgMSAxMCA5IDUgNSAwIDAgMS01IDVoLTIuMjVhMS43NSAxLjc1IDAgMCAwLTEuNCAyLjhsLjMuNGExLjc1IDEuNzUgMCAwIDEtMS40IDIuOHoiIC8+CiAgPGNpcmNsZSBjeD0iMTMuNSIgY3k9IjYuNSIgcj0iLjUiIGZpbGw9ImN1cnJlbnRDb2xvciIgLz4KICA8Y2lyY2xlIGN4PSIxNy41IiBjeT0iMTAuNSIgcj0iLjUiIGZpbGw9ImN1cnJlbnRDb2xvciIgLz4KICA8Y2lyY2xlIGN4PSI2LjUiIGN5PSIxMi41IiByPSIuNSIgZmlsbD0iY3VycmVudENvbG9yIiAvPgogIDxjaXJjbGUgY3g9IjguNSIgY3k9IjcuNSIgcj0iLjUiIGZpbGw9ImN1cnJlbnRDb2xvciIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-museum": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBsYW5kbWFyayBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTEwIDE4di03IiAvPgogIDxwYXRoIGQ9Ik0xMS4xMiAyLjE5OGEyIDIgMCAwIDEgMS43Ni4wMDZsNy44NjYgMy44NDdjLjQ3Ni4yMzMuMzEuOTQ5LS4yMi45NDlIMy40NzRjLS41MyAwLS42OTUtLjcxNi0uMjItLjk0OXoiIC8+CiAgPHBhdGggZD0iTTE0IDE4di03IiAvPgogIDxwYXRoIGQ9Ik0xOCAxOHYtNyIgLz4KICA8cGF0aCBkPSJNMyAyMmgxOCIgLz4KICA8cGF0aCBkPSJNNiAxOHYtNyIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-food": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSB1dGVuc2lscyBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTMgMnY3YzAgMS4xLjkgMiAyIDJoNGEyIDIgMCAwIDAgMi0yVjIiIC8+CiAgPHBhdGggZD0iTTcgMnYyMCIgLz4KICA8cGF0aCBkPSJNMjEgMTVWMmE1IDUgMCAwIDAtNSA1djZjMCAxLjEuOSAyIDIgMmgzWm0wIDB2NyIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-church": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBjaHVyY2ggbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xMCA5aDQiIC8+CiAgPHBhdGggZD0iTTEyIDd2NSIgLz4KICA8cGF0aCBkPSJNMTQgMjF2LTNhMiAyIDAgMCAwLTQgMHYzIiAvPgogIDxwYXRoIGQ9Im0xOCA5IDMuNTIgMi4xNDdhMSAxIDAgMCAxIC40OC44NTRWMTlhMiAyIDAgMCAxLTIgMkg0YTIgMiAwIDAgMS0yLTJ2LTYuOTk5YTEgMSAwIDAgMSAuNDgtLjg1NEw2IDkiIC8+CiAgPHBhdGggZD0iTTYgMjFWN2ExIDEgMCAwIDEgLjM3Ni0uNzgybDUtMy45OTlhMSAxIDAgMCAxIDEuMjQ5LjAwMWw1IDRBMSAxIDAgMCAxIDE4IDd2MTQiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-traditional-oceanic": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBmbGFtZSBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTEyIDNxMSA0IDQgNi41dDMgNS41YTEgMSAwIDAgMS0xNCAwIDUgNSAwIDAgMSAxLTMgMSAxIDAgMCAwIDUgMGMwLTItMS41LTMtMS41LTVxMC0yIDIuNS00IiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-castle": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBjYXN0bGUgbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xMCA1VjMiIC8+CiAgPHBhdGggZD0iTTE0IDVWMyIgLz4KICA8cGF0aCBkPSJNMTUgMjF2LTNhMyAzIDAgMCAwLTYgMHYzIiAvPgogIDxwYXRoIGQ9Ik0xOCAzdjgiIC8+CiAgPHBhdGggZD0iTTE4IDVINiIgLz4KICA8cGF0aCBkPSJNMjIgMTFIMiIgLz4KICA8cGF0aCBkPSJNMjIgOXYxMGEyIDIgMCAwIDEtMiAySDRhMiAyIDAgMCAxLTItMlY5IiAvPgogIDxwYXRoIGQ9Ik02IDN2OCIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-monument": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBwaWxjcm93IG1hcmtlciAtIHVuaWZpZWQgZ3lybyBzaGFwZSAtLT4KICAKICA8IS0tIERyb3Agc2hhZG93IC0tPgogIDxlbGxpcHNlIGN4PSIxNiIgY3k9IjQ2IiByeD0iNiIgcnk9IjIiIGZpbGw9IiMwMDAiIG9wYWNpdHk9IjAuNSIvPgogIAogIDwhLS0gU1RBTkRBUkQgR1lSTyBTSEFQRSAoc2FtZSBmb3IgYWxsKSAtLT4KICA8cGF0aCBkPSJNMTYgMiBDOSAyIDMgOCAzIDE1IEMzIDI0IDE2IDQ2IDE2IDQ2IEMxNiA0NiAyOSAyNCAyOSAxNSBDMjkgOCAyMyAyIDE2IDIgWiIgCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEx1Y2lkZSBpY29uIChzY2FsZWQgYW5kIHBvc2l0aW9uZWQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2LCAxNSkgc2NhbGUoMC41KSIgc3Ryb2tlPSIjMDBmZjAwIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTIsIC0xMikiPgo8cGF0aCBkPSJNMTMgNHYxNiIgLz4KICA8cGF0aCBkPSJNMTcgNHYxNiIgLz4KICA8cGF0aCBkPSJNMTkgNEg5LjVhNC41IDQuNSAwIDAgMCAwIDlIMTMiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-tower": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSB0cmlhbmdsZSBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTEzLjczIDRhMiAyIDAgMCAwLTMuNDYgMGwtOCAxNEEyIDIgMCAwIDAgNCAyMWgxNmEyIDIgMCAwIDAgMS43My0zWiIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-ruins": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBibG9ja3MgbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xMCAyMlY3YTEgMSAwIDAgMC0xLTFINGEyIDIgMCAwIDAtMiAydjEyYTIgMiAwIDAgMCAyIDJoMTJhMiAyIDAgMCAwIDItMnYtNWExIDEgMCAwIDAtMS0xSDIiIC8+CiAgPHJlY3QgeD0iMTQiIHk9IjIiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIHJ4PSIxIiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-palace": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBjcm93biBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTExLjU2MiAzLjI2NmEuNS41IDAgMCAxIC44NzYgMEwxNS4zOSA4Ljg3YTEgMSAwIDAgMCAxLjUxNi4yOTRMMjEuMTgzIDUuNWEuNS41IDAgMCAxIC43OTguNTE5bC0yLjgzNCAxMC4yNDZhMSAxIDAgMCAxLS45NTYuNzM0SDUuODFhMSAxIDAgMCAxLS45NTctLjczNEwyLjAyIDYuMDJhLjUuNSAwIDAgMSAuNzk4LS41MTlsNC4yNzYgMy42NjRhMSAxIDAgMCAwIDEuNTE2LS4yOTR6IiAvPgogIDxwYXRoIGQ9Ik01IDIxaDE0IiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-park": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSB0cmVlLXBpbmUgbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Im0xNyAxNCAzIDMuM2ExIDEgMCAwIDEtLjcgMS43SDQuN2ExIDEgMCAwIDEtLjctMS43TDcgMTRoLS4zYTEgMSAwIDAgMS0uNy0xLjdMOSA5aC0uMkExIDEgMCAwIDEgOCA3LjNMMTIgM2w0IDQuM2ExIDEgMCAwIDEtLjggMS43SDE1bDMgMy4zYTEgMSAwIDAgMS0uNyAxLjdIMTdaIiAvPgogIDxwYXRoIGQ9Ik0xMiAyMnYtMyIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-parliament": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBsYW5kbWFyayBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTEwIDE4di03IiAvPgogIDxwYXRoIGQ9Ik0xMS4xMiAyLjE5OGEyIDIgMCAwIDEgMS43Ni4wMDZsNy44NjYgMy44NDdjLjQ3Ni4yMzMuMzEuOTQ5LS4yMi45NDlIMy40NzRjLS41MyAwLS42OTUtLjcxNi0uMjItLjk0OXoiIC8+CiAgPHBhdGggZD0iTTE0IDE4di03IiAvPgogIDxwYXRoIGQ9Ik0xOCAxOHYtNyIgLz4KICA8cGF0aCBkPSJNMyAyMmgxOCIgLz4KICA8cGF0aCBkPSJNNiAxOHYtNyIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-mayors-office": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBidWlsZGluZyBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTEyIDEwaC4wMSIgLz4KICA8cGF0aCBkPSJNMTIgMTRoLjAxIiAvPgogIDxwYXRoIGQ9Ik0xMiA2aC4wMSIgLz4KICA8cGF0aCBkPSJNMTYgMTBoLjAxIiAvPgogIDxwYXRoIGQ9Ik0xNiAxNGguMDEiIC8+CiAgPHBhdGggZD0iTTE2IDZoLjAxIiAvPgogIDxwYXRoIGQ9Ik04IDEwaC4wMSIgLz4KICA8cGF0aCBkPSJNOCAxNGguMDEiIC8+CiAgPHBhdGggZD0iTTggNmguMDEiIC8+CiAgPHBhdGggZD0iTTkgMjJ2LTNhMSAxIDAgMCAxIDEtMWg0YTEgMSAwIDAgMSAxIDF2MyIgLz4KICA8cmVjdCB4PSI0IiB5PSIyIiB3aWR0aD0iMTYiIGhlaWdodD0iMjAiIHJ4PSIyIiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-library": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBib29rLW9wZW4gbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xMiA3djE0IiAvPgogIDxwYXRoIGQ9Ik0zIDE4YTEgMSAwIDAgMS0xLTFWNGExIDEgMCAwIDEgMS0xaDVhNCA0IDAgMCAxIDQgNCA0IDQgMCAwIDEgNC00aDVhMSAxIDAgMCAxIDEgMXYxM2ExIDEgMCAwIDEtMSAxaC02YTMgMyAwIDAgMC0zIDMgMyAzIDAgMCAwLTMtM3oiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-national-archive": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBhcmNoaXZlIG1hcmtlciAtIHVuaWZpZWQgZ3lybyBzaGFwZSAtLT4KICAKICA8IS0tIERyb3Agc2hhZG93IC0tPgogIDxlbGxpcHNlIGN4PSIxNiIgY3k9IjQ2IiByeD0iNiIgcnk9IjIiIGZpbGw9IiMwMDAiIG9wYWNpdHk9IjAuNSIvPgogIAogIDwhLS0gU1RBTkRBUkQgR1lSTyBTSEFQRSAoc2FtZSBmb3IgYWxsKSAtLT4KICA8cGF0aCBkPSJNMTYgMiBDOSAyIDMgOCAzIDE1IEMzIDI0IDE2IDQ2IDE2IDQ2IEMxNiA0NiAyOSAyNCAyOSAxNSBDMjkgOCAyMyAyIDE2IDIgWiIgCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEx1Y2lkZSBpY29uIChzY2FsZWQgYW5kIHBvc2l0aW9uZWQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2LCAxNSkgc2NhbGUoMC41KSIgc3Ryb2tlPSIjMDBmZjAwIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTIsIC0xMikiPgo8cmVjdCB3aWR0aD0iMjAiIGhlaWdodD0iNSIgeD0iMiIgeT0iMyIgcng9IjEiIC8+CiAgPHBhdGggZD0iTTQgOHYxMWEyIDIgMCAwIDAgMiAyaDEyYTIgMiAwIDAgMCAyLTJWOCIgLz4KICA8cGF0aCBkPSJNMTAgMTJoNCIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-default": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBtYXAtcGluIG1hcmtlciAtIHVuaWZpZWQgZ3lybyBzaGFwZSAtLT4KICAKICA8IS0tIERyb3Agc2hhZG93IC0tPgogIDxlbGxpcHNlIGN4PSIxNiIgY3k9IjQ2IiByeD0iNiIgcnk9IjIiIGZpbGw9IiMwMDAiIG9wYWNpdHk9IjAuNSIvPgogIAogIDwhLS0gU1RBTkRBUkQgR1lSTyBTSEFQRSAoc2FtZSBmb3IgYWxsKSAtLT4KICA8cGF0aCBkPSJNMTYgMiBDOSAyIDMgOCAzIDE1IEMzIDI0IDE2IDQ2IDE2IDQ2IEMxNiA0NiAyOSAyNCAyOSAxNSBDMjkgOCAyMyAyIDE2IDIgWiIgCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEx1Y2lkZSBpY29uIChzY2FsZWQgYW5kIHBvc2l0aW9uZWQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2LCAxNSkgc2NhbGUoMC41KSIgc3Ryb2tlPSIjMDBmZjAwIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTIsIC0xMikiPgo8cGF0aCBkPSJNMjAgMTBjMCA0Ljk5My01LjUzOSAxMC4xOTMtNy4zOTkgMTEuNzk5YTEgMSAwIDAgMS0xLjIwMiAwQzkuNTM5IDIwLjE5MyA0IDE0Ljk5MyA0IDEwYTggOCAwIDAgMSAxNiAwIiAvPgogIDxjaXJjbGUgY3g9IjEyIiBjeT0iMTAiIHI9IjMiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-geolocation": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBsb2NhdGUgbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxsaW5lIHgxPSIyIiB4Mj0iNSIgeTE9IjEyIiB5Mj0iMTIiIC8+CiAgPGxpbmUgeDE9IjE5IiB4Mj0iMjIiIHkxPSIxMiIgeTI9IjEyIiAvPgogIDxsaW5lIHgxPSIxMiIgeDI9IjEyIiB5MT0iMiIgeTI9IjUiIC8+CiAgPGxpbmUgeDE9IjEyIiB4Mj0iMTIiIHkxPSIxOSIgeTI9IjIyIiAvPgogIDxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjciIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4="};
 window.DASHBOARD_ICONS = {"alert-triangle": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"none\"><path d=\"M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z\"/><path d=\"M12 9v4\"/><path d=\"M12 17h.01\"/></svg>", "book-open": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"none\"><path d=\"M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z\"/><path d=\"M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z\"/></svg>", "bug": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"none\"><path d=\"m8 2 1.88 1.88\"/><path d=\"M14.12 3.88 16 2\"/><path d=\"M9 7.13v-1a3.003 3.003 0 1 1 6 0v1\"/><path d=\"M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6\"/><path d=\"M12 20v-9\"/><path d=\"M6.53 9C4.6 8.8 3 7.1 3 5\"/><path d=\"M6 13H2\"/><path d=\"M3 21c0-2.1 1.7-3.9 3.8-4\"/><path d=\"M20.97 5c0 2.1-1.6 3.8-3.5 4\"/><path d=\"M22 13h-4\"/><path d=\"M17.2 17c2.1.1 3.8 1.9 3.8 4\"/></svg>", "user": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"none\"><circle cx=\"12\" cy=\"8\" r=\"5\"/><path d=\"M20 21a8 8 0 1 0-16 0\"/></svg>", "book-text": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"none\"><path d=\"M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20\"/><path d=\"M8 7h6\"/><path d=\"M8 11h8\"/></svg>", "heart": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"none\"><path d=\"M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z\"/></svg>", "git-commit": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"4\"/><line x1=\"1.05\" x2=\"7\" y1=\"12\" y2=\"12\"/><line x1=\"17.01\" x2=\"22.96\" y1=\"12\" y2=\"12\"/></svg>", "megaphone": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m3 11 18-5v12L3 14v-3z\"/><path d=\"M11.6 16.8a3 3 0 1 1-5.8-1.6\"/></svg>"};
-window.DEBUG_INFO = {"event_counts": {"published": 4, "pending": 1, "archived": 13, "total": 18}, "unverified_locations_count": 17, "environment": "ci", "cache_enabled": true, "cache_file_size": null, "deployment_time": "2026-01-17T20:28:09.678159", "git_commit": {"hash": "6a18f59", "author": "copilot-swe-agent[bot]", "date": "2026-01-17 20:22:56 +0000", "message": "Break down all CSS files to max 50 selectors each"}, "html_sizes": {"total": 299586, "events_data": 2741, "translations": 0, "stylesheets": 81123, "scripts": 0, "marker_icons": 36073, "other": 179649}, "language": "de"};
+window.DEBUG_INFO = {"event_counts": {"published": 4, "pending": 1, "archived": 13, "total": 18}, "unverified_locations_count": 17, "environment": "ci", "cache_enabled": true, "cache_file_size": null, "deployment_time": "2026-01-17T20:32:11.912889", "git_commit": {"hash": "9e2269a", "author": "copilot-swe-agent[bot]", "date": "2026-01-17 20:28:56 +0000", "message": "Reorganize CSS with better semantic categorization"}, "html_sizes": {"total": 267310, "events_data": 2741, "translations": 0, "stylesheets": 48846, "scripts": 0, "marker_icons": 36073, "other": 179650}, "language": "de"};
 
 
 /* Leaflet JS: Load from CDN at runtime */

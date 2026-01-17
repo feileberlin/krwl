@@ -1,21 +1,36 @@
-/* Bubbles Styles */
+/* Bubbles */
 
 /* ═══════════════════════════════════════════════════════════════════════
-   BUBBLES - Semantic CSS organization
-   Max 50 selectors per file for KISS compliance
-   
-   Auto-generated from CSS reorganization
+   BUBBLES
+   Modular CSS - Deduplicated, ~50 selectors per file
    ═══════════════════════════════════════════════════════════════════════ */
 
 
-.bubble-connectors {
-position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 900;
+.bubble-location i[data-lucide="map-pin"],
+.bubble-location svg {
+width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+    flex-shrink: 0;
+}
+
+.bubble-date {
+font-size: 0.7rem;
+}
+
+.bubble-title {
+font-size: 0.8rem;
+}
+
+.bubble-location,
+    .bubble-distance {
+font-size: 0.7rem;
+}
+
+.bubble-bookmark {
+font-size: 1.1rem;
 }
 
 .bubble-connector-line {
@@ -24,33 +39,6 @@ stroke: var(--color-primary);
     stroke-linecap: round;
     opacity: 0.85;
     filter: drop-shadow(0 0 4px var(--color-primary-alpha-60));
-}
-
-.speech-bubble {
-position: absolute;
-    background: var(--color-bg-primary-alpha-95);
-    backdrop-filter: blur(10px);
-    border: 2px solid var(--color-primary);
-    border-radius: 12px;
-    padding: 12px;
-    width: 220px;
-    z-index: 1000;
-    box-shadow: 0 4px 20px var(--color-black-alpha-50),
-                0 0 15px var(--color-primary-alpha-40);
-    cursor: grab;
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
-                box-shadow 0.3s ease, 
-                opacity 0.4s ease,
-                filter 0.3s ease;
-    opacity: 0;
-    pointer-events: auto;
-    font-size: 0.85rem;
-    
-    transform-origin: center;
-    will-change: transform;
-    
-    touch-action: none;
-    user-select: none;
 }
 
 .speech-bubble.bubble-is-bookmarked {
@@ -144,41 +132,6 @@ color: var(--color-primary);
     line-height: 1.2;
 }
 
-.bubble-date {
-color: var(--color-text-secondary);
-    font-size: 0.75rem;
-    margin-bottom: 8px;
-    line-height: 1.2;
-}
-
-.bubble-title {
-color: var(--color-text-primary);
-    font-size: 0.9rem;
-    font-weight: 500;
-    margin-bottom: 6px;
-    line-height: 1.3;
-}
-
-.bubble-location {
-color: var(--color-text-secondary);
-    font-size: 0.8rem;
-    margin-bottom: 4px;
-    line-height: 1.2;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.bubble-distance {
-color: var(--color-text-tertiary);
-    font-size: 0.75rem;
-    margin-bottom: 8px;
-    line-height: 1.2;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
 .bubble-distance i[data-lucide="footprints"],
 .bubble-distance svg {
 width: 14px;
@@ -187,22 +140,6 @@ width: 14px;
     stroke-width: 2;
     fill: none;
     flex-shrink: 0;
-}
-
-.bubble-bookmark {
-position: absolute;
-    bottom: 8px;
-    right: 8px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
-    line-height: 1;
-    transition: transform 0.2s ease, color 0.2s ease;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .bubble-bookmark i[data-lucide="heart"],
@@ -230,75 +167,4 @@ stroke: none;
 
 .bubble-bookmark.bookmarked {
 animation: heartbeat 0.3s ease;
-}
-
-.bubble-duplicate-badge {
-position: absolute;
-    top: -8px;
-    right: -8px;
-    background: var(--color-warning);
-    color: var(--color-bg-primary);
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 12px;
-    border: 2px solid var(--color-bg-primary);
-    z-index: 10;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    line-height: 1.2;
-    white-space: nowrap;
-}
-
-.bubble-demo-badge {
-position: absolute;
-    top: -8px;
-    left: -8px;
-    background: var(--color-error);  
-    color: white;
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 12px;
-    border: 2px solid var(--color-bg-primary);
-    z-index: 10;
-    box-shadow: 0 2px 8px var(--color-black-alpha-30);
-    line-height: 1.2;
-    white-space: nowrap;
-}
-
-.speech-bubble {
-width: 180px;
-        padding: 10px;
-        font-size: 0.75rem;
-}
-
-.bubble-time-headline {
-font-size: 1rem;
-}
-
-.bubble-date {
-font-size: 0.7rem;
-}
-
-.bubble-title {
-font-size: 0.8rem;
-}
-
-.bubble-location,
-    .bubble-distance {
-font-size: 0.7rem;
-}
-
-.bubble-bookmark {
-font-size: 1.1rem;
-}
-
-.bubble-location i[data-lucide="map-pin"],
-.bubble-location svg {
-width: 14px;
-    height: 14px;
-    stroke: currentColor;
-    stroke-width: 2;
-    fill: none;
-    flex-shrink: 0;
 }
