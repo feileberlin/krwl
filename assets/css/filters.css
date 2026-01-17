@@ -74,7 +74,7 @@
 
 .filter-chip.active {
     background: rgba(176, 95, 142, 0.35); /* ecoBarbie Medium Tone: #B05F8E */
-    border-color: #D689B8; /* ecoBarbie Light Tone */
+    border: 0;
     color: var(--color-text-primary);
     text-shadow: none; /* Natural, no glow */
     box-shadow: 0 0 12px rgba(138, 74, 112, 0.5); /* ecoBarbie Dark Tone shadow */
