@@ -22,7 +22,10 @@
       "error": "#f85149",
       "bookmark": "#ffb3b3",
       "bookmark_light": "#ffcccc",
-      "bookmark_lighter": "#ffe6e6"
+      "bookmark_lighter": "#ffe6e6",
+      "ecobarbie_light": "#D689B8",
+      "ecobarbie_medium": "#B05F8E",
+      "ecobarbie_dark": "#8A4A70"
     },
     "typography": {
       "font_family_base": "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif",
