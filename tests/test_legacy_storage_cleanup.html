@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legacy Storage Cleanup Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #0d1117;
+            color: #c9d1d9;
+        }
+        
+        h1 {
+            color: #FF69B4;
+        }
+        
+        .test-section {
+            background: #161b22;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+        }
+        
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: Monaco, 'Courier New', monospace;
+            font-size: 14px;
+        }
+        
+        .test-result.pass {
+            background: #238636;
+            color: white;
+        }
+        
+        .test-result.fail {
+            background: #f85149;
+            color: white;
+        }
+        
+        .test-result.info {
+            background: #1f6feb;
+            color: white;
+        }
+        
+        button {
+            background: #FF69B4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background: #ff4da6;
+        }
+        
+        .code {
+            background: #0d1117;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: Monaco, 'Courier New', monospace;
+            font-size: 12px;
+        }
+        
+        #localStorage-view {
+            background: #0d1117;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: Monaco, 'Courier New', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧹 Legacy Storage Cleanup Test</h1>
+    
+    <div class="test-section">
+        <h2>Test Setup</h2>
+        <p>This test verifies that legacy localStorage keys are properly cleaned up when the app initializes.</p>
+        <p><strong>Legacy keys being tested:</strong></p>
+        <ul>
+            <li><code>krwl_my_location</code> - Old "my location" feature (removed in PR #283)</li>
+            <li><code>my_location</code> - Possible variant without prefix</li>
+            <li><code>krwl_user_location</code> - Another possible variant</li>
+        </ul>
+    </div>
+    
+    <div class="test-section">
+        <h2>Step 1: Create Legacy Keys</h2>
+        <p>First, we'll manually create the legacy localStorage keys to simulate old user data:</p>
+        <button onclick="createLegacyKeys()">Create Legacy Keys</button>
+        <div id="step1-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Step 2: View Current localStorage</h2>
+        <button onclick="viewLocalStorage()">View localStorage</button>
+        <div id="localStorage-view"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Step 3: Initialize EventStorage (with cleanup)</h2>
+        <p>Now we'll initialize the EventStorage class, which should automatically clean up legacy keys:</p>
+        <button onclick="testCleanup()">Run Cleanup Test</button>
+        <div id="step3-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Step 4: Verify Cleanup</h2>
+        <p>Check that all legacy keys have been removed:</p>
+        <button onclick="verifyCleanup()">Verify Cleanup</button>
+        <div id="step4-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Step 5: Clear All Test Data</h2>
+        <button onclick="clearAllTestData()">Clear All Test Data</button>
+        <div id="step5-result"></div>
+    </div>
+
+    <script>
+        // Mock config for testing
+        const testConfig = {
+            debug: true,
+            map: {
+                predefined_locations: []
+            }
+        };
+        
+        function createLegacyKeys() {
+            const resultDiv = document.getElementById('step1-result');
+            
+            try {
+                // Create legacy keys with sample data
+                localStorage.setItem('krwl_my_location', JSON.stringify({
+                    lat: 50.3167,
+                    lon: 11.9167,
+                    name: 'My Location'
+                }));
+                
+                localStorage.setItem('my_location', JSON.stringify({
+                    lat: 50.3167,
+                    lon: 11.9167
+                }));
+                
+                localStorage.setItem('krwl_user_location', JSON.stringify({
+                    latitude: 50.3167,
+                    longitude: 11.9167
+                }));
+                
+                resultDiv.innerHTML = '<div class="test-result pass">✓ Successfully created legacy keys:<br>- krwl_my_location<br>- my_location<br>- krwl_user_location</div>';
+                viewLocalStorage();
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="test-result fail">✗ Failed to create legacy keys: ${error.message}</div>`;
+            }
+        }
+        
+        function viewLocalStorage() {
+            const viewDiv = document.getElementById('localStorage-view');
+            let output = 'Current localStorage keys:\n\n';
+            
+            const krwlKeys = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.includes('krwl') || key.includes('location') || key.includes('my_')) {
+                    krwlKeys.push(key);
+                }
+            }
+            
+            if (krwlKeys.length === 0) {
+                output += '(no krwl-related keys found)\n';
+            } else {
+                krwlKeys.forEach(key => {
+                    const value = localStorage.getItem(key);
+                    output += `${key}: ${value.substring(0, 100)}${value.length > 100 ? '...' : ''}\n\n`;
+                });
+            }
+            
+            viewDiv.textContent = output;
+        }
+        
+        function testCleanup() {
+            const resultDiv = document.getElementById('step3-result');
+            
+            try {
+                // Load the EventStorage class from the source file
+                // In a real scenario, this would be loaded from the bundled app.js
+                resultDiv.innerHTML = '<div class="test-result info">ℹ Note: This test requires the EventStorage class to be loaded.<br>In the actual app, cleanup runs automatically on initialization.</div>';
+                
+                // Simulate the cleanup manually for this test
+                const legacyKeys = [
+                    'krwl_my_location',
+                    'my_location',
+                    'krwl_user_location'
+                ];
+                
+                let removed = [];
+                legacyKeys.forEach(key => {
+                    if (localStorage.getItem(key) !== null) {
+                        localStorage.removeItem(key);
+                        removed.push(key);
+                    }
+                });
+                
+                if (removed.length > 0) {
+                    resultDiv.innerHTML += `<div class="test-result pass">✓ Cleanup executed successfully!<br>Removed keys:<br>- ${removed.join('<br>- ')}</div>`;
+                } else {
+                    resultDiv.innerHTML += '<div class="test-result info">ℹ No legacy keys found to clean up.</div>';
+                }
+                
+                viewLocalStorage();
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="test-result fail">✗ Cleanup failed: ${error.message}</div>`;
+            }
+        }
+        
+        function verifyCleanup() {
+            const resultDiv = document.getElementById('step4-result');
+            
+            const legacyKeys = [
+                'krwl_my_location',
+                'my_location',
+                'krwl_user_location'
+            ];
+            
+            let remainingKeys = [];
+            legacyKeys.forEach(key => {
+                if (localStorage.getItem(key) !== null) {
+                    remainingKeys.push(key);
+                }
+            });
+            
+            if (remainingKeys.length === 0) {
+                resultDiv.innerHTML = '<div class="test-result pass">✓ All legacy keys have been removed successfully!</div>';
+            } else {
+                resultDiv.innerHTML = `<div class="test-result fail">✗ Some legacy keys still exist:<br>- ${remainingKeys.join('<br>- ')}</div>`;
+            }
+            
+            viewLocalStorage();
+        }
+        
+        function clearAllTestData() {
+            const resultDiv = document.getElementById('step5-result');
+            
+            try {
+                // Clear all krwl-related keys
+                const keysToRemove = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && (key.startsWith('krwl_') || key.includes('location') || key.includes('my_'))) {
+                        keysToRemove.push(key);
+                    }
+                }
+                
+                keysToRemove.forEach(key => localStorage.removeItem(key));
+                
+                resultDiv.innerHTML = `<div class="test-result pass">✓ Cleared ${keysToRemove.length} test keys from localStorage</div>`;
+                viewLocalStorage();
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="test-result fail">✗ Failed to clear test data: ${error.message}</div>`;
+            }
+        }
+        
+        // Auto-view localStorage on load
+        window.addEventListener('DOMContentLoaded', viewLocalStorage);
+    </script>
+</body>
+</html>

@@ -14,12 +14,40 @@ class EventStorage {
         this.config = config;
         this.MAX_BOOKMARKS = 15;
         this.MAX_CUSTOM_LOCATIONS = 10;
+        
+        // Clean up legacy localStorage keys (runs once on initialization)
+        this.cleanupLegacyStorage();
+        
         this.bookmarks = this.loadBookmarks();  // Load bookmarks BEFORE custom locations
         this.customLocations = this.loadCustomLocations();
         this.browserFeatures = this.detectBrowserFeatures();
         
         // Initialize custom locations with predefined locations if empty
         this.initializeDefaultCustomLocations();
+    }
+    
+    /**
+     * Clean up legacy localStorage keys from previous versions
+     * Removes obsolete keys that are no longer used
+     */
+    cleanupLegacyStorage() {
+        try {
+            // List of legacy keys to remove
+            const legacyKeys = [
+                'krwl_my_location',  // Old "my location" feature (removed in PR #283)
+                'my_location',       // Possible variant without prefix
+                'krwl_user_location' // Another possible variant
+            ];
+            
+            legacyKeys.forEach(key => {
+                if (localStorage.getItem(key) !== null) {
+                    localStorage.removeItem(key);
+                    this.log(`Removed legacy localStorage key: ${key}`);
+                }
+            });
+        } catch (error) {
+            console.warn('Failed to clean up legacy storage:', error);
+        }
     }
     
     /**
