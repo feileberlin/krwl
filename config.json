@@ -843,7 +843,7 @@
     "_comment_security": "Keep bot_token secret! Use environment variable in production: TELEGRAM_BOT_TOKEN",
     "bot_token": "",
     "_comment_token": "Get token from @BotFather on Telegram. Leave empty to use env var TELEGRAM_BOT_TOKEN",
-    "admin_chat_ids": ["krawl_robot"],
+    "admin_chat_ids": ["8535072704"],
     "_comment_admin_ids": "Telegram user IDs that receive admin notifications (get via /start command)",
     "features": {
       "event_submission": true,
