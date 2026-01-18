@@ -58,8 +58,8 @@ class SmartScraperTester:
         test_path = Path(self.test_dir)
         
         # Create data directory (correct data location)
-        event_data_dir = test_path / 'data'
-        event_data_dir.mkdir(exist_ok=True)
+        event_data_dir = test_path / 'assets' / 'json'
+        event_data_dir.mkdir(parents=True, exist_ok=True)
         
         # Create test config with AI and image analysis
         config = {
