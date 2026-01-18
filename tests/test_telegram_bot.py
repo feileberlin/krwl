@@ -123,7 +123,7 @@ def test_helper_methods():
 
 
 def test_cli_uses_asyncio_run_directly():
-    """Test that CLI command uses asyncio.run() directly, not start_sync()."""
+    """Test that CLI command handles event loops correctly for CI environments."""
     import inspect
     
     # Import the CLI function
@@ -132,14 +132,23 @@ def test_cli_uses_asyncio_run_directly():
     # Get the source code of the function
     source = inspect.getsource(cli_telegram_bot)
     
-    # Verify it uses asyncio.run() directly
-    if 'asyncio.run(bot.run())' in source:
-        print("✅ CLI command uses asyncio.run() directly")
-        print("   This avoids nested event loop conflicts in GitHub Actions")
-        has_direct_call = True
+    # Verify it uses explicit event loop creation (GitHub Actions compatible)
+    has_new_event_loop = 'asyncio.new_event_loop()' in source
+    has_set_event_loop = 'asyncio.set_event_loop(loop)' in source
+    has_run_until_complete = 'loop.run_until_complete' in source
+    has_loop_close = 'loop.close()' in source
+    
+    if has_new_event_loop and has_set_event_loop and has_run_until_complete and has_loop_close:
+        print("✅ CLI command uses explicit event loop creation")
+        print("   This avoids 'RuntimeError: This event loop is already running' in GitHub Actions")
+        has_proper_loop_handling = True
     else:
-        print("❌ CLI command doesn't use asyncio.run() directly")
-        has_direct_call = False
+        print("❌ CLI command doesn't use explicit event loop handling")
+        print(f"   new_event_loop: {has_new_event_loop}")
+        print(f"   set_event_loop: {has_set_event_loop}")
+        print(f"   run_until_complete: {has_run_until_complete}")
+        print(f"   loop.close: {has_loop_close}")
+        has_proper_loop_handling = False
     
     # Verify it doesn't use the problematic start_sync() method
     if 'bot.start_sync()' not in source:
@@ -150,7 +159,15 @@ def test_cli_uses_asyncio_run_directly():
         print("   This causes 'RuntimeError: This event loop is already running' in GitHub Actions")
         no_start_sync = False
     
-    return has_direct_call and no_start_sync
+    # Verify it doesn't use asyncio.run() which also has conflicts in CI
+    if 'asyncio.run(bot.run())' not in source:
+        print("✅ CLI command doesn't use asyncio.run() which can conflict in CI")
+        no_asyncio_run = True
+    else:
+        print("⚠️  CLI command uses asyncio.run() which may conflict in CI environments")
+        no_asyncio_run = False
+    
+    return has_proper_loop_handling and no_start_sync and no_asyncio_run
 
 
 def main():

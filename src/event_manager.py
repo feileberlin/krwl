@@ -114,7 +114,8 @@ class EventManagerTUI:
         print("5. Settings")
         print("6. View Documentation")
         print("7. 📘 Setup Guide (Create Your Own Site)")
-        print("8. Exit")
+        print("8. 🤖 Start Telegram Bot")
+        print("9. Exit")
         print("-" * 60)
         self.print_footer("main")
         
@@ -184,11 +185,43 @@ class EventManagerTUI:
         print_setup_guide()
         input("\nPress Enter to return to menu...")
     
+    def start_telegram_bot(self):
+        """Start Telegram bot from TUI"""
+        self.clear_screen()
+        self.print_header()
+        print("🤖 Telegram Bot")
+        print("-" * 60)
+        
+        # Check if bot is enabled in config
+        if not self.config.get('telegram', {}).get('enabled'):
+            print("❌ Telegram bot is disabled in config.json")
+            print("\nTo enable:")
+            print("  1. Set 'telegram.enabled: true' in config.json")
+            print("  2. Add your bot token to 'telegram.bot_token' or set TELEGRAM_BOT_TOKEN env var")
+            print("  3. Get bot token from @BotFather on Telegram")
+            input("\nPress Enter to continue...")
+            return
+        
+        print("Starting Telegram bot...")
+        print("\n⚠️  Note: Bot will run until you press Ctrl+C")
+        print("After stopping the bot, you'll return to the main menu.")
+        print()
+        
+        # Start the bot using the CLI function
+        result = cli_telegram_bot(self.base_path, self.config)
+        
+        if result == 0:
+            print("\n✅ Bot stopped successfully")
+        else:
+            print(f"\n❌ Bot exited with error code {result}")
+        
+        input("\nPress Enter to continue...")
+    
     def run(self):
         """Main TUI loop"""
         while self.running:
             self.show_menu()
-            choice = input("\nEnter your choice (1-8): ").strip()
+            choice = input("\nEnter your choice (1-9): ").strip()
             
             if choice == '1':
                 self.scrape_events()
@@ -216,6 +249,8 @@ class EventManagerTUI:
             elif choice == '7':
                 self.show_setup_guide()
             elif choice == '8':
+                self.start_telegram_bot()
+            elif choice == '9':
                 self.running = False
                 print("\nGoodbye!")
             else:
@@ -1753,10 +1788,21 @@ def cli_telegram_bot(base_path, config):
         print("📱 Bot is ready to receive event submissions and contact messages")
         print("\nPress Ctrl+C to stop\n")
         
-        # FIX: Use asyncio.run() directly instead of start_sync()
-        # This eliminates the nested asyncio.run() call that causes event loop conflicts
+        # FIX: Handle existing event loop in GitHub Actions/CI environments
+        # Creates a new event loop to avoid conflicts with existing loops
         import asyncio
-        asyncio.run(bot.run())
+        
+        async def start_bot():
+            """Async wrapper for bot startup"""
+            await bot.run()
+        
+        # Create a new event loop to avoid conflicts with existing loops
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            loop.run_until_complete(start_bot())
+        finally:
+            loop.close()
         
         return 0
         
