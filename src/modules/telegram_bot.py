@@ -14,7 +14,7 @@ import os
 import logging
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, TYPE_CHECKING
 from io import BytesIO
 import json
 
@@ -36,6 +36,14 @@ try:
 except ImportError:
     TELEGRAM_AVAILABLE = False
     logger.warning("python-telegram-bot not installed. Install with: pip install python-telegram-bot>=20.0")
+    
+    # Define dummy types when not available to prevent NameError
+    if TYPE_CHECKING:
+        from telegram import Update
+        from telegram.ext import ContextTypes
+    else:
+        Update = Any
+        ContextTypes = type('ContextTypes', (), {'DEFAULT_TYPE': Any})
 
 # Try to import OCR functionality
 try:
