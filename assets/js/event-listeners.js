@@ -435,6 +435,7 @@ class EventListeners {
                     this.app.filters.locationType = 'custom';
                     this.app.filters.selectedPredefinedLocation = null;
                     this.app.filters.selectedCustomLocation = locationId;
+                    this.app.filters.selectedCustomLocationName = selectedLoc.name; // Store name for display
                     this.app.filters.customLat = selectedLoc.lat;
                     this.app.filters.customLon = selectedLoc.lon;
                     this.app.storage.saveFiltersToCookie(this.app.filters);

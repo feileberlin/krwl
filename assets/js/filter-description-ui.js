@@ -136,9 +136,9 @@ class FilterDescriptionUI {
             return this.getPredefinedLocationText(filters.selectedPredefinedLocation);
         }
         
-        // Custom location
-        if (filters.locationType === 'custom' && filters.customLat && filters.customLon) {
-            return 'from custom location';
+        // Custom location - use stored name (KISS: no lookup needed)
+        if (filters.locationType === 'custom' && filters.selectedCustomLocationName) {
+            return `from ${filters.selectedCustomLocationName}`;
         }
         
         // Geolocation - always show "from here" when geolocation is active
