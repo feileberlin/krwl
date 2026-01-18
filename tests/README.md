@@ -131,6 +131,81 @@ test:
     - python3 src/event_manager.py test
 ```
 
+## Debugging Test Failures
+
+When tests fail, use this systematic approach to debug:
+
+### Quick Diagnosis
+
+```bash
+# 1. Check which tests are failing
+python3 src/event_manager.py test 2>&1 | tee test_output.txt
+
+# 2. Run verbose mode for detailed output
+python3 src/event_manager.py test test_scraper --verbose
+
+# 3. Check for missing dependencies
+pip list | grep -E "(feedparser|beautifulsoup4|lxml|pydantic)"
+```
+
+### Common Issues and Solutions
+
+#### Issue 1: Missing Dependencies
+```
+ModuleNotFoundError: No module named 'feedparser'
+```
+**Solution:**
+```bash
+pip install -r requirements.txt
+```
+
+#### Issue 2: Missing Test Fixtures
+```
+FileNotFoundError: .../assets/json/events.json
+```
+**Solution:** Test setup is incomplete. The test should create required files in `setUp()` method.
+
+#### Issue 3: Wrong File Paths
+```
+FileNotFoundError: .../src/templates/index.html
+```
+**Solution:** File was moved. Update test to use correct path (e.g., `public/index.html`).
+
+#### Issue 4: Configuration Changed
+```
+KeyError: 'lucide'
+```
+**Solution:** Configuration was updated. Check source code for current keys.
+
+#### Issue 5: CI vs Local Differences
+
+If tests pass locally but fail in CI:
+
+```bash
+# Simulate CI environment
+export CI=true
+export GITHUB_ACTIONS=true
+python3 src/event_manager.py test
+
+# Check environment detection
+python3 -c "from src.modules.utils import is_ci; print(f'CI: {is_ci()}')"
+```
+
+### Debugging Individual Tests
+
+```bash
+# Run test file directly (legacy method)
+python3 tests/test_scraper.py --verbose
+
+# Set Python path if imports fail
+PYTHONPATH=$(pwd) python3 tests/test_scraper.py
+```
+
+### Full Debugging Guide
+
+For comprehensive debugging guidance, see:
+- [GitHub Copilot Instructions](../.github/copilot-instructions.md) - Section: "How to Debug Pre-Existing Test Failures"
+
 ## See Also
 - Test Runner Module: [`../src/modules/test_runner.py`](../src/modules/test_runner.py)
 - Main Application: [`../src/event_manager.py`](../src/event_manager.py)

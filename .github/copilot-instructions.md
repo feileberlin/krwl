@@ -540,6 +540,246 @@ When you run tests, if you discover any failing tests:
 - Test-driven development requires a reliable test suite
 
 **Exception:** If a test failure is due to missing infrastructure (external services, API keys, etc.) that you cannot fix, document it clearly in your PR description.
+
+### 🔍 How to Debug Pre-Existing Test Failures
+
+When you encounter test failures (especially in CI or when focused on specific jobs), follow this systematic debugging approach:
+
+#### Step 1: Identify the Failing Tests
+
+```bash
+# List all available tests
+python3 src/event_manager.py test --list
+
+# Run all tests and capture output
+python3 src/event_manager.py test 2>&1 | tee test_output.txt
+
+# Run specific category
+python3 src/event_manager.py test core --verbose
+python3 src/event_manager.py test features --verbose
+python3 src/event_manager.py test infrastructure --verbose
+
+# Run individual test with verbose output
+python3 src/event_manager.py test test_scraper --verbose
+```
+
+#### Step 2: Analyze Common Failure Patterns
+
+**Pattern 1: Missing Dependencies**
+```
+ModuleNotFoundError: No module named 'feedparser'
+NameError: name 'feedparser' is not defined
+```
+**Solution:**
+```bash
+# Install all dependencies
+pip install -r requirements.txt
+
+# Or install specific missing package
+pip install feedparser beautifulsoup4 lxml pydantic
+```
+
+**Pattern 2: Missing Test Fixture Files**
+```
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/test_xyz/assets/json/events.json'
+```
+**Solution:** The test should create these files. Check if the test setup is incomplete:
+```python
+# In test file, ensure proper setup:
+def setUp():
+    # Create required directory structure
+    os.makedirs(os.path.join(self.test_path, 'assets/json'), exist_ok=True)
+    
+    # Create events.json file
+    events_data = {'events': [], 'pending_count': 0}
+    with open(os.path.join(self.test_path, 'assets/json/events.json'), 'w') as f:
+        json.dump(events_data, f)
+```
+
+**Pattern 3: Missing Source Files**
+```
+FileNotFoundError: [Errno 2] No such file or directory: '/path/to/src/templates/index.html'
+```
+**Solution:** The file path changed. Update test to use correct path:
+```python
+# Old path (wrong)
+template_path = os.path.join(base_path, 'src/templates/index.html')
+
+# New path (correct)
+template_path = os.path.join(base_path, 'public/index.html')
+```
+
+**Pattern 4: Configuration Issues**
+```
+KeyError: 'lucide'
+```
+**Solution:** Configuration was updated. Check the source code:
+```bash
+# Find where the key is used
+grep -r "DEPENDENCIES\['lucide'\]" src/
+
+# Update to use correct key or check if feature was removed
+```
+
+**Pattern 5: Import Path Issues**
+```
+ModuleNotFoundError: No module named 'modules.cdn_inliner'
+```
+**Solution:** Module was moved or renamed:
+```bash
+# Find the module's current location
+find . -name "cdn_inliner.py"
+
+# Update import statement
+# Old: from modules.cdn_inliner import CDNInliner
+# New: from src.modules.site_generator import SiteGenerator
+```
+
+#### Step 3: Run Tests in Isolation
+
+```bash
+# Run single test file directly (legacy method)
+python3 tests/test_scraper.py --verbose
+
+# Run with specific Python path if imports fail
+PYTHONPATH=/home/runner/work/krwl-hof/krwl-hof python3 tests/test_scraper.py
+```
+
+#### Step 4: Debug in CI Context
+
+When tests fail in CI but pass locally, check environment differences:
+
+```bash
+# Simulate CI environment locally
+export CI=true
+export GITHUB_ACTIONS=true
+python3 src/event_manager.py test
+
+# Check environment detection
+python3 -c "from src.modules.utils import is_ci, is_production; print(f'CI: {is_ci()}, Prod: {is_production()}')"
+
+# Verify dependencies are installed in CI
+pip list | grep -E "(feedparser|beautifulsoup4|lxml|pydantic)"
+```
+
+#### Step 5: Fix Common Issues
+
+**Fix 1: Update Test Fixtures**
+If tests expect files that moved:
+```bash
+# Find what tests need
+grep -r "events.demo.json" tests/
+
+# Check current location
+find . -name "events.demo.json"
+
+# Update test to use correct path: assets/json/events.demo.json (not data/events.demo.json)
+```
+
+**Fix 2: Update Imports**
+If modules were reorganized:
+```bash
+# Check current module structure
+ls -la src/modules/
+
+# Update test imports to match current structure
+```
+
+**Fix 3: Add Missing Test Dependencies**
+```bash
+# Check if dev dependencies exist
+cat requirements-dev.txt
+
+# Add missing test dependencies
+pip install pytest pydantic
+```
+
+#### Step 6: Verify Fix
+
+```bash
+# Re-run the specific failing test
+python3 src/event_manager.py test test_scraper --verbose
+
+# If it passes, run full suite to ensure no regressions
+python3 src/event_manager.py test
+
+# Check test summary
+echo $?  # Should be 0 for success
+```
+
+#### Step 7: Document and Commit
+
+```bash
+# Add clear commit message explaining the fix
+git add tests/test_*.py
+git commit -m "fix(tests): resolve pre-existing test failures
+
+- Fixed missing events.json fixture in test_scraper
+- Updated import paths for cdn_inliner module
+- Added missing test dependencies
+
+Tests now pass: test_scraper, test_components"
+```
+
+#### Quick Reference: Test Debugging Commands
+
+```bash
+# List all tests
+python3 src/event_manager.py test --list
+
+# Run all tests
+python3 src/event_manager.py test
+
+# Run by category
+python3 src/event_manager.py test core
+python3 src/event_manager.py test features
+python3 src/event_manager.py test infrastructure
+
+# Run specific test
+python3 src/event_manager.py test test_scraper --verbose
+
+# Check for missing dependencies
+pip install -r requirements.txt
+
+# Verify environment detection
+python3 -c "from src.modules.utils import is_ci; print(f'CI mode: {is_ci()}')"
+
+# Check file paths that tests depend on
+find . -name "events.json" -o -name "events.demo.json"
+find . -name "*.html" -path "*/templates/*"
+```
+
+#### CI Job-Specific Debugging
+
+When a specific CI job fails:
+
+1. **Check the job's environment**:
+   - Does it install all dependencies? (`pip install -r requirements.txt`)
+   - Does it have the correct Python version? (`python-version: '3.x'`)
+   - Are files generated in previous steps? (e.g., `python3 src/event_manager.py generate`)
+
+2. **Reproduce the job locally**:
+```bash
+# Set CI environment variables
+export CI=true
+export GITHUB_ACTIONS=true
+
+# Run the exact commands from the job
+pip install -r requirements.txt
+python3 src/event_manager.py generate
+python3 src/event_manager.py test
+```
+
+3. **Check job dependencies**:
+   - Does the job depend on artifacts from previous jobs?
+   - Are `needs:` dependencies correctly specified in workflow YAML?
+   - Did previous jobs complete successfully?
+
+4. **Review workflow logs**:
+   - Use GitHub Actions UI to view full logs
+   - Look for warnings before the failure
+   - Check if files are missing or permissions are incorrect
+
 **What it checks:**
 - ✅ `environment` field must be set to `"auto"` (not `"development"` or `"production"`)
 - ✅ Prevents demo events from appearing on production map
