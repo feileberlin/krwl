@@ -1,0 +1,52 @@
+/* Scrollbar */
+
+/* Scrollbar styling - monochrome Barbie Red theme */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--barbie-shade-darkest);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-hover);
+}
+
+@media (max-width: 768px) {
+    #event-filter-bar {
+        max-width: calc(var(--app-width) - 40px); /* More space on mobile */
+        font-size: 0.85rem;
+    }
+    
+    #event-list {
+        display: none; /* Hidden for fullscreen map */
+    }
+    
+    #map {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: var(--app-width);
+        height: var(--app-height);
+    }
+}
+
+@media (max-width: 480px) {
+    #event-filter-bar {
+        max-width: calc(var(--app-width) - 30px);
+        font-size: 0.8rem;
+        padding: 0.6rem;
+        gap: 0.2rem;
+    }
+    
+    .filter-bar-dropdown {
+        max-width: calc(var(--app-width) - 40px);
+        font-size: 0.85rem;
+    }
+}

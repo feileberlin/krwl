@@ -4,118 +4,82 @@
 
 ## 🎯 Overview
 
-The CSS is split into 10 focused modules following ITCSS (Inverted Triangle CSS) methodology. Each module handles a specific aspect of the UI, making it easier to maintain, update, and understand.
+The CSS has been split into focused modules following the component-based architecture. Each module handles a specific aspect of the UI, making it easier to maintain, update, and understand.
 
-## 📦 Modules (ITCSS Order)
+## 📦 Modules
 
-### Layer 1: Foundation
-**foundation.css** (39 lines)
-- Global base styles and typography
-- CSS custom properties (--app-width, --app-height)
-- Body and HTML styles
-- Heading styles
-- Universal reset for non-Leaflet elements
+### base.css
+Global reset and base styles for the entire application.
+- CSS reset (margin, padding, box-sizing)
+- Body styles (font, background, colors)
+- App container
+- Noscript warning
 
-### Layer 2: Layout
-**layout.css** (20 lines)
-- Grid and flexbox layouts
-- Scrollbar customization
-- Positioning utilities
+### map.css
+Map container and Leaflet integration styles.
+- Map container positioning
+- Leaflet tile filtering (monochromatic Barbie theme)
+- Map overlay positioning
 
-### Layer 3: Components
-**components.css** (283 lines)
-- Reusable UI elements
-- Speech bubbles
-- Buttons
-- Modals
-- Notifications
-- Logo and branding
-
-**forms.css** (216 lines)
-- Form input styling
-- Custom location coordinates
-- Input fields and controls
-
-### Layer 4: Features
-**map.css** (104 lines)
-- Map container and positioning
-- Leaflet integration styles
-- Custom marker styles
-- Map overlays
-
-**filters.css** (236 lines)
-- Interactive filter bar
-- Filter controls and dropdowns
+### filters.css
+Interactive filter bar and controls.
+- Filter bar layout and positioning
+- Filter logo button
+- Filter dropdowns and controls
 - Distance slider
 - Time range selector
 
-**dashboard.css** (401 lines)
-- Dashboard modal and overlay
+### dashboard.css
+Dashboard menu modal and overlay.
+- Dashboard modal container
 - Content sections
 - Open/close animations
 - Environment indicators (DEV/PRODUCTION)
 
-### Layer 5: Interactions
-**interactions.css** (167 lines)
-- Hover effects
-- Focus states
-- Active states
-- Touch interactions
+### mobile.css
+Mobile-responsive styles and optimizations.
+- Mobile breakpoints (@media queries)
+- Touch-friendly interactions
+- Responsive layouts
+- Small screen adaptations
 
-### Layer 6: Utilities
-**utilities.css** (33 lines)
-- Helper classes
-- Visibility utilities
-- Text alignment
-- Spacing helpers
+### leaflet-custom.css
+Leaflet library customization.
+- Custom popup styles
+- Edge-positioned event details
+- SVG arrows for popups
+- Marker glow effects
 
-### Layer 7: Debug
-**debug.css** (180 lines)
-- Development tools
-- Debug groups and sections
-- Performance indicators
-- Development-only utilities
+### scrollbar.css
+Custom scrollbar styling.
+- Barbie Pink themed scrollbars
+- Webkit scrollbar customization
+- Firefox scrollbar properties
 
 ## 🚀 Usage
 
-Modules are automatically loaded by the site generator (`src/modules/site_generator.py`) in ITCSS order:
+Modules are automatically loaded by the site generator in the correct order:
 
 ```python
+# In src-modules/site_generator.py
 css_modules = [
-    # Layer 1: Foundation
-    'foundation.css',
-    # Layer 2: Layout
-    'layout.css',
-    # Layer 3: Components
-    'components.css',
-    'forms.css',
-    # Layer 4: Features
-    'map.css',
+    'base.css',
+    'map.css', 
     'filters.css',
     'dashboard.css',
-    # Layer 5: Interactions
-    'interactions.css',
-    # Layer 6: Utilities
-    'utilities.css',
-    # Layer 7: Debug
-    'debug.css'
+    'mobile.css',
+    'leaflet-custom.css',
+    'scrollbar.css'
 ]
 ```
-
-During build:
-1. Each module is loaded from `assets/css/`
-2. Modules are concatenated in ITCSS order
-3. Combined CSS is inlined into `public/index.html`
 
 ## 🔧 Editing
 
 To modify styles:
 
-1. Edit the specific module file in `assets/css/`
+1. Edit the specific module file in `assets/css-modules/`
 2. Regenerate the site: `python3 src/event_manager.py generate`
 3. The modules are combined and inlined during generation
-
-**Important:** Never edit `public/index.html` directly - it's auto-generated!
 
 ## 💡 Design Tokens
 
@@ -129,32 +93,20 @@ See `assets/html/variables-reference.md` for complete token reference.
 
 ## 📝 Adding New Modules
 
-1. Create new `.css` file in `assets/css/`
+1. Create new `.css` file in `assets/css-modules/`
 2. Add module header comment: `/* Module Name */`
-3. Write focused, scoped styles (keep under 500 lines for KISS compliance)
-4. Update `src/modules/site_generator.py` to include new module in `css_modules` list
+3. Write focused, scoped styles
+4. Update `src-modules/site_generator.py` to include new module
 5. Test with `python3 src/event_manager.py generate`
 
 ## ✅ Benefits
 
 - **Maintainability**: Easy to find and update specific styles
 - **Modularity**: Independent modules, minimal coupling
-- **Readability**: Small, focused files (largest is 401 lines)
+- **Readability**: Small, focused files
 - **Reusability**: Modules can be included/excluded as needed
 - **KISS Principle**: Simple, flat structure
-- **ITCSS Organization**: Ordered by specificity (Foundation → Utilities)
-- **Performance**: 80/100 score (VERY GOOD rating)
-- **Git-Friendly**: Changes are isolated to relevant modules
-
-## 📊 Statistics
-
-- **Total**: 10 CSS modules
-- **Lines**: ~1,679 lines
-- **Largest**: dashboard.css (401 lines)
-- **Smallest**: layout.css (20 lines)
-- **Performance**: 80/100 (VERY GOOD)
-- **Organization**: ITCSS methodology
 
 ---
 
-See `CSS_OPTIMIZATION_SUMMARY.md` for detailed performance metrics and optimization guidelines.
+**Total**: 7 CSS modules, ~767 lines split into focused components

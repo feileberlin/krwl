@@ -32,7 +32,7 @@ KRWL HOF is a **mobile-first Progressive Web App (PWA)** for discovering communi
 - **Files**: 
   - `public/index.html` - Main app
   - `assets/js/app.js` - App logic
-  - `assets/css/*.css` - Modular styles (10 files)
+  - `assets/css/style.css` - Styles
 
 ### Configuration
 
@@ -119,16 +119,7 @@ krwl-hof/
 ├── assets/
 ├── assets/
 │   ├── css/
-│   │   ├── foundation.css   # ✅ Base styles
-│   │   ├── layout.css       # ✅ Layout and positioning
-│   │   ├── components.css   # ✅ Reusable UI elements
-│   │   ├── forms.css        # ✅ Form styling
-│   │   ├── map.css          # ✅ Map styles
-│   │   ├── filters.css      # ✅ Filter UI
-│   │   ├── dashboard.css    # ✅ Dashboard and modals
-│   │   ├── interactions.css # ✅ Hover, focus states
-│   │   ├── utilities.css    # ✅ Helper classes
-│   │   └── debug.css        # ✅ Development tools
+│   │   └── style.css       # ✅ Source styles
 │   ├── js/
 │   │   └── app.js          # ✅ Source app logic
 │   ├── html/               # HTML template components
@@ -188,7 +179,7 @@ krwl-hof/
 | `src/modules/config_editor.py` | Config management | Changing config TUI or validation |
 | `src/modules/workflow_launcher.py` | GitHub Actions | Modifying CI/CD integration |
 | `assets/js/app.js` | Frontend logic | Adding map features, filters, or UI behavior |
-| `assets/css/*.css` | Styles | Changing appearance, layout, or themes (10 modular files) |
+| `assets/css/style.css` | Styles | Changing appearance, layout, or themes |
 | `config.json` | Configuration | Adding settings, sources, or options |
 | `features.json` | Feature registry | **ALWAYS** when adding new features |
 
@@ -227,7 +218,7 @@ html_head = generator.load_component('html-head.html')  # Loads from /assets/htm
 ### Frontend File Edit Policy
 
 ✅ **DO edit these source files:**
-- `assets/css/*.css` - Source styles (10 modular files)
+- `assets/css/style.css` - Source styles
 - `assets/js/app.js` - Source app logic  
 
 📝 **Note:** The `site_generator.py` reads source files directly from `assets/css/` and `assets/js/` directories. Build output goes to `public/index.html`.
@@ -256,7 +247,7 @@ python3 src/event_manager.py generate
 │       │   └─ Management → src/event_manager.py
 │       │                                       │
 │       ├─ UI/Frontend related?                │
-│       │   ├─ Styling → assets/css/ (pick appropriate module)
+│       │   ├─ Styling → assets/css/style.css │
 │       │   └─ Logic → assets/js/app.js       │
 │       │                                       │
 │       ├─ Build/Generation related?           │
@@ -312,7 +303,7 @@ python3 src/event_manager.py scrape
 
 ### ✅ DO: Edit source files and regenerate
 ```css
-/* ✅ GOOD: Edit assets/css/components.css (or appropriate module) */
+/* ✅ GOOD: Edit assets/css/style.css */
 .new-style { color: red; }
 ```
 ```bash
@@ -468,7 +459,7 @@ Before submitting PR:
 
 ### To modify the HTML:
 1. Edit component templates in `layouts/components/` directory
-2. Edit source CSS/JS files in `assets/css/*.css` and `assets/js/app.js`
+2. Edit source CSS/JS files: `assets/css/style.css`, `assets/js/app.js`
 3. For advanced changes, edit `src/modules/site_generator.py` build logic
 4. Run: `python3 src/event_manager.py generate`
 5. Commit both source changes AND generated `public/index.html`
@@ -752,10 +743,9 @@ def archive_events(self, dry_run=False):
 
 ### CSS Style
 - **Mobile First**: Write for mobile, enhance for desktop
-- **CSS Variables**: Use for theming (see `assets/html/design-tokens.css`)
+- **CSS Variables**: Use for theming (see `assets/css/style.css`)
 - **Responsive**: Use media queries, flexbox, grid
 - **Accessibility**: Ensure sufficient contrast, focus indicators
-- **Modular**: Edit appropriate module in `assets/css/` (10 files organized by ITCSS)
 
 ### Design System & CSS Variables (CRITICAL)
 
@@ -1320,7 +1310,7 @@ in older documentation but never implemented. Use `generate` with automatic envi
 
 ### Add a new filter
 1. Edit `assets/js/app.js` (filter logic)
-2. Edit appropriate CSS module in `assets/css/` (e.g., `filters.css` for filter UI styles)
+2. Edit `assets/css/style.css` (filter UI styles)
 3. Rebuild: `python3 src/event_manager.py generate`
 4. Test: `python3 src/event_manager.py test filters --verbose`
 

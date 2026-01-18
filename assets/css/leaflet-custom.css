@@ -1,0 +1,80 @@
+/* Leaflet Custom */
+
+/* Edge-positioned event details with arrows */
+.event-detail-edge {
+    position: fixed;
+    background: var(--barbie-shade-darkest);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--color-border-primary);
+    border-radius: 8px;
+    padding: 1rem;
+    max-width: 280px;
+    z-index: 1500;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
+                0 0 10px rgba(214, 137, 184, 0.3);
+    pointer-events: auto;
+}
+
+.event-detail-edge h3 {
+    color: var(--color-primary);
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+}
+
+.event-detail-edge p {
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    margin: 0.3rem 0;
+    line-height: 1.4;
+}
+
+.event-detail-edge .detail-time {
+    color: var(--color-text-tertiary);
+    font-size: 0.8rem;
+}
+
+.event-detail-edge .detail-distance {
+    color: var(--color-text-tertiary);
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+/* SVG arrow container */
+#event-arrows-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1400;
+}
+
+#event-arrows-container svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Leaflet customization */
+.leaflet-popup-content-wrapper {
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    border: 2px solid var(--color-border-primary);
+}
+
+.leaflet-popup-tip {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-border-primary);
+}
+
+/* Monochrome marker glow - barbie red */
+.leaflet-marker-icon {
+    filter: drop-shadow(0 0 2px var(--color-primary));
+    transition: filter 0.2s ease;
+}
+
+.leaflet-marker-icon:hover {
+    filter: drop-shadow(0 0 4px var(--color-primary)) 
+            drop-shadow(0 0 8px var(--color-primary));
+}
