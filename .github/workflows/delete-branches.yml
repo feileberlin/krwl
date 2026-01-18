@@ -1,0 +1,192 @@
+name: 🗑️ Delete All Branches Except Main
+
+# Workflow to delete all branches in the repository except 'main'
+# This is a one-time maintenance task to clean up accumulated branches
+# Run with caution as this action is irreversible!
+
+on:
+  workflow_dispatch:  # Manual trigger only
+    inputs:
+      dry_run:
+        description: '🔍 Dry run mode - Show what would be deleted without actually deleting'
+        type: boolean
+        default: true
+        required: true
+      
+      confirm_deletion:
+        description: '⚠️ Type "DELETE ALL BRANCHES" to confirm deletion (case-sensitive)'
+        type: string
+        required: true
+
+permissions:
+  contents: write  # Required to delete branches
+
+jobs:
+  delete-branches:
+    name: 🗑️ Delete Branches (Except Main)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all branches
+      
+      - name: Validate confirmation
+        id: validate
+        run: |
+          CONFIRM="${{ github.event.inputs.confirm_deletion }}"
+          DRY_RUN="${{ github.event.inputs.dry_run }}"
+          
+          echo "## 🗑️ Branch Deletion Workflow" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "$DRY_RUN" == "true" ]; then
+            echo "**Mode:** 🔍 Dry Run (preview only)" >> $GITHUB_STEP_SUMMARY
+            echo "validation_passed=true" >> $GITHUB_OUTPUT
+          elif [ "$CONFIRM" == "DELETE ALL BRANCHES" ]; then
+            echo "**Mode:** ⚠️ LIVE DELETION" >> $GITHUB_STEP_SUMMARY
+            echo "✅ Confirmation validated" >> $GITHUB_STEP_SUMMARY
+            echo "validation_passed=true" >> $GITHUB_OUTPUT
+          else
+            echo "**Mode:** ⚠️ LIVE DELETION" >> $GITHUB_STEP_SUMMARY
+            echo "❌ Confirmation failed - must type exactly: DELETE ALL BRANCHES" >> $GITHUB_STEP_SUMMARY
+            echo "validation_passed=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+      
+      - name: List all branches
+        id: list_branches
+        run: |
+          echo "📋 Fetching all remote branches..."
+          
+          # Get all remote branches except main
+          BRANCHES=$(git ls-remote --heads origin | \
+            awk '{print $2}' | \
+            sed 's|refs/heads/||' | \
+            grep -v '^main$')
+          
+          BRANCH_COUNT=$(echo "$BRANCHES" | grep -c . || echo "0")
+          
+          echo "branch_count=$BRANCH_COUNT" >> $GITHUB_OUTPUT
+          
+          echo "### 📊 Branch Statistics" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Total branches (including main):** $((BRANCH_COUNT + 1))" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branches to delete:** $BRANCH_COUNT" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branches to keep:** 1 (main)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Save branch list to file for next step
+          echo "$BRANCHES" > branches_to_delete.txt
+          
+          if [ "$BRANCH_COUNT" -eq 0 ]; then
+            echo "✅ No branches to delete (only main exists)" >> $GITHUB_STEP_SUMMARY
+          fi
+      
+      - name: Display branches to delete
+        if: steps.list_branches.outputs.branch_count != '0'
+        run: |
+          echo "### 🗑️ Branches to Delete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat branches_to_delete.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Also print to console
+          echo "🗑️ Branches to delete:"
+          cat branches_to_delete.txt
+      
+      - name: Delete branches (dry run)
+        if: |
+          github.event.inputs.dry_run == 'true' &&
+          steps.list_branches.outputs.branch_count != '0'
+        run: |
+          echo "🔍 DRY RUN MODE - No branches will be deleted"
+          echo ""
+          echo "The following commands would be executed:"
+          echo ""
+          
+          DELETED_COUNT=0
+          while IFS= read -r branch; do
+            if [ -n "$branch" ]; then
+              echo "  git push origin --delete $branch"
+              DELETED_COUNT=$((DELETED_COUNT + 1))
+            fi
+          done < branches_to_delete.txt
+          
+          echo ""
+          echo "✓ Would delete $DELETED_COUNT branches"
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Dry run complete** - No branches were deleted" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "To actually delete branches:" >> $GITHUB_STEP_SUMMARY
+          echo "1. Set 'Dry run mode' to **false**" >> $GITHUB_STEP_SUMMARY
+          echo "2. Type **DELETE ALL BRANCHES** in the confirmation field" >> $GITHUB_STEP_SUMMARY
+          echo "3. Run the workflow again" >> $GITHUB_STEP_SUMMARY
+      
+      - name: Delete branches (live)
+        if: |
+          github.event.inputs.dry_run == 'false' &&
+          steps.validate.outputs.validation_passed == 'true' &&
+          steps.list_branches.outputs.branch_count != '0'
+        run: |
+          echo "⚠️ LIVE DELETION MODE - Deleting branches..."
+          echo ""
+          
+          DELETED_COUNT=0
+          FAILED_COUNT=0
+          
+          while IFS= read -r branch; do
+            if [ -n "$branch" ]; then
+              echo "Deleting: $branch"
+              
+              if git push origin --delete "$branch" 2>&1; then
+                echo "  ✓ Deleted: $branch"
+                DELETED_COUNT=$((DELETED_COUNT + 1))
+              else
+                echo "  ✗ Failed: $branch"
+                FAILED_COUNT=$((FAILED_COUNT + 1))
+              fi
+            fi
+          done < branches_to_delete.txt
+          
+          echo ""
+          echo "✓ Deletion complete"
+          echo "  - Deleted: $DELETED_COUNT branches"
+          echo "  - Failed: $FAILED_COUNT branches"
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### ✅ Deletion Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Successfully deleted:** $DELETED_COUNT branches" >> $GITHUB_STEP_SUMMARY
+          echo "- **Failed:** $FAILED_COUNT branches" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "$FAILED_COUNT" -gt 0 ]; then
+            echo "⚠️ Some branches could not be deleted. Check logs for details." >> $GITHUB_STEP_SUMMARY
+          fi
+      
+      - name: Verify main branch exists
+        run: |
+          echo "🔍 Verifying main branch still exists..."
+          
+          if git ls-remote --heads origin main | grep -q 'refs/heads/main'; then
+            echo "✅ Main branch preserved successfully"
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "---" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "✅ **Main branch preserved** - Workflow complete" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ ERROR: Main branch not found!"
+            echo "❌ **CRITICAL ERROR:** Main branch was deleted!" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
