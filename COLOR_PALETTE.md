@@ -15,7 +15,7 @@ This document serves as a **permanent reference** for the KRWL HOF **truly monoc
 
 **Monochromatic Design:** Every single color in the application - backgrounds, text, borders, accents, warnings, errors - derives from the ecoBarbie pink base color using HSV transformations.
 
-**Palette Size:** **Streamlined 6-color core palette** (2 tints, 2 shades, 2 tones) for maximum distinction and clarity. Fewer steps = more distinct colors = clearer visual hierarchy.
+**Palette Size:** **Streamlined 0/50/100 system** (3 colors per category) for maximum distinction and clarity. Larger steps = more distinct colors = clearer visual hierarchy.
 
 > **Note:** This is a reference document only. The actual colors used in the application are defined in `config.json` under the `design.colors` section with inline color preview comments (█ blocks). To modify colors, edit `config.json` and regenerate design tokens using `python3 src/tools/generate_design_tokens.py`.
 
@@ -44,10 +44,13 @@ A **monochromatic color scheme** uses variations of a single hue by adjusting:
 
 **Usage:** Light backgrounds, hover states, subtle highlights, soft UI elements
 
+**System:** 0/50/100 - Base color, mid-point, and white for maximum distinction
+
 | Color Preview | Name | Hex | RGB | CSS Variable | Lightness |
 |---------------|------|-----|-----|--------------|-----------|
-| ![#DE96C2](https://img.shields.io/badge/%20-%20-DE96C2?style=flat-square) | **Tint 20%** | `#de96c2` | 222, 150, 194 | `--color-tint-20` | Subtle tint |
-| ![#E6A4CC](https://img.shields.io/badge/%20-%20-E6A4CC?style=flat-square) | **Tint 40%** | `#e6a4cc` | 230, 164, 204 | `--color-tint-40` | Light backgrounds |
+| ![#D689B8](https://img.shields.io/badge/%20-%20-D689B8?style=flat-square) | **Tint 0% (Base)** | `#D689B8` | 214, 137, 184 | `--color-tint-0` | Base ecoBarbie color |
+| ![#EAC0DA](https://img.shields.io/badge/%20-%20-EAC0DA?style=flat-square) | **Tint 50%** | `#eac0da` | 234, 192, 218 | `--color-tint-50` | Light backgrounds, hover states |
+| ![#FFFFFF](https://img.shields.io/badge/%20-%20-FFFFFF?style=flat-square) | **Tint 100%** | `#ffffff` | 255, 255, 255 | `--color-tint-100` | Pure white, maximum lightness |
 | ![#EEB2D7](https://img.shields.io/badge/%20-%20-EEB2D7?style=flat-square) | **Tint 60%** | `#eeb2d7` | 238, 178, 215 | `--color-tint-60` | Very light backgrounds |
 | ![#F6C1E2](https://img.shields.io/badge/%20-%20-F6C1E2?style=flat-square) | **Tint 80%** | `#f6c1e2` | 246, 193, 226 | `--color-tint-80` | Ultra-light highlights |
 
