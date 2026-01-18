@@ -1753,10 +1753,21 @@ def cli_telegram_bot(base_path, config):
         print("📱 Bot is ready to receive event submissions and contact messages")
         print("\nPress Ctrl+C to stop\n")
         
-        # FIX: Use asyncio.run() directly instead of start_sync()
-        # This eliminates the nested asyncio.run() call that causes event loop conflicts
+        # FIX: Handle existing event loop in GitHub Actions/CI environments
+        # Creates a new event loop to avoid conflicts with existing loops
         import asyncio
-        asyncio.run(bot.run())
+        
+        async def start_bot():
+            """Async wrapper for bot startup"""
+            await bot.run()
+        
+        # Create a new event loop to avoid conflicts with existing loops
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            loop.run_until_complete(start_bot())
+        finally:
+            loop.close()
         
         return 0
         
