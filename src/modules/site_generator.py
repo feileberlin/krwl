@@ -778,6 +778,7 @@ class SiteGenerator:
             'dropdown.js',             # UI component (no dependencies)
             'dashboard-ui.js',         # Depends on: utils
             'filter-description-ui.js', # Filter description formatting (extracted from app)
+            'forms.js',                # Contact & flyer upload forms (no dependencies)
             'event-listeners.js',      # Depends on: app, dropdown
             'app.js'                   # Depends on: all modules (KISS compliant!)
         ]

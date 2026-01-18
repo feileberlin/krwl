@@ -36,6 +36,7 @@ class EventsApp {
         this.dashboardUI = new DashboardUI(this.config, this.utils);
         this.filterDescriptionUI = new FilterDescriptionUI(this.config);
         this.eventListeners = new EventListeners(this);
+        this.formsManager = new FormsManager(this.config);
         
         // App state
         this.events = [];

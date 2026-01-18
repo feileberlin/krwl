@@ -1090,6 +1090,151 @@ strong, b {
     }
 }
 
+/* Dashboard Forms - Contact & Flyer Upload */
+.dashboard-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.dashboard-input,
+.dashboard-textarea {
+    background: var(--tint-50);
+    border: 1px solid var(--border-secondary);
+    color: var(--shade-100);
+    padding: 0.5rem 0.7rem;
+    border-radius: var(--radius-small);
+    font-size: 0.85rem;
+    font-family: inherit;
+    transition: all 0.2s;
+    width: 100%;
+}
+
+.dashboard-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.dashboard-input:focus,
+.dashboard-textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background: var(--tint-50);
+    box-shadow: 0 0 0 2px rgba(214, 137, 184, 0.15);
+}
+
+.dashboard-input:hover:not(:focus),
+.dashboard-textarea:hover:not(:focus) {
+    border-color: var(--border-primary);
+}
+
+.dashboard-file-input {
+    background: var(--tint-50);
+    border: 1px solid var(--border-secondary);
+    color: var(--shade-100);
+    padding: 0.5rem 0.7rem;
+    border-radius: var(--radius-small);
+    font-size: 0.85rem;
+    font-family: inherit;
+    transition: all 0.2s;
+    width: 100%;
+    cursor: pointer;
+}
+
+.dashboard-file-input:hover {
+    border-color: var(--border-primary);
+}
+
+.file-input-help {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    margin-top: 0.25rem;
+    font-style: italic;
+}
+
+.form-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.3rem;
+}
+
+.dashboard-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-small);
+    font-size: 0.85rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid var(--border-secondary);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+
+.dashboard-btn--primary {
+    background: var(--color-primary);
+    color: var(--bg-primary);
+    border-color: var(--color-primary);
+}
+
+.dashboard-btn--primary:hover:not(:disabled) {
+    background: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(214, 137, 184, 0.3);
+}
+
+.dashboard-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.dashboard-btn i {
+    flex-shrink: 0;
+}
+
+.form-status {
+    padding: 0.7rem;
+    border-radius: var(--radius-small);
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    animation: fadeIn 0.3s;
+}
+
+.form-status--success {
+    background: rgba(214, 137, 184, 0.15);
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+}
+
+.form-status--error {
+    background: rgba(149, 68, 118, 0.15);
+    border: 1px solid var(--color-error);
+    color: var(--color-error);
+}
+
+.form-status--loading {
+    background: rgba(214, 137, 184, 0.1);
+    border: 1px solid var(--color-primary);
+    color: var(--text-secondary);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* Environment and debug mode state classes */
 .env-dev {
     color: var(--color-ecobarbie-medium-tint);

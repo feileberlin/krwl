@@ -155,6 +155,98 @@ multiple sources.</p>
     </div>
     
     <div class="dashboard-section">
+      <h3><i class="dashboard-section-icon" data-lucide="message-circle" aria-hidden="true"></i> Contact</h3>
+      <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
+        Send a message to the maintainers. We'll get back to you via email or GitHub.
+      </p>
+      <form id="contact-form" class="dashboard-form">
+        <div class="form-group">
+          <label for="contact-name">Your Name</label>
+          <input type="text" 
+                 id="contact-name" 
+                 class="dashboard-input" 
+                 placeholder="Enter your name"
+                 required
+                 maxlength="100">
+        </div>
+        <div class="form-group">
+          <label for="contact-email">Your Email</label>
+          <input type="email" 
+                 id="contact-email" 
+                 class="dashboard-input" 
+                 placeholder="your@email.com"
+                 required>
+        </div>
+        <div class="form-group">
+          <label for="contact-message">Message</label>
+          <textarea id="contact-message" 
+                    class="dashboard-textarea" 
+                    placeholder="Your message..."
+                    rows="4"
+                    required
+                    maxlength="1000"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="dashboard-btn dashboard-btn--primary">
+            <i data-lucide="send" style="width: 16px; height: 16px;"></i>
+            <span>Send Message</span>
+          </button>
+        </div>
+        <div id="contact-form-status" class="form-status" style="display: none;"></div>
+      </form>
+    </div>
+    
+    <div class="dashboard-section">
+      <h3><i class="dashboard-section-icon" data-lucide="upload" aria-hidden="true"></i> Submit Event Flyer</h3>
+      <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
+        Upload an event flyer (JPG, PNG, PDF). We'll review and add it to the map.
+      </p>
+      <form id="flyer-form" class="dashboard-form">
+        <div class="form-group">
+          <label for="flyer-name">Your Name</label>
+          <input type="text" 
+                 id="flyer-name" 
+                 class="dashboard-input" 
+                 placeholder="Enter your name"
+                 required
+                 maxlength="100">
+        </div>
+        <div class="form-group">
+          <label for="flyer-email">Your Email</label>
+          <input type="email" 
+                 id="flyer-email" 
+                 class="dashboard-input" 
+                 placeholder="your@email.com"
+                 required>
+        </div>
+        <div class="form-group">
+          <label for="flyer-file">Event Flyer</label>
+          <input type="file" 
+                 id="flyer-file" 
+                 class="dashboard-file-input" 
+                 accept="image/jpeg,image/png,application/pdf"
+                 required>
+          <div class="file-input-help">Max 10MB. Formats: JPG, PNG, PDF</div>
+        </div>
+        <div class="form-group">
+          <label for="flyer-notes">Additional Notes (optional)</label>
+          <textarea id="flyer-notes" 
+                    class="dashboard-textarea" 
+                    placeholder="Any additional information about the event..."
+                    rows="3"
+                    maxlength="500"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="dashboard-btn dashboard-btn--primary">
+            <i data-lucide="upload-cloud" style="width: 16px; height: 16px;"></i>
+            <span>Upload Flyer</span>
+          </button>
+        </div>
+        <div id="flyer-form-status" class="form-status" style="display: none;"></div>
+      </form>
+    </div>
+    
+    <div class="dashboard-section">
       <h3><i class="dashboard-section-icon" data-lucide="user" aria-hidden="true"></i> Maintainer</h3>
       <p><strong>Project:</strong> KRWL HOF Community Events</p>
       <p><strong>Location:</strong> Hof, Bavaria, Germany</p>
