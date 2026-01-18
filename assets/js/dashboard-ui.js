@@ -66,7 +66,7 @@ class DashboardUI {
         
         let html = '';
         
-        // Show all custom locations (includes initialized predefined locations)
+        // Show all custom locations (2 preconfigured locations from config.json)
         customLocs.forEach((loc) => {
             const locationLabel = loc.fromPredefined ? 
                 `<i data-lucide="map-pin" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle;"></i> ${loc.name}` : 
@@ -78,7 +78,6 @@ class DashboardUI {
                         <div class="custom-location-name">${locationLabel}</div>
                         <div class="custom-location-actions">
                             <button class="custom-location-btn" data-action="edit" data-id="${loc.id}">Edit</button>
-                            <button class="custom-location-btn delete" data-action="delete" data-id="${loc.id}">Delete</button>
                         </div>
                     </div>
                     <div class="custom-location-coords">${loc.lat.toFixed(4)}°, ${loc.lon.toFixed(4)}°</div>
@@ -93,7 +92,7 @@ class DashboardUI {
             window.lucide.createIcons();
         }
         
-        // Attach event listeners to action buttons
+        // Attach event listeners to edit buttons
         container.querySelectorAll('.custom-location-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const action = btn.getAttribute('data-action');
@@ -101,21 +100,9 @@ class DashboardUI {
                 
                 if (action === 'edit') {
                     this.editCustomLocation(id, app);
-                } else if (action === 'delete') {
-                    this.deleteCustomLocation(id, app);
                 }
             });
         });
-        
-        // Show/hide Add Location button based on max limit (2 locations)
-        const addButton = document.getElementById('add-custom-location-btn');
-        if (addButton) {
-            if (customLocs.length >= 2) {
-                addButton.style.display = 'none';
-            } else {
-                addButton.style.display = 'block';
-            }
-        }
     }
     
     /**
@@ -149,30 +136,6 @@ class DashboardUI {
         
         if (success) {
             alert('✅ Location updated!');
-            this.updateCustomLocations();
-            // Refresh the location dropdown
-            if (app.eventListeners) {
-                app.eventListeners.setupFilterListeners();
-            }
-        }
-    }
-    
-    /**
-     * Delete a custom location
-     * @param {string} id - Location ID
-     * @param {Object} app - App instance
-     */
-    deleteCustomLocation(id, app) {
-        const loc = app.storage.getCustomLocationById(id);
-        if (!loc) return;
-        
-        if (!confirm(`Delete "${loc.name}"?`)) {
-            return;
-        }
-        
-        const success = app.storage.deleteCustomLocation(id);
-        if (success) {
-            alert('✅ Location deleted!');
             this.updateCustomLocations();
             // Refresh the location dropdown
             if (app.eventListeners) {
