@@ -27,8 +27,8 @@ on:
   
   schedule:
     # Run bot every 15 minutes during active hours (UTC)
-    # 06:00-22:00 CET = 05:00-21:00 UTC
-    - cron: '*/15 5-21 * * *'  # Every 15 min, 6 AM - 10 PM CET
+    # 05:00-21:45 UTC = 06:00-22:45 CET
+    - cron: '*/15 5-21 * * *'  # Every 15 min, 6 AM - 10:45 PM CET
 
 permissions:
   contents: write  # Allow pushing pending_events.json updates
@@ -47,6 +47,8 @@ jobs:
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       
       - name: 🐍 Set up Python
         uses: actions/setup-python@v5

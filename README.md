@@ -475,8 +475,10 @@ Run the bot locally on your development machine:
 {
   "telegram": {
     "enabled": true,
-    "bot_token": "YOUR_BOT_TOKEN_HERE",  // Or use TELEGRAM_BOT_TOKEN env var
-    "admin_chat_ids": [123456789],       // Your Telegram user ID
+    "bot_token": "YOUR_BOT_TOKEN_HERE",
+    "_comment_bot_token": "Or use TELEGRAM_BOT_TOKEN env var",
+    "admin_chat_ids": [123456789],
+    "_comment_admin_chat_ids": "Your Telegram user ID",
     "features": {
       "event_submission": true,
       "flyer_upload": true,
@@ -518,7 +520,8 @@ For production deployments, the bot runs automatically in **GitHub Actions** as 
    {
      "telegram": {
        "enabled": true,
-       "admin_chat_ids": [123456789, 987654321]  // Your Telegram user IDs
+       "admin_chat_ids": [123456789, 987654321],
+       "_comment_admin_chat_ids": "Your Telegram user IDs"
      }
    }
    ```
@@ -599,17 +602,25 @@ Full configuration options in `config.json`:
 {
   "telegram": {
     "enabled": true,
-    "bot_token": "",                    // Token from @BotFather (or use env var)
-    "admin_chat_ids": [],               // List of admin Telegram user IDs
+    "bot_token": "",
+    "_comment_bot_token": "Token from @BotFather (or use env var)",
+    "admin_chat_ids": [],
+    "_comment_admin_chat_ids": "List of admin Telegram user IDs",
     "features": {
-      "event_submission": true,         // Allow manual event submission
-      "flyer_upload": true,             // Allow flyer image uploads
-      "contact_form": true              // Allow contact messages
+      "event_submission": true,
+      "_comment_event_submission": "Allow manual event submission",
+      "flyer_upload": true,
+      "_comment_flyer_upload": "Allow flyer image uploads",
+      "contact_form": true,
+      "_comment_contact_form": "Allow contact messages"
     },
     "limits": {
-      "max_flyer_size_mb": 10,          // Max flyer file size
-      "max_description_length": 1000,   // Max event description length
-      "rate_limit_per_user": 10         // Max submissions per user per hour
+      "max_flyer_size_mb": 10,
+      "_comment_max_flyer_size_mb": "Max flyer file size",
+      "max_description_length": 1000,
+      "_comment_max_description_length": "Max event description length",
+      "rate_limit_per_user": 10,
+      "_comment_rate_limit_per_user": "Max submissions per user per hour"
     },
     "messages": {
       "welcome": "🎉 Welcome to KRWL HOF Events Bot!...",
@@ -639,7 +650,7 @@ Full configuration options in `config.json`:
 **OCR not working:**
 - OCR requires system package: `tesseract-ocr`
 - Install: `sudo apt-get install tesseract-ocr tesseract-ocr-eng tesseract-ocr-deu`
-- Verify: `python3 -c "from modules.smart_scraper.image_analyzer.ocr import is_ocr_available; print(is_ocr_available())"`
+- Verify: `python3 -c "from src.modules.smart_scraper.image_analyzer.ocr import is_ocr_available; print(is_ocr_available())"`
 
 ## 🌐 Internationalization (i18n)
 
