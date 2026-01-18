@@ -259,6 +259,12 @@ COMMANDS:
     dependencies fetch        Fetch third-party dependencies
     dependencies check        Check if dependencies are present
     
+    telegram-bot              Start Telegram bot for event submissions and contact form
+                              - Allows community members to submit events via /submit
+                              - Supports flyer upload with OCR via photo messages
+                              - Provides /contact for admin messaging
+                              - All submissions saved to pending_events.json for review
+    
     schema validate           Validate events against schema
     schema migrate            Migrate events to new schema format
     schema categories         List all valid event categories
@@ -1723,6 +1729,48 @@ def cli_config_validate(base_path):
     return 0 if is_valid else 1
 
 
+def cli_telegram_bot(base_path, config):
+    """Start Telegram bot for event submissions and contact form."""
+    try:
+        from modules.telegram_bot import TelegramBot, TELEGRAM_AVAILABLE
+        
+        if not TELEGRAM_AVAILABLE:
+            print("❌ python-telegram-bot library not installed")
+            print("\nInstall with:")
+            print("  pip install python-telegram-bot>=20.0")
+            return 1
+        
+        if not config.get('telegram', {}).get('enabled'):
+            print("❌ Telegram bot is disabled in config.json")
+            print("\nTo enable:")
+            print("  1. Set 'telegram.enabled: true' in config.json")
+            print("  2. Add your bot token to 'telegram.bot_token' or set TELEGRAM_BOT_TOKEN env var")
+            print("  3. Get bot token from @BotFather on Telegram")
+            return 1
+        
+        bot = TelegramBot(config, base_path)
+        print("🤖 Starting Telegram bot...")
+        print("📱 Bot is ready to receive event submissions and contact messages")
+        print("\nPress Ctrl+C to stop\n")
+        bot.start_sync()
+        return 0
+        
+    except ValueError as e:
+        print(f"❌ Configuration error: {e}")
+        print("\nMake sure:")
+        print("  • 'telegram.bot_token' is set in config.json, OR")
+        print("  • TELEGRAM_BOT_TOKEN environment variable is set")
+        return 1
+    except KeyboardInterrupt:
+        print("\n\n👋 Telegram bot stopped")
+        return 0
+    except Exception as e:
+        print(f"❌ Error starting bot: {e}")
+        import traceback
+        traceback.print_exc()
+        return 1
+
+
 def _execute_command(args, base_path, config):
     """Execute the specified CLI command.
     
@@ -2112,6 +2160,10 @@ def _execute_command(args, base_path, config):
         organizer_args = OrganizerArgs(args.args[0], args.args[1:] if len(args.args) > 1 else [])
         cli = OrganizerCLI(base_path)
         return cli.handle_command(organizer_args)
+    
+    if command == 'telegram-bot':
+        # Telegram bot command
+        return cli_telegram_bot(base_path, config)
     
     if command is None:
         # No command - launch interactive TUI

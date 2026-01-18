@@ -31,7 +31,9 @@ exifread>=3.0.0  # EXIF metadata extraction
 # facebook-sdk>=3.1.0  # Facebook Graph API
 # instagrapi>=1.16.0  # Instagram unofficial API
 # TikTokApi>=5.3.0  # TikTok unofficial API
-# python-telegram-bot>=20.0  # Telegram Bot API
+
+# Telegram Bot for event submissions and contact form
+python-telegram-bot>=20.0  # Telegram Bot API
 
 # Optional dependencies for enhanced capabilities:
 # astral>=3.2  # For accurate sunrise/sunset calculations (using approximation for now)

@@ -833,5 +833,38 @@
       "show_in_filter_bar": true,
       "_comment_display": "Show weather dresscode in filter bar"
     }
+  },
+  "_comment_telegram_section": "────────────────────────────────────────────────────────────────────────────────",
+  "_comment_telegram_help": "TELEGRAM BOT - Community event submissions and contact form",
+  "_comment_telegram_usage": "Allows users to submit events, upload flyers, and contact admins via Telegram",
+  "telegram": {
+    "enabled": false,
+    "_comment_enabled": "Enable Telegram bot for event submissions and contact form",
+    "_comment_security": "Keep bot_token secret! Use environment variable in production: TELEGRAM_BOT_TOKEN",
+    "bot_token": "",
+    "_comment_token": "Get token from @BotFather on Telegram. Leave empty to use env var TELEGRAM_BOT_TOKEN",
+    "admin_chat_ids": [],
+    "_comment_admin_ids": "Telegram user IDs that receive admin notifications (get via /start command)",
+    "features": {
+      "event_submission": true,
+      "_comment_event": "Allow users to submit events manually via conversation",
+      "flyer_upload": true,
+      "_comment_flyer": "Allow users to upload flyer images for OCR processing",
+      "contact_form": true,
+      "_comment_contact": "Allow users to send contact messages to admins"
+    },
+    "limits": {
+      "max_flyer_size_mb": 10,
+      "_comment_size": "Maximum flyer image size in MB",
+      "max_description_length": 1000,
+      "_comment_desc": "Maximum event description length",
+      "rate_limit_per_user": 10,
+      "_comment_rate": "Max submissions per user per hour"
+    },
+    "messages": {
+      "welcome": "🎉 Welcome to KRWL HOF Events Bot!\n\nUse /help to see available commands.",
+      "help": "📋 Available Commands:\n\n/submit - Submit a new event\n/upload - Upload event flyer (image with OCR)\n/contact - Contact the admins\n/status - Check bot status\n/cancel - Cancel current operation",
+      "_comment_messages": "Customize bot messages here. Supports emoji and markdown."
+    }
   }
 }
