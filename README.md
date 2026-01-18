@@ -25,6 +25,10 @@ A **grassroots, mobile-first** Progressive Web App (PWA) for discovering local c
 - 📱 **Responsive**: Mobile-first design, works on all screen sizes
 - 🔄 **Auto-scraping**: Configurable event sources with automatic updates
 
+## 🆕 Want to Build Your Own Event Discovery App?
+
+**See [INITIATE.md](INITIATE.md)** for a comprehensive bootstrap guide on how to implement a project like this from scratch without common pitfalls. Get a working MVP in ~1 day with our step-by-step roadmap!
+
 ## 🚀 Quick Start for Developers
 
 Want to run it locally or contribute?
@@ -687,6 +691,7 @@ Built with love for the Hof community. Special thanks to all the local venues an
 - **Live App**: [krwl.in](https://krwl.in)
 - **GitHub Repository**: [github.com/feileberlin/krwl-hof](https://github.com/feileberlin/krwl-hof)
 - **Report Issues**: [GitHub Issues](https://github.com/feileberlin/krwl-hof/issues)
+- **Bootstrap Guide**: [INITIATE.md](INITIATE.md) - Build your own from scratch
 
 ---
 
