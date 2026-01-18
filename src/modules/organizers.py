@@ -27,7 +27,7 @@ import logging
 import os
 from pathlib import Path
 from typing import List, Optional, Dict, Any
-from datetime import datetime
+from datetime import datetime, timezone
 
 from .entity_models import Organizer, generate_organizer_id
 
@@ -90,8 +90,8 @@ class OrganizerManager:
         
         # Set timestamps
         if not organizer.created_at:
-            organizer.created_at = datetime.utcnow().isoformat()
-        organizer.updated_at = datetime.utcnow().isoformat()
+            organizer.created_at = datetime.now(timezone.utc).isoformat()
+        organizer.updated_at = datetime.now(timezone.utc).isoformat()
         
         # Add to library
         organizers.append(organizer.to_dict())
@@ -124,7 +124,7 @@ class OrganizerManager:
                         org[key] = value
                 
                 # Update timestamp
-                org['updated_at'] = datetime.utcnow().isoformat()
+                org['updated_at'] = datetime.now(timezone.utc).isoformat()
                 
                 # Save
                 data['organizers'] = organizers
@@ -228,7 +228,7 @@ class OrganizerManager:
         """
         updates = {
             'verified': True,
-            'verified_at': datetime.utcnow().isoformat(),
+            'verified_at': datetime.now(timezone.utc).isoformat(),
             'verified_by': verified_by
         }
         self.update_organizer(organizer_id, updates)
@@ -546,7 +546,7 @@ class OrganizerTUI:
             return
         
         try:
-            result = self.manager.merge_organizers(source_id, target_id)
+            self.manager.merge_organizers(source_id, target_id)
             print(f"\n✅ Merged successfully")
         except Exception as e:
             print(f"\n❌ Error: {e}")
@@ -711,7 +711,7 @@ class OrganizerCLI:
         target_id = args.target_id
         
         try:
-            result = self.manager.merge_organizers(source_id, target_id)
+            self.manager.merge_organizers(source_id, target_id)
             print(f"✅ Merged {source_id} → {target_id}")
             return 0
         except Exception as e:

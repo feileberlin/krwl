@@ -9,7 +9,6 @@ All dataclasses for the entity system:
 
 from dataclasses import dataclass, field, asdict
 from typing import Optional, List, Dict, Any
-from datetime import datetime
 import re
 
 
@@ -84,8 +83,9 @@ def generate_location_id(name: str) -> str:
     Examples:
         "Theater Hof" → "loc_theater_hof"
         "RW21 Volkshochschule" → "loc_rw21_volkshochschule"
+        "Café am Markt" → "loc_caf_am_markt"
     """
-    clean_name = re.sub(r'[^\w\s-]', '', name.lower())
+    clean_name = re.sub(r'[^\w\s-]', '', name.lower(), flags=re.ASCII)
     clean_name = re.sub(r'[-\s]+', '_', clean_name)
     return f"loc_{clean_name}"
 
@@ -98,6 +98,6 @@ def generate_organizer_id(name: str) -> str:
         "Kulturverein Hof" → "org_kulturverein_hof"
         "Theater Hof" → "org_theater_hof"
     """
-    clean_name = re.sub(r'[^\w\s-]', '', name.lower())
+    clean_name = re.sub(r'[^\w\s-]', '', name.lower(), flags=re.ASCII)
     clean_name = re.sub(r'[-\s]+', '_', clean_name)
     return f"org_{clean_name}"

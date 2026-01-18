@@ -51,18 +51,15 @@ except ImportError as e:
 
 # Import entity management modules
 try:
-    from modules.entity_operations import EntityOperations, EntityOperationsCLI
-    from modules.locations import LocationManager, LocationTUI, LocationCLI
-    from modules.organizers import OrganizerManager, OrganizerTUI, OrganizerCLI
+    from modules.entity_operations import EntityOperationsCLI
+    from modules.locations import LocationTUI, LocationCLI
+    from modules.organizers import OrganizerTUI, OrganizerCLI
 except ImportError as e:
     print(f"Warning: Failed to import entity modules: {e}")
     # Graceful degradation
-    EntityOperations = None
     EntityOperationsCLI = None
-    LocationManager = None
     LocationTUI = None
     LocationCLI = None
-    OrganizerManager = None
     OrganizerTUI = None
     OrganizerCLI = None
 

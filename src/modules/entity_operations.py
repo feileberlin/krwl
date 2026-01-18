@@ -17,8 +17,8 @@ import json
 import logging
 import shutil
 from pathlib import Path
-from typing import Dict, List, Any, Optional
-from datetime import datetime
+from typing import Dict, List, Any
+from datetime import datetime, timezone
 from collections import defaultdict
 
 from .entity_models import generate_location_id, generate_organizer_id, Location, Organizer
@@ -438,7 +438,7 @@ class EntityOperations:
                                 lon=location.get('lon', 0.0),
                                 address=location.get('address'),
                                 address_hidden=location.get('address_hidden', False),
-                                created_at=datetime.utcnow().isoformat()
+                                created_at=datetime.now(timezone.utc).isoformat()
                             )
                             locations_map[location_id] = location_entry.to_dict()
                             stats['locations_extracted'] += 1
@@ -461,7 +461,7 @@ class EntityOperations:
                                 website=organizer.get('website'),
                                 email=organizer.get('email'),
                                 phone=organizer.get('phone'),
-                                created_at=datetime.utcnow().isoformat()
+                                created_at=datetime.now(timezone.utc).isoformat()
                             )
                             organizers_map[organizer_id] = organizer_entry.to_dict()
                             stats['organizers_extracted'] += 1
@@ -569,7 +569,6 @@ class EntityOperationsCLI:
         """Print human-readable override report"""
         total = results['total_events']
         loc = results['location_patterns']
-        org = results['organizer_patterns']
         
         print("📊 Entity Override Report")
         print("=" * 70)

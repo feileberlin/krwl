@@ -113,7 +113,7 @@ def test_generate_location_id():
     test_cases = [
         ("Theater Hof", "loc_theater_hof"),
         ("RW21 Volkshochschule", "loc_rw21_volkshochschule"),
-        ("Café am Markt", "loc_café_am_markt"),  # Special chars preserved in the current implementation
+        ("Café am Markt", "loc_caf_am_markt"),  # Special chars like 'é' are stripped by the implementation
         ("Some-Place  With    Spaces", "loc_some_place_with_spaces"),
     ]
     

@@ -27,7 +27,7 @@ import logging
 import os
 from pathlib import Path
 from typing import List, Optional, Dict, Any
-from datetime import datetime
+from datetime import datetime, timezone
 
 from .entity_models import Location, generate_location_id
 
@@ -90,8 +90,8 @@ class LocationManager:
         
         # Set timestamps
         if not location.created_at:
-            location.created_at = datetime.utcnow().isoformat()
-        location.updated_at = datetime.utcnow().isoformat()
+            location.created_at = datetime.now(timezone.utc).isoformat()
+        location.updated_at = datetime.now(timezone.utc).isoformat()
         
         # Add to library
         locations.append(location.to_dict())
@@ -124,7 +124,7 @@ class LocationManager:
                         loc[key] = value
                 
                 # Update timestamp
-                loc['updated_at'] = datetime.utcnow().isoformat()
+                loc['updated_at'] = datetime.now(timezone.utc).isoformat()
                 
                 # Save
                 data['locations'] = locations
@@ -228,7 +228,7 @@ class LocationManager:
         """
         updates = {
             'verified': True,
-            'verified_at': datetime.utcnow().isoformat(),
+            'verified_at': datetime.now(timezone.utc).isoformat(),
             'verified_by': verified_by
         }
         self.update_location(location_id, updates)
