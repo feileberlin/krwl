@@ -150,13 +150,11 @@ jobs:
           # Count new events (rough estimate)
           NEW_EVENTS=$(git diff --cached assets/json/pending_events.json | grep -c '^\+.*"id":' || echo "0")
           
-          git commit -m "🤖 Telegram bot submissions
-
-- Added $NEW_EVENTS new event(s) to pending review
-- Source: Telegram Bot API
-- Timestamp: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
-
-[skip ci]" || {
+          # Create commit message
+          TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          git commit -m "🤖 Telegram bot: Added $NEW_EVENTS new event(s) to pending review [skip ci]" \
+                     -m "Source: Telegram Bot API" \
+                     -m "Timestamp: $TIMESTAMP" || {
             echo "No changes to commit"
           }
           
