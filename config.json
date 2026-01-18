@@ -838,7 +838,7 @@
   "_comment_telegram_help": "TELEGRAM BOT - Community event submissions and contact form",
   "_comment_telegram_usage": "Allows users to submit events, upload flyers, and contact admins via Telegram",
   "telegram": {
-    "enabled": false,
+    "enabled": true,
     "_comment_enabled": "Enable Telegram bot for event submissions and contact form",
     "_comment_security": "Keep bot_token secret! Use environment variable in production: TELEGRAM_BOT_TOKEN",
     "bot_token": "",
