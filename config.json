@@ -833,42 +833,5 @@
       "show_in_filter_bar": true,
       "_comment_display": "Show weather dresscode in filter bar"
     }
-  },
-  "_comment_vgn_section": "────────────────────────────────────────────────────────────────────────────────",
-  "_comment_vgn_help": "VGN TRANSIT INTEGRATION - Public transport reachability analysis",
-  "_comment_vgn_usage": "Analyze which stations/regions are reachable via public transit",
-  "_comment_vgn_api": "Uses VGN (Verkehrsverbund Großraum Nürnberg) Open Data API",
-  "_comment_vgn_install": "Install: pip install vgn | API: https://www.vgn.de/web-entwickler/open-data/",
-  "vgn": {
-    "enabled": true,
-    "_comment_enabled": "Enable VGN transit integration (requires vgn Python package)",
-    "reference_location": {
-      "name": "Hof Hauptbahnhof",
-      "lat": 50.308053,
-      "lon": 11.9233,
-      "_comment_location": "Starting point for reachability analysis (default: Hof main station)"
-    },
-    "reachability": {
-      "max_travel_time_minutes": 30,
-      "_comment_max_time": "Maximum travel time for reachability analysis (default: 30 minutes)",
-      "max_transfers": 2,
-      "_comment_max_transfers": "Maximum number of transfers allowed (default: 2)",
-      "include_walking": true,
-      "_comment_walking": "Include walking distance to/from stations"
-    },
-    "analysis": {
-      "cache_hours": 24,
-      "_comment_cache": "Cache reachability analysis for this many hours",
-      "output_path": "assets/json/vgn_analysis.json",
-      "_comment_output": "Path to save transit analysis reports"
-    },
-    "source_discovery": {
-      "enabled": true,
-      "_comment_discovery": "Automatically suggest event sources in reachable areas",
-      "min_population": 5000,
-      "_comment_population": "Minimum municipality population to suggest sources",
-      "categories": ["community", "culture", "news", "social"],
-      "_comment_categories": "Event source categories to suggest"
-    }
   }
 }

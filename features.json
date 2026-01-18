@@ -1260,58 +1260,6 @@
         "resolve-locations EVENT_ID"
       ],
       "test_instructions": "1. Run: python3 src/event_manager.py resolve-locations --dry-run\n2. Check output for resolution summary\n3. Verify pending events with generic locations are identified"
-    },
-    {
-      "id": "vgn-transit-integration",
-      "name": "VGN Public Transport Integration",
-      "description": "Integrates with VGN (Verkehrsverbund Großraum Nürnberg) Open Data API to analyze public transport reachability from Hof. Identifies which stations and municipalities can be reached within a specified time, suggests event sources in reachable areas, and provides transit time information for events. Helps discover local event sources in areas accessible via public transport.",
-      "category": "backend",
-      "implemented": true,
-      "files": [
-        "src/modules/vgn_transit.py",
-        "assets/json/regional_sources.json",
-        "tests/test_vgn_transit.py"
-      ],
-      "config_keys": [
-        "vgn.enabled",
-        "vgn.reference_location",
-        "vgn.reachability.max_travel_time_minutes",
-        "vgn.reachability.max_transfers",
-        "vgn.analysis.cache_hours",
-        "vgn.analysis.output_path",
-        "vgn.source_discovery.enabled"
-      ],
-      "dependencies": {
-        "python": [
-          "vgn>=0.1.0",
-          "requests>=2.31.0"
-        ],
-        "external": [
-          "VGN Open Data API",
-          "OpenStreetMap Overpass API"
-        ]
-      },
-      "code_patterns": [
-        {
-          "file": "src/modules/vgn_transit.py",
-          "pattern": "class VGNTransit|get_reachable_stations|suggest_event_sources|discover_cultural_venues",
-          "description": "VGN Transit integration class with reachability analysis and venue discovery"
-        },
-        {
-          "file": "src/event_manager.py",
-          "pattern": "cli_vgn_analyze|cli_vgn_suggest_sources|cli_vgn_export_report|cli_vgn_discover_venues",
-          "description": "CLI commands for VGN transit analysis and cultural venue discovery"
-        }
-      ],
-      "test_method": "run_custom_test",
-      "test_file": "tests/test_vgn_transit.py",
-      "test_instructions": "1. Run VGN tests: python3 tests/test_vgn_transit.py --verbose\n2. Test CLI: python3 src/event_manager.py vgn analyze 30\n3. Suggest sources: python3 src/event_manager.py vgn suggest-sources 30\n4. Export report: python3 src/event_manager.py vgn export-report 30\n5. Discover venues: python3 src/event_manager.py vgn discover-venues 5 30\n6. Note: Full functionality requires 'pip install vgn' - tests use mock data by default",
-      "cli_commands": [
-        "vgn analyze [TIME]",
-        "vgn suggest-sources [TIME]",
-        "vgn export-report [TIME] [FILE]",
-        "vgn discover-venues [RADIUS] [TIME]"
-      ]
     }
   ]
 }

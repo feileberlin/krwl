@@ -92,67 +92,6 @@ Facebook sources in `config.json` should have `scan_posts: true`:
 
 **Note:** `ocr_enabled` defaults to `true` if not specified, so it's optional. Facebook scraping works without API credentials but may be limited by Facebook's page structure changes.
 
-### 🚇 VGN Public Transport Integration
-
-This project includes **public transport reachability analysis** using VGN (Verkehrsverbund Großraum Nürnberg) Open Data API. Discover which areas are reachable via public transit and find event sources in those regions.
-
-**What it does:**
-1. **Reachability Analysis** - Shows stations/municipalities within X minutes
-2. **Source Discovery** - Suggests event sources in reachable areas
-3. **Transit Times** - Calculate how long it takes to reach events
-4. **Coverage Analysis** - Identify gaps in event source coverage
-
-**Installation:**
-```bash
-# Install VGN Python library (optional)
-pip install vgn
-```
-
-**Usage:**
-```bash
-# Analyze reachability (default: 30 minutes)
-python3 src/event_manager.py vgn analyze 30
-
-# Find event sources in reachable areas
-python3 src/event_manager.py vgn suggest-sources 30
-
-# Export comprehensive analysis report
-python3 src/event_manager.py vgn export-report 30
-```
-
-**Example Output:**
-```
-🚉 Reachable Stations:
-   • Hof Hauptbahnhof (0 min)
-   • Rehau (25 min, S4)
-   • Selb (35 min, S4, 1 transfer)
-
-📍 Suggested Sources:
-   • Stadt Rehau events calendar
-   • Rehau Facebook page
-```
-
-**Configuration:** Enable in `config.json`:
-```json
-{
-  "vgn": {
-    "enabled": true,
-    "reference_location": {
-      "name": "Hof Hauptbahnhof",
-      "lat": 50.308053,
-      "lon": 11.9233
-    }
-  }
-}
-```
-
-**Learn More:**
-- Documentation: `docs/VGN_TRANSIT_INTEGRATION.md`
-- Example: `examples/vgn_integration_example.md`
-- Tests: `tests/test_vgn_transit.py`
-
-**Note:** VGN library is optional. The module works with mock data for testing without the library installed.
-
 ## 📚 Documentation Philosophy
 
 **Keep It Simple, Stupid (KISS)**
