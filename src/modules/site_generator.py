@@ -1923,9 +1923,7 @@ window.DEBUG_INFO = {debug_info_json};'''
             ),
             self.html_component_comment('dashboard-aside.html', 'end'),
             self.html_component_comment('filter-nav.html', 'start'),
-            filter_nav.format(
-                logo_svg=logo_svg
-            ),
+            filter_nav,
             self.html_component_comment('filter-nav.html', 'end'),
             '',
             '<!-- Layer 4: Modals (reserved for future use) -->',

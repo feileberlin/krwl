@@ -139,6 +139,7 @@ def test_html_assembly():
     content_en = {'noscript': {'warning': 'JS disabled'}}
     content_de = {'noscript': {'warning': 'JS deaktiviert'}}
     stylesheets = {
+        'roboto_fonts': '/* Roboto Fonts */',
         'leaflet_css': '/* Leaflet CSS */',
         'app_css': '/* App CSS */',
         'time_drawer_css': '/* Time Drawer CSS */'
@@ -155,7 +156,7 @@ def test_html_assembly():
     # Build HTML
     try:
         html = generator.build_html_from_components(
-            configs, events, content_en, content_de,
+            configs, events,
             stylesheets, scripts, marker_icons
         )
     except Exception as e:
@@ -215,6 +216,7 @@ def test_component_based_generation():
     content_en = {'noscript': {'warning': 'JS disabled'}}
     content_de = {'noscript': {'warning': 'JS deaktiviert'}}
     stylesheets = {
+        'roboto_fonts': '/* Roboto Fonts */',
         'leaflet_css': '/* Leaflet CSS */',
         'app_css': '/* App CSS */',
         'time_drawer_css': '/* Time Drawer CSS */'
@@ -230,7 +232,7 @@ def test_component_based_generation():
     
     # Build with components
     html_component = generator.build_html_from_components(
-        configs, events, content_en, content_de,
+        configs, events,
         stylesheets, scripts, marker_icons
     )
     
@@ -337,6 +339,7 @@ def test_logo_svg_replacement():
     content_en = {'noscript': {'warning': 'JS disabled'}}
     content_de = {'noscript': {'warning': 'JS deaktiviert'}}
     stylesheets = {
+        'roboto_fonts': '/* Roboto Fonts */',
         'leaflet_css': '/* Leaflet CSS */',
         'app_css': '/* App CSS */',
         'time_drawer_css': '/* Time Drawer CSS */'
@@ -352,7 +355,7 @@ def test_logo_svg_replacement():
     
     # Build HTML
     html = generator.build_html_from_components(
-        configs, events, content_en, content_de,
+        configs, events,
         stylesheets, scripts, marker_icons
     )
     
@@ -367,11 +370,11 @@ def test_logo_svg_replacement():
     # Verify logo SVG is present in filter-nav component (button with id="filter-bar-logo")
     assert 'id="filter-bar-logo"' in html, "Filter bar logo button missing"
     
-    # Extract the button content to verify SVG is inside
+    # Extract the button content to verify Lucide icon is inside
     button_start = html.find('id="filter-bar-logo"')
-    button_section = html[button_start:button_start+200]
-    assert '<svg' in button_section, "Logo SVG missing from filter-nav component"
-    print("✓ Logo SVG found in filter-nav component")
+    button_section = html[button_start:button_start+300]
+    assert 'data-lucide="megaphone"' in button_section, "Megaphone Lucide icon missing from filter-nav component"
+    print("✓ Lucide megaphone icon found in filter-nav component")
     
     print("✅ Logo SVG replacement validated")
     return True
