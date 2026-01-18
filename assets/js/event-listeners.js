@@ -59,12 +59,6 @@ class EventListeners {
                 this.closeDashboard(dashboardMenu, dashboardLogo);
             }
         });
-        
-        // Add custom location button handler
-        const addLocationBtn = document.getElementById('add-custom-location-btn');
-        if (addLocationBtn) {
-            addLocationBtn.addEventListener('click', () => this.addCustomLocation());
-        }
     }
     
     createFocusTrap(container) {
@@ -383,7 +377,7 @@ class EventListeners {
             
             const items = [{ label: geolocationLabel, value: 'geolocation' }];
             
-            // Add custom locations (includes initialized predefined locations)
+            // Add custom locations (only config.json predefined locations)
             customLocs.forEach((loc) => {
                 items.push({ 
                     label: `${prefix} ${loc.name}`, 
@@ -392,12 +386,7 @@ class EventListeners {
                 });
             });
             
-            // Add "custom location..." option to create new
-            items.push({ 
-                label: 'custom location...', 
-                value: 'new-custom',
-                customLocation: true
-            });
+            // Note: Custom location creation removed from dropdown - use dashboard instead
             
             return items;
         };
@@ -446,6 +435,7 @@ class EventListeners {
                     this.app.filters.locationType = 'custom';
                     this.app.filters.selectedPredefinedLocation = null;
                     this.app.filters.selectedCustomLocation = locationId;
+                    this.app.filters.selectedCustomLocationName = selectedLoc.name; // Store name for display
                     this.app.filters.customLat = selectedLoc.lat;
                     this.app.filters.customLon = selectedLoc.lon;
                     this.app.storage.saveFiltersToCookie(this.app.filters);
@@ -464,104 +454,8 @@ class EventListeners {
                     this.app.displayEvents();
                     return;
                 }
-                
-                if (value === 'new-custom') {
-                    // Show custom location input dialog
-                    this.showCustomLocationDialog();
-                }
             }
         );
-    }
-    
-    showCustomLocationDialog() {
-        // Create modal dialog for custom location input
-        const existingDialog = document.getElementById('custom-location-dialog');
-        if (existingDialog) {
-            existingDialog.remove();
-        }
-        
-        const userLocation = this.app.mapManager?.userLocation;
-        const defaultLat = this.app.filters.customLat || userLocation?.lat || this.app.config?.map?.default_center?.lat || 50.3167;
-        const defaultLon = this.app.filters.customLon || userLocation?.lon || this.app.config?.map?.default_center?.lon || 11.9167;
-        
-        const dialog = document.createElement('div');
-        dialog.id = 'custom-location-dialog';
-        dialog.className = 'custom-location-dialog';
-        dialog.innerHTML = `
-            <div class="custom-location-content">
-                <h3>Custom Location</h3>
-                <p class="custom-location-description">Enter coordinates for custom reference location</p>
-                <div class="custom-location-inputs">
-                    <div class="custom-location-field">
-                        <label for="custom-lat-input">Latitude:</label>
-                        <input type="number" id="custom-lat-input" step="0.0001" value="${defaultLat.toFixed(4)}" />
-                    </div>
-                    <div class="custom-location-field">
-                        <label for="custom-lon-input">Longitude:</label>
-                        <input type="number" id="custom-lon-input" step="0.0001" value="${defaultLon.toFixed(4)}" />
-                    </div>
-                </div>
-                <div class="custom-location-buttons">
-                    <button id="custom-location-apply" class="btn-primary">Apply</button>
-                    <button id="custom-location-cancel" class="btn-secondary">Cancel</button>
-                </div>
-            </div>
-        `;
-        
-        document.body.appendChild(dialog);
-        
-        // Focus first input
-        const latInput = document.getElementById('custom-lat-input');
-        if (latInput) {
-            setTimeout(() => latInput.focus(), 100);
-        }
-        
-        // Apply button handler
-        document.getElementById('custom-location-apply')?.addEventListener('click', () => {
-            const lat = parseFloat(document.getElementById('custom-lat-input')?.value);
-            const lon = parseFloat(document.getElementById('custom-lon-input')?.value);
-            
-            if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
-                // Create new custom location
-                const locationName = `Custom (${lat.toFixed(4)}, ${lon.toFixed(4)})`;
-                const newLocation = this.app.storage.addCustomLocation(locationName, lat, lon);
-                
-                // Set as current filter
-                this.app.filters.locationType = 'custom';
-                this.app.filters.selectedCustomLocation = newLocation.id;
-                this.app.filters.customLat = lat;
-                this.app.filters.customLon = lon;
-                this.app.storage.saveFiltersToCookie(this.app.filters);
-                
-                // Center map and update marker
-                const distanceKm = this.app.filters.maxDistance;
-                this.app.mapManager?.centerMap(lat, lon, null, distanceKm);
-                this.app.mapManager?.updateReferenceMarker(lat, lon, locationName);
-                
-                this.app.displayEvents();
-                dialog.remove();
-                
-                // Update location filter text
-                const locationTextEl = document.getElementById('filter-bar-location');
-                if (locationTextEl) {
-                    locationTextEl.textContent = `from ${locationName}`;
-                }
-            } else {
-                alert('Please enter valid coordinates (Latitude: -90 to 90, Longitude: -180 to 180)');
-            }
-        });
-        
-        // Cancel button handler
-        document.getElementById('custom-location-cancel')?.addEventListener('click', () => {
-            dialog.remove();
-        });
-        
-        // ESC key to close
-        dialog.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                dialog.remove();
-            }
-        });
     }
     
     setupKeyboardShortcuts() {
@@ -590,38 +484,6 @@ class EventListeners {
                 this.app.mapManager?.invalidateSize();
             }, this.app.ORIENTATION_CHANGE_DELAY);
         });
-    }
-    
-    addCustomLocation() {
-        const name = prompt('Enter location name:', 'My Location');
-        if (!name || !name.trim()) return;
-        
-        const latStr = prompt('Enter latitude:', '50.3167');
-        const lonStr = prompt('Enter longitude:', '11.9167');
-        
-        const lat = parseFloat(latStr);
-        const lon = parseFloat(lonStr);
-        
-        if (isNaN(lat) || isNaN(lon)) {
-            alert('Invalid coordinates!');
-            return;
-        }
-        
-        const success = this.app.storage.addCustomLocation({
-            name: name.trim(),
-            lat: lat,
-            lon: lon
-        });
-        
-        if (success) {
-            alert(`✅ Location "${name.trim()}" saved!`);
-            // Refresh dashboard display
-            this.app.updateDashboard();
-            // Refresh dropdown
-            this.setupFilterListeners();
-        } else {
-            alert('❌ Failed to save location (limit: 10)');
-        }
     }
 }
 

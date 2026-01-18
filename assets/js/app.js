@@ -51,6 +51,7 @@ class EventsApp {
             locationType: 'geolocation',
             selectedPredefinedLocation: null,
             selectedCustomLocation: null,
+            selectedCustomLocationName: null,  // Store display name
             useCustomLocation: false,
             customLat: null,
             customLon: null

@@ -307,6 +307,63 @@ class EventStorage {
     }
     
     /**
+     * Reset a predefined custom location to its original config.json values
+     * @param {string} id - Location ID
+     * @returns {boolean} True if reset successfully
+     */
+    /**
+     * Get original predefined location data from config
+     * @param {string} id - Location ID
+     * @returns {Object|null} Original location data or null
+     */
+    getOriginalPredefinedLocation(id) {
+        const location = this.getCustomLocationById(id);
+        if (!location || !location.fromPredefined) {
+            return null;
+        }
+        
+        const predefinedLocs = this.config?.map?.predefined_locations || [];
+        return predefinedLocs.find(loc => 
+            loc.display_name === location.name || 
+            location.id.includes(loc.name)
+        );
+    }
+    
+    resetCustomLocation(id) {
+        const location = this.getCustomLocationById(id);
+        if (!location) {
+            console.warn('Custom location not found:', id);
+            return false;
+        }
+        
+        if (!location.fromPredefined) {
+            console.warn('Cannot reset non-predefined location:', id);
+            return false;
+        }
+        
+        // Find the original predefined location from config
+        const originalLoc = this.getOriginalPredefinedLocation(id);
+        
+        if (!originalLoc) {
+            console.warn('Original predefined location not found in config:', location.name);
+            return false;
+        }
+        
+        // Reset to original values
+        const index = this.customLocations.findIndex(loc => loc.id === id);
+        if (index !== -1) {
+            this.customLocations[index].name = originalLoc.display_name;
+            this.customLocations[index].lat = originalLoc.lat;
+            this.customLocations[index].lon = originalLoc.lon;
+            this.saveCustomLocations();
+            this.log('Custom location reset to original:', this.customLocations[index]);
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /**
      * Delete a custom location
      * @param {string} id - Location ID
      * @returns {boolean} True if deleted successfully
@@ -339,6 +396,37 @@ class EventStorage {
      */
     getCustomLocationById(id) {
         return this.customLocations.find(loc => loc.id === id) || null;
+    }
+    
+    /**
+     * Check if a predefined location has been modified from its original config.json values
+     * @param {string} id - Location ID
+     * @returns {boolean} True if location has been modified, false if unchanged or not predefined
+     */
+    isPredefinedLocationModified(id) {
+        const location = this.getCustomLocationById(id);
+        if (!location || !location.fromPredefined) {
+            return false;
+        }
+        
+        // Find the original predefined location from config
+        const predefinedLocs = this.config?.map?.predefined_locations || [];
+        const originalLoc = predefinedLocs.find(loc => 
+            loc.display_name === location.name || 
+            location.id.includes(loc.name)
+        );
+        
+        if (!originalLoc) {
+            // If we can't find the original, assume it's modified
+            return true;
+        }
+        
+        // Check if any values differ from original
+        const nameMatches = location.name === originalLoc.display_name;
+        const latMatches = Math.abs(location.lat - originalLoc.lat) < 0.0001; // Allow tiny floating point differences
+        const lonMatches = Math.abs(location.lon - originalLoc.lon) < 0.0001;
+        
+        return !(nameMatches && latMatches && lonMatches);
     }
     
     /**

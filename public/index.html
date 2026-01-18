@@ -448,7 +448,7 @@ html.js-enabled noscript {
 .filter-chip {
     cursor: pointer;
     background: rgba(214, 137, 184, 0.15); /* ecoBarbie Light Tone with transparency */
-    border: var(--border-width-thin) solid rgba(214, 137, 184, 0.4);
+    border: var(--border-width-thin) solid transparent;
     border-radius: var(--border-radius-medium);
     padding: 0.3rem 0.6rem;
     font-size: 0.95rem;
@@ -462,7 +462,7 @@ html.js-enabled noscript {
 
 .filter-chip:hover {
     background: rgba(214, 137, 184, 0.25);
-    border-color: rgba(214, 137, 184, 0.6);
+    border-color: transparent;
     color: var(--color-text-primary);
     transform: translateY(-1px);
     box-shadow: var(--shadow-small); /* Subtle depth, no glow */
@@ -2058,9 +2058,10 @@ strong, b {
 }
 
 /* Pending Events Notification */
+/* Uses --color-warning (#eb7dc0 = RGB(235, 125, 192)) with various opacity levels */
 .pending-notification {
-    background: linear-gradient(135deg, rgba(210, 153, 34, 0.15), rgba(210, 153, 34, 0.05));
-    border: 2px solid #d29922;
+    background: linear-gradient(135deg, rgba(235, 125, 192, 0.15), rgba(235, 125, 192, 0.05)); /* --color-warning with opacity */
+    border: 2px solid var(--color-warning);
     border-radius: 8px;
     padding: 1rem;
     margin-bottom: 1.5rem;
@@ -2103,11 +2104,11 @@ strong, b {
 }
 
 .pending-notification-link {
-    color: #d29922;
+    color: var(--color-warning);
     text-decoration: none;
     font-weight: 600;
     padding: 0.5rem 0.75rem;
-    border: 1px solid #d29922;
+    border: 1px solid var(--color-warning);
     border-radius: 4px;
     transition: all 0.2s;
     white-space: nowrap;
@@ -2115,10 +2116,10 @@ strong, b {
 
 .pending-notification-link:hover,
 .pending-notification-link:focus {
-    background: #d29922;
+    background: var(--color-warning);
     color: #0d1117;
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(210, 153, 34, 0.3);
+    box-shadow: 0 2px 8px rgba(235, 125, 192, 0.3);
 }
 
 @keyframes subtle-pulse {
@@ -2236,12 +2237,15 @@ strong, b {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 0.3rem;
+    gap: 0.5rem;
 }
 
 .custom-location-name {
     font-weight: bold;
     color: var(--color-primary);
     font-size: 0.95rem;
+    flex: 1;
+    min-width: 0; /* Allow text truncation if needed */
 }
 
 .custom-location-coords {
@@ -2253,7 +2257,7 @@ strong, b {
 .custom-location-actions {
     display: flex;
     gap: 0.4rem;
-    margin-top: 0.5rem;
+    flex-shrink: 0; /* Prevent buttons from shrinking */
 }
 
 .custom-location-btn {
@@ -2274,6 +2278,36 @@ strong, b {
     color: var(--color-primary);
 }
 
+/* Edit button - primary action (default styling) */
+.custom-location-btn--edit {
+    /* Uses default button styles */
+}
+
+/* Reset button - warning action (resets to config.json) */
+.custom-location-btn--reset {
+    color: var(--color-warning);
+    border-color: var(--border-primary);
+}
+
+.custom-location-btn--reset:hover {
+    border-color: var(--color-warning);
+    background: rgba(235, 125, 192, 0.1);
+    color: var(--color-warning);
+}
+
+/* Delete button - danger action (removes from localStorage) */
+.custom-location-btn--delete {
+    color: var(--color-error);
+    border-color: var(--border-primary);
+}
+
+.custom-location-btn--delete:hover {
+    border-color: var(--color-error);
+    background: rgba(149, 68, 118, 0.1);
+    color: var(--color-error);
+}
+
+/* Legacy class for backwards compatibility */
 .custom-location-btn.delete {
     color: var(--color-error);
 }
@@ -2288,6 +2322,185 @@ strong, b {
     padding: 1.5rem;
     color: var(--text-secondary);
     font-size: 0.9rem;
+}
+
+/* Custom Location Edit Mode Styles */
+
+/* Edit state container */
+.custom-location-edit {
+    animation: fadeIn 0.2s ease-in;
+}
+
+.custom-location-view {
+    animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Edit header */
+.custom-location-edit-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-primary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-secondary);
+}
+
+/* Form layout */
+.custom-location-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+}
+
+.form-group label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Input styling with EcoBarbie theme */
+.custom-location-input {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-secondary);
+    color: var(--text-primary);
+    padding: 0.5rem 0.7rem;
+    border-radius: var(--radius-small);
+    font-size: 0.85rem;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.custom-location-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background: var(--bg-secondary);
+    box-shadow: 0 0 0 2px rgba(214, 137, 184, 0.15);
+}
+
+.custom-location-input:hover:not(:focus) {
+    border-color: var(--border-primary);
+}
+
+/* Input error state */
+.custom-location-input.input-error {
+    border-color: var(--color-error);
+    animation: shake 0.3s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.error-message {
+    color: var(--color-error);
+    font-size: 0.75rem;
+    margin-top: 0.2rem;
+    animation: fadeIn 0.2s;
+}
+
+/* Edit action buttons */
+.custom-location-edit-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.3rem;
+}
+
+/* Save button - primary action with EcoBarbie accent */
+.custom-location-btn--save {
+    background: var(--color-primary);
+    color: var(--bg-primary);
+    border-color: var(--color-primary);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.custom-location-btn--save:hover {
+    background: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+    color: var(--bg-primary);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(214, 137, 184, 0.3);
+}
+
+/* Cancel button - secondary action */
+.custom-location-btn--cancel {
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    border-color: var(--border-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.custom-location-btn--cancel:hover {
+    background: var(--bg-primary);
+    border-color: var(--border-primary);
+    color: var(--text-primary);
+}
+
+/* Updated button styles to support icons */
+.custom-location-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    white-space: nowrap;
+}
+
+.custom-location-btn i {
+    flex-shrink: 0;
+}
+
+/* Save success animation */
+.custom-location-item.save-success {
+    animation: successPulse 0.5s ease-out;
+}
+
+@keyframes successPulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(214, 137, 184, 0.4);
+    }
+    50% {
+        transform: scale(1.02);
+        box-shadow: 0 0 0 8px rgba(214, 137, 184, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(214, 137, 184, 0);
+    }
 }
 
 /* Environment and debug mode state classes */
@@ -2354,8 +2567,8 @@ strong, b {
 }
 
 .debug-group-header.warning {
-    background: rgba(210, 153, 34, 0.1);
-    border-bottom-color: rgba(210, 153, 34, 0.3);
+    background: rgba(235, 125, 192, 0.1); /* --color-warning with 10% opacity */
+    border-bottom-color: rgba(235, 125, 192, 0.3); /* --color-warning with 30% opacity */
 }
 
 .debug-group-header.warning i,
@@ -2507,9 +2720,10 @@ strong, b {
 }
 
 /* Warnings Container */
+/* Uses --color-warning (#eb7dc0 = RGB(235, 125, 192)) with opacity for backgrounds/borders */
 .debug-warnings {
-    border-color: rgba(210, 153, 34, 0.3);
-    background: rgba(210, 153, 34, 0.05);
+    border-color: rgba(235, 125, 192, 0.3); /* --color-warning with 30% opacity */
+    background: rgba(235, 125, 192, 0.05); /* --color-warning with 5% opacity */
 }
 
 .debug-warning-item {
@@ -2518,7 +2732,7 @@ strong, b {
 }
 
 .debug-warning-item + .debug-warning-item {
-    border-top: 1px solid rgba(210, 153, 34, 0.2);
+    border-top: 1px solid rgba(235, 125, 192, 0.2); /* --color-warning with 20% opacity */
 }
 
 /* Warning Message Styles */
@@ -2531,7 +2745,7 @@ strong, b {
 .debug-warning-message.with-spacing {
     margin-top: 1rem;
     padding-top: 0.75rem;
-    border-top: 1px solid rgba(210, 153, 34, 0.2);
+    border-top: 1px solid rgba(235, 125, 192, 0.2); /* --color-warning with 20% opacity */
 }
 
 .debug-warning-message strong {
@@ -2543,6 +2757,142 @@ strong, b {
     color: var(--color-text-tertiary);
     line-height: 1.5;
     margin-top: 0.3rem;
+}
+
+/* Lint Warnings Section */
+/* Uses --color-warning (#eb7dc0 = RGB(235, 125, 192)) with opacity for backgrounds/borders */
+.debug-lint-warnings {
+    border-color: rgba(235, 125, 192, 0.3); /* --color-warning with 30% opacity */
+    background: rgba(235, 125, 192, 0.05); /* --color-warning with 5% opacity */
+}
+
+.debug-lint-summary {
+    padding: 0.5rem 0;
+    color: var(--color-text-secondary);
+    font-size: 0.9em;
+    border-bottom: 1px solid rgba(235, 125, 192, 0.2); /* --color-warning with 20% opacity */
+    margin-bottom: 0.75rem;
+}
+
+.debug-lint-details {
+    font-size: 0.85em;
+    color: var(--color-text-tertiary);
+    margin-top: 0.5rem;
+    display: block;
+}
+
+.debug-lint-details-link {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+.debug-lint-warnings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.lint-warning-item {
+    background: rgba(13, 17, 23, 0.4);
+    border: 1px solid rgba(235, 125, 192, 0.2); /* --color-warning with 20% opacity */
+    border-radius: 4px;
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.lint-warning-item:hover {
+    background: rgba(13, 17, 23, 0.6);
+    border-color: rgba(235, 125, 192, 0.4); /* --color-warning with 40% opacity */
+    transform: translateX(2px);
+}
+
+.lint-warning-item:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.lint-warning-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.lint-warning-icon {
+    flex-shrink: 0;
+    color: var(--color-warning);
+    margin-top: 0.1rem;
+}
+
+.lint-warning-content {
+    flex: 1;
+}
+
+.lint-warning-message {
+    color: var(--color-text-primary);
+    font-size: 0.85em;
+    line-height: 1.4;
+    margin-bottom: 0.25rem;
+}
+
+.lint-warning-meta {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    font-size: 0.75em;
+    color: var(--color-text-tertiary);
+}
+
+.lint-warning-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.15rem 0.4rem;
+    background: rgba(214, 137, 184, 0.15);
+    border-radius: 3px;
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+.lint-warning-protocol {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    padding: 0;
+}
+
+.lint-warning-item.expanded .lint-warning-protocol {
+    max-height: 300px;
+    padding-top: 0.75rem;
+    margin-top: 0.75rem;
+    border-top: 1px solid rgba(235, 125, 192, 0.2); /* --color-warning with 20% opacity */
+}
+
+.lint-warning-protocol-content {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(214, 137, 184, 0.2);
+    border-radius: 3px;
+    padding: 0.75rem;
+    font-family: 'Roboto Mono', 'Monaco', 'Courier New', monospace;
+    font-size: 0.8em;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    overflow-y: auto;
+    max-height: 250px;
+}
+
+.lint-warning-protocol strong {
+    color: var(--color-primary);
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.lint-warning-expand-hint {
+    font-size: 0.75em;
+    color: var(--color-text-tertiary);
+    margin-top: 0.5rem;
+    font-style: italic;
 }
 
 .debug-warning-hint code {
@@ -2646,119 +2996,6 @@ strong, b {
 #debug-caching.cache-disabled {
     color: #8b949e;
 }
-
-/* Custom Location Dialog */
-.custom-location-dialog {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 3000;
-    padding: 1rem;
-}
-
-.custom-location-content {
-    background: var(--color-bg-secondary);
-    border: 2px solid var(--color-border-primary);
-    border-radius: 12px;
-    padding: 1.5rem;
-    max-width: 400px;
-    width: 100%;
-    box-shadow: 0 0 20px color-mix(in srgb, var(--color-ecobarbie-light-tone) 30%, transparent);
-}
-
-.custom-location-content h3 {
-    color: var(--color-primary);
-    margin: 0 0 0.5rem 0;
-    font-size: 1.2rem;
-}
-
-.custom-location-description {
-    color: var(--color-text-secondary);
-    margin: 0 0 1rem 0;
-    font-size: 0.9rem;
-}
-
-.custom-location-inputs {
-    margin-bottom: 1.5rem;
-}
-
-.custom-location-field {
-    margin-bottom: 1rem;
-}
-
-.custom-location-field:last-child {
-    margin-bottom: 0;
-}
-
-.custom-location-field label {
-    display: block;
-    color: var(--color-text-primary);
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-}
-
-.custom-location-field input {
-    width: 100%;
-    padding: 0.6rem;
-    background: var(--color-bg-primary);
-    border: 1px solid var(--color-border-secondary);
-    border-radius: 4px;
-    color: var(--color-text-primary);
-    font-size: 1rem;
-    font-family: 'Roboto Mono', monospace;
-}
-
-.custom-location-field input:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-ecobarbie-light-tone) 20%, transparent);
-}
-
-.custom-location-buttons {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: flex-end;
-}
-
-.custom-location-buttons button {
-    padding: 0.6rem 1.2rem;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: none;
-}
-
-.btn-primary {
-    background: var(--color-primary);
-    color: var(--color-bg-primary);
-}
-
-.btn-primary:hover {
-    background: var(--color-primary-hover);
-    transform: translateY(-1px);
-}
-
-.btn-secondary {
-    background: transparent;
-    color: var(--color-text-secondary);
-    border: 1px solid var(--color-border-secondary);
-}
-
-.btn-secondary:hover {
-    background: color-mix(in srgb, var(--color-ecobarbie-light-tone) 10%, transparent);
-    border-color: var(--color-primary);
-    color: var(--color-text-primary);
-}
-
 
 
 /* Mobile optimizations */
@@ -3188,10 +3425,16 @@ strong, b {
   <div class="dashboard-content">
     <div class="dashboard-header">
       <div class="dashboard-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-  <!-- Megaphone icon in ecobarbie design - no background, just pink icon -->
-  <g transform="translate(7, 8) scale(0.9)">
-    <path style="fill:none;stroke:#D689B8;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;" 
-          d="M 4.43,15.8 H 3.81 c -0.64,-0.19 -0.9,-4.46 -0.02,-5.45 0.61,-0.06 3.81,-0.06 3.81,-0.06 0,0 2.37,0.19 7.44,-3.62 0,0 0.17,0.02 0.85,4.58 0,0 1.42,1.76 -0.11,3.71 0,0 -0.27,3.6 -0.7,4.52 0,0 -4.17,-3.43 -8.8,-3.73 l -0.04,3.58 c -0.07,0.43 -1.71,0.37 -1.72,0 z" />
+  <!-- Background - EcoBarbie Pink -->
+  <rect width="32" height="32" fill="#D689B8" rx="6"/>
+  
+  <!-- Lucide Megaphone icon (centered, scaled for 32x32) -->
+  <!-- Source: Lucide icons - https://lucide.dev/icons/megaphone -->
+  <g transform="translate(4, 6) scale(1)">
+    <path fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          d="m3 11 18-5v12L3 14v-3z"/>
+    <path fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>
   </g>
 </svg>
 </div>
@@ -3222,12 +3465,9 @@ multiple sources.</p>
     <div class="dashboard-section" id="custom-locations-section">
       <h3><i class="dashboard-section-icon" data-lucide="map-pin" aria-hidden="true"></i> Custom Locations</h3>
       <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
-        Save your favorite locations for quick access in the location filter.
+        Edit the 2 preconfigured locations. Changes are saved to browser storage (config.json stays unchanged).
       </p>
       <div id="custom-locations-list"></div>
-      <button id="add-custom-location-btn" class="dashboard-action-btn" style="margin-top: 0.5rem;">
-        + Add Location
-      </button>
     </div>
     
     <div id="dashboard-debug-section" class="dashboard-section" style="display: none;">
@@ -3329,6 +3569,20 @@ multiple sources.</p>
           </div>
         </div>
       </div>
+      
+      <!-- Lint Warnings Section -->
+      <div id="debug-lint-warnings-container" class="debug-group debug-lint-warnings" style="display: none;">
+        <div class="debug-group-header warning">
+          <i data-lucide="shield-alert" aria-hidden="true"></i>
+          <strong>WCAG AA Compliance</strong>
+        </div>
+        <div class="debug-group-content" style="display: block;">
+          <div id="debug-lint-summary" class="debug-lint-summary"></div>
+          <div id="debug-lint-warnings-list" class="debug-lint-warnings-list">
+            <!-- Populated by JavaScript with clickable warning items -->
+          </div>
+        </div>
+      </div>
     </div>
     
     <div class="dashboard-section">
@@ -3368,7 +3622,20 @@ multiple sources.</p>
      role="navigation"
      aria-label="Event filter controls">
   <button id="filter-bar-logo" class="filter-bar-logo" aria-label="Open application menu" aria-haspopup="dialog" aria-expanded="false">
-    <i data-lucide="megaphone" aria-hidden="true"></i>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Background - EcoBarbie Pink -->
+  <rect width="32" height="32" fill="#D689B8" rx="6"/>
+  
+  <!-- Lucide Megaphone icon (centered, scaled for 32x32) -->
+  <!-- Source: Lucide icons - https://lucide.dev/icons/megaphone -->
+  <g transform="translate(4, 6) scale(1)">
+    <path fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          d="m3 11 18-5v12L3 14v-3z"/>
+    <path fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>
+  </g>
+</svg>
+
   </button>
   <button id="filter-bar-event-count" class="filter-chip" role="button" aria-haspopup="true" aria-expanded="false" aria-label="Category filter">0 events</button>
   <button id="filter-bar-time-range" class="filter-chip" role="button" aria-haspopup="true" aria-expanded="false" aria-label="Time filter">till sunrise</button>
@@ -3387,7 +3654,7 @@ multiple sources.</p>
 <script>
 // Data embedded by backend (site_generator.py) - frontend does NOT fetch files
 // config.json is backend-only, frontend uses this minimal runtime config
-window.APP_CONFIG = {"debug": false, "app": {"environment": "ci"}, "map": {"default_center": {"lat": 49.944, "lon": 11.576}, "default_zoom": 13, "tile_provider": "https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png", "tile_provider_comment": "CartoDB Dark No Labels - Converted to monochromatic Barbie Red via CSS filters", "attribution": "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors", "predefined_locations": [{"name": "location.no1", "lat": 50.308053, "lon": 11.9233, "display_name": "Hauptbahnhof Hof"}, {"name": "location.no2", "lat": 50.3164799, "lon": 11.9146205, "display_name": "Sonnenplatz Hof"}]}, "data": {"source": "real", "sources": {"real": {"url": "events.json", "description": "Real scraped events data"}, "demo": {"url": "events.demo.json", "description": "Demo events with current timestamps for testing"}, "both": {"urls": ["events.json", "events.demo.json"], "description": "Combine real and demo events (useful for testing with live data)"}}}, "weather": {"enabled": true, "display": {"show_in_filter_bar": true, "_comment_display": "Show weather dresscode in filter bar"}, "data": null}, "time_filters": {"full_moon": {"days_until": 31, "enabled": true}, "sunday": {"days_until": 1, "date_iso": "2026-01-18", "date_formatted": "January 18", "enabled": true}}};
+window.APP_CONFIG = {"debug": false, "app": {"environment": "ci"}, "map": {"default_center": {"lat": 49.944, "lon": 11.576}, "default_zoom": 13, "tile_provider": "https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png", "tile_provider_comment": "CartoDB Dark No Labels - Converted to monochromatic Barbie Red via CSS filters", "attribution": "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors", "predefined_locations": [{"name": "location.no1", "lat": 50.308053, "lon": 11.9233, "display_name": "Hauptbahnhof Hof"}, {"name": "location.no2", "lat": 50.3164799, "lon": 11.9146205, "display_name": "Sonnenplatz Hof"}]}, "data": {"source": "real", "sources": {"real": {"url": "events.json", "description": "Real scraped events data"}, "demo": {"url": "events.demo.json", "description": "Demo events with current timestamps for testing"}, "both": {"urls": ["events.json", "events.demo.json"], "description": "Combine real and demo events (useful for testing with live data)"}}}, "weather": {"enabled": true, "display": {"show_in_filter_bar": true, "_comment_display": "Show weather dresscode in filter bar"}, "data": null}, "time_filters": {"full_moon": {"days_until": 31, "enabled": true}, "sunday": {"days_until": 0, "date_iso": "2026-01-18", "date_formatted": "January 18", "enabled": true}}};
 window.__INLINE_EVENTS_DATA__ = { "events": [{"id": "html_frankenpost_-3959068800383208116", "title": "Kunst in Bayreuth - Werke der 1940er bis 1960er Jahre - aus den Sammlungen und Stiftungen im Kunstmuseum", "description": "Donnerstag,01.01.2026,", "location": {"name": "Kunstmuseum Bayreuth", "lat": 49.944, "lon": 11.5747, "address": "Maximilianstraße 33, 95444 Bayreuth"}, "start_time": "2026-01-01T18:00:00", "end_time": null, "url": "https://event.frankenpost.de/detail.php?event_id=3119599", "source": "https://event.frankenpost.de/detail.php?event_id=3119599", "scraped_at": "2026-01-01T13:27:18.685017", "status": "published", "published_at": "2026-01-01T13:42:00.700054", "category": "arts", "teaser": "Donnerstag,01.01."}, {"id": "html_frankenpost_4878466979842611893", "title": "Ausstellung zum Fotowettbewerb: Zeig mir deine Lebenswerte Stadt (bis 7. Januar 2026)", "description": "Donnerstag,01.01.2026,", "location": {"name": "RW21 Volkshochschule Bayreuth", "lat": 49.9454, "lon": 11.5771, "address": "Richard-Wagner-Str. 21, 95444 Bayreuth"}, "start_time": "2026-01-01T18:00:00", "end_time": null, "url": "https://event.frankenpost.de/detail.php?event_id=3202184", "source": "https://event.frankenpost.de/detail.php?event_id=3202184", "scraped_at": "2026-01-01T13:27:18.684482", "status": "published", "published_at": "2026-01-01T13:42:00.700226", "category": "arts", "teaser": "Donnerstag,01.01."}, {"id": "html_frankenpost_6710371282043762830", "title": "Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline", "description": "Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline am 01.01.2026 18:00", "location": {"name": "Schloss Carolinenruhe", "lat": 49.93047, "lon": 11.5674, "address": "Colmdorf 8, 95448 Bayreuth"}, "start_time": "2026-01-01T18:00:00", "end_time": null, "url": "https://event.frankenpost.de/detail.php?event_id=3185852", "source": "https://event.frankenpost.de/detail.php?event_id=3185852", "scraped_at": "2026-01-01T13:27:18.683791", "status": "published", "published_at": "2026-01-01T13:42:00.700343", "category": "palace", "teaser": "Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline"}, {"id": "test_event_001", "title": "Test Community Gathering", "description": "A test event for approval flow testing", "location": {"name": "Test Venue Berlin", "lat": 52.52, "lon": 13.405, "address_hidden": true}, "start_time": "2026-01-15T19:00:00", "end_time": null, "url": "https://example.com/test-event", "source": "https://example.com/test-event", "scraped_at": "2026-01-01T14:45:00", "status": "published", "published_at": "2026-01-01T14:45:54.237616", "category": "community", "teaser": "A test event for approval flow testing"}] };
 window.MARKER_ICONS = {"marker-on-stage": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBkcmFtYSBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTEwIDExaC4wMSIgLz4KICA8cGF0aCBkPSJNMTQgNmguMDEiIC8+CiAgPHBhdGggZD0iTTE4IDZoLjAxIiAvPgogIDxwYXRoIGQ9Ik02LjUgMTMuMWguMDEiIC8+CiAgPHBhdGggZD0iTTIyIDVjMCA5LTQgMTItNiAxMnMtNi0zLTYtMTJjMC0yIDItMyA2LTNzNiAxIDYgMyIgLz4KICA8cGF0aCBkPSJNMTcuNCA5LjljLS44LjgtMiAuOC0yLjggMCIgLz4KICA8cGF0aCBkPSJNMTAuMSA3LjFDOSA3LjIgNy43IDcuNyA2IDguNmMtMy41IDItNC43IDMuOS0zLjcgNS42IDQuNSA3LjggOS41IDguNCAxMS4yIDcuNC45LS41IDEuOS0yLjEgMS45LTQuNyIgLz4KICA8cGF0aCBkPSJNOS4xIDE2LjVjLjMtMS4xIDEuNC0xLjcgMi40LTEuNCIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-music": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBtdXNpYyBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTkgMThWNWwxMi0ydjEzIiAvPgogIDxjaXJjbGUgY3g9IjYiIGN5PSIxOCIgcj0iMyIgLz4KICA8Y2lyY2xlIGN4PSIxOCIgY3k9IjE2IiByPSIzIiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-opera-house": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBsYW5kbWFyayBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTEwIDE4di03IiAvPgogIDxwYXRoIGQ9Ik0xMS4xMiAyLjE5OGEyIDIgMCAwIDEgMS43Ni4wMDZsNy44NjYgMy44NDdjLjQ3Ni4yMzMuMzEuOTQ5LS4yMi45NDlIMy40NzRjLS41MyAwLS42OTUtLjcxNi0uMjItLjk0OXoiIC8+CiAgPHBhdGggZD0iTTE0IDE4di03IiAvPgogIDxwYXRoIGQ9Ik0xOCAxOHYtNyIgLz4KICA8cGF0aCBkPSJNMyAyMmgxOCIgLz4KICA8cGF0aCBkPSJNNiAxOHYtNyIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-pub-games": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBiZWVyIG1hcmtlciAtIHVuaWZpZWQgZ3lybyBzaGFwZSAtLT4KICAKICA8IS0tIERyb3Agc2hhZG93IC0tPgogIDxlbGxpcHNlIGN4PSIxNiIgY3k9IjQ2IiByeD0iNiIgcnk9IjIiIGZpbGw9IiMwMDAiIG9wYWNpdHk9IjAuNSIvPgogIAogIDwhLS0gU1RBTkRBUkQgR1lSTyBTSEFQRSAoc2FtZSBmb3IgYWxsKSAtLT4KICA8cGF0aCBkPSJNMTYgMiBDOSAyIDMgOCAzIDE1IEMzIDI0IDE2IDQ2IDE2IDQ2IEMxNiA0NiAyOSAyNCAyOSAxNSBDMjkgOCAyMyAyIDE2IDIgWiIgCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEx1Y2lkZSBpY29uIChzY2FsZWQgYW5kIHBvc2l0aW9uZWQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2LCAxNSkgc2NhbGUoMC41KSIgc3Ryb2tlPSIjMDBmZjAwIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTIsIC0xMikiPgo8cGF0aCBkPSJNMTcgMTFoMWEzIDMgMCAwIDEgMCA2aC0xIiAvPgogIDxwYXRoIGQ9Ik05IDEydjYiIC8+CiAgPHBhdGggZD0iTTEzIDEydjYiIC8+CiAgPHBhdGggZD0iTTE0IDcuNWMtMSAwLTEuNDQuNS0zIC41cy0yLS41LTMtLjUtMS43Mi41LTIuNS41YTIuNSAyLjUgMCAwIDEgMC01Yy43OCAwIDEuNTcuNSAyLjUuNVM5LjQ0IDIgMTEgMnMyIDEuNSAzIDEuNSAxLjcyLS41IDIuNS0uNWEyLjUgMi41IDAgMCAxIDAgNWMtLjc4IDAtMS41LS41LTIuNS0uNVoiIC8+CiAgPHBhdGggZD0iTTUgOHYxMmEyIDIgMCAwIDAgMiAyaDhhMiAyIDAgMCAwIDItMlY4IiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-festivals": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBzdGFyIG1hcmtlciAtIHVuaWZpZWQgZ3lybyBzaGFwZSAtLT4KICAKICA8IS0tIERyb3Agc2hhZG93IC0tPgogIDxlbGxpcHNlIGN4PSIxNiIgY3k9IjQ2IiByeD0iNiIgcnk9IjIiIGZpbGw9IiMwMDAiIG9wYWNpdHk9IjAuNSIvPgogIAogIDwhLS0gU1RBTkRBUkQgR1lSTyBTSEFQRSAoc2FtZSBmb3IgYWxsKSAtLT4KICA8cGF0aCBkPSJNMTYgMiBDOSAyIDMgOCAzIDE1IEMzIDI0IDE2IDQ2IDE2IDQ2IEMxNiA0NiAyOSAyNCAyOSAxNSBDMjkgOCAyMyAyIDE2IDIgWiIgCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEx1Y2lkZSBpY29uIChzY2FsZWQgYW5kIHBvc2l0aW9uZWQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2LCAxNSkgc2NhbGUoMC41KSIgc3Ryb2tlPSIjMDBmZjAwIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTIsIC0xMikiPgo8cGF0aCBkPSJNMTEuNTI1IDIuMjk1YS41My41MyAwIDAgMSAuOTUgMGwyLjMxIDQuNjc5YTIuMTIzIDIuMTIzIDAgMCAwIDEuNTk1IDEuMTZsNS4xNjYuNzU2YS41My41MyAwIDAgMSAuMjk0LjkwNGwtMy43MzYgMy42MzhhMi4xMjMgMi4xMjMgMCAwIDAtLjYxMSAxLjg3OGwuODgyIDUuMTRhLjUzLjUzIDAgMCAxLS43NzEuNTZsLTQuNjE4LTIuNDI4YTIuMTIyIDIuMTIyIDAgMCAwLTEuOTczIDBMNi4zOTYgMjEuMDFhLjUzLjUzIDAgMCAxLS43Ny0uNTZsLjg4MS01LjEzOWEyLjEyMiAyLjEyMiAwIDAgMC0uNjExLTEuODc5TDIuMTYgOS43OTVhLjUzLjUzIDAgMCAxIC4yOTQtLjkwNmw1LjE2NS0uNzU1YTIuMTIyIDIuMTIyIDAgMCAwIDEuNTk3LTEuMTZ6IiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-workshops": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBwcmVzZW50YXRpb24gbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0yIDNoMjAiIC8+CiAgPHBhdGggZD0iTTIxIDN2MTFhMiAyIDAgMCAxLTIgMkg1YTIgMiAwIDAgMS0yLTJWMyIgLz4KICA8cGF0aCBkPSJtNyAyMSA1LTUgNSA1IiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-school": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBncmFkdWF0aW9uLWNhcCBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTIxLjQyIDEwLjkyMmExIDEgMCAwIDAtLjAxOS0xLjgzOEwxMi44MyA1LjE4YTIgMiAwIDAgMC0xLjY2IDBMMi42IDkuMDhhMSAxIDAgMCAwIDAgMS44MzJsOC41NyAzLjkwOGEyIDIgMCAwIDAgMS42NiAweiIgLz4KICA8cGF0aCBkPSJNMjIgMTB2NiIgLz4KICA8cGF0aCBkPSJNNiAxMi41VjE2YTYgMyAwIDAgMCAxMiAwdi0zLjUiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-shopping": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBzaG9wcGluZy1iYWcgbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xNiAxMGE0IDQgMCAwIDEtOCAwIiAvPgogIDxwYXRoIGQ9Ik0zLjEwMyA2LjAzNGgxNy43OTQiIC8+CiAgPHBhdGggZD0iTTMuNCA1LjQ2N2EyIDIgMCAwIDAtLjQgMS4yVjIwYTIgMiAwIDAgMCAyIDJoMTRhMiAyIDAgMCAwIDItMlY2LjY2N2EyIDIgMCAwIDAtLjQtMS4ybC0yLTIuNjY3QTIgMiAwIDAgMCAxNyAySDdhMiAyIDAgMCAwLTEuNi44eiIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-sports": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSB0cm9waHkgbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xMCAxNC42NnYxLjYyNmEyIDIgMCAwIDEtLjk3NiAxLjY5NkE1IDUgMCAwIDAgNyAyMS45NzgiIC8+CiAgPHBhdGggZD0iTTE0IDE0LjY2djEuNjI2YTIgMiAwIDAgMCAuOTc2IDEuNjk2QTUgNSAwIDAgMSAxNyAyMS45NzgiIC8+CiAgPHBhdGggZD0iTTE4IDloMS41YTEgMSAwIDAgMCAwLTVIMTgiIC8+CiAgPHBhdGggZD0iTTQgMjJoMTYiIC8+CiAgPHBhdGggZD0iTTYgOWE2IDYgMCAwIDAgMTIgMFYzYTEgMSAwIDAgMC0xLTFIN2ExIDEgMCAwIDAtMSAxeiIgLz4KICA8cGF0aCBkPSJNNiA5SDQuNWExIDEgMCAwIDEgMC01SDYiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-sports-field": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSB0aWNrZXQgbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0yIDlhMyAzIDAgMCAxIDAgNnYyYTIgMiAwIDAgMCAyIDJoMTZhMiAyIDAgMCAwIDItMnYtMmEzIDMgMCAwIDEgMC02VjdhMiAyIDAgMCAwLTItMkg0YTIgMiAwIDAgMC0yIDJaIiAvPgogIDxwYXRoIGQ9Ik0xMyA1djIiIC8+CiAgPHBhdGggZD0iTTEzIDE3djIiIC8+CiAgPHBhdGggZD0iTTEzIDExdjIiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-swimming": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSB3YXZlcyBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTIgNmMuNi41IDEuMiAxIDIuNSAxQzcgNyA3IDUgOS41IDVjMi42IDAgMi40IDIgNSAyIDIuNSAwIDIuNS0yIDUtMiAxLjMgMCAxLjkuNSAyLjUgMSIgLz4KICA8cGF0aCBkPSJNMiAxMmMuNi41IDEuMiAxIDIuNSAxIDIuNSAwIDIuNS0yIDUtMiAyLjYgMCAyLjQgMiA1IDIgMi41IDAgMi41LTIgNS0yIDEuMyAwIDEuOS41IDIuNSAxIiAvPgogIDxwYXRoIGQ9Ik0yIDE4Yy42LjUgMS4yIDEgMi41IDEgMi41IDAgMi41LTIgNS0yIDIuNiAwIDIuNCAyIDUgMiAyLjUgMCAyLjUtMiA1LTIgMS4zIDAgMS45LjUgMi41IDEiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-community": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSB1c2VycyBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTE2IDIxdi0yYTQgNCAwIDAgMC00LTRINmE0IDQgMCAwIDAtNCA0djIiIC8+CiAgPHBhdGggZD0iTTE2IDMuMTI4YTQgNCAwIDAgMSAwIDcuNzQ0IiAvPgogIDxwYXRoIGQ9Ik0yMiAyMXYtMmE0IDQgMCAwIDAtMy0zLjg3IiAvPgogIDxjaXJjbGUgY3g9IjkiIGN5PSI3IiByPSI0IiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-arts": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBwYWxldHRlIG1hcmtlciAtIHVuaWZpZWQgZ3lybyBzaGFwZSAtLT4KICAKICA8IS0tIERyb3Agc2hhZG93IC0tPgogIDxlbGxpcHNlIGN4PSIxNiIgY3k9IjQ2IiByeD0iNiIgcnk9IjIiIGZpbGw9IiMwMDAiIG9wYWNpdHk9IjAuNSIvPgogIAogIDwhLS0gU1RBTkRBUkQgR1lSTyBTSEFQRSAoc2FtZSBmb3IgYWxsKSAtLT4KICA8cGF0aCBkPSJNMTYgMiBDOSAyIDMgOCAzIDE1IEMzIDI0IDE2IDQ2IDE2IDQ2IEMxNiA0NiAyOSAyNCAyOSAxNSBDMjkgOCAyMyAyIDE2IDIgWiIgCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEx1Y2lkZSBpY29uIChzY2FsZWQgYW5kIHBvc2l0aW9uZWQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2LCAxNSkgc2NhbGUoMC41KSIgc3Ryb2tlPSIjMDBmZjAwIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTIsIC0xMikiPgo8cGF0aCBkPSJNMTIgMjJhMSAxIDAgMCAxIDAtMjAgMTAgOSAwIDAgMSAxMCA5IDUgNSAwIDAgMS01IDVoLTIuMjVhMS43NSAxLjc1IDAgMCAwLTEuNCAyLjhsLjMuNGExLjc1IDEuNzUgMCAwIDEtMS40IDIuOHoiIC8+CiAgPGNpcmNsZSBjeD0iMTMuNSIgY3k9IjYuNSIgcj0iLjUiIGZpbGw9ImN1cnJlbnRDb2xvciIgLz4KICA8Y2lyY2xlIGN4PSIxNy41IiBjeT0iMTAuNSIgcj0iLjUiIGZpbGw9ImN1cnJlbnRDb2xvciIgLz4KICA8Y2lyY2xlIGN4PSI2LjUiIGN5PSIxMi41IiByPSIuNSIgZmlsbD0iY3VycmVudENvbG9yIiAvPgogIDxjaXJjbGUgY3g9IjguNSIgY3k9IjcuNSIgcj0iLjUiIGZpbGw9ImN1cnJlbnRDb2xvciIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-museum": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBsYW5kbWFyayBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTEwIDE4di03IiAvPgogIDxwYXRoIGQ9Ik0xMS4xMiAyLjE5OGEyIDIgMCAwIDEgMS43Ni4wMDZsNy44NjYgMy44NDdjLjQ3Ni4yMzMuMzEuOTQ5LS4yMi45NDlIMy40NzRjLS41MyAwLS42OTUtLjcxNi0uMjItLjk0OXoiIC8+CiAgPHBhdGggZD0iTTE0IDE4di03IiAvPgogIDxwYXRoIGQ9Ik0xOCAxOHYtNyIgLz4KICA8cGF0aCBkPSJNMyAyMmgxOCIgLz4KICA8cGF0aCBkPSJNNiAxOHYtNyIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-food": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSB1dGVuc2lscyBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTMgMnY3YzAgMS4xLjkgMiAyIDJoNGEyIDIgMCAwIDAgMi0yVjIiIC8+CiAgPHBhdGggZD0iTTcgMnYyMCIgLz4KICA8cGF0aCBkPSJNMjEgMTVWMmE1IDUgMCAwIDAtNSA1djZjMCAxLjEuOSAyIDIgMmgzWm0wIDB2NyIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-church": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBjaHVyY2ggbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xMCA5aDQiIC8+CiAgPHBhdGggZD0iTTEyIDd2NSIgLz4KICA8cGF0aCBkPSJNMTQgMjF2LTNhMiAyIDAgMCAwLTQgMHYzIiAvPgogIDxwYXRoIGQ9Im0xOCA5IDMuNTIgMi4xNDdhMSAxIDAgMCAxIC40OC44NTRWMTlhMiAyIDAgMCAxLTIgMkg0YTIgMiAwIDAgMS0yLTJ2LTYuOTk5YTEgMSAwIDAgMSAuNDgtLjg1NEw2IDkiIC8+CiAgPHBhdGggZD0iTTYgMjFWN2ExIDEgMCAwIDEgLjM3Ni0uNzgybDUtMy45OTlhMSAxIDAgMCAxIDEuMjQ5LjAwMWw1IDRBMSAxIDAgMCAxIDE4IDd2MTQiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-traditional-oceanic": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBmbGFtZSBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTEyIDNxMSA0IDQgNi41dDMgNS41YTEgMSAwIDAgMS0xNCAwIDUgNSAwIDAgMSAxLTMgMSAxIDAgMCAwIDUgMGMwLTItMS41LTMtMS41LTVxMC0yIDIuNS00IiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-castle": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBjYXN0bGUgbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xMCA1VjMiIC8+CiAgPHBhdGggZD0iTTE0IDVWMyIgLz4KICA8cGF0aCBkPSJNMTUgMjF2LTNhMyAzIDAgMCAwLTYgMHYzIiAvPgogIDxwYXRoIGQ9Ik0xOCAzdjgiIC8+CiAgPHBhdGggZD0iTTE4IDVINiIgLz4KICA8cGF0aCBkPSJNMjIgMTFIMiIgLz4KICA8cGF0aCBkPSJNMjIgOXYxMGEyIDIgMCAwIDEtMiAySDRhMiAyIDAgMCAxLTItMlY5IiAvPgogIDxwYXRoIGQ9Ik02IDN2OCIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-monument": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBwaWxjcm93IG1hcmtlciAtIHVuaWZpZWQgZ3lybyBzaGFwZSAtLT4KICAKICA8IS0tIERyb3Agc2hhZG93IC0tPgogIDxlbGxpcHNlIGN4PSIxNiIgY3k9IjQ2IiByeD0iNiIgcnk9IjIiIGZpbGw9IiMwMDAiIG9wYWNpdHk9IjAuNSIvPgogIAogIDwhLS0gU1RBTkRBUkQgR1lSTyBTSEFQRSAoc2FtZSBmb3IgYWxsKSAtLT4KICA8cGF0aCBkPSJNMTYgMiBDOSAyIDMgOCAzIDE1IEMzIDI0IDE2IDQ2IDE2IDQ2IEMxNiA0NiAyOSAyNCAyOSAxNSBDMjkgOCAyMyAyIDE2IDIgWiIgCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEx1Y2lkZSBpY29uIChzY2FsZWQgYW5kIHBvc2l0aW9uZWQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2LCAxNSkgc2NhbGUoMC41KSIgc3Ryb2tlPSIjMDBmZjAwIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTIsIC0xMikiPgo8cGF0aCBkPSJNMTMgNHYxNiIgLz4KICA8cGF0aCBkPSJNMTcgNHYxNiIgLz4KICA8cGF0aCBkPSJNMTkgNEg5LjVhNC41IDQuNSAwIDAgMCAwIDlIMTMiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-tower": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSB0cmlhbmdsZSBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTEzLjczIDRhMiAyIDAgMCAwLTMuNDYgMGwtOCAxNEEyIDIgMCAwIDAgNCAyMWgxNmEyIDIgMCAwIDAgMS43My0zWiIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-ruins": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBibG9ja3MgbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xMCAyMlY3YTEgMSAwIDAgMC0xLTFINGEyIDIgMCAwIDAtMiAydjEyYTIgMiAwIDAgMCAyIDJoMTJhMiAyIDAgMCAwIDItMnYtNWExIDEgMCAwIDAtMS0xSDIiIC8+CiAgPHJlY3QgeD0iMTQiIHk9IjIiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIHJ4PSIxIiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-palace": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBjcm93biBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTExLjU2MiAzLjI2NmEuNS41IDAgMCAxIC44NzYgMEwxNS4zOSA4Ljg3YTEgMSAwIDAgMCAxLjUxNi4yOTRMMjEuMTgzIDUuNWEuNS41IDAgMCAxIC43OTguNTE5bC0yLjgzNCAxMC4yNDZhMSAxIDAgMCAxLS45NTYuNzM0SDUuODFhMSAxIDAgMCAxLS45NTctLjczNEwyLjAyIDYuMDJhLjUuNSAwIDAgMSAuNzk4LS41MTlsNC4yNzYgMy42NjRhMSAxIDAgMCAwIDEuNTE2LS4yOTR6IiAvPgogIDxwYXRoIGQ9Ik01IDIxaDE0IiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-park": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSB0cmVlLXBpbmUgbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Im0xNyAxNCAzIDMuM2ExIDEgMCAwIDEtLjcgMS43SDQuN2ExIDEgMCAwIDEtLjctMS43TDcgMTRoLS4zYTEgMSAwIDAgMS0uNy0xLjdMOSA5aC0uMkExIDEgMCAwIDEgOCA3LjNMMTIgM2w0IDQuM2ExIDEgMCAwIDEtLjggMS43SDE1bDMgMy4zYTEgMSAwIDAgMS0uNyAxLjdIMTdaIiAvPgogIDxwYXRoIGQ9Ik0xMiAyMnYtMyIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-parliament": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBsYW5kbWFyayBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTEwIDE4di03IiAvPgogIDxwYXRoIGQ9Ik0xMS4xMiAyLjE5OGEyIDIgMCAwIDEgMS43Ni4wMDZsNy44NjYgMy44NDdjLjQ3Ni4yMzMuMzEuOTQ5LS4yMi45NDlIMy40NzRjLS41MyAwLS42OTUtLjcxNi0uMjItLjk0OXoiIC8+CiAgPHBhdGggZD0iTTE0IDE4di03IiAvPgogIDxwYXRoIGQ9Ik0xOCAxOHYtNyIgLz4KICA8cGF0aCBkPSJNMyAyMmgxOCIgLz4KICA8cGF0aCBkPSJNNiAxOHYtNyIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-mayors-office": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBidWlsZGluZyBtYXJrZXIgLSB1bmlmaWVkIGd5cm8gc2hhcGUgLS0+CiAgCiAgPCEtLSBEcm9wIHNoYWRvdyAtLT4KICA8ZWxsaXBzZSBjeD0iMTYiIGN5PSI0NiIgcng9IjYiIHJ5PSIyIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjUiLz4KICAKICA8IS0tIFNUQU5EQVJEIEdZUk8gU0hBUEUgKHNhbWUgZm9yIGFsbCkgLS0+CiAgPHBhdGggZD0iTTE2IDIgQzkgMiAzIDggMyAxNSBDMyAyNCAxNiA0NiAxNiA0NiBDMTYgNDYgMjkgMjQgMjkgMTUgQzI5IDggMjMgMiAxNiAyIFoiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgCiAgPCEtLSBMdWNpZGUgaWNvbiAoc2NhbGVkIGFuZCBwb3NpdGlvbmVkKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNiwgMTUpIHNjYWxlKDAuNSkiIHN0cm9rZT0iIzAwZmYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyLCAtMTIpIj4KPHBhdGggZD0iTTEyIDEwaC4wMSIgLz4KICA8cGF0aCBkPSJNMTIgMTRoLjAxIiAvPgogIDxwYXRoIGQ9Ik0xMiA2aC4wMSIgLz4KICA8cGF0aCBkPSJNMTYgMTBoLjAxIiAvPgogIDxwYXRoIGQ9Ik0xNiAxNGguMDEiIC8+CiAgPHBhdGggZD0iTTE2IDZoLjAxIiAvPgogIDxwYXRoIGQ9Ik04IDEwaC4wMSIgLz4KICA8cGF0aCBkPSJNOCAxNGguMDEiIC8+CiAgPHBhdGggZD0iTTggNmguMDEiIC8+CiAgPHBhdGggZD0iTTkgMjJ2LTNhMSAxIDAgMCAxIDEtMWg0YTEgMSAwIDAgMSAxIDF2MyIgLz4KICA8cmVjdCB4PSI0IiB5PSIyIiB3aWR0aD0iMTYiIGhlaWdodD0iMjAiIHJ4PSIyIiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+", "marker-library": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBib29rLW9wZW4gbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xMiA3djE0IiAvPgogIDxwYXRoIGQ9Ik0zIDE4YTEgMSAwIDAgMS0xLTFWNGExIDEgMCAwIDEgMS0xaDVhNCA0IDAgMCAxIDQgNCA0IDQgMCAwIDEgNC00aDVhMSAxIDAgMCAxIDEgMXYxM2ExIDEgMCAwIDEtMSAxaC02YTMgMyAwIDAgMC0zIDMgMyAzIDAgMCAwLTMtM3oiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-national-archive": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBhcmNoaXZlIG1hcmtlciAtIHVuaWZpZWQgZ3lybyBzaGFwZSAtLT4KICAKICA8IS0tIERyb3Agc2hhZG93IC0tPgogIDxlbGxpcHNlIGN4PSIxNiIgY3k9IjQ2IiByeD0iNiIgcnk9IjIiIGZpbGw9IiMwMDAiIG9wYWNpdHk9IjAuNSIvPgogIAogIDwhLS0gU1RBTkRBUkQgR1lSTyBTSEFQRSAoc2FtZSBmb3IgYWxsKSAtLT4KICA8cGF0aCBkPSJNMTYgMiBDOSAyIDMgOCAzIDE1IEMzIDI0IDE2IDQ2IDE2IDQ2IEMxNiA0NiAyOSAyNCAyOSAxNSBDMjkgOCAyMyAyIDE2IDIgWiIgCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEx1Y2lkZSBpY29uIChzY2FsZWQgYW5kIHBvc2l0aW9uZWQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2LCAxNSkgc2NhbGUoMC41KSIgc3Ryb2tlPSIjMDBmZjAwIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTIsIC0xMikiPgo8cmVjdCB3aWR0aD0iMjAiIGhlaWdodD0iNSIgeD0iMiIgeT0iMyIgcng9IjEiIC8+CiAgPHBhdGggZD0iTTQgOHYxMWEyIDIgMCAwIDAgMiAyaDEyYTIgMiAwIDAgMCAyLTJWOCIgLz4KICA8cGF0aCBkPSJNMTAgMTJoNCIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-default": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBtYXAtcGluIG1hcmtlciAtIHVuaWZpZWQgZ3lybyBzaGFwZSAtLT4KICAKICA8IS0tIERyb3Agc2hhZG93IC0tPgogIDxlbGxpcHNlIGN4PSIxNiIgY3k9IjQ2IiByeD0iNiIgcnk9IjIiIGZpbGw9IiMwMDAiIG9wYWNpdHk9IjAuNSIvPgogIAogIDwhLS0gU1RBTkRBUkQgR1lSTyBTSEFQRSAoc2FtZSBmb3IgYWxsKSAtLT4KICA8cGF0aCBkPSJNMTYgMiBDOSAyIDMgOCAzIDE1IEMzIDI0IDE2IDQ2IDE2IDQ2IEMxNiA0NiAyOSAyNCAyOSAxNSBDMjkgOCAyMyAyIDE2IDIgWiIgCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEx1Y2lkZSBpY29uIChzY2FsZWQgYW5kIHBvc2l0aW9uZWQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2LCAxNSkgc2NhbGUoMC41KSIgc3Ryb2tlPSIjMDBmZjAwIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTIsIC0xMikiPgo8cGF0aCBkPSJNMjAgMTBjMCA0Ljk5My01LjUzOSAxMC4xOTMtNy4zOTkgMTEuNzk5YTEgMSAwIDAgMS0xLjIwMiAwQzkuNTM5IDIwLjE5MyA0IDE0Ljk5MyA0IDEwYTggOCAwIDAgMSAxNiAwIiAvPgogIDxjaXJjbGUgY3g9IjEyIiBjeT0iMTAiIHI9IjMiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-geolocation": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiA0OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjQ4Ij4KICA8IS0tIEx1Y2lkZSBsb2NhdGUgbWFya2VyIC0gdW5pZmllZCBneXJvIHNoYXBlIC0tPgogIAogIDwhLS0gRHJvcCBzaGFkb3cgLS0+CiAgPGVsbGlwc2UgY3g9IjE2IiBjeT0iNDYiIHJ4PSI2IiByeT0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC41Ii8+CiAgCiAgPCEtLSBTVEFOREFSRCBHWVJPIFNIQVBFIChzYW1lIGZvciBhbGwpIC0tPgogIDxwYXRoIGQ9Ik0xNiAyIEM5IDIgMyA4IDMgMTUgQzMgMjQgMTYgNDYgMTYgNDYgQzE2IDQ2IDI5IDI0IDI5IDE1IEMyOSA4IDIzIDIgMTYgMiBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiMwMGZmMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxsaW5lIHgxPSIyIiB4Mj0iNSIgeTE9IjEyIiB5Mj0iMTIiIC8+CiAgPGxpbmUgeDE9IjE5IiB4Mj0iMjIiIHkxPSIxMiIgeTI9IjEyIiAvPgogIDxsaW5lIHgxPSIxMiIgeDI9IjEyIiB5MT0iMiIgeTI9IjUiIC8+CiAgPGxpbmUgeDE9IjEyIiB4Mj0iMTIiIHkxPSIxOSIgeTI9IjIyIiAvPgogIDxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjciIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4="};
 window.DASHBOARD_ICONS = {"alert-triangle": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"none\"><path d=\"M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z\"/><path d=\"M12 9v4\"/><path d=\"M12 17h.01\"/></svg>", "book-open": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"none\"><path d=\"M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z\"/><path d=\"M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z\"/></svg>", "bug": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"none\"><path d=\"m8 2 1.88 1.88\"/><path d=\"M14.12 3.88 16 2\"/><path d=\"M9 7.13v-1a3.003 3.003 0 1 1 6 0v1\"/><path d=\"M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6\"/><path d=\"M12 20v-9\"/><path d=\"M6.53 9C4.6 8.8 3 7.1 3 5\"/><path d=\"M6 13H2\"/><path d=\"M3 21c0-2.1 1.7-3.9 3.8-4\"/><path d=\"M20.97 5c0 2.1-1.6 3.8-3.5 4\"/><path d=\"M22 13h-4\"/><path d=\"M17.2 17c2.1.1 3.8 1.9 3.8 4\"/></svg>", "user": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"none\"><circle cx=\"12\" cy=\"8\" r=\"5\"/><path d=\"M20 21a8 8 0 1 0-16 0\"/></svg>", "book-text": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"none\"><path d=\"M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20\"/><path d=\"M8 7h6\"/><path d=\"M8 11h8\"/></svg>", "heart": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"none\"><path d=\"M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z\"/></svg>", "git-commit": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"4\"/><line x1=\"1.05\" x2=\"7\" y1=\"12\" y2=\"12\"/><line x1=\"17.01\" x2=\"22.96\" y1=\"12\" y2=\"12\"/></svg>", "megaphone": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m3 11 18-5v12L3 14v-3z\"/><path d=\"M11.6 16.8a3 3 0 1 1-5.8-1.6\"/></svg>"};
@@ -3792,6 +4059,63 @@ class EventStorage {
     }
     
     /**
+     * Reset a predefined custom location to its original config.json values
+     * @param {string} id - Location ID
+     * @returns {boolean} True if reset successfully
+     */
+    /**
+     * Get original predefined location data from config
+     * @param {string} id - Location ID
+     * @returns {Object|null} Original location data or null
+     */
+    getOriginalPredefinedLocation(id) {
+        const location = this.getCustomLocationById(id);
+        if (!location || !location.fromPredefined) {
+            return null;
+        }
+        
+        const predefinedLocs = this.config?.map?.predefined_locations || [];
+        return predefinedLocs.find(loc => 
+            loc.display_name === location.name || 
+            location.id.includes(loc.name)
+        );
+    }
+    
+    resetCustomLocation(id) {
+        const location = this.getCustomLocationById(id);
+        if (!location) {
+            console.warn('Custom location not found:', id);
+            return false;
+        }
+        
+        if (!location.fromPredefined) {
+            console.warn('Cannot reset non-predefined location:', id);
+            return false;
+        }
+        
+        // Find the original predefined location from config
+        const originalLoc = this.getOriginalPredefinedLocation(id);
+        
+        if (!originalLoc) {
+            console.warn('Original predefined location not found in config:', location.name);
+            return false;
+        }
+        
+        // Reset to original values
+        const index = this.customLocations.findIndex(loc => loc.id === id);
+        if (index !== -1) {
+            this.customLocations[index].name = originalLoc.display_name;
+            this.customLocations[index].lat = originalLoc.lat;
+            this.customLocations[index].lon = originalLoc.lon;
+            this.saveCustomLocations();
+            this.log('Custom location reset to original:', this.customLocations[index]);
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /**
      * Delete a custom location
      * @param {string} id - Location ID
      * @returns {boolean} True if deleted successfully
@@ -3824,6 +4148,37 @@ class EventStorage {
      */
     getCustomLocationById(id) {
         return this.customLocations.find(loc => loc.id === id) || null;
+    }
+    
+    /**
+     * Check if a predefined location has been modified from its original config.json values
+     * @param {string} id - Location ID
+     * @returns {boolean} True if location has been modified, false if unchanged or not predefined
+     */
+    isPredefinedLocationModified(id) {
+        const location = this.getCustomLocationById(id);
+        if (!location || !location.fromPredefined) {
+            return false;
+        }
+        
+        // Find the original predefined location from config
+        const predefinedLocs = this.config?.map?.predefined_locations || [];
+        const originalLoc = predefinedLocs.find(loc => 
+            loc.display_name === location.name || 
+            location.id.includes(loc.name)
+        );
+        
+        if (!originalLoc) {
+            // If we can't find the original, assume it's modified
+            return true;
+        }
+        
+        // Check if any values differ from original
+        const nameMatches = location.name === originalLoc.display_name;
+        const latMatches = Math.abs(location.lat - originalLoc.lat) < 0.0001; // Allow tiny floating point differences
+        const lonMatches = Math.abs(location.lon - originalLoc.lon) < 0.0001;
+        
+        return !(nameMatches && latMatches && lonMatches);
     }
     
     /**
@@ -5916,9 +6271,13 @@ class DashboardUI {
         this.updateCachingInfo(debugInfo);
         this.updateDOMCacheInfo();
         this.updateSizeBreakdown(debugInfo);
-        this.updateCacheStatistics();
+        this.updateCacheStatistics();  // Cache & compression statistics
         this.updateDuplicateWarnings(duplicateStats);
         this.updateCustomLocations();
+        
+        // Lint Warnings section (WCAG AA compliance)
+        this.updateLintWarnings(debugInfo);
+        
         this.showDebugSection();
     }
     
@@ -5945,21 +6304,111 @@ class DashboardUI {
         
         let html = '';
         
-        // Show all custom locations (includes initialized predefined locations)
+        // Show all custom locations with appropriate buttons
         customLocs.forEach((loc) => {
-            const locationLabel = loc.fromPredefined ? 
-                `<i data-lucide="map-pin" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle;"></i> ${loc.name}` : 
-                `<i data-lucide="edit-3" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle;"></i> ${loc.name}`;
+            const iconType = loc.fromPredefined ? 'map-pin' : 'edit-3';
+            
+            // Show different buttons based on whether it's predefined or user-created
+            let actionButtons;
+            if (loc.fromPredefined) {
+                // For predefined locations: always show Edit, only show Reset if modified
+                const isModified = app.storage.isPredefinedLocationModified(loc.id);
+                actionButtons = isModified ? `
+                    <button class="custom-location-btn custom-location-btn--edit" data-action="edit" data-id="${loc.id}" title="Edit location">
+                        <i data-lucide="edit-2" style="width: 14px; height: 14px;"></i>
+                        <span>Edit</span>
+                    </button>
+                    <button class="custom-location-btn custom-location-btn--reset" data-action="reset" data-id="${loc.id}" title="Reset to config.json values">
+                        <i data-lucide="rotate-ccw" style="width: 14px; height: 14px;"></i>
+                        <span>Reset</span>
+                    </button>
+                ` : `
+                    <button class="custom-location-btn custom-location-btn--edit" data-action="edit" data-id="${loc.id}" title="Edit location">
+                        <i data-lucide="edit-2" style="width: 14px; height: 14px;"></i>
+                        <span>Edit</span>
+                    </button>
+                `;
+            } else {
+                // For user-created locations: show Edit and Delete
+                actionButtons = `
+                    <button class="custom-location-btn custom-location-btn--edit" data-action="edit" data-id="${loc.id}" title="Edit location">
+                        <i data-lucide="edit-2" style="width: 14px; height: 14px;"></i>
+                        <span>Edit</span>
+                    </button>
+                    <button class="custom-location-btn custom-location-btn--delete" data-action="delete" data-id="${loc.id}" title="Delete location">
+                        <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                        <span>Delete</span>
+                    </button>
+                `;
+            }
             
             html += `
-                <div class="custom-location-item">
-                    <div class="custom-location-header">
-                        <div class="custom-location-name">${locationLabel}</div>
+                <div class="custom-location-item" data-location-id="${loc.id}">
+                    <!-- View State -->
+                    <div class="custom-location-view">
+                        <div class="custom-location-header">
+                            <div class="custom-location-name">
+                                <i data-lucide="${iconType}" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle;"></i>
+                                <span class="location-name-text">${loc.name}</span>
+                            </div>
+                            <div class="custom-location-actions">
+                                ${actionButtons}
+                            </div>
+                        </div>
+                        <div class="custom-location-coords">${loc.lat.toFixed(4)}°, ${loc.lon.toFixed(4)}°</div>
                     </div>
-                    <div class="custom-location-coords">${loc.lat.toFixed(4)}°, ${loc.lon.toFixed(4)}°</div>
-                    <div class="custom-location-actions">
-                        <button class="custom-location-btn" data-action="edit" data-id="${loc.id}">Edit</button>
-                        <button class="custom-location-btn delete" data-action="delete" data-id="${loc.id}">Delete</button>
+                    
+                    <!-- Edit State (hidden by default) -->
+                    <div class="custom-location-edit" style="display: none;">
+                        <div class="custom-location-edit-header">
+                            <i data-lucide="${iconType}" style="width: 14px; height: 14px;"></i>
+                            <span>Editing Location</span>
+                        </div>
+                        <div class="custom-location-form">
+                            <div class="form-group">
+                                <label for="edit-name-${loc.id}">Name</label>
+                                <input type="text" 
+                                       id="edit-name-${loc.id}" 
+                                       class="custom-location-input" 
+                                       value="${loc.name}" 
+                                       placeholder="Location name"
+                                       maxlength="50">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="edit-lat-${loc.id}">Latitude</label>
+                                    <input type="number" 
+                                           id="edit-lat-${loc.id}" 
+                                           class="custom-location-input" 
+                                           value="${loc.lat}" 
+                                           step="0.0001"
+                                           min="-90"
+                                           max="90"
+                                           placeholder="Latitude">
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit-lon-${loc.id}">Longitude</label>
+                                    <input type="number" 
+                                           id="edit-lon-${loc.id}" 
+                                           class="custom-location-input" 
+                                           value="${loc.lon}" 
+                                           step="0.0001"
+                                           min="-180"
+                                           max="180"
+                                           placeholder="Longitude">
+                                </div>
+                            </div>
+                            <div class="custom-location-edit-actions">
+                                <button class="custom-location-btn custom-location-btn--save" data-action="save" data-id="${loc.id}">
+                                    <i data-lucide="check" style="width: 14px; height: 14px;"></i>
+                                    <span>Save</span>
+                                </button>
+                                <button class="custom-location-btn custom-location-btn--cancel" data-action="cancel" data-id="${loc.id}">
+                                    <i data-lucide="x" style="width: 14px; height: 14px;"></i>
+                                    <span>Cancel</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
@@ -5972,14 +6421,20 @@ class DashboardUI {
             window.lucide.createIcons();
         }
         
-        // Attach event listeners to action buttons
+        // Attach event listeners to all action buttons
         container.querySelectorAll('.custom-location-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const action = btn.getAttribute('data-action');
                 const id = btn.getAttribute('data-id');
                 
                 if (action === 'edit') {
-                    this.editCustomLocation(id, app);
+                    this.toggleEditMode(id, true);
+                } else if (action === 'save') {
+                    this.saveCustomLocation(id, app);
+                } else if (action === 'cancel') {
+                    this.toggleEditMode(id, false);
+                } else if (action === 'reset') {
+                    this.resetCustomLocation(id, app);
                 } else if (action === 'delete') {
                     this.deleteCustomLocation(id, app);
                 }
@@ -5988,41 +6443,201 @@ class DashboardUI {
     }
     
     /**
-     * Edit a custom location
+     * Toggle edit mode for a custom location
+     * @param {string} id - Location ID
+     * @param {boolean} enabled - Whether to enable edit mode
+     */
+    toggleEditMode(id, enabled) {
+        const item = document.querySelector(`.custom-location-item[data-location-id="${id}"]`);
+        if (!item) return;
+        
+        const viewState = item.querySelector('.custom-location-view');
+        const editState = item.querySelector('.custom-location-edit');
+        
+        if (enabled) {
+            // Enter edit mode
+            viewState.style.display = 'none';
+            editState.style.display = 'block';
+            
+            // Focus on the name input
+            const nameInput = editState.querySelector(`#edit-name-${id}`);
+            if (nameInput) {
+                setTimeout(() => nameInput.focus(), 50);
+            }
+        } else {
+            // Exit edit mode (restore original values)
+            viewState.style.display = 'block';
+            editState.style.display = 'none';
+            
+            // Reset form values to original
+            const app = window.app || window.eventsApp;
+            if (app && app.storage) {
+                const loc = app.storage.getCustomLocationById(id);
+                if (loc) {
+                    const nameInput = editState.querySelector(`#edit-name-${id}`);
+                    const latInput = editState.querySelector(`#edit-lat-${id}`);
+                    const lonInput = editState.querySelector(`#edit-lon-${id}`);
+                    
+                    if (nameInput) nameInput.value = loc.name;
+                    if (latInput) latInput.value = loc.lat;
+                    if (lonInput) lonInput.value = loc.lon;
+                }
+            }
+        }
+    }
+    
+    /**
+     * Save changes to a custom location
      * @param {string} id - Location ID
      * @param {Object} app - App instance
      */
-    editCustomLocation(id, app) {
-        const loc = app.storage.getCustomLocationById(id);
-        if (!loc) return;
+    saveCustomLocation(id, app) {
+        const item = document.querySelector(`.custom-location-item[data-location-id="${id}"]`);
+        if (!item) return;
         
-        const newName = prompt('Enter new name:', loc.name);
-        if (!newName || !newName.trim()) return;
+        const editState = item.querySelector('.custom-location-edit');
+        const nameInput = editState.querySelector(`#edit-name-${id}`);
+        const latInput = editState.querySelector(`#edit-lat-${id}`);
+        const lonInput = editState.querySelector(`#edit-lon-${id}`);
         
-        const newLatStr = prompt('Enter new latitude:', loc.lat.toString());
-        const newLonStr = prompt('Enter new longitude:', loc.lon.toString());
+        if (!nameInput || !latInput || !lonInput) return;
         
-        const newLat = parseFloat(newLatStr);
-        const newLon = parseFloat(newLonStr);
+        // Get current location to check if it's predefined
+        const currentLoc = app.storage.getCustomLocationById(id);
+        if (!currentLoc) return;
         
-        if (isNaN(newLat) || isNaN(newLon)) {
-            alert('Invalid coordinates!');
+        // Get values
+        let newName = nameInput.value.trim();
+        let newLat = parseFloat(latInput.value);
+        let newLon = parseFloat(lonInput.value);
+        
+        // Handle empty fields for predefined locations - revert to config.json values
+        if (currentLoc.fromPredefined) {
+            const originalLoc = app.storage.getOriginalPredefinedLocation(id);
+            
+            if (originalLoc) {
+                // If name is empty, use original predefined name
+                if (!newName) {
+                    newName = originalLoc.display_name;
+                }
+                
+                // If lat is empty or invalid, use original predefined lat
+                if (isNaN(newLat) || latInput.value.trim() === '') {
+                    newLat = originalLoc.lat;
+                }
+                
+                // If lon is empty or invalid, use original predefined lon
+                if (isNaN(newLon) || lonInput.value.trim() === '') {
+                    newLon = originalLoc.lon;
+                }
+            }
+        }
+        
+        // Validate (after applying defaults for predefined locations)
+        if (!newName) {
+            this.showValidationError(nameInput, 'Name cannot be empty');
             return;
         }
         
+        if (isNaN(newLat) || newLat < -90 || newLat > 90) {
+            this.showValidationError(latInput, 'Invalid latitude (must be between -90 and 90)');
+            return;
+        }
+        
+        if (isNaN(newLon) || newLon < -180 || newLon > 180) {
+            this.showValidationError(lonInput, 'Invalid longitude (must be between -180 and 180)');
+            return;
+        }
+        
+        // Update storage
         const success = app.storage.updateCustomLocation(id, {
-            name: newName.trim(),
+            name: newName,
             lat: newLat,
             lon: newLon
         });
         
         if (success) {
-            alert('✅ Location updated!');
+            // Exit edit mode and refresh display
+            this.updateCustomLocations();
+            
+            // Refresh the location dropdown
+            if (app.eventListeners) {
+                app.eventListeners.setupFilterListeners();
+            }
+            
+            // Show success feedback
+            this.showSaveSuccess(item);
+        } else {
+            this.showValidationError(nameInput, 'Failed to save location');
+        }
+    }
+    
+    /**
+     * Show validation error on an input field
+     * @param {HTMLElement} input - Input element
+     * @param {string} message - Error message
+     */
+    showValidationError(input, message) {
+        // Add error class
+        input.classList.add('input-error');
+        
+        // Create or update error message
+        let errorEl = input.parentElement.querySelector('.error-message');
+        if (!errorEl) {
+            errorEl = document.createElement('div');
+            errorEl.className = 'error-message';
+            input.parentElement.appendChild(errorEl);
+        }
+        errorEl.textContent = message;
+        
+        // Focus the input
+        input.focus();
+        
+        // Remove error after 3 seconds
+        setTimeout(() => {
+            input.classList.remove('input-error');
+            if (errorEl) errorEl.remove();
+        }, 3000);
+    }
+    
+    /**
+     * Show save success feedback
+     * @param {HTMLElement} item - Location item element
+     */
+    showSaveSuccess(item) {
+        // Add success class temporarily
+        item.classList.add('save-success');
+        
+        // Remove after animation
+        setTimeout(() => {
+            item.classList.remove('save-success');
+        }, 1000);
+    }
+    
+    /**
+     * Reset a predefined custom location to its original config.json values
+     * @param {string} id - Location ID
+     * @param {Object} app - App instance
+     */
+    resetCustomLocation(id, app) {
+        const loc = app.storage.getCustomLocationById(id);
+        if (!loc) return;
+        
+        if (!confirm(`Reset "${loc.name}" to its original config.json values?`)) {
+            return;
+        }
+        
+        const success = app.storage.resetCustomLocation(id);
+        
+        if (success) {
+            alert('✅ Location reset to original values!');
             this.updateCustomLocations();
             // Refresh the location dropdown
             if (app.eventListeners) {
                 app.eventListeners.setupFilterListeners();
             }
+        } else {
+            alert('❌ Failed to reset location. It may not be a predefined location.');
         }
     }
     
@@ -6035,11 +6650,12 @@ class DashboardUI {
         const loc = app.storage.getCustomLocationById(id);
         if (!loc) return;
         
-        if (!confirm(`Delete "${loc.name}"?`)) {
+        if (!confirm(`Delete custom location "${loc.name}"?`)) {
             return;
         }
         
         const success = app.storage.deleteCustomLocation(id);
+        
         if (success) {
             alert('✅ Location deleted!');
             this.updateCustomLocations();
@@ -6047,6 +6663,8 @@ class DashboardUI {
             if (app.eventListeners) {
                 app.eventListeners.setupFilterListeners();
             }
+        } else {
+            alert('❌ Failed to delete location.');
         }
     }
     
@@ -6146,6 +6764,53 @@ class DashboardUI {
         }
     }
     
+    updateCacheStatistics() {
+        /**
+         * Update cache statistics for production mode
+         * Shows:
+         * - Cache hit/miss rates
+         * - Compression ratios
+         * - Cache file sizes
+         */
+        const debugInfo = window.DEBUG_INFO || {};
+        
+        // Check if we have cache statistics
+        if (!debugInfo.cache_enabled) {
+            return; // No cache statistics to show in development mode
+        }
+        
+        // Update cache file size if available
+        if (debugInfo.cache_file_size) {
+            const debugFileSize = document.getElementById('debug-file-size');
+            if (debugFileSize) {
+                const cacheKB = (debugInfo.cache_file_size / 1024).toFixed(1);
+                const htmlKB = debugInfo.html_sizes ? (debugInfo.html_sizes.total / 1024).toFixed(1) : '?';
+                debugFileSize.title = `HTML: ${htmlKB} KB, Cache: ${cacheKB} KB`;
+            }
+        }
+        
+        // Update compression info if available
+        if (debugInfo.compression) {
+            const comp = debugInfo.compression;
+            
+            // Show compression ratio in title/tooltip
+            const debugCaching = document.getElementById('debug-caching');
+            if (debugCaching && comp.ratio) {
+                const ratio = (comp.ratio * 100).toFixed(1);
+                debugCaching.title = `Compression: ${ratio}% reduction (${comp.original_kb || '?'} KB → ${comp.compressed_kb || '?'} KB)`;
+            }
+        }
+        
+        // Log cache statistics for debugging (only in debug mode)
+        if (this.config && this.config.debug) {
+            console.log('[KRWL Debug] Cache Statistics:', {
+                enabled: debugInfo.cache_enabled,
+                file_size: debugInfo.cache_file_size,
+                compression: debugInfo.compression
+            });
+        }
+    }
+    
     updateSizeBreakdown(debugInfo) {
         const debugSizeBreakdown = document.getElementById('debug-size-breakdown');
         if (!debugSizeBreakdown || !debugInfo.html_sizes) return;
@@ -6230,6 +6895,69 @@ class DashboardUI {
         if (debugSection && debugSection.style.display === 'none') {
             debugSection.style.display = 'block';
         }
+    }
+    
+    /**
+     * Update lint warnings section with WCAG AA compliance results
+     * Show summary with link to protocol file instead of detailed list
+     * @param {Object} debugInfo - Debug info object containing lint_results
+     */
+    updateLintWarnings(debugInfo) {
+        if (!debugInfo || !debugInfo.lint_results) return;
+        
+        const container = document.getElementById('debug-lint-warnings-container');
+        const summary = document.getElementById('debug-lint-summary');
+        const warningsList = document.getElementById('debug-lint-warnings-list');
+        
+        if (!container || !summary || !warningsList) return;
+        
+        const lintResults = debugInfo.lint_results;
+        const warnings = lintResults.structured_warnings || [];
+        
+        // Show container if there are warnings
+        if (warnings.length === 0) {
+            container.style.display = 'none';
+            return;
+        }
+        
+        container.style.display = 'block';
+        
+        // Show summary with link to protocol file (no detailed list)
+        const errorCount = lintResults.error_count || 0;
+        const warningCount = lintResults.warning_count || 0;
+        
+        summary.innerHTML = `
+            <strong>${warningCount} accessibility ${warningCount === 1 ? 'warning' : 'warnings'}</strong>
+            ${errorCount > 0 ? ` · ${errorCount} ${errorCount === 1 ? 'error' : 'errors'}` : ''}
+            <br>
+            <span class="debug-lint-details">
+                For details, see 
+                <a href="wcag_protocol.txt" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="debug-lint-details-link">
+                    wcag_protocol.txt
+                </a>
+            </span>
+        `;
+        
+        // Hide the warnings list (no detailed display)
+        warningsList.style.display = 'none';
+    }
+    
+    /**
+     * Escape HTML to prevent XSS
+     * @param {string} unsafe - Unsafe string
+     * @returns {string} - Escaped string
+     */
+    escapeHtml(unsafe) {
+        if (typeof unsafe !== 'string') return '';
+        return unsafe
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
     }
     
     /**
@@ -6387,9 +7115,9 @@ class FilterDescriptionUI {
             return this.getPredefinedLocationText(filters.selectedPredefinedLocation);
         }
         
-        // Custom location
-        if (filters.locationType === 'custom' && filters.customLat && filters.customLon) {
-            return 'from custom location';
+        // Custom location - use stored name (KISS: no lookup needed)
+        if (filters.locationType === 'custom' && filters.selectedCustomLocationName) {
+            return `from ${filters.selectedCustomLocationName}`;
         }
         
         // Geolocation - always show "from here" when geolocation is active
@@ -6491,12 +7219,6 @@ class EventListeners {
                 this.closeDashboard(dashboardMenu, dashboardLogo);
             }
         });
-        
-        // Add custom location button handler
-        const addLocationBtn = document.getElementById('add-custom-location-btn');
-        if (addLocationBtn) {
-            addLocationBtn.addEventListener('click', () => this.addCustomLocation());
-        }
     }
     
     createFocusTrap(container) {
@@ -6815,7 +7537,7 @@ class EventListeners {
             
             const items = [{ label: geolocationLabel, value: 'geolocation' }];
             
-            // Add custom locations (includes initialized predefined locations)
+            // Add custom locations (only config.json predefined locations)
             customLocs.forEach((loc) => {
                 items.push({ 
                     label: `${prefix} ${loc.name}`, 
@@ -6824,12 +7546,7 @@ class EventListeners {
                 });
             });
             
-            // Add "custom location..." option to create new
-            items.push({ 
-                label: 'custom location...', 
-                value: 'new-custom',
-                customLocation: true
-            });
+            // Note: Custom location creation removed from dropdown - use dashboard instead
             
             return items;
         };
@@ -6878,6 +7595,7 @@ class EventListeners {
                     this.app.filters.locationType = 'custom';
                     this.app.filters.selectedPredefinedLocation = null;
                     this.app.filters.selectedCustomLocation = locationId;
+                    this.app.filters.selectedCustomLocationName = selectedLoc.name; // Store name for display
                     this.app.filters.customLat = selectedLoc.lat;
                     this.app.filters.customLon = selectedLoc.lon;
                     this.app.storage.saveFiltersToCookie(this.app.filters);
@@ -6896,104 +7614,8 @@ class EventListeners {
                     this.app.displayEvents();
                     return;
                 }
-                
-                if (value === 'new-custom') {
-                    // Show custom location input dialog
-                    this.showCustomLocationDialog();
-                }
             }
         );
-    }
-    
-    showCustomLocationDialog() {
-        // Create modal dialog for custom location input
-        const existingDialog = document.getElementById('custom-location-dialog');
-        if (existingDialog) {
-            existingDialog.remove();
-        }
-        
-        const userLocation = this.app.mapManager?.userLocation;
-        const defaultLat = this.app.filters.customLat || userLocation?.lat || this.app.config?.map?.default_center?.lat || 50.3167;
-        const defaultLon = this.app.filters.customLon || userLocation?.lon || this.app.config?.map?.default_center?.lon || 11.9167;
-        
-        const dialog = document.createElement('div');
-        dialog.id = 'custom-location-dialog';
-        dialog.className = 'custom-location-dialog';
-        dialog.innerHTML = `
-            <div class="custom-location-content">
-                <h3>Custom Location</h3>
-                <p class="custom-location-description">Enter coordinates for custom reference location</p>
-                <div class="custom-location-inputs">
-                    <div class="custom-location-field">
-                        <label for="custom-lat-input">Latitude:</label>
-                        <input type="number" id="custom-lat-input" step="0.0001" value="${defaultLat.toFixed(4)}" />
-                    </div>
-                    <div class="custom-location-field">
-                        <label for="custom-lon-input">Longitude:</label>
-                        <input type="number" id="custom-lon-input" step="0.0001" value="${defaultLon.toFixed(4)}" />
-                    </div>
-                </div>
-                <div class="custom-location-buttons">
-                    <button id="custom-location-apply" class="btn-primary">Apply</button>
-                    <button id="custom-location-cancel" class="btn-secondary">Cancel</button>
-                </div>
-            </div>
-        `;
-        
-        document.body.appendChild(dialog);
-        
-        // Focus first input
-        const latInput = document.getElementById('custom-lat-input');
-        if (latInput) {
-            setTimeout(() => latInput.focus(), 100);
-        }
-        
-        // Apply button handler
-        document.getElementById('custom-location-apply')?.addEventListener('click', () => {
-            const lat = parseFloat(document.getElementById('custom-lat-input')?.value);
-            const lon = parseFloat(document.getElementById('custom-lon-input')?.value);
-            
-            if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
-                // Create new custom location
-                const locationName = `Custom (${lat.toFixed(4)}, ${lon.toFixed(4)})`;
-                const newLocation = this.app.storage.addCustomLocation(locationName, lat, lon);
-                
-                // Set as current filter
-                this.app.filters.locationType = 'custom';
-                this.app.filters.selectedCustomLocation = newLocation.id;
-                this.app.filters.customLat = lat;
-                this.app.filters.customLon = lon;
-                this.app.storage.saveFiltersToCookie(this.app.filters);
-                
-                // Center map and update marker
-                const distanceKm = this.app.filters.maxDistance;
-                this.app.mapManager?.centerMap(lat, lon, null, distanceKm);
-                this.app.mapManager?.updateReferenceMarker(lat, lon, locationName);
-                
-                this.app.displayEvents();
-                dialog.remove();
-                
-                // Update location filter text
-                const locationTextEl = document.getElementById('filter-bar-location');
-                if (locationTextEl) {
-                    locationTextEl.textContent = `from ${locationName}`;
-                }
-            } else {
-                alert('Please enter valid coordinates (Latitude: -90 to 90, Longitude: -180 to 180)');
-            }
-        });
-        
-        // Cancel button handler
-        document.getElementById('custom-location-cancel')?.addEventListener('click', () => {
-            dialog.remove();
-        });
-        
-        // ESC key to close
-        dialog.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                dialog.remove();
-            }
-        });
     }
     
     setupKeyboardShortcuts() {
@@ -7022,38 +7644,6 @@ class EventListeners {
                 this.app.mapManager?.invalidateSize();
             }, this.app.ORIENTATION_CHANGE_DELAY);
         });
-    }
-    
-    addCustomLocation() {
-        const name = prompt('Enter location name:', 'My Location');
-        if (!name || !name.trim()) return;
-        
-        const latStr = prompt('Enter latitude:', '50.3167');
-        const lonStr = prompt('Enter longitude:', '11.9167');
-        
-        const lat = parseFloat(latStr);
-        const lon = parseFloat(lonStr);
-        
-        if (isNaN(lat) || isNaN(lon)) {
-            alert('Invalid coordinates!');
-            return;
-        }
-        
-        const success = this.app.storage.addCustomLocation({
-            name: name.trim(),
-            lat: lat,
-            lon: lon
-        });
-        
-        if (success) {
-            alert(`✅ Location "${name.trim()}" saved!`);
-            // Refresh dashboard display
-            this.app.updateDashboard();
-            // Refresh dropdown
-            this.setupFilterListeners();
-        } else {
-            alert('❌ Failed to save location (limit: 10)');
-        }
     }
 }
 
@@ -7114,6 +7704,7 @@ class EventsApp {
             locationType: 'geolocation',
             selectedPredefinedLocation: null,
             selectedCustomLocation: null,
+            selectedCustomLocationName: null,  // Store display name
             useCustomLocation: false,
             customLat: null,
             customLon: null
