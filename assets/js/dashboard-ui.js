@@ -221,15 +221,17 @@ class DashboardUI {
                 setTimeout(() => nameInput.focus(), 50);
             }
             
-            // Add ESC key listener to exit edit mode
+            // Add ESC key listener to exit edit mode (use capture phase to intercept before dashboard handler)
             const escHandler = (e) => {
                 if (e.key === 'Escape') {
                     e.stopPropagation(); // Prevent dashboard from closing
+                    e.preventDefault(); // Prevent default behavior
                     this.toggleEditMode(id, false);
-                    document.removeEventListener('keydown', escHandler);
+                    document.removeEventListener('keydown', escHandler, true);
                 }
             };
-            document.addEventListener('keydown', escHandler);
+            // Use capture phase (true) to intercept before other handlers
+            document.addEventListener('keydown', escHandler, true);
             // Store handler for cleanup
             editState.dataset.escHandler = 'attached';
         } else {
