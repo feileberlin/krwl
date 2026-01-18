@@ -48,7 +48,7 @@
 .filter-chip {
     cursor: pointer;
     background: rgba(214, 137, 184, 0.15); /* ecoBarbie Light Tone with transparency */
-    border: var(--border-width-thin) solid rgba(214, 137, 184, 0.4);
+    border: var(--border-width-thin) solid transparent;
     border-radius: var(--border-radius-medium);
     padding: 0.3rem 0.6rem;
     font-size: 0.95rem;
@@ -62,7 +62,7 @@
 
 .filter-chip:hover {
     background: rgba(214, 137, 184, 0.25);
-    border-color: rgba(214, 137, 184, 0.6);
+    border-color: transparent;
     color: var(--color-text-primary);
     transform: translateY(-1px);
     box-shadow: var(--shadow-small); /* Subtle depth, no glow */
