@@ -311,6 +311,24 @@ class EventStorage {
      * @param {string} id - Location ID
      * @returns {boolean} True if reset successfully
      */
+    /**
+     * Get original predefined location data from config
+     * @param {string} id - Location ID
+     * @returns {Object|null} Original location data or null
+     */
+    getOriginalPredefinedLocation(id) {
+        const location = this.getCustomLocationById(id);
+        if (!location || !location.fromPredefined) {
+            return null;
+        }
+        
+        const predefinedLocs = this.config?.map?.predefined_locations || [];
+        return predefinedLocs.find(loc => 
+            loc.display_name === location.name || 
+            location.id.includes(loc.name)
+        );
+    }
+    
     resetCustomLocation(id) {
         const location = this.getCustomLocationById(id);
         if (!location) {
@@ -324,11 +342,7 @@ class EventStorage {
         }
         
         // Find the original predefined location from config
-        const predefinedLocs = this.config?.map?.predefined_locations || [];
-        const originalLoc = predefinedLocs.find(loc => 
-            loc.display_name === location.name || 
-            location.id.includes(loc.name)
-        );
+        const originalLoc = this.getOriginalPredefinedLocation(id);
         
         if (!originalLoc) {
             console.warn('Original predefined location not found in config:', location.name);

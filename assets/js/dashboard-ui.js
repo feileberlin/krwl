@@ -264,12 +264,38 @@ class DashboardUI {
         
         if (!nameInput || !latInput || !lonInput) return;
         
-        // Get values
-        const newName = nameInput.value.trim();
-        const newLat = parseFloat(latInput.value);
-        const newLon = parseFloat(lonInput.value);
+        // Get current location to check if it's predefined
+        const currentLoc = app.storage.getCustomLocationById(id);
+        if (!currentLoc) return;
         
-        // Validate
+        // Get values
+        let newName = nameInput.value.trim();
+        let newLat = parseFloat(latInput.value);
+        let newLon = parseFloat(lonInput.value);
+        
+        // Handle empty fields for predefined locations - revert to config.json values
+        if (currentLoc.fromPredefined) {
+            const originalLoc = app.storage.getOriginalPredefinedLocation(id);
+            
+            if (originalLoc) {
+                // If name is empty, use original predefined name
+                if (!newName) {
+                    newName = originalLoc.display_name;
+                }
+                
+                // If lat is empty or invalid, use original predefined lat
+                if (isNaN(newLat) || latInput.value.trim() === '') {
+                    newLat = originalLoc.lat;
+                }
+                
+                // If lon is empty or invalid, use original predefined lon
+                if (isNaN(newLon) || lonInput.value.trim() === '') {
+                    newLon = originalLoc.lon;
+                }
+            }
+        }
+        
+        // Validate (after applying defaults for predefined locations)
         if (!newName) {
             this.showValidationError(nameInput, 'Name cannot be empty');
             return;
