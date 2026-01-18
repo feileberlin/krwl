@@ -109,12 +109,12 @@ class DashboardUI {
                     <!-- View State -->
                     <div class="custom-location-view">
                         <div class="custom-location-header">
+                            <div class="custom-location-actions">
+                                ${actionButtons}
+                            </div>
                             <div class="custom-location-name">
                                 <i data-lucide="${iconType}" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle;"></i>
                                 <span class="location-name-text">${loc.name}</span>
-                            </div>
-                            <div class="custom-location-actions">
-                                ${actionButtons}
                             </div>
                         </div>
                         <div class="custom-location-coords">${loc.lat.toFixed(4)}°, ${loc.lon.toFixed(4)}°</div>

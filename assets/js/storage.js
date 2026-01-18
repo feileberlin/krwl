@@ -107,6 +107,7 @@ class EventStorage {
                 locationType: filters.locationType,
                 selectedPredefinedLocation: filters.selectedPredefinedLocation,
                 selectedCustomLocation: filters.selectedCustomLocation,
+                selectedCustomLocationName: filters.selectedCustomLocationName, // Save display name
                 useCustomLocation: filters.useCustomLocation,
                 customLat: filters.customLat,
                 customLon: filters.customLon
@@ -135,6 +136,16 @@ class EventStorage {
                     category: 'all',
                     timeFilter: 'sunrise'
                 };
+                
+                // Restore custom location name if missing (for backward compatibility)
+                if (filters.locationType === 'custom' && filters.selectedCustomLocation && !filters.selectedCustomLocationName) {
+                    const customLoc = this.getCustomLocationById(filters.selectedCustomLocation);
+                    if (customLoc) {
+                        filters.selectedCustomLocationName = customLoc.name;
+                        this.log('Restored missing custom location name:', customLoc.name);
+                    }
+                }
+                
                 this.log('Filters loaded from localStorage (category and timeFilter reset to defaults)', filters);
                 return filters;
             }
