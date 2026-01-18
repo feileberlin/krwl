@@ -1,0 +1,193 @@
+name: 🤖 Telegram Bot - Event Submissions & Contact Form
+
+# Phase 2 Backend Integration: GitHub Actions workflow to proxy Telegram bot submissions
+# - Uses TELEGRAM_BOT_TOKEN secret from GitHub Secrets
+# - Forwards contact messages to admin Telegram chat (config.telegram.admin_chat_ids)
+# - Saves flyer uploads to pending_events.json via Telegram Bot API
+# - Leverages existing telegram_bot.py infrastructure
+
+on:
+  workflow_dispatch:
+    inputs:
+      duration_minutes:
+        description: '⏱️ Bot run duration in minutes (1-60)'
+        required: false
+        type: number
+        default: 10
+      
+      mode:
+        description: '🎯 Bot operation mode'
+        required: true
+        type: choice
+        options:
+          - 'polling'      # Run bot with long polling (default)
+          - 'webhook'      # Set up webhook (future implementation)
+          - 'stop'         # Stop bot gracefully
+        default: 'polling'
+  
+  schedule:
+    # Run bot every 15 minutes during active hours (UTC)
+    # 06:00-22:00 CET = 05:00-21:00 UTC
+    - cron: '*/15 5-21 * * *'  # Every 15 min, 6 AM - 10 PM CET
+
+permissions:
+  contents: write  # Allow pushing pending_events.json updates
+
+# Prevent concurrent bot instances
+concurrency:
+  group: "telegram-bot"
+  cancel-in-progress: true
+
+jobs:
+  run-telegram-bot:
+    name: 🤖 Run Telegram Bot
+    runs-on: ubuntu-latest
+    timeout-minutes: 60  # Maximum 60 minutes per run
+    
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+          cache: 'pip'
+      
+      - name: 📦 Install dependencies
+        run: |
+          pip install -r requirements.txt
+          echo "✅ Installed dependencies"
+      
+      - name: 🔑 Configure bot token
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: |
+          if [ -z "$TELEGRAM_BOT_TOKEN" ]; then
+            echo "❌ ERROR: TELEGRAM_BOT_TOKEN secret not configured"
+            echo "Please add TELEGRAM_BOT_TOKEN to repository secrets:"
+            echo "1. Go to Settings > Secrets and variables > Actions"
+            echo "2. Click 'New repository secret'"
+            echo "3. Name: TELEGRAM_BOT_TOKEN"
+            echo "4. Value: Your bot token from @BotFather"
+            exit 1
+          fi
+          
+          echo "✅ Bot token configured"
+          echo "TELEGRAM_BOT_TOKEN is set (length: ${#TELEGRAM_BOT_TOKEN})"
+      
+      - name: 🤖 Run Telegram bot
+        id: run_bot
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: |
+          set -e
+          
+          # Calculate run duration
+          DURATION=${{ inputs.duration_minutes || 10 }}
+          MODE="${{ inputs.mode || 'polling' }}"
+          
+          echo "🚀 Starting Telegram bot..."
+          echo "Mode: $MODE"
+          echo "Duration: $DURATION minutes"
+          
+          if [ "$MODE" = "stop" ]; then
+            echo "🛑 Stop mode - exiting gracefully"
+            exit 0
+          fi
+          
+          if [ "$MODE" = "webhook" ]; then
+            echo "⚠️  Webhook mode not yet implemented"
+            echo "Using polling mode instead"
+          fi
+          
+          # Run bot with timeout
+          # The bot will run for specified duration then exit gracefully
+          timeout --signal=SIGINT ${DURATION}m python3 -m src.modules.telegram_bot || {
+            EXIT_CODE=$?
+            if [ $EXIT_CODE -eq 124 ]; then
+              echo "✅ Bot stopped after ${DURATION} minutes (normal timeout)"
+            elif [ $EXIT_CODE -eq 130 ]; then
+              echo "✅ Bot stopped gracefully (SIGINT)"
+            else
+              echo "❌ Bot exited with code $EXIT_CODE"
+              exit $EXIT_CODE
+            fi
+          }
+          
+          echo "BOT_RAN=true" >> $GITHUB_OUTPUT
+      
+      - name: 📊 Check for new submissions
+        id: check_changes
+        run: |
+          set -e
+          
+          # Check if pending_events.json was modified
+          if git diff --quiet assets/json/pending_events.json; then
+            echo "No new submissions"
+            echo "CHANGES_DETECTED=false" >> $GITHUB_OUTPUT
+          else
+            echo "✅ New submissions detected!"
+            echo "CHANGES_DETECTED=true" >> $GITHUB_OUTPUT
+            
+            # Show what changed
+            echo "Changes in pending_events.json:"
+            git diff --stat assets/json/pending_events.json || true
+          fi
+      
+      - name: 💾 Commit new submissions
+        if: steps.check_changes.outputs.CHANGES_DETECTED == 'true'
+        run: |
+          set -e
+          
+          # Configure git
+          git config user.name "Telegram Bot"
+          git config user.email "telegram-bot@krwl-hof.github.io"
+          
+          # Commit changes
+          git add assets/json/pending_events.json
+          
+          # Count new events (rough estimate)
+          NEW_EVENTS=$(git diff --cached assets/json/pending_events.json | grep -c '^\+.*"id":' || echo "0")
+          
+          git commit -m "🤖 Telegram bot submissions
+
+- Added $NEW_EVENTS new event(s) to pending review
+- Source: Telegram Bot API
+- Timestamp: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+
+[skip ci]" || {
+            echo "No changes to commit"
+          }
+          
+          # Push changes
+          git push origin ${{ github.ref_name }} || {
+            echo "⚠️  Failed to push changes - may need to pull first"
+            git pull --rebase origin ${{ github.ref_name }}
+            git push origin ${{ github.ref_name }}
+          }
+          
+          echo "✅ Pushed new submissions to repository"
+      
+      - name: 📈 Report statistics
+        if: always()
+        run: |
+          echo "=== Telegram Bot Statistics ==="
+          
+          # Count pending events
+          PENDING_COUNT=$(python3 -c "
+          import json
+          from pathlib import Path
+          
+          pending_file = Path('assets/json/pending_events.json')
+          if pending_file.exists():
+              data = json.loads(pending_file.read_text())
+              print(len(data.get('pending_events', [])))
+          else:
+              print('0')
+          " || echo "0")
+          
+          echo "📊 Pending events: $PENDING_COUNT"
+          echo "🤖 Bot run: ${{ steps.run_bot.outputs.BOT_RAN || 'false' }}"
+          echo "📝 Changes detected: ${{ steps.check_changes.outputs.CHANGES_DETECTED || 'false' }}"
+          echo "================================"
