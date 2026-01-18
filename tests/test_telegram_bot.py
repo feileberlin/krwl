@@ -170,6 +170,54 @@ def test_cli_uses_asyncio_run_directly():
     return has_proper_loop_handling and no_start_sync and no_asyncio_run
 
 
+def test_standalone_main_uses_correct_asyncio():
+    """Test that standalone main() function uses correct asyncio pattern."""
+    import inspect
+    
+    # Import the standalone main function
+    from src.modules.telegram_bot import main as telegram_main
+    
+    # Get the source code of the function
+    source = inspect.getsource(telegram_main)
+    
+    # Verify it uses explicit event loop creation (GitHub Actions compatible)
+    has_new_event_loop = 'asyncio.new_event_loop()' in source
+    has_set_event_loop = 'asyncio.set_event_loop(loop)' in source
+    has_run_until_complete = 'loop.run_until_complete' in source
+    has_loop_close = 'loop.close()' in source
+    
+    if has_new_event_loop and has_set_event_loop and has_run_until_complete and has_loop_close:
+        print("✅ Standalone main() uses explicit event loop creation")
+        print("   This avoids 'RuntimeError: This event loop is already running' in GitHub Actions")
+        has_proper_loop_handling = True
+    else:
+        print("❌ Standalone main() doesn't use explicit event loop handling")
+        print(f"   new_event_loop: {has_new_event_loop}")
+        print(f"   set_event_loop: {has_set_event_loop}")
+        print(f"   run_until_complete: {has_run_until_complete}")
+        print(f"   loop.close: {has_loop_close}")
+        has_proper_loop_handling = False
+    
+    # Verify it doesn't use the problematic start_sync() method
+    if 'bot.start_sync()' not in source:
+        print("✅ Standalone main() doesn't use deprecated start_sync() method")
+        no_start_sync = True
+    else:
+        print("❌ Standalone main() still uses start_sync() method")
+        print("   This causes 'RuntimeError: This event loop is already running' in GitHub Actions")
+        no_start_sync = False
+    
+    # Verify it doesn't use asyncio.run() which also has conflicts in CI
+    if 'asyncio.run(bot.run())' not in source and 'asyncio.run(self.run())' not in source:
+        print("✅ Standalone main() doesn't use asyncio.run() which can conflict in CI")
+        no_asyncio_run = True
+    else:
+        print("⚠️  Standalone main() uses asyncio.run() which may conflict in CI environments")
+        no_asyncio_run = False
+    
+    return has_proper_loop_handling and no_start_sync and no_asyncio_run
+
+
 def main():
     """Run all tests."""
     print("=" * 60)
@@ -182,6 +230,7 @@ def main():
         ("Bot Instantiation", test_bot_instantiation_requires_library),
         ("Helper Methods", test_helper_methods),
         ("CLI Event Loop Fix", test_cli_uses_asyncio_run_directly),
+        ("Standalone Main Event Loop Fix", test_standalone_main_uses_correct_asyncio),
     ]
     
     results = []

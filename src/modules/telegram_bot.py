@@ -742,15 +742,10 @@ class TelegramBot:
         logger.info("Telegram bot is running. Press Ctrl+C to stop.")
         await self.application.run_polling(allowed_updates=Update.ALL_TYPES)
     
-    def start_sync(self):
-        """Start bot synchronously (wrapper for async run)."""
-        import asyncio
-        asyncio.run(self.run())
-
-
 def main():
     """Standalone entry point for testing."""
     import sys
+    import asyncio
     from pathlib import Path
     from .utils import load_config
     
@@ -766,7 +761,18 @@ def main():
         bot = TelegramBot(config, base_path)
         print("🤖 Starting Telegram bot...")
         print("Press Ctrl+C to stop")
-        bot.start_sync()
+        
+        # Use explicit event loop creation (GitHub Actions compatible)
+        async def start_bot():
+            await bot.run()
+        
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            loop.run_until_complete(start_bot())
+        finally:
+            loop.close()
+            
     except KeyboardInterrupt:
         print("\n👋 Bot stopped")
     except Exception as e:
