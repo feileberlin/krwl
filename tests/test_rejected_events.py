@@ -55,11 +55,7 @@ class RejectedEventsTester:
         self.test_dir = tempfile.mkdtemp(prefix='krwl_rejected_test_')
         test_path = Path(self.test_dir)
         
-        # Create data directory (for legacy events files)
-        event_data_dir = test_path / 'data'
-        event_data_dir.mkdir(exist_ok=True)
-        
-        # Create assets/json directory (for rejected_events.json)
+        # Create assets/json directory (for events and rejected_events.json)
         assets_json_dir = test_path / 'assets' / 'json'
         assets_json_dir.mkdir(parents=True, exist_ok=True)
         
@@ -69,7 +65,7 @@ class RejectedEventsTester:
             'last_updated': datetime.now().isoformat()
         }
         
-        with open(event_data_dir / 'pending_events.json', 'w') as f:
+        with open(assets_json_dir / 'pending_events.json', 'w') as f:
             json.dump(pending_events, f, indent=2)
         
         events = {
@@ -77,7 +73,7 @@ class RejectedEventsTester:
             'last_updated': datetime.now().isoformat()
         }
         
-        with open(event_data_dir / 'events.json', 'w') as f:
+        with open(assets_json_dir / 'events.json', 'w') as f:
             json.dump(events, f, indent=2)
         
         return test_path

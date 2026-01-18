@@ -58,9 +58,9 @@ class ScraperTester:
         self.test_dir = tempfile.mkdtemp(prefix='krwl_scraper_test_')
         test_path = Path(self.test_dir)
         
-        # Create data directory (correct data location)
-        event_data_dir = test_path / 'data'
-        event_data_dir.mkdir(exist_ok=True)
+        # Create assets/json directory (correct data location for new architecture)
+        event_data_dir = test_path / 'assets' / 'json'
+        event_data_dir.mkdir(parents=True, exist_ok=True)
         
         # Create initial pending events file
         pending_events = {
