@@ -20,6 +20,7 @@ A **grassroots, mobile-first** Progressive Web App (PWA) for discovering local c
 - 🗺️ **Interactive Map**: Leaflet.js with event markers and clustering
 - 📍 **Geolocation Filtering**: Shows events within 5.0km radius
 - 🌅 **Time-based Filtering**: Shows events until next_sunrise
+- 🤖 **Telegram Bot**: Community event submissions via Telegram messenger
 - 🌐 **Bilingual**: English and German (i18n support)
 - ♿ **Accessible**: WCAG 2.1 Level AA compliant
 - 📱 **Responsive**: Mobile-first design, works on all screen sizes
@@ -191,6 +192,7 @@ COMMANDS:
     archive-monthly --dry-run Preview archiving without making changes
     archive-info              Show archiving configuration and existing archives
     archive                   Archive past events to archived_events.json (legacy)
+    telegram-bot              Start Telegram bot for event submissions and contact form
     load-examples             Load example data for development
     clear-data                Clear all event data
     scraper-info              Show scraper capabilities (JSON output for workflows)
@@ -450,6 +452,194 @@ Test the scraper:
 python3 src/event_manager.py scrape
 python3 tests/test_scraper.py --verbose
 ```
+
+## 🤖 Telegram Bot Integration
+
+The project includes a **Telegram bot** that allows community members to submit events directly via Telegram messenger. This provides an easy, accessible way for people without GitHub accounts to contribute events.
+
+### Features
+
+- **📝 Manual Event Submission**: Users can submit events by answering a few questions in a conversation
+- **📸 Flyer Upload with OCR**: Upload event flyer images and automatically extract event details using OCR
+- **💬 Contact Form**: Send messages directly to the event maintainers
+- **🔒 Admin Notifications**: All submissions notify admins in their Telegram chat
+- **✅ Editorial Review**: Submissions go to `pending_events.json` for approval before publishing
+
+### Phase 1: Local Bot (Manual Operation)
+
+Run the bot locally on your development machine:
+
+```bash
+# 1. Get a bot token from @BotFather on Telegram
+# 2. Enable the bot in config.json
+{
+  "telegram": {
+    "enabled": true,
+    "bot_token": "YOUR_BOT_TOKEN_HERE",  // Or use TELEGRAM_BOT_TOKEN env var
+    "admin_chat_ids": [123456789],       // Your Telegram user ID
+    "features": {
+      "event_submission": true,
+      "flyer_upload": true,
+      "contact_form": true
+    }
+  }
+}
+
+# 3. Start the bot
+python3 src/event_manager.py telegram-bot
+
+# 4. Open Telegram and send /start to your bot
+```
+
+**Bot Commands:**
+- `/start` - Get welcome message with your Telegram ID
+- `/submit` - Submit a new event (guided conversation)
+- `/upload` - Upload event flyer image for OCR processing
+- `/contact` - Send a message to maintainers
+- `/status` - Check bot status and pending events count
+- `/help` - Show available commands
+- `/cancel` - Cancel current operation
+
+### Phase 2: GitHub Actions Integration (Automated Operation)
+
+For production deployments, the bot runs automatically in **GitHub Actions** as a scheduled workflow:
+
+#### Setup
+
+1. **Add Bot Token to GitHub Secrets:**
+   - Go to: Settings → Secrets and variables → Actions
+   - Click "New repository secret"
+   - Name: `TELEGRAM_BOT_TOKEN`
+   - Value: Your bot token from @BotFather
+   - Click "Add secret"
+
+2. **Configure Admin Chat IDs** in `config.json`:
+   ```json
+   {
+     "telegram": {
+       "enabled": true,
+       "admin_chat_ids": [123456789, 987654321]  // Your Telegram user IDs
+     }
+   }
+   ```
+
+3. **Enable the Workflow:**
+   - The workflow is located at `.github/workflows/telegram-bot.yml`
+   - It runs automatically every 15 minutes during active hours (6 AM - 10 PM CET)
+   - You can also trigger it manually
+
+#### How It Works
+
+1. **Scheduled Execution**: GitHub Actions runs the bot every 15 minutes
+2. **Polling Mode**: Bot checks for new messages from users
+3. **Save Submissions**: New events are added to `assets/json/pending_events.json`
+4. **Auto-Commit**: Changes are automatically committed back to the repository
+5. **Admin Notifications**: Admins receive Telegram notifications for new submissions
+
+#### Manual Workflow Trigger
+
+Go to: **Actions** → **Telegram Bot** → **Run workflow**
+
+**Options:**
+- **Duration**: How long to run the bot (1-60 minutes, default: 10 min)
+- **Mode**: 
+  - `polling` - Run bot with long polling (default)
+  - `webhook` - Set up webhook (future implementation)
+  - `stop` - Stop bot gracefully
+
+#### Monitoring
+
+Check workflow status:
+```bash
+# View workflow logs in GitHub Actions UI
+# Or check the workflow file:
+cat .github/workflows/telegram-bot.yml
+```
+
+The workflow reports:
+- ✅ Bot run status
+- 📊 Number of pending events
+- 📝 New submissions detected
+- 💾 Commit information
+
+#### Security & Rate Limiting
+
+- **Token Security**: Bot token is stored in GitHub Secrets (never in code)
+- **Rate Limiting**: Max 10 submissions per user per hour (configurable in `config.json`)
+- **File Size Limits**: Max 10 MB per flyer upload (configurable)
+- **Description Length**: Max 1000 characters (configurable)
+
+### Getting Your Telegram User ID
+
+To receive admin notifications, you need your Telegram user ID:
+
+1. Start your bot: `/start`
+2. The bot will reply with: "Your Telegram ID: `123456789`"
+3. Add this ID to `config.json` → `telegram.admin_chat_ids`
+
+### Testing the Integration
+
+```bash
+# 1. Test bot locally
+python3 tests/test_telegram_bot.py --verbose
+
+# 2. Test bot instantiation (requires python-telegram-bot library)
+pip install python-telegram-bot>=20.0
+python3 -c "from src.modules.telegram_bot import TelegramBot, TELEGRAM_AVAILABLE; print(f'Available: {TELEGRAM_AVAILABLE}')"
+
+# 3. Test feature verification
+python3 src/modules/feature_verifier.py --verbose | grep telegram
+```
+
+### Configuration Reference
+
+Full configuration options in `config.json`:
+
+```json
+{
+  "telegram": {
+    "enabled": true,
+    "bot_token": "",                    // Token from @BotFather (or use env var)
+    "admin_chat_ids": [],               // List of admin Telegram user IDs
+    "features": {
+      "event_submission": true,         // Allow manual event submission
+      "flyer_upload": true,             // Allow flyer image uploads
+      "contact_form": true              // Allow contact messages
+    },
+    "limits": {
+      "max_flyer_size_mb": 10,          // Max flyer file size
+      "max_description_length": 1000,   // Max event description length
+      "rate_limit_per_user": 10         // Max submissions per user per hour
+    },
+    "messages": {
+      "welcome": "🎉 Welcome to KRWL HOF Events Bot!...",
+      "help": "📋 Available Commands:\n\n/submit - ..."
+    }
+  }
+}
+```
+
+### Troubleshooting
+
+**Bot not responding:**
+- Check that `telegram.enabled: true` in config.json
+- Verify TELEGRAM_BOT_TOKEN is set (env var or config)
+- Check bot token is valid (test with @BotFather)
+
+**No admin notifications:**
+- Verify your Telegram user ID is in `telegram.admin_chat_ids`
+- Start the bot with `/start` to get your user ID
+- Check admin IDs are integers, not strings
+
+**GitHub Actions workflow not running:**
+- Verify TELEGRAM_BOT_TOKEN is added to GitHub Secrets
+- Check workflow file syntax: `.github/workflows/telegram-bot.yml`
+- Review Actions logs for error messages
+
+**OCR not working:**
+- OCR requires system package: `tesseract-ocr`
+- Install: `sudo apt-get install tesseract-ocr tesseract-ocr-eng tesseract-ocr-deu`
+- Verify: `python3 -c "from modules.smart_scraper.image_analyzer.ocr import is_ocr_available; print(is_ocr_available())"`
 
 ## 🌐 Internationalization (i18n)
 
