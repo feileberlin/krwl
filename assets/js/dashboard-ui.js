@@ -33,9 +33,13 @@ class DashboardUI {
         this.updateCachingInfo(debugInfo);
         this.updateDOMCacheInfo();
         this.updateSizeBreakdown(debugInfo);
-        this.updateCacheStatistics();
+        this.updateCacheStatistics();  // Cache & compression statistics
         this.updateDuplicateWarnings(duplicateStats);
         this.updateCustomLocations();
+        
+        // Lint Warnings section (WCAG AA compliance)
+        this.updateLintWarnings(debugInfo);
+        
         this.showDebugSection();
     }
     
@@ -72,12 +76,12 @@ class DashboardUI {
                 <div class="custom-location-item">
                     <div class="custom-location-header">
                         <div class="custom-location-name">${locationLabel}</div>
+                        <div class="custom-location-actions">
+                            <button class="custom-location-btn" data-action="edit" data-id="${loc.id}">Edit</button>
+                            <button class="custom-location-btn delete" data-action="delete" data-id="${loc.id}">Delete</button>
+                        </div>
                     </div>
                     <div class="custom-location-coords">${loc.lat.toFixed(4)}°, ${loc.lon.toFixed(4)}°</div>
-                    <div class="custom-location-actions">
-                        <button class="custom-location-btn" data-action="edit" data-id="${loc.id}">Edit</button>
-                        <button class="custom-location-btn delete" data-action="delete" data-id="${loc.id}">Delete</button>
-                    </div>
                 </div>
             `;
         });
@@ -102,6 +106,16 @@ class DashboardUI {
                 }
             });
         });
+        
+        // Show/hide Add Location button based on max limit (2 locations)
+        const addButton = document.getElementById('add-custom-location-btn');
+        if (addButton) {
+            if (customLocs.length >= 2) {
+                addButton.style.display = 'none';
+            } else {
+                addButton.style.display = 'block';
+            }
+        }
     }
     
     /**
@@ -263,6 +277,53 @@ class DashboardUI {
         }
     }
     
+    updateCacheStatistics() {
+        /**
+         * Update cache statistics for production mode
+         * Shows:
+         * - Cache hit/miss rates
+         * - Compression ratios
+         * - Cache file sizes
+         */
+        const debugInfo = window.DEBUG_INFO || {};
+        
+        // Check if we have cache statistics
+        if (!debugInfo.cache_enabled) {
+            return; // No cache statistics to show in development mode
+        }
+        
+        // Update cache file size if available
+        if (debugInfo.cache_file_size) {
+            const debugFileSize = document.getElementById('debug-file-size');
+            if (debugFileSize) {
+                const cacheKB = (debugInfo.cache_file_size / 1024).toFixed(1);
+                const htmlKB = debugInfo.html_sizes ? (debugInfo.html_sizes.total / 1024).toFixed(1) : '?';
+                debugFileSize.title = `HTML: ${htmlKB} KB, Cache: ${cacheKB} KB`;
+            }
+        }
+        
+        // Update compression info if available
+        if (debugInfo.compression) {
+            const comp = debugInfo.compression;
+            
+            // Show compression ratio in title/tooltip
+            const debugCaching = document.getElementById('debug-caching');
+            if (debugCaching && comp.ratio) {
+                const ratio = (comp.ratio * 100).toFixed(1);
+                debugCaching.title = `Compression: ${ratio}% reduction (${comp.original_kb || '?'} KB → ${comp.compressed_kb || '?'} KB)`;
+            }
+        }
+        
+        // Log cache statistics for debugging (only in debug mode)
+        if (this.config && this.config.debug) {
+            console.log('[KRWL Debug] Cache Statistics:', {
+                enabled: debugInfo.cache_enabled,
+                file_size: debugInfo.cache_file_size,
+                compression: debugInfo.compression
+            });
+        }
+    }
+    
     updateSizeBreakdown(debugInfo) {
         const debugSizeBreakdown = document.getElementById('debug-size-breakdown');
         if (!debugSizeBreakdown || !debugInfo.html_sizes) return;
@@ -347,6 +408,69 @@ class DashboardUI {
         if (debugSection && debugSection.style.display === 'none') {
             debugSection.style.display = 'block';
         }
+    }
+    
+    /**
+     * Update lint warnings section with WCAG AA compliance results
+     * Show summary with link to protocol file instead of detailed list
+     * @param {Object} debugInfo - Debug info object containing lint_results
+     */
+    updateLintWarnings(debugInfo) {
+        if (!debugInfo || !debugInfo.lint_results) return;
+        
+        const container = document.getElementById('debug-lint-warnings-container');
+        const summary = document.getElementById('debug-lint-summary');
+        const warningsList = document.getElementById('debug-lint-warnings-list');
+        
+        if (!container || !summary || !warningsList) return;
+        
+        const lintResults = debugInfo.lint_results;
+        const warnings = lintResults.structured_warnings || [];
+        
+        // Show container if there are warnings
+        if (warnings.length === 0) {
+            container.style.display = 'none';
+            return;
+        }
+        
+        container.style.display = 'block';
+        
+        // Show summary with link to protocol file (no detailed list)
+        const errorCount = lintResults.error_count || 0;
+        const warningCount = lintResults.warning_count || 0;
+        
+        summary.innerHTML = `
+            <strong>${warningCount} accessibility ${warningCount === 1 ? 'warning' : 'warnings'}</strong>
+            ${errorCount > 0 ? ` · ${errorCount} ${errorCount === 1 ? 'error' : 'errors'}` : ''}
+            <br>
+            <span class="debug-lint-details">
+                For details, see 
+                <a href="wcag_protocol.txt" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="debug-lint-details-link">
+                    wcag_protocol.txt
+                </a>
+            </span>
+        `;
+        
+        // Hide the warnings list (no detailed display)
+        warningsList.style.display = 'none';
+    }
+    
+    /**
+     * Escape HTML to prevent XSS
+     * @param {string} unsafe - Unsafe string
+     * @returns {string} - Escaped string
+     */
+    escapeHtml(unsafe) {
+        if (typeof unsafe !== 'string') return '';
+        return unsafe
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
     }
     
     /**

@@ -561,9 +561,10 @@ strong, b {
 }
 
 /* Pending Events Notification */
+/* Uses --color-warning (#eb7dc0 = RGB(235, 125, 192)) with various opacity levels */
 .pending-notification {
-    background: linear-gradient(135deg, rgba(210, 153, 34, 0.15), rgba(210, 153, 34, 0.05));
-    border: 2px solid #d29922;
+    background: linear-gradient(135deg, rgba(235, 125, 192, 0.15), rgba(235, 125, 192, 0.05)); /* --color-warning with opacity */
+    border: 2px solid var(--color-warning);
     border-radius: 8px;
     padding: 1rem;
     margin-bottom: 1.5rem;
@@ -606,11 +607,11 @@ strong, b {
 }
 
 .pending-notification-link {
-    color: #d29922;
+    color: var(--color-warning);
     text-decoration: none;
     font-weight: 600;
     padding: 0.5rem 0.75rem;
-    border: 1px solid #d29922;
+    border: 1px solid var(--color-warning);
     border-radius: 4px;
     transition: all 0.2s;
     white-space: nowrap;
@@ -618,10 +619,10 @@ strong, b {
 
 .pending-notification-link:hover,
 .pending-notification-link:focus {
-    background: #d29922;
+    background: var(--color-warning);
     color: #0d1117;
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(210, 153, 34, 0.3);
+    box-shadow: 0 2px 8px rgba(235, 125, 192, 0.3);
 }
 
 @keyframes subtle-pulse {
@@ -739,12 +740,15 @@ strong, b {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 0.3rem;
+    gap: 0.5rem;
 }
 
 .custom-location-name {
     font-weight: bold;
     color: var(--color-primary);
     font-size: 0.95rem;
+    flex: 1;
+    min-width: 0; /* Allow text truncation if needed */
 }
 
 .custom-location-coords {
@@ -756,7 +760,7 @@ strong, b {
 .custom-location-actions {
     display: flex;
     gap: 0.4rem;
-    margin-top: 0.5rem;
+    flex-shrink: 0; /* Prevent buttons from shrinking */
 }
 
 .custom-location-btn {
@@ -857,8 +861,8 @@ strong, b {
 }
 
 .debug-group-header.warning {
-    background: rgba(210, 153, 34, 0.1);
-    border-bottom-color: rgba(210, 153, 34, 0.3);
+    background: rgba(235, 125, 192, 0.1); /* --color-warning with 10% opacity */
+    border-bottom-color: rgba(235, 125, 192, 0.3); /* --color-warning with 30% opacity */
 }
 
 .debug-group-header.warning i,
@@ -1010,9 +1014,10 @@ strong, b {
 }
 
 /* Warnings Container */
+/* Uses --color-warning (#eb7dc0 = RGB(235, 125, 192)) with opacity for backgrounds/borders */
 .debug-warnings {
-    border-color: rgba(210, 153, 34, 0.3);
-    background: rgba(210, 153, 34, 0.05);
+    border-color: rgba(235, 125, 192, 0.3); /* --color-warning with 30% opacity */
+    background: rgba(235, 125, 192, 0.05); /* --color-warning with 5% opacity */
 }
 
 .debug-warning-item {
@@ -1021,7 +1026,7 @@ strong, b {
 }
 
 .debug-warning-item + .debug-warning-item {
-    border-top: 1px solid rgba(210, 153, 34, 0.2);
+    border-top: 1px solid rgba(235, 125, 192, 0.2); /* --color-warning with 20% opacity */
 }
 
 /* Warning Message Styles */
@@ -1034,7 +1039,7 @@ strong, b {
 .debug-warning-message.with-spacing {
     margin-top: 1rem;
     padding-top: 0.75rem;
-    border-top: 1px solid rgba(210, 153, 34, 0.2);
+    border-top: 1px solid rgba(235, 125, 192, 0.2); /* --color-warning with 20% opacity */
 }
 
 .debug-warning-message strong {
@@ -1046,6 +1051,142 @@ strong, b {
     color: var(--color-text-tertiary);
     line-height: 1.5;
     margin-top: 0.3rem;
+}
+
+/* Lint Warnings Section */
+/* Uses --color-warning (#eb7dc0 = RGB(235, 125, 192)) with opacity for backgrounds/borders */
+.debug-lint-warnings {
+    border-color: rgba(235, 125, 192, 0.3); /* --color-warning with 30% opacity */
+    background: rgba(235, 125, 192, 0.05); /* --color-warning with 5% opacity */
+}
+
+.debug-lint-summary {
+    padding: 0.5rem 0;
+    color: var(--color-text-secondary);
+    font-size: 0.9em;
+    border-bottom: 1px solid rgba(235, 125, 192, 0.2); /* --color-warning with 20% opacity */
+    margin-bottom: 0.75rem;
+}
+
+.debug-lint-details {
+    font-size: 0.85em;
+    color: var(--color-text-tertiary);
+    margin-top: 0.5rem;
+    display: block;
+}
+
+.debug-lint-details-link {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+.debug-lint-warnings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.lint-warning-item {
+    background: rgba(13, 17, 23, 0.4);
+    border: 1px solid rgba(235, 125, 192, 0.2); /* --color-warning with 20% opacity */
+    border-radius: 4px;
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.lint-warning-item:hover {
+    background: rgba(13, 17, 23, 0.6);
+    border-color: rgba(235, 125, 192, 0.4); /* --color-warning with 40% opacity */
+    transform: translateX(2px);
+}
+
+.lint-warning-item:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.lint-warning-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.lint-warning-icon {
+    flex-shrink: 0;
+    color: var(--color-warning);
+    margin-top: 0.1rem;
+}
+
+.lint-warning-content {
+    flex: 1;
+}
+
+.lint-warning-message {
+    color: var(--color-text-primary);
+    font-size: 0.85em;
+    line-height: 1.4;
+    margin-bottom: 0.25rem;
+}
+
+.lint-warning-meta {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    font-size: 0.75em;
+    color: var(--color-text-tertiary);
+}
+
+.lint-warning-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.15rem 0.4rem;
+    background: rgba(214, 137, 184, 0.15);
+    border-radius: 3px;
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+.lint-warning-protocol {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    padding: 0;
+}
+
+.lint-warning-item.expanded .lint-warning-protocol {
+    max-height: 300px;
+    padding-top: 0.75rem;
+    margin-top: 0.75rem;
+    border-top: 1px solid rgba(235, 125, 192, 0.2); /* --color-warning with 20% opacity */
+}
+
+.lint-warning-protocol-content {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(214, 137, 184, 0.2);
+    border-radius: 3px;
+    padding: 0.75rem;
+    font-family: 'Roboto Mono', 'Monaco', 'Courier New', monospace;
+    font-size: 0.8em;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    overflow-y: auto;
+    max-height: 250px;
+}
+
+.lint-warning-protocol strong {
+    color: var(--color-primary);
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.lint-warning-expand-hint {
+    font-size: 0.75em;
+    color: var(--color-text-tertiary);
+    margin-top: 0.5rem;
+    font-style: italic;
 }
 
 .debug-warning-hint code {

@@ -20,20 +20,51 @@ class LintResult:
         self.passed = passed
         self.errors = errors or []
         self.warnings = warnings or []
+        # Structured warnings with context for clickable UI
+        self.structured_warnings = []
     
     def add_error(self, message: str):
         self.errors.append(message)
         self.passed = False
     
-    def add_warning(self, message: str):
+    def add_warning(self, message: str, category: str = None, rule: str = None, context: str = None):
+        """
+        Add a warning with optional structured metadata.
+        
+        Args:
+            message: Warning message
+            category: Category (e.g., "accessibility", "css", "javascript", "html")
+            rule: WCAG rule or lint rule (e.g., "WCAG 1.1.1", "bracket-matching")
+            context: Additional context (e.g., file location, code snippet)
+        """
         self.warnings.append(message)
+        # Add structured version for clickable UI
+        self.structured_warnings.append({
+            'message': message,
+            'category': category or 'general',
+            'rule': rule or '',
+            'context': context or ''
+        })
     
     def merge(self, other: 'LintResult'):
         """Merge another result into this one"""
         self.errors.extend(other.errors)
         self.warnings.extend(other.warnings)
+        if hasattr(other, 'structured_warnings'):
+            self.structured_warnings.extend(other.structured_warnings)
         if not other.passed:
             self.passed = False
+    
+    def to_json(self) -> Dict[str, Any]:
+        """Export lint results as JSON for embedding in HTML"""
+        return {
+            'passed': self.passed,
+            'error_count': len(self.errors),
+            'warning_count': len(self.warnings),
+            'errors': self.errors,
+            'warnings': self.warnings,
+            'structured_warnings': self.structured_warnings
+        }
     
     def __bool__(self):
         return self.passed
@@ -45,6 +76,7 @@ class HTMLValidator(html.parser.HTMLParser):
         super().__init__()
         self.errors = []
         self.warnings = []
+        self.structured_warnings = []
         self.tag_stack = []
         self.self_closing_tags = {'meta', 'link', 'br', 'hr', 'img', 'input', 'area', 'base', 'col', 'embed', 'source', 'track', 'wbr'}
     
@@ -56,14 +88,28 @@ class HTMLValidator(html.parser.HTMLParser):
         if tag == 'img':
             attr_dict = dict(attrs)
             if 'alt' not in attr_dict:
-                self.warnings.append(f"Image tag missing 'alt' attribute (accessibility issue)")
+                warning_msg = f"Image tag missing 'alt' attribute (accessibility issue)"
+                self.warnings.append(warning_msg)
+                self.structured_warnings.append({
+                    'message': warning_msg,
+                    'category': 'accessibility',
+                    'rule': 'WCAG 1.1.1',
+                    'context': 'All images must have alt attributes for screen reader accessibility'
+                })
         
         if tag == 'a':
             attr_dict = dict(attrs)
             if 'href' in attr_dict and attr_dict['href'].startswith('http'):
                 # External link - check for security attributes
                 if 'rel' not in attr_dict or 'noopener' not in attr_dict.get('rel', ''):
-                    self.warnings.append(f"External link missing 'rel=\"noopener noreferrer\"' (security issue)")
+                    warning_msg = f"External link missing 'rel=\"noopener noreferrer\"' (security issue)"
+                    self.warnings.append(warning_msg)
+                    self.structured_warnings.append({
+                        'message': warning_msg,
+                        'category': 'security',
+                        'rule': 'Security Best Practice',
+                        'context': 'External links should have rel="noopener noreferrer" to prevent tab-nabbing attacks'
+                    })
     
     def handle_endtag(self, tag):
         if tag in self.self_closing_tags:
@@ -82,6 +128,7 @@ class HTMLValidator(html.parser.HTMLParser):
         """Validate HTML structure"""
         self.errors = []
         self.warnings = []
+        self.structured_warnings = []
         self.tag_stack = []
         
         try:
@@ -96,6 +143,7 @@ class HTMLValidator(html.parser.HTMLParser):
         result = LintResult(passed=len(self.errors) == 0)
         result.errors = self.errors
         result.warnings = self.warnings
+        result.structured_warnings = self.structured_warnings
         return result
 
 
@@ -236,11 +284,21 @@ class Linter:
         
         # Check for charset
         if 'charset' not in html_content.lower():
-            result.add_warning("Missing charset declaration (e.g., <meta charset=\"UTF-8\">)")
+            result.add_warning(
+                "Missing charset declaration (e.g., <meta charset=\"UTF-8\">)",
+                category="html",
+                rule="HTML Best Practice",
+                context="Character encoding should be declared early in the document to prevent encoding issues"
+            )
         
         # Check for viewport meta tag (mobile-first)
         if 'viewport' not in html_content.lower():
-            result.add_warning("Missing viewport meta tag for mobile responsiveness")
+            result.add_warning(
+                "Missing viewport meta tag for mobile responsiveness",
+                category="html",
+                rule="Mobile Best Practice",
+                context="Viewport meta tag is essential for proper mobile display: <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">"
+            )
         
         # Check for title
         if '<title>' not in html_content.lower() or '</title>' not in html_content.lower():
@@ -400,7 +458,12 @@ class Linter:
                 continue
             # Check for aria-label or id (for label association)
             if 'aria-label=' not in input_tag.lower() and 'id=' not in input_tag.lower():
-                result.add_warning("Form input should have aria-label or associated label (WCAG 3.3.2)")
+                result.add_warning(
+                    "Form input should have aria-label or associated label (WCAG 3.3.2)",
+                    category="accessibility",
+                    rule="WCAG 3.3.2",
+                    context="Form inputs must be properly labeled for screen readers"
+                )
         
         # Check for proper heading hierarchy (h1, h2, h3, etc.)
         headings = re.findall(r'<h([1-6])[^>]*>', html_content, re.IGNORECASE)
@@ -408,15 +471,30 @@ class Linter:
             heading_levels = [int(h) for h in headings]
             # Check if h1 exists
             if 1 not in heading_levels:
-                result.add_warning("Missing <h1> heading for page title")
+                result.add_warning(
+                    "Missing <h1> heading for page title",
+                    category="accessibility",
+                    rule="WCAG 1.3.1",
+                    context="Every page should have exactly one h1 tag for the main heading"
+                )
             # Check for skipped levels (e.g., h1 -> h3)
             for i in range(len(heading_levels) - 1):
                 if heading_levels[i+1] > heading_levels[i] + 1:
-                    result.add_warning(f"Heading hierarchy skip: h{heading_levels[i]} -> h{heading_levels[i+1]} (WCAG 1.3.1)")
+                    result.add_warning(
+                        f"Heading hierarchy skip: h{heading_levels[i]} -> h{heading_levels[i+1]} (WCAG 1.3.1)",
+                        category="accessibility",
+                        rule="WCAG 1.3.1",
+                        context="Heading levels should not be skipped (e.g., h1 -> h2 -> h3, not h1 -> h3)"
+                    )
         
         # Check for ARIA attributes
         if 'aria-' not in html_content.lower():
-            result.add_warning("No ARIA attributes found - consider adding for better accessibility")
+            result.add_warning(
+                "No ARIA attributes found - consider adding for better accessibility",
+                category="accessibility",
+                rule="ARIA Best Practices",
+                context="ARIA attributes help screen readers understand dynamic content and interactive elements"
+            )
         
         # Check for sufficient color contrast (can only check if colors are defined)
         # This would require actual color analysis - skip for now
@@ -427,7 +505,12 @@ class Linter:
         
         # Check for skip links
         if 'skip' not in html_content.lower() or 'main-content' not in html_content.lower():
-            result.add_warning("Consider adding skip navigation links for keyboard users")
+            result.add_warning(
+                "Consider adding skip navigation links for keyboard users",
+                category="accessibility",
+                rule="WCAG 2.4.1",
+                context="Skip links allow keyboard users to bypass repetitive navigation and go directly to main content"
+            )
         
         return result
     

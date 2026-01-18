@@ -1719,7 +1719,8 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
         primary_config = configs[0] if configs else {}
         app_name = primary_config.get('app', {}).get('name', 'KRWL HOF Community Events')
         favicon = self.create_favicon_data_url()
-        logo_svg = self.read_logo_svg()
+        # Use favicon.svg for both favicon AND logo (consistent branding with background)
+        logo_svg = self.inline_svg_file('favicon.svg', as_data_url=False)
         
         # Build noscript HTML
         noscript_html = self.build_noscript_html(events, app_name)
@@ -2010,30 +2011,8 @@ window.DEBUG_INFO = {debug_info_json};'''
         )
         print("✅ Site generated using components")
         
-        # Calculate HTML size breakdown
-        html_sizes = self.calculate_html_size_breakdown(html_de)
-        
-        # Find and update DEBUG_INFO with size information
-        debug_info_marker = 'window.DEBUG_INFO = '
-        debug_info_start = html_de.find(debug_info_marker)
-        if debug_info_start != -1:
-            debug_info_end = html_de.find('};', debug_info_start)
-            if debug_info_end != -1:
-                # Extract current DEBUG_INFO
-                current_debug_json = html_de[debug_info_start + len(debug_info_marker):debug_info_end + 1]
-                try:
-                    debug_data = json.loads(current_debug_json)
-                    debug_data['html_sizes'] = html_sizes
-                    debug_data['language'] = 'de'
-                    # Replace with updated DEBUG_INFO
-                    updated_debug_json = json.dumps(debug_data, ensure_ascii=False)
-                    html_de = html_de[:debug_info_start + len(debug_info_marker)] + updated_debug_json + html_de[debug_info_end + 1:]
-                except Exception as e:
-                    logger.warning(f"Could not update DEBUG_INFO: {e}")
-        
-        print(f"✅ Injected HTML size breakdown into DEBUG_INFO")
-        
-        # Lint the generated content (only German version to avoid duplicate linting)
+        # Lint the generated content first (before updating DEBUG_INFO)
+        lint_data = None  # Initialize lint data for DEBUG_INFO
         if not skip_lint:
             print("\n🔍 Linting generated content...")
             linter = Linter(verbose=False)
@@ -2053,6 +2032,53 @@ window.DEBUG_INFO = {debug_info_json};'''
                 svg_files=svg_files
             )
             
+            # Export lint results to JSON for embedding (summary only)
+            lint_data = lint_result.to_json()
+            
+            # Save full WCAG protocol to separate file for on-demand loading
+            wcag_protocol_path = self.static_path / 'wcag_protocol.txt'
+            try:
+                with open(wcag_protocol_path, 'w', encoding='utf-8') as f:
+                    f.write("=" * 80 + "\n")
+                    f.write("WCAG AA COMPLIANCE LINT REPORT\n")
+                    f.write("=" * 80 + "\n\n")
+                    f.write(f"Generated: {datetime.now().isoformat()}\n")
+                    f.write(f"Total Warnings: {len(lint_result.warnings)}\n")
+                    f.write(f"Total Errors: {len(lint_result.errors)}\n")
+                    f.write(f"Status: {'PASSED' if lint_result.passed else 'FAILED'}\n\n")
+                    
+                    if lint_result.structured_warnings:
+                        f.write("=" * 80 + "\n")
+                        f.write("STRUCTURED WARNINGS\n")
+                        f.write("=" * 80 + "\n\n")
+                        for i, warning in enumerate(lint_result.structured_warnings, 1):
+                            f.write(f"WARNING #{i}\n")
+                            f.write("-" * 80 + "\n")
+                            f.write(f"Category: {warning.get('category', 'N/A')}\n")
+                            f.write(f"Rule: {warning.get('rule', 'N/A')}\n")
+                            f.write(f"Message: {warning.get('message', 'N/A')}\n")
+                            f.write(f"\nContext:\n{warning.get('context', 'N/A')}\n")
+                            f.write("\n")
+                    
+                    if lint_result.errors:
+                        f.write("=" * 80 + "\n")
+                        f.write("ERRORS\n")
+                        f.write("=" * 80 + "\n\n")
+                        for i, error in enumerate(lint_result.errors, 1):
+                            f.write(f"{i}. {error}\n")
+                        f.write("\n")
+                    
+                    if lint_result.warnings:
+                        f.write("=" * 80 + "\n")
+                        f.write("ALL WARNINGS (UNSTRUCTURED)\n")
+                        f.write("=" * 80 + "\n\n")
+                        for i, warning in enumerate(lint_result.warnings, 1):
+                            f.write(f"{i}. {warning}\n")
+                
+                print(f"✅ Saved WCAG protocol to {wcag_protocol_path}")
+            except Exception as e:
+                logger.warning(f"Could not save WCAG protocol: {e}")
+            
             # Show detailed errors and warnings
             if not lint_result.passed:
                 print("\n❌ Linting failed with errors:")
@@ -2070,6 +2096,33 @@ window.DEBUG_INFO = {debug_info_json};'''
             if not lint_result.passed:
                 print("\n⚠️  Build completed with lint errors (warnings only, not blocking)")
                 # Don't block build, just warn
+        
+        # Calculate HTML size breakdown
+        html_sizes = self.calculate_html_size_breakdown(html_de)
+        
+        # Find and update DEBUG_INFO with size information and lint results
+        debug_info_marker = 'window.DEBUG_INFO = '
+        debug_info_start = html_de.find(debug_info_marker)
+        if debug_info_start != -1:
+            debug_info_end = html_de.find('};', debug_info_start)
+            if debug_info_end != -1:
+                # Extract current DEBUG_INFO
+                current_debug_json = html_de[debug_info_start + len(debug_info_marker):debug_info_end + 1]
+                try:
+                    debug_data = json.loads(current_debug_json)
+                    debug_data['html_sizes'] = html_sizes
+                    debug_data['language'] = 'de'
+                    # Add lint results if available
+                    if lint_data:
+                        debug_data['lint_results'] = lint_data
+                        print(f"✅ Embedded {len(lint_data.get('structured_warnings', []))} lint warnings in DEBUG_INFO")
+                    # Replace with updated DEBUG_INFO
+                    updated_debug_json = json.dumps(debug_data, ensure_ascii=False)
+                    html_de = html_de[:debug_info_start + len(debug_info_marker)] + updated_debug_json + html_de[debug_info_end + 1:]
+                except Exception as e:
+                    logger.warning(f"Could not update DEBUG_INFO: {e}")
+        
+        print(f"✅ Injected HTML size breakdown into DEBUG_INFO")
         
         # Write German version to root (primary/only deployment)
         output_file = self.static_path / 'index.html'
