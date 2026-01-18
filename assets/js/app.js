@@ -1,4 +1,17 @@
+// ============================================================================
+// PROGRESSIVE ENHANCEMENT: Enable JavaScript-dependent content
+// ============================================================================
+// This runs immediately (before DOMContentLoaded) to show the app container
+// and hide the noscript fallback. Without JavaScript, users see event listings.
+(function enableJavaScriptContent() {
+    document.documentElement.classList.add('js-enabled');
+    var appEl = document.getElementById('app');
+    if (appEl) appEl.style.display = 'block';
+})();
+
+// ============================================================================
 // KRWL HOF Community Events App - KISS Refactored
+// ============================================================================
 // 
 // This file coordinates modules and handles UI interactions.
 // Core logic delegated to focused modules (each < 500 lines):

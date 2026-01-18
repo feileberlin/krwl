@@ -66,3 +66,19 @@ noscript {
     text-align: center;
     font-weight: bold;
 }
+
+/* Progressive Enhancement: Hide JS-dependent content when JavaScript is disabled */
+/* The .requires-js class is added to the #app wrapper */
+.requires-js {
+    display: none;
+}
+
+/* When JavaScript loads, it adds .js-enabled to <html> and shows the app */
+html.js-enabled .requires-js {
+    display: block;
+}
+
+/* Hide noscript content when JavaScript is enabled */
+html.js-enabled noscript {
+    display: none !important;
+}

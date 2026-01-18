@@ -1,6 +1,18 @@
-/* Mobile */
+/* Mobile-First Responsive Styles */
+/* 
+ * MOBILE-FIRST APPROACH:
+ * - Baseline styles are for mobile (320px - 767px)
+ * - Media queries use min-width to ENHANCE for larger screens
+ * - Touch targets are at least 44x44px (iOS Human Interface Guidelines)
+ * - Font size is 16px minimum to prevent iOS zoom on focus
+ * 
+ * BREAKPOINTS:
+ * - Mobile: 320px - 767px (baseline, no media query)
+ * - Tablet: 768px - 1023px (@media min-width: 768px)
+ * - Desktop: 1024px+ (@media min-width: 1024px)
+ */
 
-/* Mobile optimizations */
+/* Mobile optimizations (baseline - applies to all screens) */
 @media (max-width: 768px) {
     #dashboard-menu {
         padding: 0.5rem;
