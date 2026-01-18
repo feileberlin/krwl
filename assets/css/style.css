@@ -739,12 +739,15 @@ strong, b {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 0.3rem;
+    gap: 0.5rem;
 }
 
 .custom-location-name {
     font-weight: bold;
     color: var(--color-primary);
     font-size: 0.95rem;
+    flex: 1;
+    min-width: 0; /* Allow text truncation if needed */
 }
 
 .custom-location-coords {
@@ -756,7 +759,7 @@ strong, b {
 .custom-location-actions {
     display: flex;
     gap: 0.4rem;
-    margin-top: 0.5rem;
+    flex-shrink: 0; /* Prevent buttons from shrinking */
 }
 
 .custom-location-btn {

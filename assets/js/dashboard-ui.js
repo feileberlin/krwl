@@ -76,12 +76,12 @@ class DashboardUI {
                 <div class="custom-location-item">
                     <div class="custom-location-header">
                         <div class="custom-location-name">${locationLabel}</div>
+                        <div class="custom-location-actions">
+                            <button class="custom-location-btn" data-action="edit" data-id="${loc.id}">Edit</button>
+                            <button class="custom-location-btn delete" data-action="delete" data-id="${loc.id}">Delete</button>
+                        </div>
                     </div>
                     <div class="custom-location-coords">${loc.lat.toFixed(4)}°, ${loc.lon.toFixed(4)}°</div>
-                    <div class="custom-location-actions">
-                        <button class="custom-location-btn" data-action="edit" data-id="${loc.id}">Edit</button>
-                        <button class="custom-location-btn delete" data-action="delete" data-id="${loc.id}">Delete</button>
-                    </div>
                 </div>
             `;
         });
