@@ -2031,8 +2031,52 @@ window.DEBUG_INFO = {debug_info_json};'''
                 svg_files=svg_files
             )
             
-            # Export lint results to JSON for embedding
+            # Export lint results to JSON for embedding (summary only)
             lint_data = lint_result.to_json()
+            
+            # Save full lint protocol to separate file for on-demand loading
+            lint_protocol_path = self.static_path / 'lint_protocol.txt'
+            try:
+                with open(lint_protocol_path, 'w', encoding='utf-8') as f:
+                    f.write("=" * 80 + "\n")
+                    f.write("WCAG AA COMPLIANCE LINT REPORT\n")
+                    f.write("=" * 80 + "\n\n")
+                    f.write(f"Generated: {datetime.now().isoformat()}\n")
+                    f.write(f"Total Warnings: {len(lint_result.warnings)}\n")
+                    f.write(f"Total Errors: {len(lint_result.errors)}\n")
+                    f.write(f"Status: {'PASSED' if lint_result.passed else 'FAILED'}\n\n")
+                    
+                    if lint_result.structured_warnings:
+                        f.write("=" * 80 + "\n")
+                        f.write("STRUCTURED WARNINGS\n")
+                        f.write("=" * 80 + "\n\n")
+                        for i, warning in enumerate(lint_result.structured_warnings, 1):
+                            f.write(f"WARNING #{i}\n")
+                            f.write("-" * 80 + "\n")
+                            f.write(f"Category: {warning.get('category', 'N/A')}\n")
+                            f.write(f"Rule: {warning.get('rule', 'N/A')}\n")
+                            f.write(f"Message: {warning.get('message', 'N/A')}\n")
+                            f.write(f"\nContext:\n{warning.get('context', 'N/A')}\n")
+                            f.write("\n")
+                    
+                    if lint_result.errors:
+                        f.write("=" * 80 + "\n")
+                        f.write("ERRORS\n")
+                        f.write("=" * 80 + "\n\n")
+                        for i, error in enumerate(lint_result.errors, 1):
+                            f.write(f"{i}. {error}\n")
+                        f.write("\n")
+                    
+                    if lint_result.warnings:
+                        f.write("=" * 80 + "\n")
+                        f.write("ALL WARNINGS (UNSTRUCTURED)\n")
+                        f.write("=" * 80 + "\n\n")
+                        for i, warning in enumerate(lint_result.warnings, 1):
+                            f.write(f"{i}. {warning}\n")
+                
+                print(f"✅ Saved lint protocol to {lint_protocol_path}")
+            except Exception as e:
+                logger.warning(f"Could not save lint protocol: {e}")
             
             # Show detailed errors and warnings
             if not lint_result.passed:

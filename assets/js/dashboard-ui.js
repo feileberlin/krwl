@@ -33,7 +33,7 @@ class DashboardUI {
         this.updateCachingInfo(debugInfo);
         this.updateDOMCacheInfo();
         this.updateSizeBreakdown(debugInfo);
-        this.updateCacheStatistics();
+        this.updateCacheStatistics();  // Cache & compression statistics
         this.updateDuplicateWarnings(duplicateStats);
         this.updateCustomLocations();
         
@@ -264,6 +264,53 @@ class DashboardUI {
             const cacheSize = Object.keys(this.utils.domCache || {}).length;
             debugDOMCache.textContent = `${cacheSize} elements`;
             debugDOMCache.title = `DOM elements cached: ${Object.keys(this.utils.domCache || {}).join(', ') || 'none'}`;
+        }
+    }
+    
+    updateCacheStatistics() {
+        /**
+         * Update cache statistics for production mode
+         * Shows:
+         * - Cache hit/miss rates
+         * - Compression ratios
+         * - Cache file sizes
+         */
+        const debugInfo = window.DEBUG_INFO || {};
+        
+        // Check if we have cache statistics
+        if (!debugInfo.cache_enabled) {
+            return; // No cache statistics to show in development mode
+        }
+        
+        // Update cache file size if available
+        if (debugInfo.cache_file_size) {
+            const debugFileSize = document.getElementById('debug-file-size');
+            if (debugFileSize) {
+                const cacheKB = (debugInfo.cache_file_size / 1024).toFixed(1);
+                const htmlKB = debugInfo.html_sizes ? (debugInfo.html_sizes.total / 1024).toFixed(1) : '?';
+                debugFileSize.title = `HTML: ${htmlKB} KB, Cache: ${cacheKB} KB`;
+            }
+        }
+        
+        // Update compression info if available
+        if (debugInfo.compression) {
+            const comp = debugInfo.compression;
+            
+            // Show compression ratio in title/tooltip
+            const debugCaching = document.getElementById('debug-caching');
+            if (debugCaching && comp.ratio) {
+                const ratio = (comp.ratio * 100).toFixed(1);
+                debugCaching.title = `Compression: ${ratio}% reduction (${comp.original_kb || '?'} KB → ${comp.compressed_kb || '?'} KB)`;
+            }
+        }
+        
+        // Log cache statistics for debugging (only in debug mode)
+        if (this.config && this.config.debug) {
+            console.log('[KRWL Debug] Cache Statistics:', {
+                enabled: debugInfo.cache_enabled,
+                file_size: debugInfo.cache_file_size,
+                compression: debugInfo.compression
+            });
         }
     }
     
