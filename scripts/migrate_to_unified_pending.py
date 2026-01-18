@@ -20,15 +20,26 @@ import json
 import shutil
 from pathlib import Path
 from datetime import datetime
-import hashlib
+import uuid
 
 
 def generate_id(entity_type: str, name: str) -> str:
-    """Generate unique ID for entity."""
-    hash_input = f"{entity_type}_{name}_{datetime.now().isoformat()}"
-    hash_short = hashlib.md5(hash_input.encode()).hexdigest()[:8]
+    """
+    Generate unique ID for entity using UUID4 for collision resistance.
+    
+    Uses UUID4 to minimize collision risk as the dataset grows.
+    Prefix is kept for backward compatibility with existing ID schemes.
+    
+    Args:
+        entity_type: Type of entity (location, organizer, event)
+        name: Name of the entity (not used in UUID but kept for API compatibility)
+        
+    Returns:
+        Unique ID with format: {prefix}_{uuid}
+    """
     prefix = {"location": "loc", "organizer": "org", "event": "evt"}[entity_type]
-    return f"{prefix}_{hash_short}"
+    unique_part = uuid.uuid4().hex[:16]  # Use first 16 hex chars for readability
+    return f"{prefix}_{unique_part}"
 
 
 def migrate_pending_events(base_path: Path) -> list:

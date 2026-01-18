@@ -102,3 +102,6 @@ data/*.json
 
 # Weather cache - regenerated hourly
 assets/json/weather_cache.json
+
+# Migration backup files - auto-generated at runtime
+*.backup_*

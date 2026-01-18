@@ -18,7 +18,7 @@ import json
 import logging
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
@@ -139,9 +139,8 @@ class VGNTransit:
             logger.warning("VGN integration not available")
             return []
         
-        if departure_time is None:
-            departure_time = datetime.now()
-        
+        # Note: departure_time parameter reserved for future use with actual VGN API
+        # Currently using mock data for testing
         reachable_stations = []
         
         try:
@@ -482,33 +481,23 @@ class VGNTransit:
         self,
         radius_km: float = 5.0,
         max_travel_time_minutes: int = 30,
-        use_cache: bool = True
+        save_to_pending: bool = True
     ) -> List[CulturalVenue]:
         """
         Discover cultural venues near reachable VGN stations (hybrid approach)
         
-        Uses OpenStreetMap Overpass API to auto-discover venues, then caches
-        results in a local database for manual review and enrichment.
+        Uses OpenStreetMap Overpass API to auto-discover venues, then saves
+        results to unified pending.json for manual review and enrichment.
         
         Args:
             radius_km: Search radius around each station in kilometers
             max_travel_time_minutes: Maximum travel time to stations
-            use_cache: Use cached venues database if available
+            save_to_pending: Save discovered venues to pending.json (default: True)
             
         Returns:
             List of cultural venues with deduplication
         """
         venues = []
-        venues_cache_path = self.base_path / 'assets' / 'json' / 'cultural_venues.json'
-        
-        # Try to load cached venues first
-        if use_cache and venues_cache_path.exists():
-            try:
-                venues = self._load_cached_venues(venues_cache_path)
-                logger.info(f"Loaded {len(venues)} venues from cache")
-                return venues
-            except Exception as e:
-                logger.warning(f"Error loading cached venues: {e}, will discover fresh")
         
         # Get reachable stations
         stations = self.get_reachable_stations(max_travel_time_minutes)
@@ -564,10 +553,10 @@ class VGNTransit:
                 logger.error(f"Error querying venues near {station.name}: {e}")
                 continue
         
-        # Save discovered venues to cache for manual review
-        if discovered_venues:
-            self._save_venues_to_cache(discovered_venues, venues_cache_path)
-            logger.info(f"Saved {len(discovered_venues)} venues to cache")
+        # Save discovered venues to pending.json for manual review
+        if discovered_venues and save_to_pending:
+            self._save_venues_to_pending(discovered_venues)
+            logger.info(f"Saved {len(discovered_venues)} venues to pending.json")
         
         return discovered_venues
     
@@ -687,53 +676,52 @@ class VGNTransit:
         
         return R * c
     
-    def _load_cached_venues(self, cache_path: Path) -> List[CulturalVenue]:
-        """Load cultural venues from cache file"""
-        with open(cache_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
+    def _save_venues_to_pending(self, venues: List[CulturalVenue]):
+        """
+        Save discovered venues to unified pending.json for manual review
         
-        venues = []
-        for item in data.get('venues', []):
-            venues.append(CulturalVenue(
-                name=item['name'],
-                venue_type=item['venue_type'],
-                latitude=item['latitude'],
-                longitude=item['longitude'],
-                address=item.get('address'),
-                website=item.get('website'),
-                nearest_station=item.get('nearest_station'),
-                distance_to_station_km=item.get('distance_to_station_km'),
-                travel_time_minutes=item.get('travel_time_minutes'),
-                osm_id=item.get('osm_id')
-            ))
+        This integrates VGN venue discovery with the unified data structure,
+        allowing venues to go through the same editorial workflow as events.
+        """
+        import uuid
+        pending_path = self.base_path / 'assets' / 'json' / 'pending.json'
         
-        return venues
-    
-    def _save_venues_to_cache(self, venues: List[CulturalVenue], cache_path: Path):
-        """Save discovered venues to cache file for manual review"""
-        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        # Load existing pending items
+        pending_items = []
+        if pending_path.exists():
+            try:
+                with open(pending_path, 'r', encoding='utf-8') as f:
+                    pending_items = json.load(f)
+            except Exception as e:
+                logger.error(f"Error loading pending.json: {e}")
+                pending_items = []
         
-        data = {
-            '_comment': 'Auto-discovered cultural venues - Review and enrich manually',
-            '_generated_at': datetime.now().isoformat(),
-            'venues': [
-                {
-                    'name': v.name,
-                    'venue_type': v.venue_type,
-                    'latitude': v.latitude,
-                    'longitude': v.longitude,
-                    'address': v.address,
-                    'website': v.website,
-                    'nearest_station': v.nearest_station,
-                    'distance_to_station_km': v.distance_to_station_km,
-                    'travel_time_minutes': v.travel_time_minutes,
-                    'osm_id': v.osm_id,
-                    'verified': False,
-                    'notes': ''
-                }
-                for v in venues
-            ]
-        }
+        # Add discovered venues to pending queue
+        for venue in venues:
+            venue_item = {
+                'id': f"loc_{uuid.uuid4().hex[:16]}",
+                'type': 'location',
+                'name': venue.name,
+                'category': venue.venue_type,
+                'lat': venue.latitude,
+                'lon': venue.longitude,
+                'address': venue.address,
+                'website': venue.website,
+                'source': 'osm_vgn',
+                'osm_id': venue.osm_id,
+                'nearest_station': venue.nearest_station,
+                'distance_to_station_km': venue.distance_to_station_km,
+                'travel_time_minutes': venue.travel_time_minutes,
+                'verified': False,
+                'scraping_enabled': False,
+                'notes': 'Auto-discovered via VGN transit + OpenStreetMap',
+                'discovered_at': datetime.now().isoformat()
+            }
+            pending_items.append(venue_item)
         
-        with open(cache_path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
+        # Save back to pending.json
+        pending_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(pending_path, 'w', encoding='utf-8') as f:
+            json.dump(pending_items, f, indent=2, ensure_ascii=False)
+        
+        logger.info(f"Added {len(venues)} venues to pending.json for editorial review")

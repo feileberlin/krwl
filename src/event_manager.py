@@ -2228,6 +2228,7 @@ def _execute_command(args, base_path, config):
                 try:
                     radius_km = float(args.args[1])
                 except ValueError:
+                    # Invalid radius argument; keep the default radius_km value
                     pass
             if len(args.args) > 2 and args.args[2].isdigit():
                 max_time = int(args.args[2])
