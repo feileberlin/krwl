@@ -106,6 +106,16 @@ class DashboardUI {
                 }
             });
         });
+        
+        // Show/hide Add Location button based on max limit (2 locations)
+        const addButton = document.getElementById('add-custom-location-btn');
+        if (addButton) {
+            if (customLocs.length >= 2) {
+                addButton.style.display = 'none';
+            } else {
+                addButton.style.display = 'block';
+            }
+        }
     }
     
     /**
@@ -402,6 +412,7 @@ class DashboardUI {
     
     /**
      * Update lint warnings section with WCAG AA compliance results
+     * Show summary with link to protocol file instead of detailed list
      * @param {Object} debugInfo - Debug info object containing lint_results
      */
     updateLintWarnings(debugInfo) {
@@ -424,83 +435,27 @@ class DashboardUI {
         
         container.style.display = 'block';
         
-        // Update summary
+        // Show summary with link to protocol file (no detailed list)
         const errorCount = lintResults.error_count || 0;
         const warningCount = lintResults.warning_count || 0;
+        
         summary.innerHTML = `
             <strong>${warningCount} accessibility ${warningCount === 1 ? 'warning' : 'warnings'}</strong>
             ${errorCount > 0 ? ` · ${errorCount} ${errorCount === 1 ? 'error' : 'errors'}` : ''}
             <br>
-            <span style="font-size: 0.85em; color: var(--color-text-tertiary);">
-                Click on warnings below to view full details
+            <span style="font-size: 0.85em; color: var(--color-text-tertiary); margin-top: 0.5rem; display: block;">
+                For details, see 
+                <a href="lint_protocol.txt" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   style="color: var(--color-primary); text-decoration: underline;">
+                    lint_protocol.txt
+                </a>
             </span>
         `;
         
-        // Populate warnings list
-        let html = '';
-        warnings.forEach((warning, index) => {
-            const categoryBadge = warning.category ? 
-                `<span class="lint-warning-badge">${warning.category}</span>` : '';
-            const ruleBadge = warning.rule ? 
-                `<span class="lint-warning-badge">${warning.rule}</span>` : '';
-            
-            html += `
-                <div class="lint-warning-item" 
-                     data-warning-index="${index}"
-                     role="button"
-                     tabindex="0"
-                     aria-expanded="false"
-                     aria-label="Lint warning: ${warning.message}">
-                    <div class="lint-warning-header">
-                        <i class="lint-warning-icon" data-lucide="alert-circle" aria-hidden="true"></i>
-                        <div class="lint-warning-content">
-                            <div class="lint-warning-message">${this.escapeHtml(warning.message)}</div>
-                            <div class="lint-warning-meta">
-                                ${categoryBadge}
-                                ${ruleBadge}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="lint-warning-protocol">
-                        <div class="lint-warning-protocol-content">
-                            <strong>Full Protocol:</strong>
-                            ${warning.context ? this.escapeHtml(warning.context) : 'No additional context available'}
-                        </div>
-                    </div>
-                    <div class="lint-warning-expand-hint">Click to ${index === 0 ? 'expand' : 'toggle'} details</div>
-                </div>
-            `;
-        });
-        
-        warningsList.innerHTML = html;
-        
-        // Re-initialize Lucide icons for newly added elements
-        if (typeof lucide !== 'undefined' && lucide.createIcons) {
-            lucide.createIcons();
-        }
-        
-        // Add click handlers for toggling warnings
-        warningsList.querySelectorAll('.lint-warning-item').forEach(item => {
-            const toggleWarning = () => {
-                const isExpanded = item.classList.contains('expanded');
-                item.classList.toggle('expanded');
-                item.setAttribute('aria-expanded', !isExpanded);
-                
-                // Update hint text
-                const hint = item.querySelector('.lint-warning-expand-hint');
-                if (hint) {
-                    hint.textContent = isExpanded ? 'Click to expand details' : 'Click to collapse details';
-                }
-            };
-            
-            item.addEventListener('click', toggleWarning);
-            item.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    toggleWarning();
-                }
-            });
-        });
+        // Hide the warnings list (no detailed display)
+        warningsList.style.display = 'none';
     }
     
     /**
