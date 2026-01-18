@@ -1319,6 +1319,33 @@
       "config_keys": [],
       "test_method": "manual",
       "test_instructions": "1. Open the app in a browser\n2. Click the logo to open the dashboard menu\n3. Scroll to the 'Submit Event Flyer' section\n4. Fill in name and email fields\n5. Select a flyer image (JPG/PNG/PDF, max 10MB)\n6. Optionally add notes about the event\n7. Verify validation (required fields, file size, file type)\n8. Submit the form\n9. Verify success message appears\n10. Check that form is cleared after submission"
+    },
+    {
+      "id": "telegram-bot-github-actions",
+      "name": "Telegram Bot GitHub Actions Integration",
+      "description": "Phase 2 Backend Integration: GitHub Actions workflow that runs the Telegram bot to proxy event submissions. Uses TELEGRAM_BOT_TOKEN secret, forwards contact messages to admin chat IDs, saves flyer uploads to pending_events.json, and commits changes back to the repository.",
+      "category": "infrastructure",
+      "implemented": true,
+      "files": [
+        ".github/workflows/telegram-bot.yml",
+        "src/modules/telegram_bot.py"
+      ],
+      "config_keys": [
+        "telegram.enabled",
+        "telegram.bot_token",
+        "telegram.admin_chat_ids"
+      ],
+      "dependencies": {
+        "github_secrets": [
+          "TELEGRAM_BOT_TOKEN"
+        ],
+        "python": [
+          "python-telegram-bot>=20.0"
+        ]
+      },
+      "test_method": "manual",
+      "test_instructions": "1. Add TELEGRAM_BOT_TOKEN to GitHub repository secrets\n2. Go to Actions → Telegram Bot workflow\n3. Click 'Run workflow' → Select duration and mode\n4. Verify bot starts running in CI environment\n5. Send a message to the bot on Telegram\n6. Wait for workflow to complete\n7. Check that pending_events.json was updated with new submission\n8. Verify commit was made by 'Telegram Bot' user\n9. Check workflow logs for submission statistics",
+      "documentation": "README.md section: Telegram Bot GitHub Actions Integration"
     }
   ]
 }
