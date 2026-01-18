@@ -34,9 +34,9 @@ A **monochromatic color scheme** uses variations of a single hue by adjusting:
 
 | Color Preview | Name | Hex | RGB | CSS Variable | Usage |
 |---------------|------|-----|-----|--------------|-------|
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#D689B8"/></svg> | **Primary** | `#D689B8` | 214, 137, 184 | `--color-primary` | Primary brand color, accents, highlights |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#E8A5C8"/></svg> | **Primary Hover** | `#E8A5C8` | 232, 165, 200 | `--color-primary-hover` | Hover states for primary |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#D689B8"/></svg> | **Success** | `#D689B8` | 214, 137, 184 | `--color-success` | Success state (uses primary) |
+| ![#D689B8](https://img.shields.io/badge/%20-%20-D689B8?style=flat-square) | **Primary** | `#D689B8` | 214, 137, 184 | `--color-primary` | Primary brand color, accents, highlights |
+| ![#E8A5C8](https://img.shields.io/badge/%20-%20-E8A5C8?style=flat-square) | **Primary Hover** | `#E8A5C8` | 232, 165, 200 | `--color-primary-hover` | Hover states for primary |
+| ![#D689B8](https://img.shields.io/badge/%20-%20-D689B8?style=flat-square) | **Success** | `#D689B8` | 214, 137, 184 | `--color-success` | Success state (uses primary) |
 
 ### ecoBarbie Tints (+ White) - Scientifically Generated
 
@@ -44,10 +44,10 @@ A **monochromatic color scheme** uses variations of a single hue by adjusting:
 
 | Color Preview | Name | Hex | RGB | CSS Variable | Lightness |
 |---------------|------|-----|-----|--------------|-----------|
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#DE96C2"/></svg> | **Tint 20%** | `#de96c2` | 222, 150, 194 | `--color-tint-20` | Subtle tint |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#E6A4CC"/></svg> | **Tint 40%** | `#e6a4cc` | 230, 164, 204 | `--color-tint-40` | Light backgrounds |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#EEB2D7"/></svg> | **Tint 60%** | `#eeb2d7` | 238, 178, 215 | `--color-tint-60` | Very light backgrounds |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#F6C1E2"/></svg> | **Tint 80%** | `#f6c1e2` | 246, 193, 226 | `--color-tint-80` | Ultra-light highlights |
+| ![#DE96C2](https://img.shields.io/badge/%20-%20-DE96C2?style=flat-square) | **Tint 20%** | `#de96c2` | 222, 150, 194 | `--color-tint-20` | Subtle tint |
+| ![#E6A4CC](https://img.shields.io/badge/%20-%20-E6A4CC?style=flat-square) | **Tint 40%** | `#e6a4cc` | 230, 164, 204 | `--color-tint-40` | Light backgrounds |
+| ![#EEB2D7](https://img.shields.io/badge/%20-%20-EEB2D7?style=flat-square) | **Tint 60%** | `#eeb2d7` | 238, 178, 215 | `--color-tint-60` | Very light backgrounds |
+| ![#F6C1E2](https://img.shields.io/badge/%20-%20-F6C1E2?style=flat-square) | **Tint 80%** | `#f6c1e2` | 246, 193, 226 | `--color-tint-80` | Ultra-light highlights |
 
 ### ecoBarbie Shades (+ Black) - Scientifically Generated
 
@@ -55,10 +55,10 @@ A **monochromatic color scheme** uses variations of a single hue by adjusting:
 
 | Color Preview | Name | Hex | RGB | CSS Variable | Darkness |
 |---------------|------|-----|-----|--------------|----------|
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#AB6D93"/></svg> | **Shade 20%** | `#ab6d93` | 171, 109, 147 | `--color-shade-20` | Medium dark |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#80526E"/></svg> | **Shade 40%** | `#80526e` | 128, 82, 110 | `--color-shade-40` | Dark accents |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#553649"/></svg> | **Shade 60%** | `#553649` | 85, 54, 73 | `--color-shade-60` | Very dark backgrounds |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#2A1B24"/></svg> | **Shade 80%** | `#2a1b24` | 42, 27, 36 | `--color-shade-80` | Near-black backgrounds |
+| ![#AB6D93](https://img.shields.io/badge/%20-%20-AB6D93?style=flat-square) | **Shade 20%** | `#ab6d93` | 171, 109, 147 | `--color-shade-20` | Medium dark |
+| ![#80526E](https://img.shields.io/badge/%20-%20-80526E?style=flat-square) | **Shade 40%** | `#80526e` | 128, 82, 110 | `--color-shade-40` | Dark accents |
+| ![#553649](https://img.shields.io/badge/%20-%20-553649?style=flat-square) | **Shade 60%** | `#553649` | 85, 54, 73 | `--color-shade-60` | Very dark backgrounds |
+| ![#2A1B24](https://img.shields.io/badge/%20-%20-2A1B24?style=flat-square) | **Shade 80%** | `#2a1b24` | 42, 27, 36 | `--color-shade-80` | Near-black backgrounds |
 
 ### ecoBarbie Tones (+ Grey) - Scientifically Generated
 
@@ -66,20 +66,20 @@ A **monochromatic color scheme** uses variations of a single hue by adjusting:
 
 | Color Preview | Name | Hex | RGB | CSS Variable | Saturation |
 |---------------|------|-----|-----|--------------|------------|
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#D698BE"/></svg> | **Tone 20%** | `#d698be` | 214, 152, 190 | `--color-tone-20` | Slightly desaturated |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#D6A7C4"/></svg> | **Tone 40%** | `#d6a7c4` | 214, 167, 196 | `--color-tone-40` | Moderate desaturation |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#D6B7CA"/></svg> | **Tone 60%** | `#d6b7ca` | 214, 183, 202 | `--color-tone-60` | Soft neutral |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#D6C6D0"/></svg> | **Tone 80%** | `#d6c6d0` | 214, 198, 208 | `--color-tone-80` | Very soft neutral |
+| ![#D698BE](https://img.shields.io/badge/%20-%20-D698BE?style=flat-square) | **Tone 20%** | `#d698be` | 214, 152, 190 | `--color-tone-20` | Slightly desaturated |
+| ![#D6A7C4](https://img.shields.io/badge/%20-%20-D6A7C4?style=flat-square) | **Tone 40%** | `#d6a7c4` | 214, 167, 196 | `--color-tone-40` | Moderate desaturation |
+| ![#D6B7CA](https://img.shields.io/badge/%20-%20-D6B7CA?style=flat-square) | **Tone 60%** | `#d6b7ca` | 214, 183, 202 | `--color-tone-60` | Soft neutral |
+| ![#D6C6D0](https://img.shields.io/badge/%20-%20-D6C6D0?style=flat-square) | **Tone 80%** | `#d6c6d0` | 214, 198, 208 | `--color-tone-80` | Very soft neutral |
 
 ### Legacy Colors (Backward Compatibility)
 
 | Color Preview | Name | Hex | RGB | CSS Variable | Notes |
 |---------------|------|-----|-----|--------------|-------|
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#FFB3DF"/></svg> | **Medium Tint** | `#FFB3DF` | 255, 179, 223 | `--color-medium-tint` | Legacy bright tint |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#D689B8"/></svg> | **Light Tone** | `#D689B8` | 214, 137, 184 | `--color-light-tone` | Duplicate of primary |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#B05F8E"/></svg> | **Medium Tone** | `#B05F8E` | 176, 95, 142 | `--color-medium-tone` | Similar to shade_20 |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#8A4A70"/></svg> | **Dark Tone** | `#8A4A70` | 138, 74, 112 | `--color-dark-tone` | Similar to shade_40 |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#BF5087"/></svg> | **Light Shade** | `#BF5087` | 191, 80, 135 | `--color-light-shade` | Consider removing |
+| ![#FFB3DF](https://img.shields.io/badge/%20-%20-FFB3DF?style=flat-square) | **Medium Tint** | `#FFB3DF` | 255, 179, 223 | `--color-medium-tint` | Legacy bright tint |
+| ![#D689B8](https://img.shields.io/badge/%20-%20-D689B8?style=flat-square) | **Light Tone** | `#D689B8` | 214, 137, 184 | `--color-light-tone` | Duplicate of primary |
+| ![#B05F8E](https://img.shields.io/badge/%20-%20-B05F8E?style=flat-square) | **Medium Tone** | `#B05F8E` | 176, 95, 142 | `--color-medium-tone` | Similar to shade_20 |
+| ![#8A4A70](https://img.shields.io/badge/%20-%20-8A4A70?style=flat-square) | **Dark Tone** | `#8A4A70` | 138, 74, 112 | `--color-dark-tone` | Similar to shade_40 |
+| ![#BF5087](https://img.shields.io/badge/%20-%20-BF5087?style=flat-square) | **Light Shade** | `#BF5087` | 191, 80, 135 | `--color-light-shade` | Consider removing |
 
 ### Neutral Greys & Blacks
 
@@ -91,9 +91,9 @@ A **monochromatic color scheme** uses variations of a single hue by adjusting:
 
 | Color Preview | Name | Hex | RGB | CSS Variable | Usage |
 |---------------|------|-----|-----|--------------|-------|
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#110A0E"/></svg> | **BG Primary** | `#110a0e` | 17, 10, 14 | `--color-bg-primary` | Main background (92% darker) |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#150D12"/></svg> | **BG Secondary** | `#150d12` | 21, 13, 18 | `--color-bg-secondary` | Secondary background (90% darker) |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#191016"/></svg> | **BG Tertiary** | `#191016` | 25, 16, 22 | `--color-bg-tertiary` | Tertiary background (88% darker) |
+| ![#110A0E](https://img.shields.io/badge/%20-%20-110A0E?style=flat-square) | **BG Primary** | `#110a0e` | 17, 10, 14 | `--color-bg-primary` | Main background (92% darker) |
+| ![#150D12](https://img.shields.io/badge/%20-%20-150D12?style=flat-square) | **BG Secondary** | `#150d12` | 21, 13, 18 | `--color-bg-secondary` | Secondary background (90% darker) |
+| ![#191016](https://img.shields.io/badge/%20-%20-191016?style=flat-square) | **BG Tertiary** | `#191016` | 25, 16, 22 | `--color-bg-tertiary` | Tertiary background (88% darker) |
 
 ### Text Colors (Very Light Tints)
 
@@ -101,9 +101,9 @@ A **monochromatic color scheme** uses variations of a single hue by adjusting:
 
 | Color Preview | Name | Hex | RGB | CSS Variable | Contrast | Usage |
 |---------------|------|-----|-----|--------------|----------|-------|
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#F9F5F8"/></svg> | **Text Primary** | `#f9f5f8` | 249, 245, 248 | `--color-text-primary` | High | Primary text (98% lighter) |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#F2E9EE"/></svg> | **Text Secondary** | `#f2e9ee` | 242, 233, 238 | `--color-text-secondary` | Medium | Secondary text (95% lighter) |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#EADDE5"/></svg> | **Text Tertiary** | `#eadde5` | 234, 221, 229 | `--color-text-tertiary` | Lower | Tertiary text (92% lighter) |
+| ![#F9F5F8](https://img.shields.io/badge/%20-%20-F9F5F8?style=flat-square) | **Text Primary** | `#f9f5f8` | 249, 245, 248 | `--color-text-primary` | High | Primary text (98% lighter) |
+| ![#F2E9EE](https://img.shields.io/badge/%20-%20-F2E9EE?style=flat-square) | **Text Secondary** | `#f2e9ee` | 242, 233, 238 | `--color-text-secondary` | Medium | Secondary text (95% lighter) |
+| ![#EADDE5](https://img.shields.io/badge/%20-%20-EADDE5?style=flat-square) | **Text Tertiary** | `#eadde5` | 234, 221, 229 | `--color-text-tertiary` | Lower | Tertiary text (92% lighter) |
 
 ### Border Colors (Medium Dark Shades)
 
@@ -111,8 +111,8 @@ A **monochromatic color scheme** uses variations of a single hue by adjusting:
 
 | Color Preview | Name | Hex | RGB | CSS Variable | Usage |
 |---------------|------|-----|-----|--------------|-------|
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#35222E"/></svg> | **Border Primary** | `#35222e` | 53, 34, 46 | `--color-border-primary` | Primary border (75% darker) |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#2F1E28"/></svg> | **Border Secondary** | `#2f1e28` | 47, 30, 40 | `--color-border-secondary` | Secondary border (78% darker) |
+| ![#35222E](https://img.shields.io/badge/%20-%20-35222E?style=flat-square) | **Border Primary** | `#35222e` | 53, 34, 46 | `--color-border-primary` | Primary border (75% darker) |
+| ![#2F1E28](https://img.shields.io/badge/%20-%20-2F1E28?style=flat-square) | **Border Secondary** | `#2f1e28` | 47, 30, 40 | `--color-border-secondary` | Secondary border (78% darker) |
 
 ### Accent Colors (Monochromatic Variants)
 
@@ -120,12 +120,12 @@ A **monochromatic color scheme** uses variations of a single hue by adjusting:
 
 | Color Preview | Name | Hex | RGB | CSS Variable | Transform | Usage |
 |---------------|------|-----|-----|--------------|-----------|-------|
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#E07FBA"/></svg> | **Accent** | `#e07fba` | 224, 127, 186 | `--color-accent` | +20% sat, +5% val | Links, info, highlights |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#EB7DC0"/></svg> | **Warning** | `#eb7dc0` | 235, 125, 192 | `--color-warning` | +30% sat, +10% val | Warnings, pending states |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#954476"/></svg> | **Error** | `#954476` | 149, 68, 118 | `--color-error` | +50% sat, -30% val | Errors, critical alerts |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#EEB2D7"/></svg> | **Bookmark** | `#eeb2d7` | 238, 178, 215 | `--color-bookmark` | Same as tint_60 | Bookmark highlight |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#F6C1E2"/></svg> | **Bookmark Light** | `#f6c1e2` | 246, 193, 226 | `--color-bookmark-light` | Same as tint_80 | Bookmark hover |
-| <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="#FCE0EF"/></svg> | **Bookmark Lighter** | `#fce0ef` | 252, 224, 239 | `--color-bookmark-lighter` | 90% lighter tint | Bookmark subtle |
+| ![#E07FBA](https://img.shields.io/badge/%20-%20-E07FBA?style=flat-square) | **Accent** | `#e07fba` | 224, 127, 186 | `--color-accent` | +20% sat, +5% val | Links, info, highlights |
+| ![#EB7DC0](https://img.shields.io/badge/%20-%20-EB7DC0?style=flat-square) | **Warning** | `#eb7dc0` | 235, 125, 192 | `--color-warning` | +30% sat, +10% val | Warnings, pending states |
+| ![#954476](https://img.shields.io/badge/%20-%20-954476?style=flat-square) | **Error** | `#954476` | 149, 68, 118 | `--color-error` | +50% sat, -30% val | Errors, critical alerts |
+| ![#EEB2D7](https://img.shields.io/badge/%20-%20-EEB2D7?style=flat-square) | **Bookmark** | `#eeb2d7` | 238, 178, 215 | `--color-bookmark` | Same as tint_60 | Bookmark highlight |
+| ![#F6C1E2](https://img.shields.io/badge/%20-%20-F6C1E2?style=flat-square) | **Bookmark Light** | `#f6c1e2` | 246, 193, 226 | `--color-bookmark-light` | Same as tint_80 | Bookmark hover |
+| ![#FCE0EF](https://img.shields.io/badge/%20-%20-FCE0EF?style=flat-square) | **Bookmark Lighter** | `#fce0ef` | 252, 224, 239 | `--color-bookmark-lighter` | 90% lighter tint | Bookmark subtle |
 ---
 
 ## Alpha Channel Variations
