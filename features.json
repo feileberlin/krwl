@@ -1289,6 +1289,36 @@
       "test_method": "manual",
       "test_instructions": "1. Get bot token from @BotFather on Telegram\n2. Set telegram.enabled: true in config.json\n3. Add bot token to config or TELEGRAM_BOT_TOKEN env var\n4. Run: python3 src/event_manager.py telegram-bot\n5. Open Telegram and send /start to your bot\n6. Test /submit command for manual event entry\n7. Test photo upload for flyer OCR\n8. Test /contact command\n9. Verify submissions appear in assets/json/pending_events.json\n10. Stop bot with Ctrl+C",
       "documentation": "README.md section: Telegram Bot Integration (to be added)"
+    },
+    {
+      "id": "dashboard-contact-form",
+      "name": "Dashboard Contact Form",
+      "description": "Web-based contact form in the dashboard menu that allows users to send messages to maintainers. Includes client-side validation, responsive design, and user feedback. Future integration with Telegram Bot API for delivery.",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "assets/html/dashboard-aside.html",
+        "assets/css/style.css",
+        "assets/js/forms.js"
+      ],
+      "config_keys": [],
+      "test_method": "manual",
+      "test_instructions": "1. Open the app in a browser\n2. Click the logo to open the dashboard menu\n3. Scroll to the 'Contact' section\n4. Fill in name, email, and message fields\n5. Verify validation (required fields, email format)\n6. Submit the form\n7. Verify success message appears\n8. Check that form is cleared after submission"
+    },
+    {
+      "id": "dashboard-flyer-upload-form",
+      "name": "Dashboard Flyer Upload Form",
+      "description": "Web-based flyer upload form in the dashboard menu that allows users to submit event flyers (JPG, PNG, PDF). Includes file validation (size, type), responsive design, and user feedback. Future integration with Telegram Bot API for processing.",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "assets/html/dashboard-aside.html",
+        "assets/css/style.css",
+        "assets/js/forms.js"
+      ],
+      "config_keys": [],
+      "test_method": "manual",
+      "test_instructions": "1. Open the app in a browser\n2. Click the logo to open the dashboard menu\n3. Scroll to the 'Submit Event Flyer' section\n4. Fill in name and email fields\n5. Select a flyer image (JPG/PNG/PDF, max 10MB)\n6. Optionally add notes about the event\n7. Verify validation (required fields, file size, file type)\n8. Submit the form\n9. Verify success message appears\n10. Check that form is cleared after submission"
     }
   ]
 }
