@@ -781,6 +781,36 @@ strong, b {
     color: var(--color-primary);
 }
 
+/* Edit button - primary action (default styling) */
+.custom-location-btn--edit {
+    /* Uses default button styles */
+}
+
+/* Reset button - warning action (resets to config.json) */
+.custom-location-btn--reset {
+    color: var(--color-warning);
+    border-color: var(--border-primary);
+}
+
+.custom-location-btn--reset:hover {
+    border-color: var(--color-warning);
+    background: rgba(235, 125, 192, 0.1);
+    color: var(--color-warning);
+}
+
+/* Delete button - danger action (removes from localStorage) */
+.custom-location-btn--delete {
+    color: var(--color-error);
+    border-color: var(--border-primary);
+}
+
+.custom-location-btn--delete:hover {
+    border-color: var(--color-error);
+    background: rgba(149, 68, 118, 0.1);
+    color: var(--color-error);
+}
+
+/* Legacy class for backwards compatibility */
 .custom-location-btn.delete {
     color: var(--color-error);
 }

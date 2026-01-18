@@ -66,18 +66,37 @@ class DashboardUI {
         
         let html = '';
         
-        // Show all custom locations (2 preconfigured locations from config.json)
+        // Show all custom locations with appropriate buttons
         customLocs.forEach((loc) => {
             const locationLabel = loc.fromPredefined ? 
                 `<i data-lucide="map-pin" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle;"></i> ${loc.name}` : 
                 `<i data-lucide="edit-3" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle;"></i> ${loc.name}`;
+            
+            // Show different buttons based on whether it's predefined or user-created
+            let actionButtons;
+            if (loc.fromPredefined) {
+                // For predefined locations: always show Edit, only show Reset if modified
+                const isModified = app.storage.isPredefinedLocationModified(loc.id);
+                actionButtons = isModified ? `
+                    <button class="custom-location-btn custom-location-btn--edit" data-action="edit" data-id="${loc.id}" title="Edit location">Edit</button>
+                    <button class="custom-location-btn custom-location-btn--reset" data-action="reset" data-id="${loc.id}" title="Reset to config.json values">Reset</button>
+                ` : `
+                    <button class="custom-location-btn custom-location-btn--edit" data-action="edit" data-id="${loc.id}" title="Edit location">Edit</button>
+                `;
+            } else {
+                // For user-created locations: show Edit and Delete
+                actionButtons = `
+                    <button class="custom-location-btn custom-location-btn--edit" data-action="edit" data-id="${loc.id}" title="Edit location">Edit</button>
+                    <button class="custom-location-btn custom-location-btn--delete" data-action="delete" data-id="${loc.id}" title="Delete location">Delete</button>
+                `;
+            }
             
             html += `
                 <div class="custom-location-item">
                     <div class="custom-location-header">
                         <div class="custom-location-name">${locationLabel}</div>
                         <div class="custom-location-actions">
-                            <button class="custom-location-btn" data-action="edit" data-id="${loc.id}">Edit</button>
+                            ${actionButtons}
                         </div>
                     </div>
                     <div class="custom-location-coords">${loc.lat.toFixed(4)}°, ${loc.lon.toFixed(4)}°</div>
@@ -92,7 +111,7 @@ class DashboardUI {
             window.lucide.createIcons();
         }
         
-        // Attach event listeners to edit buttons
+        // Attach event listeners to all action buttons
         container.querySelectorAll('.custom-location-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const action = btn.getAttribute('data-action');
@@ -100,6 +119,10 @@ class DashboardUI {
                 
                 if (action === 'edit') {
                     this.editCustomLocation(id, app);
+                } else if (action === 'reset') {
+                    this.resetCustomLocation(id, app);
+                } else if (action === 'delete') {
+                    this.deleteCustomLocation(id, app);
                 }
             });
         });
@@ -141,6 +164,60 @@ class DashboardUI {
             if (app.eventListeners) {
                 app.eventListeners.setupFilterListeners();
             }
+        }
+    }
+    
+    /**
+     * Reset a predefined custom location to its original config.json values
+     * @param {string} id - Location ID
+     * @param {Object} app - App instance
+     */
+    resetCustomLocation(id, app) {
+        const loc = app.storage.getCustomLocationById(id);
+        if (!loc) return;
+        
+        if (!confirm(`Reset "${loc.name}" to its original config.json values?`)) {
+            return;
+        }
+        
+        const success = app.storage.resetCustomLocation(id);
+        
+        if (success) {
+            alert('✅ Location reset to original values!');
+            this.updateCustomLocations();
+            // Refresh the location dropdown
+            if (app.eventListeners) {
+                app.eventListeners.setupFilterListeners();
+            }
+        } else {
+            alert('❌ Failed to reset location. It may not be a predefined location.');
+        }
+    }
+    
+    /**
+     * Delete a custom location
+     * @param {string} id - Location ID
+     * @param {Object} app - App instance
+     */
+    deleteCustomLocation(id, app) {
+        const loc = app.storage.getCustomLocationById(id);
+        if (!loc) return;
+        
+        if (!confirm(`Delete custom location "${loc.name}"?`)) {
+            return;
+        }
+        
+        const success = app.storage.deleteCustomLocation(id);
+        
+        if (success) {
+            alert('✅ Location deleted!');
+            this.updateCustomLocations();
+            // Refresh the location dropdown
+            if (app.eventListeners) {
+                app.eventListeners.setupFilterListeners();
+            }
+        } else {
+            alert('❌ Failed to delete location.');
         }
     }
     
