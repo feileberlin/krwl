@@ -46,7 +46,7 @@
       },
       "test_method": "run_custom_test",
       "test_file": "tests/test_ocr_availability.py",
-      "documentation": "README.md section: \ud83d\udcf8 Facebook Flyer Scraping with OCR"
+      "documentation": "README.md section: 📸 Facebook Flyer Scraping with OCR"
     },
     {
       "id": "editor-workflow",
@@ -799,7 +799,7 @@
         }
       ],
       "test_method": "automated",
-      "test_instructions": "1. Start local server: cd static && python3 -m http.server 8000\n2. Run test script: python3 src/tools/generate_screenshots.py --verbose\n3. Verify body[data-app-ready='true'] attribute is set after page load\n4. Verify 'app-ready' custom event is dispatched with event.detail metadata\n5. Check that screenshots are captured with fully loaded map and events\n6. Verify both mobile (640\u00d71136) and desktop (1280\u00d7800) screenshots are generated"
+      "test_instructions": "1. Start local server: cd static && python3 -m http.server 8000\n2. Run test script: python3 src/tools/generate_screenshots.py --verbose\n3. Verify body[data-app-ready='true'] attribute is set after page load\n4. Verify 'app-ready' custom event is dispatched with event.detail metadata\n5. Check that screenshots are captured with fully loaded map and events\n6. Verify both mobile (640×1136) and desktop (1280×800) screenshots are generated"
     },
     {
       "id": "html-export-linting",
@@ -1045,7 +1045,7 @@
       ],
       "test_method": "automated",
       "test_file": "tests/test_archive_events.py",
-      "test_instructions": "1. Run archiving tests: python3 tests/test_archive_events.py\n2. Test dry-run: python3 src/event_manager.py archive-monthly --dry-run\n3. View configuration: python3 src/event_manager.py archive-info\n4. Test with different retention: Edit config.json \u2192 archiving.retention.active_window_days\n5. Verify archives created: Check assets/json/events/archived/ directory\n6. Test GitHub Actions: Trigger website-maintenance workflow with archive mode",
+      "test_instructions": "1. Run archiving tests: python3 tests/test_archive_events.py\n2. Test dry-run: python3 src/event_manager.py archive-monthly --dry-run\n3. View configuration: python3 src/event_manager.py archive-info\n4. Test with different retention: Edit config.json → archiving.retention.active_window_days\n5. Verify archives created: Check assets/json/events/archived/ directory\n6. Test GitHub Actions: Trigger website-maintenance workflow with archive mode",
       "cli_command": "python3 src/event_manager.py archive-monthly --dry-run"
     },
     {
@@ -1086,7 +1086,7 @@
         }
       ],
       "test_method": "manual",
-      "test_instructions": "1. Open app in browser\n2. Verify no hardcoded 100vh/100vw in layers: grep -r '100vh\\|100vw' assets/css/*.css\n3. Test mobile: Open DevTools \u2192 Mobile view \u2192 Toggle device toolbar\n4. Test orientation: Rotate device/emulator from portrait to landscape\n5. Test address bar: Scroll on mobile to hide/show address bar\n6. Verify CSS variables: Open DevTools \u2192 Elements \u2192 :root \u2192 Check --app-width and --app-height\n7. Test resize: Resize browser window and verify all layers scale together\n8. Test keyboard: On mobile, focus input field to show keyboard, verify layers adjust\n9. Architecture analysis: Read docs/LAYER_ARCHITECTURE_ANALYSIS.md for design rationale"
+      "test_instructions": "1. Open app in browser\n2. Verify no hardcoded 100vh/100vw in layers: grep -r '100vh\\|100vw' assets/css/*.css\n3. Test mobile: Open DevTools → Mobile view → Toggle device toolbar\n4. Test orientation: Rotate device/emulator from portrait to landscape\n5. Test address bar: Scroll on mobile to hide/show address bar\n6. Verify CSS variables: Open DevTools → Elements → :root → Check --app-width and --app-height\n7. Test resize: Resize browser window and verify all layers scale together\n8. Test keyboard: On mobile, focus input field to show keyboard, verify layers adjust\n9. Architecture analysis: Read docs/LAYER_ARCHITECTURE_ANALYSIS.md for design rationale"
     },
     {
       "id": "weather-dresscode",
@@ -1138,7 +1138,7 @@
         }
       ],
       "test_method": "check_code_patterns",
-      "test_instructions": "1. Run weather scraper: python3 src/event_manager.py scrape-weather\n2. Verify cache created: assets/json/weather_cache.json\n3. Check dresscode is validated against accepted list\n4. Generate site: python3 src/event_manager.py generate\n5. Verify window.WEATHER_CACHE is embedded in public/index.html\n6. Open site and verify weather chip appears at end of filter bar\n7. Verify dresscode text is displayed in format 'with [dresscode].' (e.g., 'with warm pullover.')\n8. Hover over chip to see temperature tooltip (e.g., '8\u00b0C \u2022 with warm pullover.')\n9. Test hourly caching: run scrape-weather again within 1 hour, should use cache\n10. Force refresh: python3 src/event_manager.py scrape-weather --force\n11. Test GitHub Actions: Go to Actions \u2192 Website Maintenance (Unified) \u2192 Run workflow \u2192 Select 'scrape-weather'"
+      "test_instructions": "1. Run weather scraper: python3 src/event_manager.py scrape-weather\n2. Verify cache created: assets/json/weather_cache.json\n3. Check dresscode is validated against accepted list\n4. Generate site: python3 src/event_manager.py generate\n5. Verify window.WEATHER_CACHE is embedded in public/index.html\n6. Open site and verify weather chip appears at end of filter bar\n7. Verify dresscode text is displayed in format 'with [dresscode].' (e.g., 'with warm pullover.')\n8. Hover over chip to see temperature tooltip (e.g., '8°C • with warm pullover.')\n9. Test hourly caching: run scrape-weather again within 1 hour, should use cache\n10. Force refresh: python3 src/event_manager.py scrape-weather --force\n11. Test GitHub Actions: Go to Actions → Website Maintenance (Unified) → Run workflow → Select 'scrape-weather'"
     },
     {
       "id": "draggable-speech-bubbles",
