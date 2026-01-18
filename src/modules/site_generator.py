@@ -1719,7 +1719,8 @@ window.DASHBOARD_ICONS = {json.dumps(DASHBOARD_ICONS_MAP, ensure_ascii=False)};'
         primary_config = configs[0] if configs else {}
         app_name = primary_config.get('app', {}).get('name', 'KRWL HOF Community Events')
         favicon = self.create_favicon_data_url()
-        logo_svg = self.read_logo_svg()
+        # Use favicon.svg for both favicon AND logo (consistent branding with background)
+        logo_svg = self.inline_svg_file('favicon.svg', as_data_url=False)
         
         # Build noscript HTML
         noscript_html = self.build_noscript_html(events, app_name)
@@ -2034,10 +2035,10 @@ window.DEBUG_INFO = {debug_info_json};'''
             # Export lint results to JSON for embedding (summary only)
             lint_data = lint_result.to_json()
             
-            # Save full lint protocol to separate file for on-demand loading
-            lint_protocol_path = self.static_path / 'lint_protocol.txt'
+            # Save full WCAG protocol to separate file for on-demand loading
+            wcag_protocol_path = self.static_path / 'wcag_protocol.txt'
             try:
-                with open(lint_protocol_path, 'w', encoding='utf-8') as f:
+                with open(wcag_protocol_path, 'w', encoding='utf-8') as f:
                     f.write("=" * 80 + "\n")
                     f.write("WCAG AA COMPLIANCE LINT REPORT\n")
                     f.write("=" * 80 + "\n\n")
@@ -2074,9 +2075,9 @@ window.DEBUG_INFO = {debug_info_json};'''
                         for i, warning in enumerate(lint_result.warnings, 1):
                             f.write(f"{i}. {warning}\n")
                 
-                print(f"✅ Saved lint protocol to {lint_protocol_path}")
+                print(f"✅ Saved WCAG protocol to {wcag_protocol_path}")
             except Exception as e:
-                logger.warning(f"Could not save lint protocol: {e}")
+                logger.warning(f"Could not save WCAG protocol: {e}")
             
             # Show detailed errors and warnings
             if not lint_result.passed:

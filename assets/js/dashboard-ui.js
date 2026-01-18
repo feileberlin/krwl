@@ -445,11 +445,11 @@ class DashboardUI {
             <br>
             <span style="font-size: 0.85em; color: var(--color-text-tertiary); margin-top: 0.5rem; display: block;">
                 For details, see 
-                <a href="lint_protocol.txt" 
+                <a href="wcag_protocol.txt" 
                    target="_blank" 
                    rel="noopener noreferrer"
                    style="color: var(--color-primary); text-decoration: underline;">
-                    lint_protocol.txt
+                    wcag_protocol.txt
                 </a>
             </span>
         `;
