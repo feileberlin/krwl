@@ -120,6 +120,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 2  # Need history for git diff
       
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -164,7 +165,7 @@ jobs:
             -m -o /tmp/color-preview.md
           
           # Check if colors changed
-          if git diff HEAD^ HEAD -- assets/html/design-tokens.css > /dev/null 2>&1; then
+          if git diff HEAD~1 HEAD -- assets/html/design-tokens.css | grep -q '^[+-]'; then
             echo "colors_changed=true" >> $GITHUB_OUTPUT
             echo "✓ Colors changed - preview will be shown"
           else
@@ -177,8 +178,8 @@ jobs:
       - name: Install Playwright (for screenshots)
         run: |
           echo "📸 Installing Playwright for screenshots..."
-          pip install playwright
-          playwright install chromium
+          pip install playwright || { echo "Failed to install playwright"; exit 1; }
+          playwright install chromium || { echo "Failed to install chromium"; exit 1; }
           echo "✓ Playwright installed"
       
       - name: Take screenshots
@@ -197,32 +198,32 @@ jobs:
           
           # Take screenshots using Playwright
           cd ..
-          python3 << 'PYTHON_SCRIPT'
-import asyncio
-from playwright.async_api import async_playwright
-
-async def take_screenshots():
-    async with async_playwright() as p:
-        browser = await p.chromium.launch()
-        
-        # Desktop screenshot
-        page = await browser.new_page(viewport={'width': 1920, 'height': 1080})
-        await page.goto('http://localhost:8000/')
-        await page.wait_for_timeout(3000)  # Wait for map to load
-        await page.screenshot(path='public/screenshots/desktop.png', full_page=True)
-        print("✓ Desktop screenshot taken (1920x1080)")
-        
-        # Mobile screenshot
-        mobile_page = await browser.new_page(viewport={'width': 375, 'height': 667})
-        await mobile_page.goto('http://localhost:8000/')
-        await mobile_page.wait_for_timeout(3000)  # Wait for map to load
-        await mobile_page.screenshot(path='public/screenshots/mobile.png', full_page=True)
-        print("✓ Mobile screenshot taken (375x667)")
-        
-        await browser.close()
-
-asyncio.run(take_screenshots())
-PYTHON_SCRIPT
+          python3 << 'EOF'
+          import asyncio
+          from playwright.async_api import async_playwright
+          
+          async def take_screenshots():
+              async with async_playwright() as p:
+                  browser = await p.chromium.launch()
+                  
+                  # Desktop screenshot
+                  page = await browser.new_page(viewport={'width': 1920, 'height': 1080})
+                  await page.goto('http://localhost:8000/')
+                  await page.wait_for_timeout(3000)  # Wait for map to load
+                  await page.screenshot(path='public/screenshots/desktop.png', full_page=True)
+                  print("✓ Desktop screenshot taken (1920x1080)")
+                  
+                  # Mobile screenshot
+                  mobile_page = await browser.new_page(viewport={'width': 375, 'height': 667})
+                  await mobile_page.goto('http://localhost:8000/')
+                  await mobile_page.wait_for_timeout(3000)  # Wait for map to load
+                  await mobile_page.screenshot(path='public/screenshots/mobile.png', full_page=True)
+                  print("✓ Mobile screenshot taken (375x667)")
+                  
+                  await browser.close()
+          
+          asyncio.run(take_screenshots())
+          EOF
           
           # Stop server
           kill $SERVER_PID 2>/dev/null || true
@@ -240,7 +241,7 @@ PYTHON_SCRIPT
       
       - name: Create preview info file
         run: |
-          cat > public/PREVIEW_INFO.txt << 'EOF'
+          cat > public/PREVIEW_INFO.txt << EOF
           ========================================
           PR PREVIEW BUILD
           ========================================
@@ -330,7 +331,15 @@ PYTHON_SCRIPT
             
             // Add color preview to comment if colors changed
             if (colorPreview) {
-              comment += `\n<details>\n<summary>📊 CSS Color Variables (Click to expand)</summary>\n\n${colorPreview}\n\n</details>\n\n`;
+              comment += `
+<details>
+<summary>📊 CSS Color Variables (Click to expand)</summary>
+
+${colorPreview}
+
+</details>
+
+`;
             }
             
             comment += `### 📸 Screenshots
@@ -411,3 +420,4 @@ PYTHON_SCRIPT
           echo "2. Scroll to 'Artifacts' section" >> $GITHUB_STEP_SUMMARY
           echo "3. Download \`pr-${{ github.event.pull_request.number }}-preview\`" >> $GITHUB_STEP_SUMMARY
           echo "4. Extract and open \`public/index.html\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
