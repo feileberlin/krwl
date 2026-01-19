@@ -1,8 +1,15 @@
 # Scripts Directory
 
-This directory contains shell scripts for hosting setup and configuration.
+This directory contains shell scripts and standalone Python scripts for hosting setup, configuration, and Telegram bot management.
 
 ## Contents
+
+### Telegram Bot Scripts (NEW)
+
+- **telegram_bot.py** - Simple Telegram bot for event submissions (✅ Active - replaces old bot)
+- **manage_pins.py** - PIN management helper for trusted organizers
+
+See [Telegram Integration Documentation](../docs/TELEGRAM_INTEGRATION.md) for full details.
 
 ### Shell Scripts
 - **setup-hosting-gitignore.sh** - Setup .gitignore for different hosting platforms (GitHub Pages, Netlify, Vercel)
@@ -31,6 +38,48 @@ This directory contains shell scripts for hosting setup and configuration.
 - ✅ `validate_docs.py` → **MOVED** to `src/tools/validate_docs.py`
 
 ## Usage
+
+### Telegram Bot Scripts
+
+#### Run Simple Telegram Bot
+
+```bash
+# Set environment variables
+export TELEGRAM_BOT_TOKEN="your_bot_token_from_botfather"
+export GITHUB_TOKEN="your_github_pat"
+export GITHUB_REPOSITORY="owner/repo"
+
+# Run bot
+python3 scripts/telegram_bot.py
+```
+
+**Features:**
+- 📸 Flyer uploads → cached and dispatched for OCR processing
+- 💬 Contact messages → create GitHub issues
+- 🔐 PIN publishing → direct to production (trusted organizers only)
+
+See [Telegram Integration Documentation](../docs/TELEGRAM_INTEGRATION.md)
+
+#### Manage PINs for Trusted Organizers
+
+```bash
+# Generate new random PIN
+python3 scripts/manage_pins.py generate
+
+# Show hash for existing PIN
+python3 scripts/manage_pins.py hash 1234
+
+# Validate PIN format
+python3 scripts/manage_pins.py validate 5678
+
+# Help
+python3 scripts/manage_pins.py --help
+```
+
+**Security:**
+- Never commit PINs to repository
+- Store only SHA256 hashes in GitHub Secrets
+- Rotate PINs regularly
 
 ### Shell Scripts
 

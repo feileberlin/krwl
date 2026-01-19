@@ -1,0 +1,37 @@
+{
+  "_comment": "Example event JSON for testing PIN publishing via Telegram",
+  "_usage": "Send this to the Telegram bot with format: PIN:1234\\n{...json...}",
+  
+  "id": "example_pin_event_001",
+  "title": "Community Meetup - Test Event",
+  "description": "This is a test event for PIN publishing validation. Replace with real event details.",
+  "teaser": "Join us for a community gathering!",
+  
+  "location": {
+    "name": "Bürgerzentrum Hof",
+    "lat": 50.3167,
+    "lon": 11.9167,
+    "address": "Klosterstraße 1, 95028 Hof"
+  },
+  
+  "start_time": "2026-01-25T18:00:00",
+  "end_time": "2026-01-25T21:00:00",
+  
+  "category": "community",
+  "url": "https://example.com/event",
+  "source": "telegram_pin",
+  
+  "tags": [
+    "community",
+    "meetup",
+    "social"
+  ],
+  
+  "metadata": {
+    "language": "de",
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "parking_available": true
+    }
+  }
+}

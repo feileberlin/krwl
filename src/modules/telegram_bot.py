@@ -1,6 +1,12 @@
 """
 Telegram Bot for KRWL HOF Community Events
 
+**DEPRECATED:** This conversation-based bot is deprecated as of January 2025.
+Use the simplified bot in `scripts/telegram_bot.py` instead.
+
+**Migration:** See `docs/TELEGRAM_INTEGRATION.md` for migration guide.
+
+**Old Approach (deprecated):**
 Provides a Telegram bot interface for:
 1. Event submissions (manual entry via conversation)
 2. Flyer uploads (OCR processing of event flyers)
@@ -9,6 +15,18 @@ Provides a Telegram bot interface for:
 All submissions are saved to pending_events.json for editorial review.
 Note: The configuration mentions "incoming.json" as the new name, but
 the actual file path is assets/json/pending_events.json.
+
+**Why Deprecated:**
+- Complex conversation state management
+- Difficult to maintain and extend
+- No PIN publishing support
+- Limited GitHub Actions integration
+
+**New Approach:**
+See `scripts/telegram_bot.py` for simple, stateless bot with:
+- Direct GitHub Actions integration via repository_dispatch
+- PIN publishing for trusted organizers
+- Simpler architecture and maintenance
 """
 
 import os

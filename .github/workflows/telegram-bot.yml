@@ -1,4 +1,8 @@
-name: 🤖 Telegram Bot - Event Submissions & Contact Form
+name: 🤖 Telegram Bot - Event Submissions & Contact Form [DEPRECATED]
+
+# ⚠️ DEPRECATED: This workflow uses the old conversation-based bot.
+# Use the new simplified approach integrated into website-maintenance.yml instead.
+# See docs/TELEGRAM_INTEGRATION.md for migration guide.
 
 # Phase 2 Backend Integration: GitHub Actions workflow to proxy Telegram bot submissions
 # - Uses TELEGRAM_BOT_TOKEN secret from GitHub Secrets
