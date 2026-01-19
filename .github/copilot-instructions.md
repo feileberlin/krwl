@@ -555,7 +555,7 @@ When you run tests, if you discover any failing tests:
 - PRs will be blocked if config validation fails
 - This is a **hard requirement** before merging to main branch
 
-See `.github/workflows/config-validation.yml` for the CI workflow.
+See `.github/workflows/website-maintenance.yml` (Job 12: Validate Configuration Files) for the CI workflow.
 
 #### Documentation
 ```bash
