@@ -66,6 +66,94 @@ jobs:
           
           echo "✓ Preview site built successfully"
       
+      - name: Generate CSS color preview
+        id: color_preview
+        run: |
+          echo "🎨 Generating CSS color variable preview..."
+          
+          # Generate HTML color preview
+          python3 src/tools/generate_color_preview.py assets/html/design-tokens.css \
+            -o public/color-preview.html
+          
+          # Generate markdown for PR comment
+          python3 src/tools/generate_color_preview.py assets/html/design-tokens.css \
+            -m -o /tmp/color-preview.md
+          
+          # Check if colors changed
+          if git diff HEAD^ HEAD -- assets/html/design-tokens.css > /dev/null 2>&1; then
+            echo "colors_changed=true" >> $GITHUB_OUTPUT
+            echo "✓ Colors changed - preview will be shown"
+          else
+            echo "colors_changed=false" >> $GITHUB_OUTPUT
+            echo "ℹ No color changes detected"
+          fi
+          
+          echo "✓ Color preview generated"
+      
+      - name: Install Playwright (for screenshots)
+        run: |
+          echo "📸 Installing Playwright for screenshots..."
+          pip install playwright
+          playwright install chromium
+          echo "✓ Playwright installed"
+      
+      - name: Take screenshots
+        id: screenshots
+        run: |
+          echo "📸 Taking screenshots of generated site..."
+          
+          # Create screenshots directory
+          mkdir -p public/screenshots
+          
+          # Start local server in background
+          cd public
+          python3 -m http.server 8000 &
+          SERVER_PID=$!
+          sleep 3  # Wait for server to start
+          
+          # Take screenshots using Playwright
+          cd ..
+          python3 << 'PYTHON_SCRIPT'
+import asyncio
+from playwright.async_api import async_playwright
+
+async def take_screenshots():
+    async with async_playwright() as p:
+        browser = await p.chromium.launch()
+        
+        # Desktop screenshot
+        page = await browser.new_page(viewport={'width': 1920, 'height': 1080})
+        await page.goto('http://localhost:8000/')
+        await page.wait_for_timeout(3000)  # Wait for map to load
+        await page.screenshot(path='public/screenshots/desktop.png', full_page=True)
+        print("✓ Desktop screenshot taken (1920x1080)")
+        
+        # Mobile screenshot
+        mobile_page = await browser.new_page(viewport={'width': 375, 'height': 667})
+        await mobile_page.goto('http://localhost:8000/')
+        await mobile_page.wait_for_timeout(3000)  # Wait for map to load
+        await mobile_page.screenshot(path='public/screenshots/mobile.png', full_page=True)
+        print("✓ Mobile screenshot taken (375x667)")
+        
+        await browser.close()
+
+asyncio.run(take_screenshots())
+PYTHON_SCRIPT
+          
+          # Stop server
+          kill $SERVER_PID 2>/dev/null || true
+          
+          echo "screenshots_taken=true" >> $GITHUB_OUTPUT
+          echo "✓ Screenshots captured"
+      
+      - name: Upload screenshots as separate artifact
+        if: steps.screenshots.outputs.screenshots_taken == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-${{ github.event.pull_request.number }}-screenshots
+          path: public/screenshots/
+          retention-days: 90
+      
       - name: Create preview info file
         run: |
           cat > public/PREVIEW_INFO.txt << 'EOF'
@@ -123,21 +211,56 @@ jobs:
             const prNumber = context.issue.number;
             const runId = context.runId;
             const sha = context.payload.pull_request.head.sha.substring(0, 7);
+            const fs = require('fs');
             
-            const comment = `## 🔍 PR Preview Built Successfully
+            // Read color preview markdown if it exists
+            let colorPreview = '';
+            try {
+              colorPreview = fs.readFileSync('/tmp/color-preview.md', 'utf8');
+            } catch (e) {
+              // Color preview not generated
+            }
+            
+            let comment = `## 🔍 PR Preview Built Successfully
             
             A preview of this PR has been generated and is available for download!
             
-            ### 📦 Download Preview
+            ### 📦 Download Artifacts
             
-            **Artifact:** \`pr-${prNumber}-preview\`
+            **Main Preview:** \`pr-${prNumber}-preview\` (includes HTML, color preview, screenshots)
             
             👉 [Download Preview Artifact](https://github.com/${{ github.repository }}/actions/runs/${runId})
+            
+            **Screenshots:** \`pr-${prNumber}-screenshots\` (separate download)
+            
+            👉 [Download Screenshots](https://github.com/${{ github.repository }}/actions/runs/${runId})
+            
+            ### 🎨 Color Preview
+            
+            CSS color variables are included in the preview artifact:
+            - Open \`public/color-preview.html\` in browser to see all colors
+            - Visual swatches for all CSS variables
+            - Organized by category (Primary, Tints, Shades, etc.)
+            
+            `;
+            
+            // Add color preview to comment if colors changed
+            if (colorPreview) {
+              comment += `\n<details>\n<summary>📊 CSS Color Variables (Click to expand)</summary>\n\n${colorPreview}\n\n</details>\n\n`;
+            }
+            
+            comment += `### 📸 Screenshots
+            
+            Screenshots are available in the artifacts:
+            - \`desktop.png\` - Desktop view (1920x1080)
+            - \`mobile.png\` - Mobile view (375x667)
+            
+            Download the screenshots artifact to view them, or extract the main preview artifact and check \`public/screenshots/\` directory.
             
             ### 🚀 How to Test
             
             **Quick Test (Just open file):**
-            1. Download artifact from link above
+            1. Download \`pr-${prNumber}-preview\` artifact from link above
             2. Extract the zip file
             3. Open \`public/index.html\` in your browser
             
@@ -147,6 +270,13 @@ jobs:
             cd public
             python3 -m http.server 8000
             # Open http://localhost:8000
+            \`\`\`
+            
+            **View Color Preview:**
+            \`\`\`bash
+            # After extracting the artifact
+            open public/color-preview.html  # macOS
+            xdg-open public/color-preview.html  # Linux
             \`\`\`
             
             ### ℹ️ Preview Details
