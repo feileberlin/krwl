@@ -102,6 +102,70 @@ def is_hex_color(value: str) -> bool:
         return False
 
 
+def get_color_emoji(hex_color: str) -> str:
+    """
+    Get appropriate emoji for a hex color using KISS logic.
+    
+    Args:
+        hex_color: Hex color code (e.g., '#D689B8')
+    
+    Returns:
+        Emoji character representing the color
+    """
+    color = hex_color.upper().lstrip('#')
+    
+    # Parse RGB
+    r = int(color[0:2], 16)
+    g = int(color[2:4], 16)
+    b = int(color[4:6], 16)
+    
+    # Calculate luminance
+    luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+    
+    # Very light or very dark
+    if luminance > 0.95:
+        return '⚪'  # White
+    elif luminance < 0.08:
+        return '⚫'  # Black
+    
+    # Pink/Purple detection (ecoBarbie colors)
+    # Check if it's in the pink/magenta family (R > B > G pattern)
+    if r > b and b > g:
+        # Pink family
+        if luminance > 0.7:
+            return '💗'  # Light pink
+        elif luminance > 0.5:
+            return '🩷'  # Pink
+        elif luminance > 0.3:
+            return '🟣'  # Purple (medium)
+        else:
+            return '🟪'  # Purple square (dark)
+    
+    # Check if it's purple (R ≈ B, both > G)
+    if abs(r - b) < 30 and r > g and b > g:
+        if luminance > 0.6:
+            return '💜'  # Light purple
+        else:
+            return '🟣'  # Purple
+    
+    # Other colors
+    if r > g and r > b:
+        # Red family
+        if r > 200:
+            return '🔴' if g < 100 else '🟠'  # Red or orange
+        else:
+            return '🟤'  # Brown
+    elif g > r and g > b:
+        # Green family
+        return '🟢'
+    elif b > r and b > g:
+        # Blue family
+        return '🔵'
+    else:
+        # Gray or mixed
+        return '⚫' if luminance < 0.5 else '⚪'
+
+
 def generate_css_custom_properties(design: Dict) -> str:
     """Generate CSS custom properties from design tokens"""
     lines = [
@@ -135,9 +199,9 @@ def generate_css_custom_properties(design: Dict) -> str:
             # Add the CSS variable
             lines.append(f"  --color-{css_var}: {value};")
             
-            # Check if this is a hex color and add badge URL in comment
+            # Check if this is a hex color and add emoji badge in comment
             if is_hex_color(value):
-                badge_url = create_color_badge_url(value)
+                emoji = get_color_emoji(value)
                 
                 # Check if there's a corresponding _preview key for description
                 preview_key = f"_preview_{key}"
@@ -146,9 +210,9 @@ def generate_css_custom_properties(design: Dict) -> str:
                     # Remove hex code from preview text if it starts with it (avoid duplication)
                     if preview_text.startswith(value):
                         preview_text = preview_text[len(value):].strip(' -')
-                    lines.append(f"  /* {badge_url} {preview_text} */")
+                    lines.append(f"  /* {emoji} {value} {preview_text} */")
                 else:
-                    lines.append(f"  /* {badge_url} */")
+                    lines.append(f"  /* {emoji} {value} */")
         lines.append("")
     
     # Generate typography tokens

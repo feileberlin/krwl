@@ -14,88 +14,88 @@
   /* Colors */
   --color--comment-primary-section: ─── PRIMARY COLORS (ecoBarbie Core) ───;
   --color-primary: #D689B8;
-  /* Preview: https://img.shields.io/badge/%20-%20-D689B8?style=flat-square - #D689B8 - ecoBarbie base color (HSV: 323.4°, 36%, 84%) */
-  /* #D689B8 - ecoBarbie base color (HSV: 323.4°, 36%, 84%) - Preview: https://img.shields.io/badge/%20-%20-D689B8?style=flat-square */
+  /* 🩷 #D689B8 ecoBarbie base color (HSV: 323.4°, 36%, 84%) */
+  --color--preview-primary: #D689B8 - ecoBarbie base color (HSV: 323.4°, 36%, 84%);
   --color-primary-hover: #E8A5C8;
-  /* Preview: https://img.shields.io/badge/%20-%20-E8A5C8?style=flat-square - #E8A5C8 - Hover state (10% lighter, 8% more saturated) */
-  /* #E8A5C8 - Hover state (10% lighter, 8% more saturated) - Preview: https://img.shields.io/badge/%20-%20-E8A5C8?style=flat-square */
+  /* 💗 #E8A5C8 Hover state (10% lighter, 8% more saturated) */
+  --color--preview-primary-hover: #E8A5C8 - Hover state (10% lighter, 8% more saturated);
   --color--comment-tints-section: ─── TINTS (Lighter - Add White) ───;
   --color--comment-tints-usage: Usage: Backgrounds, hover states, light accents. Simple 2-step system (50%, 100%) - base is 'primary'.;
   --color-tint-50: #eac0da;
-  /* Preview: https://img.shields.io/badge/%20-%20-eac0da?style=flat-square - #eac0da - 50% lighter (light backgrounds, hover states) */
-  /* #eac0da - 50% lighter (light backgrounds, hover states) - Preview: https://img.shields.io/badge/%20-%20-eac0da?style=flat-square */
+  /* 💗 #eac0da 50% lighter (light backgrounds, hover states) */
+  --color--preview-tint-50: #eac0da - 50% lighter (light backgrounds, hover states);
   --color-tint-100: #ffffff;
-  /* Preview: https://img.shields.io/badge/%20-%20-ffffff?style=flat-square - #ffffff - 100% lighter (pure white, maximum contrast) */
-  /* #ffffff - 100% lighter (pure white, maximum contrast) - Preview: https://img.shields.io/badge/%20-%20-ffffff?style=flat-square */
+  /* ⚪ #ffffff 100% lighter (pure white, maximum contrast) */
+  --color--preview-tint-100: #ffffff - 100% lighter (pure white, maximum contrast);
   --color--comment-shades-section: ─── SHADES (Darker - Add Black) ───;
   --color--comment-shades-usage: Usage: Text, borders, dark accents, depth. Simple 2-step system (50%, 100%) - base is 'primary'.;
   --color-shade-50: #6b445c;
-  /* Preview: https://img.shields.io/badge/%20-%20-6b445c?style=flat-square - #6b445c - 50% darker (dark accents, borders, text on light) */
-  /* #6b445c - 50% darker (dark accents, borders, text on light) - Preview: https://img.shields.io/badge/%20-%20-6b445c?style=flat-square */
+  /* 🟣 #6b445c 50% darker (dark accents, borders, text on light) */
+  --color--preview-shade-50: #6b445c - 50% darker (dark accents, borders, text on light);
   --color-shade-100: #000000;
-  /* Preview: https://img.shields.io/badge/%20-%20-000000?style=flat-square - #000000 - 100% darker (pure black, maximum contrast) */
-  /* #000000 - 100% darker (pure black, maximum contrast) - Preview: https://img.shields.io/badge/%20-%20-000000?style=flat-square */
+  /* ⚫ #000000 100% darker (pure black, maximum contrast) */
+  --color--preview-shade-100: #000000 - 100% darker (pure black, maximum contrast);
   --color--comment-tones-section: ─── TONES (Muted - Add Grey) ───;
   --color--comment-tones-usage: Usage: Disabled states, secondary elements, soft UI. Simple 2-step system (50%, 100%) - base is 'primary'.;
   --color-tone-50: #d6afc7;
-  /* Preview: https://img.shields.io/badge/%20-%20-d6afc7?style=flat-square - #d6afc7 - 50% muted (disabled states, secondary text) */
-  /* #d6afc7 - 50% muted (disabled states, secondary text) - Preview: https://img.shields.io/badge/%20-%20-d6afc7?style=flat-square */
+  /* 💗 #d6afc7 50% muted (disabled states, secondary text) */
+  --color--preview-tone-50: #d6afc7 - 50% muted (disabled states, secondary text);
   --color-tone-100: #d6d6d6;
-  /* Preview: https://img.shields.io/badge/%20-%20-d6d6d6?style=flat-square - #d6d6d6 - 100% muted (neutral grey, fully desaturated) */
-  /* #d6d6d6 - 100% muted (neutral grey, fully desaturated) - Preview: https://img.shields.io/badge/%20-%20-d6d6d6?style=flat-square */
+  /* ⚪ #d6d6d6 100% muted (neutral grey, fully desaturated) */
+  --color--preview-tone-100: #d6d6d6 - 100% muted (neutral grey, fully desaturated);
   --color--comment-backgrounds-section: ─── BACKGROUND COLORS (Very Dark Shades) ───;
   --color--comment-backgrounds-usage: Monochromatic dark backgrounds derived from ecoBarbie;
   --color-bg-primary: #110a0e;
-  /* Preview: https://img.shields.io/badge/%20-%20-110a0e?style=flat-square - #110a0e - Main background (92% darker ecoBarbie shade) */
-  /* #110a0e - Main background (92% darker ecoBarbie shade) - Preview: https://img.shields.io/badge/%20-%20-110a0e?style=flat-square */
+  /* ⚫ #110a0e Main background (92% darker ecoBarbie shade) */
+  --color--preview-bg-primary: #110a0e - Main background (92% darker ecoBarbie shade);
   --color-bg-secondary: #150d12;
-  /* Preview: https://img.shields.io/badge/%20-%20-150d12?style=flat-square - #150d12 - Secondary background (90% darker ecoBarbie shade) */
-  /* #150d12 - Secondary background (90% darker ecoBarbie shade) - Preview: https://img.shields.io/badge/%20-%20-150d12?style=flat-square */
+  /* ⚫ #150d12 Secondary background (90% darker ecoBarbie shade) */
+  --color--preview-bg-secondary: #150d12 - Secondary background (90% darker ecoBarbie shade);
   --color-bg-tertiary: #191016;
-  /* Preview: https://img.shields.io/badge/%20-%20-191016?style=flat-square - #191016 - Tertiary background (88% darker ecoBarbie shade) */
-  /* #191016 - Tertiary background (88% darker ecoBarbie shade) - Preview: https://img.shields.io/badge/%20-%20-191016?style=flat-square */
+  /* ⚫ #191016 Tertiary background (88% darker ecoBarbie shade) */
+  --color--preview-bg-tertiary: #191016 - Tertiary background (88% darker ecoBarbie shade);
   --color--comment-text-section: ─── TEXT COLORS (Very Light Tints) ───;
   --color--comment-text-usage: Monochromatic light text colors derived from ecoBarbie for high contrast;
   --color-text-primary: #f9f5f8;
-  /* Preview: https://img.shields.io/badge/%20-%20-f9f5f8?style=flat-square - #f9f5f8 - Primary text (98% lighter ecoBarbie tint, high contrast) */
-  /* #f9f5f8 - Primary text (98% lighter ecoBarbie tint, high contrast) - Preview: https://img.shields.io/badge/%20-%20-f9f5f8?style=flat-square */
+  /* ⚪ #f9f5f8 Primary text (98% lighter ecoBarbie tint, high contrast) */
+  --color--preview-text-primary: #f9f5f8 - Primary text (98% lighter ecoBarbie tint, high contrast);
   --color-text-secondary: #f2e9ee;
-  /* Preview: https://img.shields.io/badge/%20-%20-f2e9ee?style=flat-square - #f2e9ee - Secondary text (95% lighter ecoBarbie tint) */
-  /* #f2e9ee - Secondary text (95% lighter ecoBarbie tint) - Preview: https://img.shields.io/badge/%20-%20-f2e9ee?style=flat-square */
+  /* 💗 #f2e9ee Secondary text (95% lighter ecoBarbie tint) */
+  --color--preview-text-secondary: #f2e9ee - Secondary text (95% lighter ecoBarbie tint);
   --color-text-tertiary: #eadde5;
-  /* Preview: https://img.shields.io/badge/%20-%20-eadde5?style=flat-square - #eadde5 - Tertiary text (92% lighter ecoBarbie tint) */
-  /* #eadde5 - Tertiary text (92% lighter ecoBarbie tint) - Preview: https://img.shields.io/badge/%20-%20-eadde5?style=flat-square */
+  /* 💗 #eadde5 Tertiary text (92% lighter ecoBarbie tint) */
+  --color--preview-text-tertiary: #eadde5 - Tertiary text (92% lighter ecoBarbie tint);
   --color--comment-borders-section: ─── BORDER COLORS (Medium Dark Shades) ───;
   --color--comment-borders-usage: Monochromatic borders derived from ecoBarbie;
   --color-border-primary: #35222e;
-  /* Preview: https://img.shields.io/badge/%20-%20-35222e?style=flat-square - #35222e - Primary border (75% darker ecoBarbie shade) */
-  /* #35222e - Primary border (75% darker ecoBarbie shade) - Preview: https://img.shields.io/badge/%20-%20-35222e?style=flat-square */
+  /* 🟪 #35222e Primary border (75% darker ecoBarbie shade) */
+  --color--preview-border-primary: #35222e - Primary border (75% darker ecoBarbie shade);
   --color-border-secondary: #2f1e28;
-  /* Preview: https://img.shields.io/badge/%20-%20-2f1e28?style=flat-square - #2f1e28 - Secondary border (78% darker ecoBarbie shade) */
-  /* #2f1e28 - Secondary border (78% darker ecoBarbie shade) - Preview: https://img.shields.io/badge/%20-%20-2f1e28?style=flat-square */
+  /* 🟪 #2f1e28 Secondary border (78% darker ecoBarbie shade) */
+  --color--preview-border-secondary: #2f1e28 - Secondary border (78% darker ecoBarbie shade);
   --color--comment-accents-section: ─── ACCENT COLORS (Monochromatic Variants) ───;
   --color--comment-accents-usage: ALL derived from ecoBarbie with saturation/value adjustments for visual distinction;
   --color-success: #D689B8;
-  /* Preview: https://img.shields.io/badge/%20-%20-D689B8?style=flat-square - #D689B8 - Success state (uses primary color) */
-  /* #D689B8 - Success state (uses primary color) - Preview: https://img.shields.io/badge/%20-%20-D689B8?style=flat-square */
+  /* 🩷 #D689B8 Success state (uses primary color) */
+  --color--preview-success: #D689B8 - Success state (uses primary color);
   --color-accent: #e07fba;
-  /* Preview: https://img.shields.io/badge/%20-%20-e07fba?style=flat-square - #e07fba - Accent (20% more saturated, 5% brighter) */
-  /* #e07fba - Accent (20% more saturated, 5% brighter) - Preview: https://img.shields.io/badge/%20-%20-e07fba?style=flat-square */
+  /* 🩷 #e07fba Accent (20% more saturated, 5% brighter) */
+  --color--preview-accent: #e07fba - Accent (20% more saturated, 5% brighter);
   --color-warning: #eb7dc0;
-  /* Preview: https://img.shields.io/badge/%20-%20-eb7dc0?style=flat-square - #eb7dc0 - Warning (30% more saturated, 10% brighter) */
-  /* #eb7dc0 - Warning (30% more saturated, 10% brighter) - Preview: https://img.shields.io/badge/%20-%20-eb7dc0?style=flat-square */
+  /* 🩷 #eb7dc0 Warning (30% more saturated, 10% brighter) */
+  --color--preview-warning: #eb7dc0 - Warning (30% more saturated, 10% brighter);
   --color-error: #954476;
-  /* Preview: https://img.shields.io/badge/%20-%20-954476?style=flat-square - #954476 - Error (50% more saturated, 30% darker) */
-  /* #954476 - Error (50% more saturated, 30% darker) - Preview: https://img.shields.io/badge/%20-%20-954476?style=flat-square */
+  /* 🟣 #954476 Error (50% more saturated, 30% darker) */
+  --color--preview-error: #954476 - Error (50% more saturated, 30% darker);
   --color-bookmark: #eac0da;
-  /* Preview: https://img.shields.io/badge/%20-%20-eac0da?style=flat-square - #eac0da - Bookmark highlight (uses tint_50) */
-  /* #eac0da - Bookmark highlight (uses tint_50) - Preview: https://img.shields.io/badge/%20-%20-eac0da?style=flat-square */
+  /* 💗 #eac0da Bookmark highlight (uses tint_50) */
+  --color--preview-bookmark: #eac0da - Bookmark highlight (uses tint_50);
   --color-bookmark-light: #eeb2d7;
-  /* Preview: https://img.shields.io/badge/%20-%20-eeb2d7?style=flat-square - #eeb2d7 - Bookmark hover (between tint_50 and white) */
-  /* #eeb2d7 - Bookmark hover (between tint_50 and white) - Preview: https://img.shields.io/badge/%20-%20-eeb2d7?style=flat-square */
+  /* 💗 #eeb2d7 Bookmark hover (between tint_50 and white) */
+  --color--preview-bookmark-light: #eeb2d7 - Bookmark hover (between tint_50 and white);
   --color-bookmark-lighter: #f6c1e2;
-  /* Preview: https://img.shields.io/badge/%20-%20-f6c1e2?style=flat-square - #f6c1e2 - Bookmark subtle (very light tint) */
-  /* #f6c1e2 - Bookmark subtle (very light tint) - Preview: https://img.shields.io/badge/%20-%20-f6c1e2?style=flat-square */
+  /* 💗 #f6c1e2 Bookmark subtle (very light tint) */
+  --color--preview-bookmark-lighter: #f6c1e2 - Bookmark subtle (very light tint);
 
   /* Typography */
   --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
