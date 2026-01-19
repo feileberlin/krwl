@@ -21,32 +21,65 @@ This palette is **100% monochromatic** - every color is scientifically derived f
 
 ## Complete Scientific Palette - 15 Unique Colors
 
+<div style="font-size: 1.5em;">
+
 | Badge | Name | Hex | RGB | Transform | Category | Usage |
 |-------|------|-----|-----|-----------|----------|-------|
 | **PRIMARY (BASE)** | | | | | | |
-| 🟪 | **Primary** | `#D689B8` | 214, 137, 184 | Base 0% | Core | Base color, brand identity |
+| 🟪🟪🟪 | **Primary** | `#D689B8` | 214, 137, 184 | Base 0% | Core | Base color, brand identity |
 | | | | | | | |
 | **TINTS (Base + White)** | | | | | | |
-| 🟪 | **Tint 25%** | `#e09fc7` | 224, 159, 199 | +25% white | Tint | Hover states, light accents |
-| 🟪 | **Tint 50%** | `#eab7d6` | 234, 183, 214 | +50% white | Tint | Light backgrounds |
-| 🟪 | **Tint 75%** | `#f4d1e7` | 244, 209, 231 | +75% white | Tint | Very light backgrounds |
-| ⬜ | **Tint 100%** | `#ffecf7` | 255, 236, 247 | +100% white | Tint | Near-white, subtle tint |
+| 🟪🟪🟪 | **Tint 25%** | `#e09fc7` | 224, 159, 199 | +25% white | Tint | Hover states, light accents |
+| 🟪🟪🟪 | **Tint 50%** | `#eab7d6` | 234, 183, 214 | +50% white | Tint | Light backgrounds |
+| 🟪🟪🟪 | **Tint 75%** | `#f4d1e7` | 244, 209, 231 | +75% white | Tint | Very light backgrounds |
+| ⬜⬜⬜ | **Tint 100%** | `#ffecf7` | 255, 236, 247 | +100% white | Tint | Near-white, subtle tint |
 | | | | | | | |
 | **SHADES (Base + Black)** | | | | | | |
-| 🟪 | **Shade 25%** | `#a0668a` | 160, 102, 138 | +25% black | Shade | Medium dark accents |
-| 🟪 | **Shade 50%** | `#6b445c` | 107, 68, 92 | +50% black | Shade | Borders, dark text |
-| 🟪 | **Shade 75%** | `#35222e` | 53, 34, 46 | +75% black | Shade | Very dark accents |
-| ⬛ | **Shade 100%** | `#000000` | 0, 0, 0 | +100% black | Shade | Pure black |
+| 🟪🟪🟪 | **Shade 25%** | `#a0668a` | 160, 102, 138 | +25% black | Shade | Medium dark accents |
+| 🟪🟪🟪 | **Shade 50%** | `#6b445c` | 107, 68, 92 | +50% black | Shade | Borders, dark text |
+| 🟪🟪🟪 | **Shade 75%** | `#35222e` | 53, 34, 46 | +75% black | Shade | Very dark accents |
+| ⬛⬛⬛ | **Shade 100%** | `#000000` | 0, 0, 0 | +100% black | Shade | Pure black |
 | | | | | | | |
 | **TONES (Base + Grey)** | | | | | | |
-| 🟪 | **Tone 50%** | `#d6afc7` | 214, 175, 199 | 50% desat | Tone | Disabled states |
-| 🟪 | **Tone 75%** | `#d6c2ce` | 214, 194, 206 | 75% desat | Tone | Very muted elements |
-| 🟪 | **Tone 100%** | `#d6d6d6` | 214, 214, 214 | 100% desat | Tone | Neutral grey |
+| 🟪🟪🟪 | **Tone 50%** | `#d6afc7` | 214, 175, 199 | 50% desat | Tone | Disabled states |
+| 🟪🟪🟪 | **Tone 75%** | `#d6c2ce` | 214, 194, 206 | 75% desat | Tone | Very muted elements |
+| 🟪🟪🟪 | **Tone 100%** | `#d6d6d6` | 214, 214, 214 | 100% desat | Tone | Neutral grey |
 | | | | | | | |
 | **SPECIAL (Saturation/Value Adjusted)** | | | | | | |
-| 🟪 | **Accent** | `#e27aba` | 226, 122, 186 | +10% sat, +5% val | Special | Links, highlights |
-| 🟪 | **Warning** | `#ef69bb` | 239, 105, 187 | +20% sat, +10% val | Special | Warnings, alerts |
-| 🟪 | **Error** | `#a33779` | 163, 55, 121 | +30% sat, -20% val | Special | Errors, critical |
+| 🟪🟪🟪 | **Accent** | `#e27aba` | 226, 122, 186 | +10% sat, +5% val | Special | Links, highlights |
+| 🟪🟪🟪 | **Warning** | `#ef69bb` | 239, 105, 187 | +20% sat, +10% val | Special | Warnings, alerts |
+| 🟪🟪🟪 | **Error** | `#a33779` | 163, 55, 121 | +30% sat, -20% val | Special | Errors, critical |
+
+</div>
+
+---
+
+## Large Color Swatches for Better Visibility
+
+### Primary
+<h2 style="font-size: 3em;">🟪🟪🟪🟪🟪 <code>#D689B8</code> Primary (Base)</h2>
+
+### Tints (Lighter)
+<h3 style="font-size: 2.5em;">🟪🟪🟪🟪🟪 <code>#e09fc7</code> Tint 25%</h3>
+<h3 style="font-size: 2.5em;">🟪🟪🟪🟪🟪 <code>#eab7d6</code> Tint 50%</h3>
+<h3 style="font-size: 2.5em;">🟪🟪🟪🟪🟪 <code>#f4d1e7</code> Tint 75%</h3>
+<h3 style="font-size: 2.5em;">⬜⬜⬜⬜⬜ <code>#ffecf7</code> Tint 100%</h3>
+
+### Shades (Darker)
+<h3 style="font-size: 2.5em;">🟪🟪🟪🟪🟪 <code>#a0668a</code> Shade 25%</h3>
+<h3 style="font-size: 2.5em;">🟪🟪🟪🟪🟪 <code>#6b445c</code> Shade 50%</h3>
+<h3 style="font-size: 2.5em;">🟪🟪🟪🟪🟪 <code>#35222e</code> Shade 75%</h3>
+<h3 style="font-size: 2.5em;">⬛⬛⬛⬛⬛ <code>#000000</code> Shade 100%</h3>
+
+### Tones (Muted)
+<h3 style="font-size: 2.5em;">🟪🟪🟪🟪🟪 <code>#d6afc7</code> Tone 50%</h3>
+<h3 style="font-size: 2.5em;">🟪🟪🟪🟪🟪 <code>#d6c2ce</code> Tone 75%</h3>
+<h3 style="font-size: 2.5em;">🟪🟪🟪🟪🟪 <code>#d6d6d6</code> Tone 100%</h3>
+
+### Special
+<h3 style="font-size: 2.5em;">🟪🟪🟪🟪🟪 <code>#e27aba</code> Accent</h3>
+<h3 style="font-size: 2.5em;">🟪🟪🟪🟪🟪 <code>#ef69bb</code> Warning</h3>
+<h3 style="font-size: 2.5em;">🟪🟪🟪🟪🟪 <code>#a33779</code> Error</h3>
 
 ---
 
