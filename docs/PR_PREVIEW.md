@@ -10,6 +10,22 @@ This project uses a **KISS (Keep It Simple, Stupid)** approach to PR previews:
 - ✅ **Pure GitHub** - Uses GitHub Actions artifacts
 - ✅ **Automatic** - Builds on every PR update
 - ✅ **Self-contained** - Download once, test offline
+- ✅ **Includes** - Site preview, color variables, screenshots
+
+## 🎛️ Control Panel
+
+**Want to disable previews temporarily?** See [How to Disable PR Previews](./PR_PREVIEW_DISABLE.md)
+
+**Quick disable:**
+```
+Repository Settings → Actions → Variables → Add:
+Name: PR_PREVIEWS_ENABLED
+Value: false
+```
+
+**Why disable?** To save Actions minutes during high-volume PR periods or maintenance.
+
+---
 
 ## 🚀 How It Works
 
