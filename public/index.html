@@ -100,7 +100,7 @@
 
   /* Typography */
   --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
-  --font-family-mono: 'Monaco', 'Courier New', monospace;
+  --font-family-mono: 'Roboto Mono', 'Monaco', 'Courier New', monospace;
   --font-size-base: 16px;
   --font-size-small: 14px;
   --font-size-large: 18px;
@@ -2871,6 +2871,7 @@ strong, b {
     word-break: break-word;
     padding: 0.4rem 0;
     border-bottom: 1px solid color-mix(in srgb, var(--color-ecobarbie-dark-tone) 10%, transparent);
+    font-family: var(--font-family-mono);
 }
 
 .debug-value.monospace {
@@ -2924,11 +2925,110 @@ strong, b {
     color: var(--color-ecobarbie-light-tone);
 }
 
-/* Details/Summary for Size Breakdown */
+/* Details/Summary for Size Breakdown (deprecated - now using table) */
 .debug-details {
     margin-top: 0.75rem;
     border-top: 1px solid color-mix(in srgb, var(--color-ecobarbie-dark-tone) 20%, transparent);
     padding-top: 0.75rem;
+}
+
+/* Size Breakdown Table - Always Visible */
+.debug-size-breakdown-table {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid color-mix(in srgb, var(--color-ecobarbie-dark-tone) 20%, transparent);
+}
+
+.size-breakdown-header {
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: color-mix(in srgb, var(--color-ecobarbie-dark-tone) 15%, transparent);
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.size-breakdown-header strong {
+    color: var(--color-ecobarbie-light-shade);
+    font-size: 1.1em;
+}
+
+.size-breakdown-bytes {
+    color: var(--color-ecobarbie-light-tone);
+    font-size: 0.85em;
+    margin-left: 0.5rem;
+    font-family: var(--font-family-mono);
+}
+
+.size-breakdown-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85em;
+    margin-top: 0.5rem;
+}
+
+.size-breakdown-table thead {
+    border-bottom: 2px solid color-mix(in srgb, var(--color-ecobarbie-dark-tone) 30%, transparent);
+}
+
+.size-breakdown-table th {
+    padding: 0.5rem 0.5rem;
+    text-align: left;
+    color: var(--color-ecobarbie-medium-tone);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 0.75em;
+}
+
+.size-breakdown-table th.size-col,
+.size-breakdown-table th.percent-col {
+    text-align: right;
+}
+
+.size-breakdown-table td {
+    padding: 0.5rem 0.5rem;
+    color: var(--color-ecobarbie-light-tone);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-ecobarbie-dark-tone) 10%, transparent);
+}
+
+.size-breakdown-table td.component-name {
+    font-weight: 500;
+}
+
+.size-breakdown-table td.size-col,
+.size-breakdown-table td.percent-col {
+    text-align: right;
+    font-family: var(--font-family-mono);
+}
+
+.size-breakdown-table tr.highlight-row td {
+    background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.size-breakdown-table tr.highlight-row td.component-name::after {
+    content: ' ← Icon map only';
+    color: var(--color-ecobarbie-light-tone);
+    font-weight: normal;
+    font-size: 0.9em;
+    margin-left: 0.5rem;
+}
+
+.size-breakdown-table tbody tr:hover td {
+    background: color-mix(in srgb, var(--color-ecobarbie-dark-tone) 20%, transparent);
+}
+
+.size-breakdown-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.size-breakdown-loading {
+    padding: 1rem;
+    text-align: center;
+    color: var(--color-ecobarbie-light-tone);
+    font-size: 0.85em;
+    font-style: italic;
 }
 
 .debug-details-summary {
@@ -3806,15 +3906,14 @@ multiple sources.</p>
           </div>
         </div>
         
-        <!-- Size breakdown - collapsible details -->
-        <details class="debug-details">
-          <summary class="debug-details-summary">Size Breakdown</summary>
-          <div id="debug-size-breakdown" class="debug-details-content">
-            <ul class="debug-size-list">
-              <li>Loading...</li>
-            </ul>
-          </div>
-        </details>
+        <!-- Build Size Breakdown Table - Always Visible -->
+        <div class="debug-group-header">
+          <i data-lucide="package" aria-hidden="true"></i>
+          <strong>Build Size Breakdown</strong>
+        </div>
+        <div id="debug-size-breakdown-table" class="debug-size-breakdown-table">
+          <div class="size-breakdown-loading">Loading build size information...</div>
+        </div>
       </div>
       
       <!-- Warnings Section -->
@@ -4013,7 +4112,7 @@ window.APP_CONFIG = {"debug": false, "app": {"environment": "ci"}, "map": {"defa
 window.__INLINE_EVENTS_DATA__ = { "events": [{"id": "html_frankenpost_-3959068800383208116", "title": "Kunst in Bayreuth - Werke der 1940er bis 1960er Jahre - aus den Sammlungen und Stiftungen im Kunstmuseum", "description": "Donnerstag,01.01.2026,", "location": {"name": "Kunstmuseum Bayreuth", "lat": 49.944, "lon": 11.5747, "address": "Maximilianstraße 33, 95444 Bayreuth"}, "start_time": "2026-01-01T18:00:00", "end_time": null, "url": "https://event.frankenpost.de/detail.php?event_id=3119599", "source": "https://event.frankenpost.de/detail.php?event_id=3119599", "scraped_at": "2026-01-01T13:27:18.685017", "status": "published", "published_at": "2026-01-01T13:42:00.700054", "category": "arts", "teaser": "Donnerstag,01.01."}, {"id": "html_frankenpost_4878466979842611893", "title": "Ausstellung zum Fotowettbewerb: Zeig mir deine Lebenswerte Stadt (bis 7. Januar 2026)", "description": "Donnerstag,01.01.2026,", "location": {"name": "RW21 Volkshochschule Bayreuth", "lat": 49.9454, "lon": 11.5771, "address": "Richard-Wagner-Str. 21, 95444 Bayreuth"}, "start_time": "2026-01-01T18:00:00", "end_time": null, "url": "https://event.frankenpost.de/detail.php?event_id=3202184", "source": "https://event.frankenpost.de/detail.php?event_id=3202184", "scraped_at": "2026-01-01T13:27:18.684482", "status": "published", "published_at": "2026-01-01T13:42:00.700226", "category": "arts", "teaser": "Donnerstag,01.01."}, {"id": "html_frankenpost_6710371282043762830", "title": "Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline", "description": "Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline am 01.01.2026 18:00", "location": {"name": "Schloss Carolinenruhe", "lat": 49.93047, "lon": 11.5674, "address": "Colmdorf 8, 95448 Bayreuth"}, "start_time": "2026-01-01T18:00:00", "end_time": null, "url": "https://event.frankenpost.de/detail.php?event_id=3185852", "source": "https://event.frankenpost.de/detail.php?event_id=3185852", "scraped_at": "2026-01-01T13:27:18.683791", "status": "published", "published_at": "2026-01-01T13:42:00.700343", "category": "palace", "teaser": "Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline"}, {"id": "test_event_001", "title": "Test Community Gathering", "description": "A test event for approval flow testing", "location": {"name": "Test Venue Berlin", "lat": 52.52, "lon": 13.405, "address_hidden": true}, "start_time": "2026-01-15T19:00:00", "end_time": null, "url": "https://example.com/test-event", "source": "https://example.com/test-event", "scraped_at": "2026-01-01T14:45:00", "status": "published", "published_at": "2026-01-01T14:45:54.237616", "category": "community", "teaser": "A test event for approval flow testing"}] };
 window.MARKER_ICONS = {"marker-community": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NiA5NiIgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2Ij4KICA8IS0tIEljb24tb25seSBtYXJrZXIgKG5vIGd5cm8gb3V0bGluZSkgLSAzeCBsYXJnZXIgLS0+CiAgCjwhLS0gRHJvcCBzaGFkb3cgZm9yIGRlcHRoIC0tPgogIDxlbGxpcHNlIGN4PSI0OC4wIiBjeT0iOTAiIHJ4PSIxOS4yIiByeT0iNi4wIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjMiLz4KICAKICA8IS0tIEljb24gY29udGVudCBzY2FsZWQgM3ggYW5kIGNlbnRlcmVkIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAuMCwgMy4wKSBzY2FsZSgzKSI+CjwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiNENjg5QjgiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xNiAyMXYtMmE0IDQgMCAwIDAtNC00SDZhNCA0IDAgMCAwLTQgNHYyIiAvPgogIDxwYXRoIGQ9Ik0xNiAzLjEyOGE0IDQgMCAwIDEgMCA3Ljc0NCIgLz4KICA8cGF0aCBkPSJNMjIgMjF2LTJhNCA0IDAgMCAwLTMtMy44NyIgLz4KICA8Y2lyY2xlIGN4PSI5IiBjeT0iNyIgcj0iNCIgLz4KICAgIDwvZz4KICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-arts": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NiA5NiIgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2Ij4KICA8IS0tIEljb24tb25seSBtYXJrZXIgKG5vIGd5cm8gb3V0bGluZSkgLSAzeCBsYXJnZXIgLS0+CiAgCjwhLS0gRHJvcCBzaGFkb3cgZm9yIGRlcHRoIC0tPgogIDxlbGxpcHNlIGN4PSI0OC4wIiBjeT0iOTAiIHJ4PSIxOS4yIiByeT0iNi4wIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjMiLz4KICAKICA8IS0tIEljb24gY29udGVudCBzY2FsZWQgM3ggYW5kIGNlbnRlcmVkIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAuMCwgMy4wKSBzY2FsZSgzKSI+CjwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiNENjg5QjgiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xMiAyMmExIDEgMCAwIDEgMC0yMCAxMCA5IDAgMCAxIDEwIDkgNSA1IDAgMCAxLTUgNWgtMi4yNWExLjc1IDEuNzUgMCAwIDAtMS40IDIuOGwuMy40YTEuNzUgMS43NSAwIDAgMS0xLjQgMi44eiIgLz4KICA8Y2lyY2xlIGN4PSIxMy41IiBjeT0iNi41IiByPSIuNSIgZmlsbD0iY3VycmVudENvbG9yIiAvPgogIDxjaXJjbGUgY3g9IjE3LjUiIGN5PSIxMC41IiByPSIuNSIgZmlsbD0iY3VycmVudENvbG9yIiAvPgogIDxjaXJjbGUgY3g9IjYuNSIgY3k9IjEyLjUiIHI9Ii41IiBmaWxsPSJjdXJyZW50Q29sb3IiIC8+CiAgPGNpcmNsZSBjeD0iOC41IiBjeT0iNy41IiByPSIuNSIgZmlsbD0iY3VycmVudENvbG9yIiAvPgogICAgPC9nPgogIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-palace": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NiA5NiIgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2Ij4KICA8IS0tIEljb24tb25seSBtYXJrZXIgKG5vIGd5cm8gb3V0bGluZSkgLSAzeCBsYXJnZXIgLS0+CiAgCjwhLS0gRHJvcCBzaGFkb3cgZm9yIGRlcHRoIC0tPgogIDxlbGxpcHNlIGN4PSI0OC4wIiBjeT0iOTAiIHJ4PSIxOS4yIiByeT0iNi4wIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjMiLz4KICAKICA8IS0tIEljb24gY29udGVudCBzY2FsZWQgM3ggYW5kIGNlbnRlcmVkIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAuMCwgMy4wKSBzY2FsZSgzKSI+CjwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiNENjg5QjgiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xMS41NjIgMy4yNjZhLjUuNSAwIDAgMSAuODc2IDBMMTUuMzkgOC44N2ExIDEgMCAwIDAgMS41MTYuMjk0TDIxLjE4MyA1LjVhLjUuNSAwIDAgMSAuNzk4LjUxOWwtMi44MzQgMTAuMjQ2YTEgMSAwIDAgMS0uOTU2LjczNEg1LjgxYTEgMSAwIDAgMS0uOTU3LS43MzRMMi4wMiA2LjAyYS41LjUgMCAwIDEgLjc5OC0uNTE5bDQuMjc2IDMuNjY0YTEgMSAwIDAgMCAxLjUxNi0uMjk0eiIgLz4KICA8cGF0aCBkPSJNNSAyMWgxNCIgLz4KICAgIDwvZz4KICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-default": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NiA5NiIgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2Ij4KICA8IS0tIEljb24tb25seSBtYXJrZXIgKG5vIGd5cm8gb3V0bGluZSkgLSAzeCBsYXJnZXIgLS0+CiAgCjwhLS0gRHJvcCBzaGFkb3cgZm9yIGRlcHRoIC0tPgogIDxlbGxpcHNlIGN4PSI0OC4wIiBjeT0iOTAiIHJ4PSIxOS4yIiByeT0iNi4wIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjMiLz4KICAKICA8IS0tIEljb24gY29udGVudCBzY2FsZWQgM3ggYW5kIGNlbnRlcmVkIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAuMCwgMy4wKSBzY2FsZSgzKSI+CjwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiNENjg5QjgiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0yMCAxMGMwIDQuOTkzLTUuNTM5IDEwLjE5My03LjM5OSAxMS43OTlhMSAxIDAgMCAxLTEuMjAyIDBDOS41MzkgMjAuMTkzIDQgMTQuOTkzIDQgMTBhOCA4IDAgMCAxIDE2IDAiIC8+CiAgPGNpcmNsZSBjeD0iMTIiIGN5PSIxMCIgcj0iMyIgLz4KICAgIDwvZz4KICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-geolocation": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NiA5NiIgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2Ij4KICA8IS0tIEljb24tb25seSBtYXJrZXIgKG5vIGd5cm8gb3V0bGluZSkgLSAzeCBsYXJnZXIgLS0+CiAgCjwhLS0gRHJvcCBzaGFkb3cgZm9yIGRlcHRoIC0tPgogIDxlbGxpcHNlIGN4PSI0OC4wIiBjeT0iOTAiIHJ4PSIxOS4yIiByeT0iNi4wIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjMiLz4KICAKICA8IS0tIEljb24gY29udGVudCBzY2FsZWQgM3ggYW5kIGNlbnRlcmVkIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAuMCwgMy4wKSBzY2FsZSgzKSI+CjwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiNENjg5QjgiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxsaW5lIHgxPSIyIiB4Mj0iNSIgeTE9IjEyIiB5Mj0iMTIiIC8+CiAgPGxpbmUgeDE9IjE5IiB4Mj0iMjIiIHkxPSIxMiIgeTI9IjEyIiAvPgogIDxsaW5lIHgxPSIxMiIgeDI9IjEyIiB5MT0iMiIgeTI9IjUiIC8+CiAgPGxpbmUgeDE9IjEyIiB4Mj0iMTIiIHkxPSIxOSIgeTI9IjIyIiAvPgogIDxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjciIC8+CiAgICA8L2c+CiAgPC9nPgogIDwvZz4KPC9zdmc+"};
 window.DASHBOARD_ICONS = {};
-window.DEBUG_INFO = {"event_counts": {"published": 4, "pending": 1, "archived": 13, "total": 18}, "unverified_locations_count": 17, "environment": "ci", "cache_enabled": true, "cache_file_size": null, "deployment_time": "2026-01-19T21:56:00.062900", "git_commit": {"hash": "66aed1e", "author": "copilot-swe-agent[bot]", "date": "2026-01-19 21:43:00 +0000", "message": "Redesign markers: Remove gyro outline, show icons only at 3x size (96x96px)"}, "html_sizes": {"total": 303948, "events_data": 2741, "translations": 0, "stylesheets": 86794, "scripts": 0, "marker_icons": 5809, "other": 208604}, "language": "de", "lint_results": {"passed": true, "error_count": 0, "warning_count": 2, "errors": [], "warnings": ["app_js: Found 11 console.log statements (consider removing for production)", "app_js: Found alert() usage (consider better UX)"], "structured_warnings": [{"message": "app_js: Found 11 console.log statements (consider removing for production)", "category": "general", "rule": "", "context": ""}, {"message": "app_js: Found alert() usage (consider better UX)", "category": "general", "rule": "", "context": ""}]}};
+window.DEBUG_INFO = {"event_counts": {"published": 4, "pending": 1, "archived": 13, "total": 18}, "unverified_locations_count": 17, "environment": "ci", "cache_enabled": true, "cache_file_size": null, "deployment_time": "2026-01-19T22:12:28.113256", "git_commit": {"hash": "bb5c6d0", "author": "copilot-swe-agent[bot]", "date": "2026-01-19 21:56:25 +0000", "message": "Add smart marker optimization: keep only icons used by current events"}, "html_sizes": {"total": 307809, "events_data": 2741, "translations": 0, "stylesheets": 89362, "scripts": 0, "marker_icons": 5809, "other": 209897}, "language": "de", "lint_results": {"passed": true, "error_count": 0, "warning_count": 2, "errors": [], "warnings": ["app_js: Found 11 console.log statements (consider removing for production)", "app_js: Found alert() usage (consider better UX)"], "structured_warnings": [{"message": "app_js: Found 11 console.log statements (consider removing for production)", "category": "general", "rule": "", "context": ""}, {"message": "app_js: Found alert() usage (consider better UX)", "category": "general", "rule": "", "context": ""}]}};
 
 
 /* Leaflet JS: Load from CDN at runtime */
@@ -7237,28 +7336,63 @@ class DashboardUI {
     }
     
     updateSizeBreakdown(debugInfo) {
-        const debugSizeBreakdown = document.getElementById('debug-size-breakdown');
+        const debugSizeBreakdown = document.getElementById('debug-size-breakdown-table');
         if (!debugSizeBreakdown || !debugInfo.html_sizes) return;
         
         const sizes = debugInfo.html_sizes;
+        const totalKB = (sizes.total / 1024).toFixed(1);
+        const totalBytes = sizes.total;
+        
+        // Component data with sizes
         const components = [
-            { name: 'Events Data', size: sizes.events_data },
-            { name: 'Scripts', size: sizes.scripts },
-            { name: 'Styles', size: sizes.stylesheets },
-            { name: 'Translations', size: sizes.translations },
-            { name: 'Markers', size: sizes.marker_icons },
-            { name: 'Other', size: sizes.other }
+            { name: 'Events Data', size: sizes.events_data, key: 'events_data' },
+            { name: 'Stylesheets', size: sizes.stylesheets, key: 'stylesheets' },
+            { name: 'Marker Icons', size: sizes.marker_icons, key: 'marker_icons', highlight: true },
+            { name: 'Scripts', size: sizes.scripts, key: 'scripts' },
+            { name: 'Translations', size: sizes.translations, key: 'translations' },
+            { name: 'Other', size: sizes.other, key: 'other' }
         ];
         
+        // Sort by size (largest first)
         components.sort((a, b) => b.size - a.size);
         
-        let breakdownHTML = '<ul class="debug-size-list">';
+        // Generate nice table HTML
+        let breakdownHTML = `
+          <div class="size-breakdown-header">
+            <strong>Total: ${totalKB} KB</strong> 
+            <span class="size-breakdown-bytes">(${totalBytes.toLocaleString()} bytes)</span>
+          </div>
+          <table class="size-breakdown-table">
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th class="size-col">Size</th>
+                <th class="percent-col">%</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+        
         components.forEach(comp => {
+            if (comp.size === 0) return; // Skip zero-size components
+            
             const kb = (comp.size / 1024).toFixed(1);
             const percent = ((comp.size / sizes.total) * 100).toFixed(1);
-            breakdownHTML += `<li>${comp.name}: ${kb} KB (${percent}%)</li>`;
+            const highlightClass = comp.highlight ? ' class="highlight-row"' : '';
+            
+            breakdownHTML += `
+              <tr${highlightClass}>
+                <td class="component-name">${comp.name}</td>
+                <td class="size-col">${kb} KB</td>
+                <td class="percent-col">${percent}%</td>
+              </tr>
+            `;
         });
-        breakdownHTML += '</ul>';
+        
+        breakdownHTML += `
+            </tbody>
+          </table>
+        `;
         
         debugSizeBreakdown.innerHTML = breakdownHTML;
     }

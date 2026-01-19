@@ -109,15 +109,14 @@ multiple sources.</p>
           </div>
         </div>
         
-        <!-- Size breakdown - collapsible details -->
-        <details class="debug-details">
-          <summary class="debug-details-summary">Size Breakdown</summary>
-          <div id="debug-size-breakdown" class="debug-details-content">
-            <ul class="debug-size-list">
-              <li>Loading...</li>
-            </ul>
-          </div>
-        </details>
+        <!-- Build Size Breakdown Table - Always Visible -->
+        <div class="debug-group-header">
+          <i data-lucide="package" aria-hidden="true"></i>
+          <strong>Build Size Breakdown</strong>
+        </div>
+        <div id="debug-size-breakdown-table" class="debug-size-breakdown-table">
+          <div class="size-breakdown-loading">Loading build size information...</div>
+        </div>
       </div>
       
       <!-- Warnings Section -->

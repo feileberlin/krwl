@@ -1362,6 +1362,7 @@ strong, b {
     word-break: break-word;
     padding: 0.4rem 0;
     border-bottom: 1px solid color-mix(in srgb, var(--color-ecobarbie-dark-tone) 10%, transparent);
+    font-family: var(--font-family-mono);
 }
 
 .debug-value.monospace {
@@ -1415,11 +1416,110 @@ strong, b {
     color: var(--color-ecobarbie-light-tone);
 }
 
-/* Details/Summary for Size Breakdown */
+/* Details/Summary for Size Breakdown (deprecated - now using table) */
 .debug-details {
     margin-top: 0.75rem;
     border-top: 1px solid color-mix(in srgb, var(--color-ecobarbie-dark-tone) 20%, transparent);
     padding-top: 0.75rem;
+}
+
+/* Size Breakdown Table - Always Visible */
+.debug-size-breakdown-table {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid color-mix(in srgb, var(--color-ecobarbie-dark-tone) 20%, transparent);
+}
+
+.size-breakdown-header {
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: color-mix(in srgb, var(--color-ecobarbie-dark-tone) 15%, transparent);
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.size-breakdown-header strong {
+    color: var(--color-ecobarbie-light-shade);
+    font-size: 1.1em;
+}
+
+.size-breakdown-bytes {
+    color: var(--color-ecobarbie-light-tone);
+    font-size: 0.85em;
+    margin-left: 0.5rem;
+    font-family: var(--font-family-mono);
+}
+
+.size-breakdown-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85em;
+    margin-top: 0.5rem;
+}
+
+.size-breakdown-table thead {
+    border-bottom: 2px solid color-mix(in srgb, var(--color-ecobarbie-dark-tone) 30%, transparent);
+}
+
+.size-breakdown-table th {
+    padding: 0.5rem 0.5rem;
+    text-align: left;
+    color: var(--color-ecobarbie-medium-tone);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 0.75em;
+}
+
+.size-breakdown-table th.size-col,
+.size-breakdown-table th.percent-col {
+    text-align: right;
+}
+
+.size-breakdown-table td {
+    padding: 0.5rem 0.5rem;
+    color: var(--color-ecobarbie-light-tone);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-ecobarbie-dark-tone) 10%, transparent);
+}
+
+.size-breakdown-table td.component-name {
+    font-weight: 500;
+}
+
+.size-breakdown-table td.size-col,
+.size-breakdown-table td.percent-col {
+    text-align: right;
+    font-family: var(--font-family-mono);
+}
+
+.size-breakdown-table tr.highlight-row td {
+    background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.size-breakdown-table tr.highlight-row td.component-name::after {
+    content: ' ← Icon map only';
+    color: var(--color-ecobarbie-light-tone);
+    font-weight: normal;
+    font-size: 0.9em;
+    margin-left: 0.5rem;
+}
+
+.size-breakdown-table tbody tr:hover td {
+    background: color-mix(in srgb, var(--color-ecobarbie-dark-tone) 20%, transparent);
+}
+
+.size-breakdown-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.size-breakdown-loading {
+    padding: 1rem;
+    text-align: center;
+    color: var(--color-ecobarbie-light-tone);
+    font-size: 0.85em;
+    font-style: italic;
 }
 
 .debug-details-summary {

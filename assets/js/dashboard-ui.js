@@ -642,28 +642,63 @@ class DashboardUI {
     }
     
     updateSizeBreakdown(debugInfo) {
-        const debugSizeBreakdown = document.getElementById('debug-size-breakdown');
+        const debugSizeBreakdown = document.getElementById('debug-size-breakdown-table');
         if (!debugSizeBreakdown || !debugInfo.html_sizes) return;
         
         const sizes = debugInfo.html_sizes;
+        const totalKB = (sizes.total / 1024).toFixed(1);
+        const totalBytes = sizes.total;
+        
+        // Component data with sizes
         const components = [
-            { name: 'Events Data', size: sizes.events_data },
-            { name: 'Scripts', size: sizes.scripts },
-            { name: 'Styles', size: sizes.stylesheets },
-            { name: 'Translations', size: sizes.translations },
-            { name: 'Markers', size: sizes.marker_icons },
-            { name: 'Other', size: sizes.other }
+            { name: 'Events Data', size: sizes.events_data, key: 'events_data' },
+            { name: 'Stylesheets', size: sizes.stylesheets, key: 'stylesheets' },
+            { name: 'Marker Icons', size: sizes.marker_icons, key: 'marker_icons', highlight: true },
+            { name: 'Scripts', size: sizes.scripts, key: 'scripts' },
+            { name: 'Translations', size: sizes.translations, key: 'translations' },
+            { name: 'Other', size: sizes.other, key: 'other' }
         ];
         
+        // Sort by size (largest first)
         components.sort((a, b) => b.size - a.size);
         
-        let breakdownHTML = '<ul class="debug-size-list">';
+        // Generate nice table HTML
+        let breakdownHTML = `
+          <div class="size-breakdown-header">
+            <strong>Total: ${totalKB} KB</strong> 
+            <span class="size-breakdown-bytes">(${totalBytes.toLocaleString()} bytes)</span>
+          </div>
+          <table class="size-breakdown-table">
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th class="size-col">Size</th>
+                <th class="percent-col">%</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+        
         components.forEach(comp => {
+            if (comp.size === 0) return; // Skip zero-size components
+            
             const kb = (comp.size / 1024).toFixed(1);
             const percent = ((comp.size / sizes.total) * 100).toFixed(1);
-            breakdownHTML += `<li>${comp.name}: ${kb} KB (${percent}%)</li>`;
+            const highlightClass = comp.highlight ? ' class="highlight-row"' : '';
+            
+            breakdownHTML += `
+              <tr${highlightClass}>
+                <td class="component-name">${comp.name}</td>
+                <td class="size-col">${kb} KB</td>
+                <td class="percent-col">${percent}%</td>
+              </tr>
+            `;
         });
-        breakdownHTML += '</ul>';
+        
+        breakdownHTML += `
+            </tbody>
+          </table>
+        `;
         
         debugSizeBreakdown.innerHTML = breakdownHTML;
     }
