@@ -115,7 +115,8 @@ class EventManagerTUI:
         print("6. View Documentation")
         print("7. 📘 Setup Guide (Create Your Own Site)")
         print("8. 🤖 Start Telegram Bot")
-        print("9. Exit")
+        print("9. 🔐 Manage Organizer PINs")
+        print("10. Exit")
         print("-" * 60)
         self.print_footer("main")
         
@@ -217,11 +218,22 @@ class EventManagerTUI:
         
         input("\nPress Enter to continue...")
     
+    def manage_pins(self):
+        """Manage organizer PINs for Telegram bot"""
+        from modules.pin_manager import PINManager
+        
+        manager = PINManager(self.base_path)
+        
+        running = True
+        while running:
+            self.clear_screen()
+            running = manager.show_tui_menu()
+    
     def run(self):
         """Main TUI loop"""
         while self.running:
             self.show_menu()
-            choice = input("\nEnter your choice (1-9): ").strip()
+            choice = input("\nEnter your choice (1-10): ").strip()
             
             if choice == '1':
                 self.scrape_events()
@@ -251,6 +263,8 @@ class EventManagerTUI:
             elif choice == '8':
                 self.start_telegram_bot()
             elif choice == '9':
+                self.manage_pins()
+            elif choice == '10':
                 self.running = False
                 print("\nGoodbye!")
             else:
@@ -299,6 +313,20 @@ COMMANDS:
                               - Supports flyer upload with OCR via photo messages
                               - Provides /contact for admin messaging
                               - All submissions saved to pending_events.json for review
+    
+    pin-generate              Generate new 4-digit PIN for trusted organizer
+                              - Creates random PIN and SHA256 hash
+                              - Shows instructions for GitHub Secrets
+                              - For use with Telegram PIN publishing
+    pin-hash PIN              Compute SHA256 hash for existing PIN
+                              - Validates PIN format (4 digits)
+                              - Shows hash for adding to GitHub Secrets
+    pin-validate PIN          Validate PIN format (4 digits)
+                              - Checks if PIN meets requirements
+                              - Returns success/error code
+    pin-status                Show status of PIN hash slots
+                              - Checks ORGANIZER_PIN_HASH_1, _2, _3 env vars
+                              - Shows which slots are configured
     
     schema validate           Validate events against schema
     schema migrate            Migrate events to new schema format
@@ -1833,6 +1861,62 @@ def cli_telegram_bot(base_path, config):
         return 1
 
 
+def cli_pin_generate(base_path):
+    """Generate a new random 4-digit PIN for trusted organizer."""
+    from modules.pin_manager import PINManager
+    
+    manager = PINManager(base_path)
+    pin = manager.generate_pin()
+    pin_hash = manager.compute_hash(pin)
+    
+    manager.display_generate_result(pin, pin_hash)
+    return 0
+
+
+def cli_pin_hash(base_path, pin):
+    """Compute SHA256 hash for an existing PIN."""
+    from modules.pin_manager import PINManager
+    
+    manager = PINManager(base_path)
+    
+    # Validate PIN format
+    is_valid, error = manager.validate_pin_format(pin)
+    if not is_valid:
+        print(f"❌ Invalid PIN: {error}")
+        return 1
+    
+    pin_hash = manager.compute_hash(pin)
+    manager.display_hash_result(pin, pin_hash)
+    return 0
+
+
+def cli_pin_validate(base_path, pin):
+    """Validate PIN format (4 digits)."""
+    from modules.pin_manager import PINManager
+    
+    manager = PINManager(base_path)
+    
+    is_valid, error = manager.validate_pin_format(pin)
+    
+    if is_valid:
+        print(f"✅ Valid PIN: {pin}")
+        print("   Format: 4 digits ✓")
+        return 0
+    else:
+        print(f"❌ Invalid PIN: {pin}")
+        print(f"   Error: {error}")
+        return 1
+
+
+def cli_pin_status(base_path):
+    """Show status of PIN hash slots in GitHub Secrets."""
+    from modules.pin_manager import PINManager
+    
+    manager = PINManager(base_path)
+    manager.display_slots_status()
+    return 0
+
+
 def _execute_command(args, base_path, config):
     """Execute the specified CLI command.
     
@@ -2226,6 +2310,27 @@ def _execute_command(args, base_path, config):
     if command == 'telegram-bot':
         # Telegram bot command
         return cli_telegram_bot(base_path, config)
+    
+    # PIN management commands
+    if command == 'pin-generate':
+        return cli_pin_generate(base_path)
+    
+    if command == 'pin-hash':
+        if not args.args:
+            print("Error: PIN required")
+            print("Usage: python3 src/event_manager.py pin-hash PIN")
+            return 1
+        return cli_pin_hash(base_path, args.args[0])
+    
+    if command == 'pin-validate':
+        if not args.args:
+            print("Error: PIN required")
+            print("Usage: python3 src/event_manager.py pin-validate PIN")
+            return 1
+        return cli_pin_validate(base_path, args.args[0])
+    
+    if command == 'pin-status':
+        return cli_pin_status(base_path)
     
     if command is None:
         # No command - launch interactive TUI
