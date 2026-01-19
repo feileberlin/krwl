@@ -57,6 +57,103 @@ def convert_to_css_var_name(key: str) -> str:
     return key.replace('_', '-')
 
 
+def create_color_badge_url(hex_color: str) -> str:
+    """
+    Create a shields.io badge URL for color preview.
+    
+    Args:
+        hex_color: Hex color code (e.g., '#D689B8' or 'D689B8')
+    
+    Returns:
+        Shields.io badge URL for the color
+    """
+    # Remove '#' if present
+    color = hex_color.lstrip('#')
+    
+    # Create shields.io badge URL
+    # Format: https://img.shields.io/badge/[text]-[color]?style=flat-square
+    return f"https://img.shields.io/badge/%20-%20-{color}?style=flat-square"
+
+
+def is_hex_color(value: str) -> bool:
+    """
+    Check if a value is a hex color code.
+    
+    Args:
+        value: String to check
+    
+    Returns:
+        True if value is a hex color code
+    """
+    if not isinstance(value, str):
+        return False
+    
+    # Remove '#' if present
+    color = value.lstrip('#')
+    
+    # Check if it's a valid hex color (3 or 6 characters)
+    if len(color) not in [3, 6]:
+        return False
+    
+    try:
+        int(color, 16)
+        return True
+    except ValueError:
+        return False
+
+
+def get_color_emoji(hex_color: str) -> str:
+    """
+    Get appropriate square emoji for a hex color using KISS logic.
+    Uses flat colored squares (⬛⬜) without 3D shadow effects.
+    
+    Args:
+        hex_color: Hex color code (e.g., '#D689B8')
+    
+    Returns:
+        Square emoji character representing the color
+    """
+    color = hex_color.upper().lstrip('#')
+    
+    # Parse RGB
+    r = int(color[0:2], 16)
+    g = int(color[2:4], 16)
+    b = int(color[4:6], 16)
+    
+    # Calculate luminance
+    luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+    
+    # Very light or very dark - use basic geometric squares
+    if luminance > 0.95:
+        return '⬜'  # White square (flat, no shadow)
+    elif luminance < 0.08:
+        return '⬛'  # Black square (flat, no shadow)
+    
+    # For all ecoBarbie pink/purple colors, use a simple colored block
+    # Since we want flat squares without emoji shadow effects,
+    # use Unicode block characters instead of colored emoji
+    
+    # Pink/Purple detection (all ecoBarbie colors)
+    if r > b and b > g:
+        return '🟪'  # Purple square (closest to pink, but has shadow...)
+    
+    if abs(r - b) < 30 and r > g and b > g:
+        return '🟪'  # Purple square
+    
+    # For other color families (if ever used)
+    if r > g and r > b:
+        if r > 200:
+            return '🟥' if g < 100 else '🟧'
+        else:
+            return '🟫'
+    elif g > r and g > b:
+        return '🟩'
+    elif b > r and b > g:
+        return '🟦'
+    else:
+        return '⬛' if luminance < 0.5 else '⬜'
+
+
 def generate_css_custom_properties(design: Dict) -> str:
     """Generate CSS custom properties from design tokens"""
     lines = [
@@ -79,8 +176,31 @@ def generate_css_custom_properties(design: Dict) -> str:
     if 'colors' in design:
         lines.append("  /* Colors */")
         for key, value in design['colors'].items():
+            # Skip keys that start with underscore (comments and previews)
+            if key.startswith('_'):
+                css_var = convert_to_css_var_name(key)
+                lines.append(f"  --color-{css_var}: {value};")
+                continue
+            
             css_var = convert_to_css_var_name(key)
+            
+            # Add the CSS variable
             lines.append(f"  --color-{css_var}: {value};")
+            
+            # Check if this is a hex color and add emoji badge in comment
+            if is_hex_color(value):
+                emoji = get_color_emoji(value)
+                
+                # Check if there's a corresponding _preview key for description
+                preview_key = f"_preview_{key}"
+                if preview_key in design['colors']:
+                    preview_text = design['colors'][preview_key]
+                    # Remove hex code from preview text if it starts with it (avoid duplication)
+                    if preview_text.startswith(value):
+                        preview_text = preview_text[len(value):].strip(' -')
+                    lines.append(f"  /* {emoji} {value} {preview_text} */")
+                else:
+                    lines.append(f"  /* {emoji} {value} */")
         lines.append("")
     
     # Generate typography tokens

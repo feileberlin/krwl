@@ -14,65 +14,88 @@
   /* Colors */
   --color--comment-primary-section: ─── PRIMARY COLORS (ecoBarbie Core) ───;
   --color-primary: #D689B8;
-  --color--preview-primary: █ #D689B8 - ecoBarbie base color (HSV: 323.4°, 36%, 84%);
+  /* 🟪 #D689B8 ecoBarbie base color (HSV: 323.4°, 36%, 84%) */
+  --color--preview-primary: #D689B8 - ecoBarbie base color (HSV: 323.4°, 36%, 84%);
   --color-primary-hover: #E8A5C8;
-  --color--preview-primary-hover: █ #E8A5C8 - Hover state (10% lighter, 8% more saturated);
+  /* 🟪 #E8A5C8 Hover state (10% lighter, 8% more saturated) */
+  --color--preview-primary-hover: #E8A5C8 - Hover state (10% lighter, 8% more saturated);
   --color--comment-tints-section: ─── TINTS (Lighter - Add White) ───;
   --color--comment-tints-usage: Usage: Backgrounds, hover states, light accents. Simple 2-step system (50%, 100%) - base is 'primary'.;
   --color-tint-50: #eac0da;
-  --color--preview-tint-50: █ #eac0da - 50% lighter (light backgrounds, hover states);
+  /* 🟪 #eac0da 50% lighter (light backgrounds, hover states) */
+  --color--preview-tint-50: #eac0da - 50% lighter (light backgrounds, hover states);
   --color-tint-100: #ffffff;
-  --color--preview-tint-100: █ #ffffff - 100% lighter (pure white, maximum contrast);
+  /* ⬜ #ffffff 100% lighter (pure white, maximum contrast) */
+  --color--preview-tint-100: #ffffff - 100% lighter (pure white, maximum contrast);
   --color--comment-shades-section: ─── SHADES (Darker - Add Black) ───;
   --color--comment-shades-usage: Usage: Text, borders, dark accents, depth. Simple 2-step system (50%, 100%) - base is 'primary'.;
   --color-shade-50: #6b445c;
-  --color--preview-shade-50: █ #6b445c - 50% darker (dark accents, borders, text on light);
+  /* 🟪 #6b445c 50% darker (dark accents, borders, text on light) */
+  --color--preview-shade-50: #6b445c - 50% darker (dark accents, borders, text on light);
   --color-shade-100: #000000;
-  --color--preview-shade-100: █ #000000 - 100% darker (pure black, maximum contrast);
+  /* ⬛ #000000 100% darker (pure black, maximum contrast) */
+  --color--preview-shade-100: #000000 - 100% darker (pure black, maximum contrast);
   --color--comment-tones-section: ─── TONES (Muted - Add Grey) ───;
   --color--comment-tones-usage: Usage: Disabled states, secondary elements, soft UI. Simple 2-step system (50%, 100%) - base is 'primary'.;
   --color-tone-50: #d6afc7;
-  --color--preview-tone-50: █ #d6afc7 - 50% muted (disabled states, secondary text);
+  /* 🟪 #d6afc7 50% muted (disabled states, secondary text) */
+  --color--preview-tone-50: #d6afc7 - 50% muted (disabled states, secondary text);
   --color-tone-100: #d6d6d6;
-  --color--preview-tone-100: █ #d6d6d6 - 100% muted (neutral grey, fully desaturated);
+  /* ⬜ #d6d6d6 100% muted (neutral grey, fully desaturated) */
+  --color--preview-tone-100: #d6d6d6 - 100% muted (neutral grey, fully desaturated);
   --color--comment-backgrounds-section: ─── BACKGROUND COLORS (Very Dark Shades) ───;
   --color--comment-backgrounds-usage: Monochromatic dark backgrounds derived from ecoBarbie;
   --color-bg-primary: #110a0e;
-  --color--preview-bg-primary: █ #110a0e - Main background (92% darker ecoBarbie shade);
+  /* ⬛ #110a0e Main background (92% darker ecoBarbie shade) */
+  --color--preview-bg-primary: #110a0e - Main background (92% darker ecoBarbie shade);
   --color-bg-secondary: #150d12;
-  --color--preview-bg-secondary: █ #150d12 - Secondary background (90% darker ecoBarbie shade);
+  /* ⬛ #150d12 Secondary background (90% darker ecoBarbie shade) */
+  --color--preview-bg-secondary: #150d12 - Secondary background (90% darker ecoBarbie shade);
   --color-bg-tertiary: #191016;
-  --color--preview-bg-tertiary: █ #191016 - Tertiary background (88% darker ecoBarbie shade);
+  /* ⬛ #191016 Tertiary background (88% darker ecoBarbie shade) */
+  --color--preview-bg-tertiary: #191016 - Tertiary background (88% darker ecoBarbie shade);
   --color--comment-text-section: ─── TEXT COLORS (Very Light Tints) ───;
   --color--comment-text-usage: Monochromatic light text colors derived from ecoBarbie for high contrast;
   --color-text-primary: #f9f5f8;
-  --color--preview-text-primary: █ #f9f5f8 - Primary text (98% lighter ecoBarbie tint, high contrast);
+  /* ⬜ #f9f5f8 Primary text (98% lighter ecoBarbie tint, high contrast) */
+  --color--preview-text-primary: #f9f5f8 - Primary text (98% lighter ecoBarbie tint, high contrast);
   --color-text-secondary: #f2e9ee;
-  --color--preview-text-secondary: █ #f2e9ee - Secondary text (95% lighter ecoBarbie tint);
+  /* 🟪 #f2e9ee Secondary text (95% lighter ecoBarbie tint) */
+  --color--preview-text-secondary: #f2e9ee - Secondary text (95% lighter ecoBarbie tint);
   --color-text-tertiary: #eadde5;
-  --color--preview-text-tertiary: █ #eadde5 - Tertiary text (92% lighter ecoBarbie tint);
+  /* 🟪 #eadde5 Tertiary text (92% lighter ecoBarbie tint) */
+  --color--preview-text-tertiary: #eadde5 - Tertiary text (92% lighter ecoBarbie tint);
   --color--comment-borders-section: ─── BORDER COLORS (Medium Dark Shades) ───;
   --color--comment-borders-usage: Monochromatic borders derived from ecoBarbie;
   --color-border-primary: #35222e;
-  --color--preview-border-primary: █ #35222e - Primary border (75% darker ecoBarbie shade);
+  /* 🟪 #35222e Primary border (75% darker ecoBarbie shade) */
+  --color--preview-border-primary: #35222e - Primary border (75% darker ecoBarbie shade);
   --color-border-secondary: #2f1e28;
-  --color--preview-border-secondary: █ #2f1e28 - Secondary border (78% darker ecoBarbie shade);
+  /* 🟪 #2f1e28 Secondary border (78% darker ecoBarbie shade) */
+  --color--preview-border-secondary: #2f1e28 - Secondary border (78% darker ecoBarbie shade);
   --color--comment-accents-section: ─── ACCENT COLORS (Monochromatic Variants) ───;
   --color--comment-accents-usage: ALL derived from ecoBarbie with saturation/value adjustments for visual distinction;
   --color-success: #D689B8;
-  --color--preview-success: █ #D689B8 - Success state (uses primary color);
+  /* 🟪 #D689B8 Success state (uses primary color) */
+  --color--preview-success: #D689B8 - Success state (uses primary color);
   --color-accent: #e07fba;
-  --color--preview-accent: █ #e07fba - Accent (20% more saturated, 5% brighter);
+  /* 🟪 #e07fba Accent (20% more saturated, 5% brighter) */
+  --color--preview-accent: #e07fba - Accent (20% more saturated, 5% brighter);
   --color-warning: #eb7dc0;
-  --color--preview-warning: █ #eb7dc0 - Warning (30% more saturated, 10% brighter);
+  /* 🟪 #eb7dc0 Warning (30% more saturated, 10% brighter) */
+  --color--preview-warning: #eb7dc0 - Warning (30% more saturated, 10% brighter);
   --color-error: #954476;
-  --color--preview-error: █ #954476 - Error (50% more saturated, 30% darker);
+  /* 🟪 #954476 Error (50% more saturated, 30% darker) */
+  --color--preview-error: #954476 - Error (50% more saturated, 30% darker);
   --color-bookmark: #eac0da;
-  --color--preview-bookmark: █ #eac0da - Bookmark highlight (uses tint_50);
+  /* 🟪 #eac0da Bookmark highlight (uses tint_50) */
+  --color--preview-bookmark: #eac0da - Bookmark highlight (uses tint_50);
   --color-bookmark-light: #eeb2d7;
-  --color--preview-bookmark-light: █ #eeb2d7 - Bookmark hover (between tint_50 and white);
+  /* 🟪 #eeb2d7 Bookmark hover (between tint_50 and white) */
+  --color--preview-bookmark-light: #eeb2d7 - Bookmark hover (between tint_50 and white);
   --color-bookmark-lighter: #f6c1e2;
-  --color--preview-bookmark-lighter: █ #f6c1e2 - Bookmark subtle (very light tint);
+  /* 🟪 #f6c1e2 Bookmark subtle (very light tint) */
+  --color--preview-bookmark-lighter: #f6c1e2 - Bookmark subtle (very light tint);
 
   /* Typography */
   --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;

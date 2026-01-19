@@ -38,9 +38,9 @@ A **monochromatic color scheme** uses variations of a single hue by adjusting:
 
 | Color Preview | Name | Hex | RGB | CSS Variable | Usage |
 |---------------|------|-----|-----|--------------|-------|
-| ![#D689B8](https://img.shields.io/badge/%20-%20-D689B8?style=flat-square) | **Primary (Base)** | `#D689B8` | 214, 137, 184 | `--color-primary` | Base color for all transformations, brand color |
-| ![#E8A5C8](https://img.shields.io/badge/%20-%20-E8A5C8?style=flat-square) | **Primary Hover** | `#E8A5C8` | 232, 165, 200 | `--color-primary-hover` | Interactive hover states |
-| ![#D689B8](https://img.shields.io/badge/%20-%20-D689B8?style=flat-square) | **Success** | `#D689B8` | 214, 137, 184 | `--color-success` | Success state (references primary) |
+| 🟪 `#D689B8` | **Primary (Base)** | `#D689B8` | 214, 137, 184 | `--color-primary` | Base color for all transformations, brand color |
+| 🟪 `#E8A5C8` | **Primary Hover** | `#E8A5C8` | 232, 165, 200 | `--color-primary-hover` | Interactive hover states |
+| 🟪 `#D689B8` | **Success** | `#D689B8` | 214, 137, 184 | `--color-success` | Success state (references primary) |
 
 ### ecoBarbie Tints (+ White) - Scientifically Generated
 
@@ -50,9 +50,9 @@ A **monochromatic color scheme** uses variations of a single hue by adjusting:
 
 | Color Preview | Name | Hex | RGB | CSS Variable | Lightness |
 |---------------|------|-----|-----|--------------|-----------|
-| ![#D689B8](https://img.shields.io/badge/%20-%20-D689B8?style=flat-square) | **(Use Primary)** | `#D689B8` | 214, 137, 184 | `--color-primary` | Base color (0% tint) |
-| ![#EAC0DA](https://img.shields.io/badge/%20-%20-EAC0DA?style=flat-square) | **Tint 50%** | `#eac0da` | 234, 192, 218 | `--color-tint-50` | Light backgrounds, hover states |
-| ![#FFFFFF](https://img.shields.io/badge/%20-%20-FFFFFF?style=flat-square) | **Tint 100%** | `#ffffff` | 255, 255, 255 | `--color-tint-100` | Pure white, maximum contrast |
+| 🟪 `#D689B8` | **(Use Primary)** | `#D689B8` | 214, 137, 184 | `--color-primary` | Base color (0% tint) |
+| 🟪 `#EAC0DA` | **Tint 50%** | `#eac0da` | 234, 192, 218 | `--color-tint-50` | Light backgrounds, hover states |
+| ⬜ `#FFFFFF` | **Tint 100%** | `#ffffff` | 255, 255, 255 | `--color-tint-100` | Pure white, maximum contrast |
 
 ### ecoBarbie Shades (+ Black) - Scientifically Generated
 
@@ -62,9 +62,9 @@ A **monochromatic color scheme** uses variations of a single hue by adjusting:
 
 | Color Preview | Name | Hex | RGB | CSS Variable | Darkness |
 |---------------|------|-----|-----|--------------|----------|
-| ![#D689B8](https://img.shields.io/badge/%20-%20-D689B8?style=flat-square) | **(Use Primary)** | `#D689B8` | 214, 137, 184 | `--color-primary` | Base color (0% shade) |
-| ![#6B445C](https://img.shields.io/badge/%20-%20-6B445C?style=flat-square) | **Shade 50%** | `#6b445c` | 107, 68, 92 | `--color-shade-50` | Dark accents, borders, text |
-| ![#000000](https://img.shields.io/badge/%20-%20-000000?style=flat-square) | **Shade 100%** | `#000000` | 0, 0, 0 | `--color-shade-100` | Pure black, maximum contrast |
+| 🟪 `#D689B8` | **(Use Primary)** | `#D689B8` | 214, 137, 184 | `--color-primary` | Base color (0% shade) |
+| 🟪 `#6B445C` | **Shade 50%** | `#6b445c` | 107, 68, 92 | `--color-shade-50` | Dark accents, borders, text |
+| ⬛ `#000000` | **Shade 100%** | `#000000` | 0, 0, 0 | `--color-shade-100` | Pure black, maximum contrast |
 
 ### ecoBarbie Tones (+ Grey) - Scientifically Generated
 
@@ -74,9 +74,9 @@ A **monochromatic color scheme** uses variations of a single hue by adjusting:
 
 | Color Preview | Name | Hex | RGB | CSS Variable | Saturation |
 |---------------|------|-----|-----|--------------|------------|
-| ![#D689B8](https://img.shields.io/badge/%20-%20-D689B8?style=flat-square) | **(Use Primary)** | `#D689B8` | 214, 137, 184 | `--color-primary` | Base color (0% desaturation) |
-| ![#D6AFC7](https://img.shields.io/badge/%20-%20-D6AFC7?style=flat-square) | **Tone 50%** | `#d6afc7` | 214, 175, 199 | `--color-tone-50` | Disabled states, secondary text |
-| ![#D6D6D6](https://img.shields.io/badge/%20-%20-D6D6D6?style=flat-square) | **Tone 100%** | `#d6d6d6` | 214, 214, 214 | `--color-tone-100` | Neutral grey, fully desaturated |
+| 🟪 `#D689B8` | **(Use Primary)** | `#D689B8` | 214, 137, 184 | `--color-primary` | Base color (0% desaturation) |
+| 🟪 `#D6AFC7` | **Tone 50%** | `#d6afc7` | 214, 175, 199 | `--color-tone-50` | Disabled states, secondary text |
+| ⬜ `#D6D6D6` | **Tone 100%** | `#d6d6d6` | 214, 214, 214 | `--color-tone-100` | Neutral grey, fully desaturated |
 
 ### Background Colors (Very Dark Shades)
 
@@ -84,9 +84,9 @@ A **monochromatic color scheme** uses variations of a single hue by adjusting:
 
 | Color Preview | Name | Hex | RGB | CSS Variable | Usage |
 |---------------|------|-----|-----|--------------|-------|
-| ![#110A0E](https://img.shields.io/badge/%20-%20-110A0E?style=flat-square) | **BG Primary** | `#110a0e` | 17, 10, 14 | `--color-bg-primary` | Main background (92% darker) |
-| ![#150D12](https://img.shields.io/badge/%20-%20-150D12?style=flat-square) | **BG Secondary** | `#150d12` | 21, 13, 18 | `--color-bg-secondary` | Secondary background (90% darker) |
-| ![#191016](https://img.shields.io/badge/%20-%20-191016?style=flat-square) | **BG Tertiary** | `#191016` | 25, 16, 22 | `--color-bg-tertiary` | Tertiary background (88% darker) |
+| ⬛ `#110A0E` | **BG Primary** | `#110a0e` | 17, 10, 14 | `--color-bg-primary` | Main background (92% darker) |
+| ⬛ `#150D12` | **BG Secondary** | `#150d12` | 21, 13, 18 | `--color-bg-secondary` | Secondary background (90% darker) |
+| ⬛ `#191016` | **BG Tertiary** | `#191016` | 25, 16, 22 | `--color-bg-tertiary` | Tertiary background (88% darker) |
 
 ### Text Colors (Very Light Tints)
 
@@ -94,9 +94,9 @@ A **monochromatic color scheme** uses variations of a single hue by adjusting:
 
 | Color Preview | Name | Hex | RGB | CSS Variable | Contrast | Usage |
 |---------------|------|-----|-----|--------------|----------|-------|
-| ![#F9F5F8](https://img.shields.io/badge/%20-%20-F9F5F8?style=flat-square) | **Text Primary** | `#f9f5f8` | 249, 245, 248 | `--color-text-primary` | High | Primary text (98% lighter) |
-| ![#F2E9EE](https://img.shields.io/badge/%20-%20-F2E9EE?style=flat-square) | **Text Secondary** | `#f2e9ee` | 242, 233, 238 | `--color-text-secondary` | Medium | Secondary text (95% lighter) |
-| ![#EADDE5](https://img.shields.io/badge/%20-%20-EADDE5?style=flat-square) | **Text Tertiary** | `#eadde5` | 234, 221, 229 | `--color-text-tertiary` | Lower | Tertiary text (92% lighter) |
+| ⬜ `#F9F5F8` | **Text Primary** | `#f9f5f8` | 249, 245, 248 | `--color-text-primary` | High | Primary text (98% lighter) |
+| 🟪 `#F2E9EE` | **Text Secondary** | `#f2e9ee` | 242, 233, 238 | `--color-text-secondary` | Medium | Secondary text (95% lighter) |
+| 🟪 `#EADDE5` | **Text Tertiary** | `#eadde5` | 234, 221, 229 | `--color-text-tertiary` | Lower | Tertiary text (92% lighter) |
 
 ### Border Colors (Medium Dark Shades)
 
@@ -104,8 +104,8 @@ A **monochromatic color scheme** uses variations of a single hue by adjusting:
 
 | Color Preview | Name | Hex | RGB | CSS Variable | Usage |
 |---------------|------|-----|-----|--------------|-------|
-| ![#35222E](https://img.shields.io/badge/%20-%20-35222E?style=flat-square) | **Border Primary** | `#35222e` | 53, 34, 46 | `--color-border-primary` | Primary border (75% darker) |
-| ![#2F1E28](https://img.shields.io/badge/%20-%20-2F1E28?style=flat-square) | **Border Secondary** | `#2f1e28` | 47, 30, 40 | `--color-border-secondary` | Secondary border (78% darker) |
+| 🟪 `#35222E` | **Border Primary** | `#35222e` | 53, 34, 46 | `--color-border-primary` | Primary border (75% darker) |
+| 🟪 `#2F1E28` | **Border Secondary** | `#2f1e28` | 47, 30, 40 | `--color-border-secondary` | Secondary border (78% darker) |
 
 ### Accent Colors (Monochromatic Variants)
 
@@ -113,12 +113,12 @@ A **monochromatic color scheme** uses variations of a single hue by adjusting:
 
 | Color Preview | Name | Hex | RGB | CSS Variable | Transform | Usage |
 |---------------|------|-----|-----|--------------|-----------|-------|
-| ![#E07FBA](https://img.shields.io/badge/%20-%20-E07FBA?style=flat-square) | **Accent** | `#e07fba` | 224, 127, 186 | `--color-accent` | +20% sat, +5% val | Links, info, highlights |
-| ![#EB7DC0](https://img.shields.io/badge/%20-%20-EB7DC0?style=flat-square) | **Warning** | `#eb7dc0` | 235, 125, 192 | `--color-warning` | +30% sat, +10% val | Warnings, pending states |
-| ![#954476](https://img.shields.io/badge/%20-%20-954476?style=flat-square) | **Error** | `#954476` | 149, 68, 118 | `--color-error` | +50% sat, -30% val | Errors, critical alerts |
-| ![#EEB2D7](https://img.shields.io/badge/%20-%20-EEB2D7?style=flat-square) | **Bookmark** | `#eeb2d7` | 238, 178, 215 | `--color-bookmark` | Same as tint_60 | Bookmark highlight |
-| ![#F6C1E2](https://img.shields.io/badge/%20-%20-F6C1E2?style=flat-square) | **Bookmark Light** | `#f6c1e2` | 246, 193, 226 | `--color-bookmark-light` | Same as tint_80 | Bookmark hover |
-| ![#FCE0EF](https://img.shields.io/badge/%20-%20-FCE0EF?style=flat-square) | **Bookmark Lighter** | `#fce0ef` | 252, 224, 239 | `--color-bookmark-lighter` | 90% lighter tint | Bookmark subtle |
+| 🟪 `#E07FBA` | **Accent** | `#e07fba` | 224, 127, 186 | `--color-accent` | +20% sat, +5% val | Links, info, highlights |
+| 🟪 `#EB7DC0` | **Warning** | `#eb7dc0` | 235, 125, 192 | `--color-warning` | +30% sat, +10% val | Warnings, pending states |
+| 🟪 `#954476` | **Error** | `#954476` | 149, 68, 118 | `--color-error` | +50% sat, -30% val | Errors, critical alerts |
+| 🟪 `#EEB2D7` | **Bookmark** | `#eeb2d7` | 238, 178, 215 | `--color-bookmark` | Same as tint_60 | Bookmark highlight |
+| 🟪 `#F6C1E2` | **Bookmark Light** | `#f6c1e2` | 246, 193, 226 | `--color-bookmark-light` | Same as tint_80 | Bookmark hover |
+| 🟪 `#FCE0EF` | **Bookmark Lighter** | `#fce0ef` | 252, 224, 239 | `--color-bookmark-lighter` | 90% lighter tint | Bookmark subtle |
 ---
 
 ## Alpha Channel Variations
