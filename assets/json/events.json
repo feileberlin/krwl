@@ -79,8 +79,28 @@
       "published_at": "2026-01-01T14:45:54.237616",
       "category": "community",
       "teaser": "A test event for approval flow testing"
+    },
+    {
+      "id": "test_kiss_123",
+      "title": "KISS Test Event",
+      "description": "KISS Test Event am 20.01.2026 18:00",
+      "location": {
+        "name": "Test Venue",
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": true
+      },
+      "start_time": "2026-01-20T18:00:00",
+      "end_time": null,
+      "url": "https://example.com/event/123",
+      "source": "https://example.com/event/123",
+      "scraped_at": "2026-01-17T15:00:00",
+      "status": "published",
+      "category": "community",
+      "teaser": "KISS Test Event am 20.01.",
+      "published_at": "2026-01-19T23:17:46.281972"
     }
   ],
-  "last_updated": "2026-01-03T15:47:19.164009",
+  "last_updated": "2026-01-19T23:17:46.282316",
   "pending_count": 1
 }

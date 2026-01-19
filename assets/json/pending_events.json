@@ -1,24 +1,4 @@
 {
-  "pending_events": [
-    {
-      "id": "test_kiss_123",
-      "title": "KISS Test Event",
-      "description": "KISS Test Event am 20.01.2026 18:00",
-      "location": {
-        "name": "Test Venue",
-        "lat": 50.3167,
-        "lon": 11.9167,
-        "address_hidden": true
-      },
-      "start_time": "2026-01-20T18:00:00",
-      "end_time": null,
-      "url": "https://example.com/event/123",
-      "source": "https://example.com/event/123",
-      "scraped_at": "2026-01-17T15:00:00",
-      "status": "pending",
-      "category": "community",
-      "teaser": "KISS Test Event am 20.01."
-    }
-  ],
-  "last_scraped": "2026-01-17T15:09:46.330894"
+  "pending_events": [],
+  "last_scraped": "2026-01-19T23:17:46.282620"
 }
