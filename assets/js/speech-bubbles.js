@@ -238,6 +238,7 @@ class SpeechBubbles {
         bubble.className = isBookmarked ? 'speech-bubble bubble-is-bookmarked' : 'speech-bubble';
         bubble.setAttribute('data-event-id', event.id);
         bubble.setAttribute('data-bubble-index', index);
+        bubble.dataset.bubbleId = event.id; // For force-directed layout tracking
         
         // Format start time
         const startTime = new Date(event.start_time);
@@ -570,10 +571,10 @@ class SpeechBubbles {
 
     /**
      * Create SVG connector elements between a marker and its bubble.
-     * Builds the forked bezier connector path(s) and an (optionally invisible)
-     * boundary circle around the marker. The visual "tail" attached to the
-     * bubble itself is implemented via CSS pseudo-element, not by this
-     * function.
+     * Builds a single forked bezier connector path element (with two curves in
+     * its path data) and an (optionally invisible) boundary circle around the
+     * marker. The visual "tail" attached to the bubble itself is implemented
+     * via CSS pseudo-element, not by this function.
      * @param {Object} markerPos - Marker position in container coordinates.
      * @param {Object} bubbleRect - Bubble rectangle bounds.
      * @returns {Object|null} Connector elements (path and circle).
@@ -821,7 +822,7 @@ class SpeechBubbles {
         return markers.map(marker => {
             if (!this.isValidMarker(marker)) return null;
             const pos = map.latLngToContainerPoint(marker.getLatLng());
-            // Center the collision box around the visual icon center, not the anchor
+            // Adjust collision box y-coordinate to align with visual icon center, not the anchor, not the anchor
             const iconCenterY = pos.y + MARKER_ICON_CENTER_OFFSET_Y;
             return {
                 x: pos.x - MARKER_CLEARANCE,
@@ -959,6 +960,14 @@ class SpeechBubbles {
             this.forceState.checkInterval = null;
         }
         
+        // Clear stored velocities and positions to avoid stale bubble IDs accumulating
+        if (this.forceState.velocities && typeof this.forceState.velocities.clear === 'function') {
+            this.forceState.velocities.clear();
+        }
+        if (this.forceState.lastPositions && typeof this.forceState.lastPositions.clear === 'function') {
+            this.forceState.lastPositions.clear();
+        }
+        
         this.log('Force-directed layout stopped');
     }
     
@@ -1033,17 +1042,23 @@ class SpeechBubbles {
             forces.set(bubbleId, { fx: 0, fy: 0 });
         });
         
+        // Cache bounding rects once per bubble to avoid repeated layout reads
+        const bubbleRects = this.speechBubbles.map(bubble => ({
+            bubble,
+            rect: bubble.getBoundingClientRect()
+        }));
+        
         // Calculate repulsion forces between all pairs
-        for (let i = 0; i < this.speechBubbles.length; i++) {
-            for (let j = i + 1; j < this.speechBubbles.length; j++) {
-                const bubble1 = this.speechBubbles[i];
-                const bubble2 = this.speechBubbles[j];
+        for (let i = 0; i < bubbleRects.length; i++) {
+            for (let j = i + 1; j < bubbleRects.length; j++) {
+                const bubble1 = bubbleRects[i].bubble;
+                const bubble2 = bubbleRects[j].bubble;
                 
                 const id1 = bubble1.dataset.bubbleId;
                 const id2 = bubble2.dataset.bubbleId;
                 
-                const rect1 = bubble1.getBoundingClientRect();
-                const rect2 = bubble2.getBoundingClientRect();
+                const rect1 = bubbleRects[i].rect;
+                const rect2 = bubbleRects[j].rect;
                 
                 // Calculate centers
                 const center1 = {
@@ -1072,6 +1087,7 @@ class SpeechBubbles {
                 
                 const force1 = forces.get(id1);
                 const force2 = forces.get(id2);
+                if (!force1 || !force2) continue; // Skip if bubble IDs are invalid
                 
                 force1.fx -= fx;
                 force1.fy -= fy;
@@ -1086,7 +1102,9 @@ class SpeechBubbles {
         this.speechBubbles.forEach(bubble => {
             const bubbleId = bubble.dataset.bubbleId;
             const force = forces.get(bubbleId);
+            if (!force) return; // Skip if force not calculated
             const velocity = this.forceState.velocities.get(bubbleId);
+            if (!velocity) return; // Skip if velocity tracking not initialized
             
             // Update velocity with force and damping
             velocity.vx = (velocity.vx + force.fx) * DAMPING;
@@ -1132,7 +1150,9 @@ class SpeechBubbles {
             // Update connector line if exists
             const bubbleDataEntry = this.bubbleData.find(bd => bd.bubble === bubble);
             if (bubbleDataEntry && bubbleDataEntry.connector) {
-                this.updateConnectorLine(bubbleDataEntry.marker, bubble, bubbleDataEntry.connector);
+                const bubbleRect = bubble.getBoundingClientRect();
+                const markerPos = this.map.latLngToContainerPoint(bubbleDataEntry.marker.getLatLng());
+                this.updateConnectorLine(bubbleDataEntry, bubbleRect, markerPos, true);
             }
         });
         
