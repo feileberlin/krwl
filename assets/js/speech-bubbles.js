@@ -579,7 +579,7 @@ class SpeechBubbles {
 
     /**
      * Update connector coordinates between a marker and bubble.
-     * Draws a curved bezier path (tail-like) and positions circle around marker.
+     * Draws two curved bezier paths (forked tail) that merge at circle around marker.
      * @param {Object} entry - Bubble data entry.
      * @param {Object} bubbleRect - Bubble rectangle bounds.
      * @param {Object} markerPos - Marker position in container coordinates (anchor point).
@@ -603,26 +603,55 @@ class SpeechBubbles {
             connector.circle.style.opacity = isVisible ? '' : '0';
         }
         
-        // Get closest point on bubble rectangle as start point
-        const bubblePoint = this.getClosestPointOnRect(markerIconCenter, bubbleRect);
+        // Get closest point on bubble rectangle as center reference
+        const bubbleCenterPoint = this.getClosestPointOnRect(markerIconCenter, bubbleRect);
         
-        // Calculate endpoint on circle perimeter (stop at circle edge)
-        const dx = markerIconCenter.x - bubblePoint.x;
-        const dy = markerIconCenter.y - bubblePoint.y;
+        // Calculate endpoint on circle perimeter (where both paths merge)
+        const dx = markerIconCenter.x - bubbleCenterPoint.x;
+        const dy = markerIconCenter.y - bubbleCenterPoint.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
         
         const circleEdgeX = markerIconCenter.x - (dx / distance) * CONNECTOR_STOP_DISTANCE;
         const circleEdgeY = markerIconCenter.y - (dy / distance) * CONNECTOR_STOP_DISTANCE;
         
-        // Create curved bezier path (tail-like connection)
-        // Control points create a smooth curve from bubble to marker
-        const controlOffset = distance * BEZIER_CONTROL_POINT_FACTOR;
-        const controlX1 = bubblePoint.x + (dx / distance) * controlOffset;
-        const controlY1 = bubblePoint.y;
-        const controlX2 = circleEdgeX - (dx / distance) * controlOffset;
-        const controlY2 = circleEdgeY;
+        // Create TWO starting points at bottom of bubble (forked tail)
+        const forkSpacing = 12; // Distance between the two fork points
+        // Calculate perpendicular direction for fork spread
+        const perpX = -dy / distance;
+        const perpY = dx / distance;
         
-        const pathData = `M ${bubblePoint.x},${bubblePoint.y} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${circleEdgeX},${circleEdgeY}`;
+        const startPoint1 = {
+            x: bubbleCenterPoint.x + perpX * forkSpacing,
+            y: bubbleCenterPoint.y + perpY * forkSpacing
+        };
+        
+        const startPoint2 = {
+            x: bubbleCenterPoint.x - perpX * forkSpacing,
+            y: bubbleCenterPoint.y - perpY * forkSpacing
+        };
+        
+        // Create two curved bezier paths that merge at the circle edge
+        const controlOffset = distance * BEZIER_CONTROL_POINT_FACTOR;
+        
+        // Path 1: from startPoint1 to circleEdge
+        const controlX1_1 = startPoint1.x + (dx / distance) * controlOffset;
+        const controlY1_1 = startPoint1.y + (dy / distance) * (controlOffset * 0.3);
+        const controlX1_2 = circleEdgeX - (dx / distance) * (controlOffset * 0.5);
+        const controlY1_2 = circleEdgeY - (dy / distance) * (controlOffset * 0.5);
+        
+        // Path 2: from startPoint2 to circleEdge (mirrors path 1)
+        const controlX2_1 = startPoint2.x + (dx / distance) * controlOffset;
+        const controlY2_1 = startPoint2.y + (dy / distance) * (controlOffset * 0.3);
+        const controlX2_2 = circleEdgeX - (dx / distance) * (controlOffset * 0.5);
+        const controlY2_2 = circleEdgeY - (dy / distance) * (controlOffset * 0.5);
+        
+        // Combine both paths into a single SVG path with two curves merging at one point
+        const pathData = `
+            M ${startPoint1.x},${startPoint1.y} 
+            C ${controlX1_1},${controlY1_1} ${controlX1_2},${controlY1_2} ${circleEdgeX},${circleEdgeY}
+            M ${startPoint2.x},${startPoint2.y} 
+            C ${controlX2_1},${controlY2_1} ${controlX2_2},${controlY2_2} ${circleEdgeX},${circleEdgeY}
+        `.trim();
         
         if (connector.path) {
             connector.path.setAttribute('d', pathData);
