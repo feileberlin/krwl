@@ -33,14 +33,13 @@
     transition: opacity 0.3s ease;
 }
 
-/* Circle around marker icon */
+/* Circle around marker icon - INVISIBLE (only used as boundary) */
 .bubble-connector-circle {
     fill: none;
-    stroke: var(--color-primary);
-    stroke-width: 2;
-    opacity: 0.6;
-    filter: drop-shadow(0 0 4px rgba(214, 137, 184, 0.6));
-    transition: opacity 0.3s ease;
+    stroke: none; /* Made invisible - serves only as stopping boundary */
+    stroke-width: 0;
+    opacity: 0; /* Invisible */
+    pointer-events: none;
 }
 
 .speech-bubble {
