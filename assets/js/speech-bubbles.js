@@ -659,13 +659,21 @@ class SpeechBubbles {
         }
         
         // Update CSS-based tail on bubble element
+        // The tail should point toward the circle edge (stopping point), not the icon center
+        // This creates the "comic book" effect where the tail doesn't touch the subject
         if (entry.bubble) {
-            // Calculate tail position relative to bubble
+            // Calculate position where tail should point to (circle edge, not icon center)
+            const tailTargetX = circleEdgeX;
+            const tailTargetY = circleEdgeY;
+            
+            // Calculate tail attachment point relative to bubble
             const tailX = ((bubbleCenterPoint.x - bubbleRect.x) / bubbleRect.width) * 100;
             const tailY = ((bubbleCenterPoint.y - bubbleRect.y) / bubbleRect.height) * 100;
             
-            // Calculate angle for tail rotation (pointing toward marker)
-            const angleRad = Math.atan2(dy, dx);
+            // Calculate angle for tail rotation (pointing toward circle edge, not icon)
+            const tailDx = tailTargetX - bubbleCenterPoint.x;
+            const tailDy = tailTargetY - bubbleCenterPoint.y;
+            const angleRad = Math.atan2(tailDy, tailDx);
             const angleDeg = (angleRad * 180 / Math.PI) + 90; // +90 because tail points down by default
             
             // Set CSS custom properties for tail positioning
