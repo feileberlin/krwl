@@ -22,6 +22,27 @@
     filter: drop-shadow(0 0 4px rgba(214, 137, 184, 0.6)); /* Matches --color-primary glow */
 }
 
+/* New curved path connector (tail-like) */
+.bubble-connector-path {
+    fill: none;
+    stroke: var(--color-primary);
+    stroke-width: 2;
+    stroke-linecap: round;
+    opacity: 0.85;
+    filter: drop-shadow(0 0 4px rgba(214, 137, 184, 0.6));
+    transition: opacity 0.3s ease;
+}
+
+/* Circle around marker icon */
+.bubble-connector-circle {
+    fill: none;
+    stroke: var(--color-primary);
+    stroke-width: 2;
+    opacity: 0.6;
+    filter: drop-shadow(0 0 4px rgba(214, 137, 184, 0.6));
+    transition: opacity 0.3s ease;
+}
+
 .speech-bubble {
     position: absolute;
     background: rgba(13, 17, 23, 0.95);

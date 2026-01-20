@@ -27,6 +27,8 @@ const SPREAD_BASE = 1;                 // Avoid sqrt(0) spacing
 // Category markers are 96x96px with anchor at [48, 96] (bottom-center)
 // Visual icon center is ~48px above the anchor point (at y=48 in the SVG)
 const MARKER_ICON_CENTER_OFFSET_Y = -48; // Negative = upward offset from anchor
+const MARKER_CIRCLE_RADIUS = 20; // Radius of circle around marker icon
+const CONNECTOR_STOP_DISTANCE = MARKER_CIRCLE_RADIUS + 2; // Stop connector before reaching circle
 
 // Filter bar constants
 const FILTER_BAR_PADDING = 20;         // Extra padding below filter bar
@@ -537,17 +539,28 @@ class SpeechBubbles {
 
     /**
      * Create a connector line element between a marker and bubble.
+     * Creates a curved bezier path (tail-like) and a circle around the marker.
      * @param {Object} markerPos - Marker position in container coordinates.
      * @param {Object} bubbleRect - Bubble rectangle bounds.
-     * @returns {SVGLineElement|null} Connector line element.
+     * @returns {Object|null} Connector elements (path and circle).
      */
     createConnectorLine(markerPos, bubbleRect) {
         if (!this.connectorLayer) return null;
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.classList.add('bubble-connector-line');
-        this.connectorLayer.appendChild(line);
-        this.updateConnectorLine({ connector: line }, bubbleRect, markerPos, true);
-        return line;
+        
+        // Create curved path (bezier) instead of straight line
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.classList.add('bubble-connector-path');
+        this.connectorLayer.appendChild(path);
+        
+        // Create circle around the marker icon
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.classList.add('bubble-connector-circle');
+        circle.setAttribute('r', MARKER_CIRCLE_RADIUS);
+        this.connectorLayer.appendChild(circle);
+        
+        const connector = { path, circle };
+        this.updateConnectorLine({ connector }, bubbleRect, markerPos, true);
+        return connector;
     }
 
     /**
@@ -565,6 +578,7 @@ class SpeechBubbles {
 
     /**
      * Update connector coordinates between a marker and bubble.
+     * Draws a curved bezier path (tail-like) and positions circle around marker.
      * @param {Object} entry - Bubble data entry.
      * @param {Object} bubbleRect - Bubble rectangle bounds.
      * @param {Object} markerPos - Marker position in container coordinates (anchor point).
@@ -581,12 +595,38 @@ class SpeechBubbles {
             y: markerPos.y + MARKER_ICON_CENTER_OFFSET_Y
         };
         
-        const endPoint = this.getClosestPointOnRect(markerIconCenter, bubbleRect);
-        connector.setAttribute('x1', markerIconCenter.x);
-        connector.setAttribute('y1', markerIconCenter.y);
-        connector.setAttribute('x2', endPoint.x);
-        connector.setAttribute('y2', endPoint.y);
-        connector.style.opacity = isVisible ? '' : '0';
+        // Update circle position around marker
+        if (connector.circle) {
+            connector.circle.setAttribute('cx', markerIconCenter.x);
+            connector.circle.setAttribute('cy', markerIconCenter.y);
+            connector.circle.style.opacity = isVisible ? '' : '0';
+        }
+        
+        // Get closest point on bubble rectangle as start point
+        const bubblePoint = this.getClosestPointOnRect(markerIconCenter, bubbleRect);
+        
+        // Calculate endpoint on circle perimeter (stop at circle edge)
+        const dx = markerIconCenter.x - bubblePoint.x;
+        const dy = markerIconCenter.y - bubblePoint.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        const circleEdgeX = markerIconCenter.x - (dx / distance) * CONNECTOR_STOP_DISTANCE;
+        const circleEdgeY = markerIconCenter.y - (dy / distance) * CONNECTOR_STOP_DISTANCE;
+        
+        // Create curved bezier path (tail-like connection)
+        // Control points create a smooth curve from bubble to marker
+        const controlOffset = distance * 0.4; // 40% of distance for smooth curve
+        const controlX1 = bubblePoint.x + (dx / distance) * controlOffset;
+        const controlY1 = bubblePoint.y;
+        const controlX2 = circleEdgeX - (dx / distance) * controlOffset;
+        const controlY2 = circleEdgeY;
+        
+        const pathData = `M ${bubblePoint.x},${bubblePoint.y} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${circleEdgeX},${circleEdgeY}`;
+        
+        if (connector.path) {
+            connector.path.setAttribute('d', pathData);
+            connector.path.style.opacity = isVisible ? '' : '0';
+        }
     }
 
     /**

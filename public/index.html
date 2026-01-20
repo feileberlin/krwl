@@ -946,6 +946,27 @@ html.js-enabled noscript {
     filter: drop-shadow(0 0 4px rgba(214, 137, 184, 0.6)); /* Matches --color-primary glow */
 }
 
+/* New curved path connector (tail-like) */
+.bubble-connector-path {
+    fill: none;
+    stroke: var(--color-primary);
+    stroke-width: 2;
+    stroke-linecap: round;
+    opacity: 0.85;
+    filter: drop-shadow(0 0 4px rgba(214, 137, 184, 0.6));
+    transition: opacity 0.3s ease;
+}
+
+/* Circle around marker icon */
+.bubble-connector-circle {
+    fill: none;
+    stroke: var(--color-primary);
+    stroke-width: 2;
+    opacity: 0.6;
+    filter: drop-shadow(0 0 4px rgba(214, 137, 184, 0.6));
+    transition: opacity 0.3s ease;
+}
+
 .speech-bubble {
     position: absolute;
     background: rgba(13, 17, 23, 0.95);
@@ -4135,7 +4156,7 @@ window.APP_CONFIG = {"debug": false, "app": {"environment": "ci"}, "map": {"defa
 window.__INLINE_EVENTS_DATA__ = { "events": [{"id": "html_frankenpost_-3959068800383208116", "title": "Kunst in Bayreuth - Werke der 1940er bis 1960er Jahre - aus den Sammlungen und Stiftungen im Kunstmuseum", "description": "Donnerstag,01.01.2026,", "location": {"name": "Kunstmuseum Bayreuth", "lat": 49.944, "lon": 11.5747, "address": "Maximilianstraße 33, 95444 Bayreuth"}, "start_time": "2026-01-01T18:00:00", "end_time": null, "url": "https://event.frankenpost.de/detail.php?event_id=3119599", "source": "https://event.frankenpost.de/detail.php?event_id=3119599", "scraped_at": "2026-01-01T13:27:18.685017", "status": "published", "published_at": "2026-01-01T13:42:00.700054", "category": "arts", "teaser": "Donnerstag,01.01."}, {"id": "html_frankenpost_4878466979842611893", "title": "Ausstellung zum Fotowettbewerb: Zeig mir deine Lebenswerte Stadt (bis 7. Januar 2026)", "description": "Donnerstag,01.01.2026,", "location": {"name": "RW21 Volkshochschule Bayreuth", "lat": 49.9454, "lon": 11.5771, "address": "Richard-Wagner-Str. 21, 95444 Bayreuth"}, "start_time": "2026-01-01T18:00:00", "end_time": null, "url": "https://event.frankenpost.de/detail.php?event_id=3202184", "source": "https://event.frankenpost.de/detail.php?event_id=3202184", "scraped_at": "2026-01-01T13:27:18.684482", "status": "published", "published_at": "2026-01-01T13:42:00.700226", "category": "arts", "teaser": "Donnerstag,01.01."}, {"id": "html_frankenpost_6710371282043762830", "title": "Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline", "description": "Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline am 01.01.2026 18:00", "location": {"name": "Schloss Carolinenruhe", "lat": 49.93047, "lon": 11.5674, "address": "Colmdorf 8, 95448 Bayreuth"}, "start_time": "2026-01-01T18:00:00", "end_time": null, "url": "https://event.frankenpost.de/detail.php?event_id=3185852", "source": "https://event.frankenpost.de/detail.php?event_id=3185852", "scraped_at": "2026-01-01T13:27:18.683791", "status": "published", "published_at": "2026-01-01T13:42:00.700343", "category": "palace", "teaser": "Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline"}, {"id": "test_event_001", "title": "Test Community Gathering", "description": "A test event for approval flow testing", "location": {"name": "Test Venue Berlin", "lat": 52.52, "lon": 13.405, "address_hidden": true}, "start_time": "2026-01-15T19:00:00", "end_time": null, "url": "https://example.com/test-event", "source": "https://example.com/test-event", "scraped_at": "2026-01-01T14:45:00", "status": "published", "published_at": "2026-01-01T14:45:54.237616", "category": "community", "teaser": "A test event for approval flow testing"}] };
 window.MARKER_ICONS = {"marker-community": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NiA5NiIgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2Ij4KICA8IS0tIEljb24tb25seSBtYXJrZXIgKG5vIGd5cm8gb3V0bGluZSkgLSAzeCBsYXJnZXIgLS0+CiAgCjwhLS0gRHJvcCBzaGFkb3cgZm9yIGRlcHRoIC0tPgogIDxlbGxpcHNlIGN4PSI0OC4wIiBjeT0iOTAiIHJ4PSIxOS4yIiByeT0iNi4wIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjMiLz4KICAKICA8IS0tIEljb24gY29udGVudCBzY2FsZWQgM3ggYW5kIGNlbnRlcmVkIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAuMCwgMy4wKSBzY2FsZSgzKSI+CjwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiNENjg5QjgiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xNiAyMXYtMmE0IDQgMCAwIDAtNC00SDZhNCA0IDAgMCAwLTQgNHYyIiAvPgogIDxwYXRoIGQ9Ik0xNiAzLjEyOGE0IDQgMCAwIDEgMCA3Ljc0NCIgLz4KICA8cGF0aCBkPSJNMjIgMjF2LTJhNCA0IDAgMCAwLTMtMy44NyIgLz4KICA8Y2lyY2xlIGN4PSI5IiBjeT0iNyIgcj0iNCIgLz4KICAgIDwvZz4KICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-arts": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NiA5NiIgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2Ij4KICA8IS0tIEljb24tb25seSBtYXJrZXIgKG5vIGd5cm8gb3V0bGluZSkgLSAzeCBsYXJnZXIgLS0+CiAgCjwhLS0gRHJvcCBzaGFkb3cgZm9yIGRlcHRoIC0tPgogIDxlbGxpcHNlIGN4PSI0OC4wIiBjeT0iOTAiIHJ4PSIxOS4yIiByeT0iNi4wIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjMiLz4KICAKICA8IS0tIEljb24gY29udGVudCBzY2FsZWQgM3ggYW5kIGNlbnRlcmVkIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAuMCwgMy4wKSBzY2FsZSgzKSI+CjwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiNENjg5QjgiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xMiAyMmExIDEgMCAwIDEgMC0yMCAxMCA5IDAgMCAxIDEwIDkgNSA1IDAgMCAxLTUgNWgtMi4yNWExLjc1IDEuNzUgMCAwIDAtMS40IDIuOGwuMy40YTEuNzUgMS43NSAwIDAgMS0xLjQgMi44eiIgLz4KICA8Y2lyY2xlIGN4PSIxMy41IiBjeT0iNi41IiByPSIuNSIgZmlsbD0iY3VycmVudENvbG9yIiAvPgogIDxjaXJjbGUgY3g9IjE3LjUiIGN5PSIxMC41IiByPSIuNSIgZmlsbD0iY3VycmVudENvbG9yIiAvPgogIDxjaXJjbGUgY3g9IjYuNSIgY3k9IjEyLjUiIHI9Ii41IiBmaWxsPSJjdXJyZW50Q29sb3IiIC8+CiAgPGNpcmNsZSBjeD0iOC41IiBjeT0iNy41IiByPSIuNSIgZmlsbD0iY3VycmVudENvbG9yIiAvPgogICAgPC9nPgogIDwvZz4KICA8L2c+Cjwvc3ZnPg==", "marker-palace": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NiA5NiIgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2Ij4KICA8IS0tIEljb24tb25seSBtYXJrZXIgKG5vIGd5cm8gb3V0bGluZSkgLSAzeCBsYXJnZXIgLS0+CiAgCjwhLS0gRHJvcCBzaGFkb3cgZm9yIGRlcHRoIC0tPgogIDxlbGxpcHNlIGN4PSI0OC4wIiBjeT0iOTAiIHJ4PSIxOS4yIiByeT0iNi4wIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjMiLz4KICAKICA8IS0tIEljb24gY29udGVudCBzY2FsZWQgM3ggYW5kIGNlbnRlcmVkIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAuMCwgMy4wKSBzY2FsZSgzKSI+CjwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiNENjg5QjgiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0xMS41NjIgMy4yNjZhLjUuNSAwIDAgMSAuODc2IDBMMTUuMzkgOC44N2ExIDEgMCAwIDAgMS41MTYuMjk0TDIxLjE4MyA1LjVhLjUuNSAwIDAgMSAuNzk4LjUxOWwtMi44MzQgMTAuMjQ2YTEgMSAwIDAgMS0uOTU2LjczNEg1LjgxYTEgMSAwIDAgMS0uOTU3LS43MzRMMi4wMiA2LjAyYS41LjUgMCAwIDEgLjc5OC0uNTE5bDQuMjc2IDMuNjY0YTEgMSAwIDAgMCAxLjUxNi0uMjk0eiIgLz4KICA8cGF0aCBkPSJNNSAyMWgxNCIgLz4KICAgIDwvZz4KICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-default": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NiA5NiIgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2Ij4KICA8IS0tIEljb24tb25seSBtYXJrZXIgKG5vIGd5cm8gb3V0bGluZSkgLSAzeCBsYXJnZXIgLS0+CiAgCjwhLS0gRHJvcCBzaGFkb3cgZm9yIGRlcHRoIC0tPgogIDxlbGxpcHNlIGN4PSI0OC4wIiBjeT0iOTAiIHJ4PSIxOS4yIiByeT0iNi4wIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjMiLz4KICAKICA8IS0tIEljb24gY29udGVudCBzY2FsZWQgM3ggYW5kIGNlbnRlcmVkIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAuMCwgMy4wKSBzY2FsZSgzKSI+CjwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiNENjg5QjgiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxwYXRoIGQ9Ik0yMCAxMGMwIDQuOTkzLTUuNTM5IDEwLjE5My03LjM5OSAxMS43OTlhMSAxIDAgMCAxLTEuMjAyIDBDOS41MzkgMjAuMTkzIDQgMTQuOTkzIDQgMTBhOCA4IDAgMCAxIDE2IDAiIC8+CiAgPGNpcmNsZSBjeD0iMTIiIGN5PSIxMCIgcj0iMyIgLz4KICAgIDwvZz4KICA8L2c+CiAgPC9nPgo8L3N2Zz4=", "marker-geolocation": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NiA5NiIgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2Ij4KICA8IS0tIEljb24tb25seSBtYXJrZXIgKG5vIGd5cm8gb3V0bGluZSkgLSAzeCBsYXJnZXIgLS0+CiAgCjwhLS0gRHJvcCBzaGFkb3cgZm9yIGRlcHRoIC0tPgogIDxlbGxpcHNlIGN4PSI0OC4wIiBjeT0iOTAiIHJ4PSIxOS4yIiByeT0iNi4wIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjMiLz4KICAKICA8IS0tIEljb24gY29udGVudCBzY2FsZWQgM3ggYW5kIGNlbnRlcmVkIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAuMCwgMy4wKSBzY2FsZSgzKSI+CjwhLS0gTHVjaWRlIGljb24gKHNjYWxlZCBhbmQgcG9zaXRpb25lZCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYsIDE1KSBzY2FsZSgwLjUpIiBzdHJva2U9IiNENjg5QjgiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMiwgLTEyKSI+CjxsaW5lIHgxPSIyIiB4Mj0iNSIgeTE9IjEyIiB5Mj0iMTIiIC8+CiAgPGxpbmUgeDE9IjE5IiB4Mj0iMjIiIHkxPSIxMiIgeTI9IjEyIiAvPgogIDxsaW5lIHgxPSIxMiIgeDI9IjEyIiB5MT0iMiIgeTI9IjUiIC8+CiAgPGxpbmUgeDE9IjEyIiB4Mj0iMTIiIHkxPSIxOSIgeTI9IjIyIiAvPgogIDxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjciIC8+CiAgICA8L2c+CiAgPC9nPgogIDwvZz4KPC9zdmc+"};
 window.DASHBOARD_ICONS = {};
-window.DEBUG_INFO = {"event_counts": {"published": 4, "pending": 1, "archived": 13, "total": 18}, "unverified_locations_count": 17, "environment": "ci", "cache_enabled": true, "cache_file_size": null, "deployment_time": "2026-01-20T03:42:14.445148", "git_commit": {"hash": "6404edc", "author": "copilot-swe-agent[bot]", "date": "2026-01-20 03:41:05 +0000", "message": "Plan: Fix speech bubble connectors to point to marker icon centers"}, "html_sizes": {"total": 310005, "events_data": 2741, "translations": 0, "stylesheets": 90756, "scripts": 0, "marker_icons": 5809, "other": 210699}, "language": "de", "lint_results": {"passed": true, "error_count": 0, "warning_count": 2, "errors": [], "warnings": ["app_js: Found 11 console.log statements (consider removing for production)", "app_js: Found alert() usage (consider better UX)"], "structured_warnings": [{"message": "app_js: Found 11 console.log statements (consider removing for production)", "category": "general", "rule": "", "context": ""}, {"message": "app_js: Found alert() usage (consider better UX)", "category": "general", "rule": "", "context": ""}]}};
+window.DEBUG_INFO = {"event_counts": {"published": 4, "pending": 1, "archived": 13, "total": 18}, "unverified_locations_count": 17, "environment": "ci", "cache_enabled": true, "cache_file_size": null, "deployment_time": "2026-01-20T04:08:51.512884", "git_commit": {"hash": "8bc4dea", "author": "copilot-swe-agent[bot]", "date": "2026-01-20 03:44:57 +0000", "message": "Fix speech bubble connectors to point to marker icon center"}, "html_sizes": {"total": 312612, "events_data": 2741, "translations": 0, "stylesheets": 91284, "scripts": 0, "marker_icons": 5809, "other": 212778}, "language": "de", "lint_results": {"passed": true, "error_count": 0, "warning_count": 2, "errors": [], "warnings": ["app_js: Found 11 console.log statements (consider removing for production)", "app_js: Found alert() usage (consider better UX)"], "structured_warnings": [{"message": "app_js: Found 11 console.log statements (consider removing for production)", "category": "general", "rule": "", "context": ""}, {"message": "app_js: Found alert() usage (consider better UX)", "category": "general", "rule": "", "context": ""}]}};
 
 
 /* Leaflet JS: Load from CDN at runtime */
@@ -5468,6 +5489,8 @@ const SPREAD_BASE = 1;                 // Avoid sqrt(0) spacing
 // Category markers are 96x96px with anchor at [48, 96] (bottom-center)
 // Visual icon center is ~48px above the anchor point (at y=48 in the SVG)
 const MARKER_ICON_CENTER_OFFSET_Y = -48; // Negative = upward offset from anchor
+const MARKER_CIRCLE_RADIUS = 20; // Radius of circle around marker icon
+const CONNECTOR_STOP_DISTANCE = MARKER_CIRCLE_RADIUS + 2; // Stop connector before reaching circle
 
 // Filter bar constants
 const FILTER_BAR_PADDING = 20;         // Extra padding below filter bar
@@ -5978,17 +6001,28 @@ class SpeechBubbles {
 
     /**
      * Create a connector line element between a marker and bubble.
+     * Creates a curved bezier path (tail-like) and a circle around the marker.
      * @param {Object} markerPos - Marker position in container coordinates.
      * @param {Object} bubbleRect - Bubble rectangle bounds.
-     * @returns {SVGLineElement|null} Connector line element.
+     * @returns {Object|null} Connector elements (path and circle).
      */
     createConnectorLine(markerPos, bubbleRect) {
         if (!this.connectorLayer) return null;
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.classList.add('bubble-connector-line');
-        this.connectorLayer.appendChild(line);
-        this.updateConnectorLine({ connector: line }, bubbleRect, markerPos, true);
-        return line;
+        
+        // Create curved path (bezier) instead of straight line
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.classList.add('bubble-connector-path');
+        this.connectorLayer.appendChild(path);
+        
+        // Create circle around the marker icon
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.classList.add('bubble-connector-circle');
+        circle.setAttribute('r', MARKER_CIRCLE_RADIUS);
+        this.connectorLayer.appendChild(circle);
+        
+        const connector = { path, circle };
+        this.updateConnectorLine({ connector }, bubbleRect, markerPos, true);
+        return connector;
     }
 
     /**
@@ -6006,6 +6040,7 @@ class SpeechBubbles {
 
     /**
      * Update connector coordinates between a marker and bubble.
+     * Draws a curved bezier path (tail-like) and positions circle around marker.
      * @param {Object} entry - Bubble data entry.
      * @param {Object} bubbleRect - Bubble rectangle bounds.
      * @param {Object} markerPos - Marker position in container coordinates (anchor point).
@@ -6022,12 +6057,38 @@ class SpeechBubbles {
             y: markerPos.y + MARKER_ICON_CENTER_OFFSET_Y
         };
         
-        const endPoint = this.getClosestPointOnRect(markerIconCenter, bubbleRect);
-        connector.setAttribute('x1', markerIconCenter.x);
-        connector.setAttribute('y1', markerIconCenter.y);
-        connector.setAttribute('x2', endPoint.x);
-        connector.setAttribute('y2', endPoint.y);
-        connector.style.opacity = isVisible ? '' : '0';
+        // Update circle position around marker
+        if (connector.circle) {
+            connector.circle.setAttribute('cx', markerIconCenter.x);
+            connector.circle.setAttribute('cy', markerIconCenter.y);
+            connector.circle.style.opacity = isVisible ? '' : '0';
+        }
+        
+        // Get closest point on bubble rectangle as start point
+        const bubblePoint = this.getClosestPointOnRect(markerIconCenter, bubbleRect);
+        
+        // Calculate endpoint on circle perimeter (stop at circle edge)
+        const dx = markerIconCenter.x - bubblePoint.x;
+        const dy = markerIconCenter.y - bubblePoint.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        const circleEdgeX = markerIconCenter.x - (dx / distance) * CONNECTOR_STOP_DISTANCE;
+        const circleEdgeY = markerIconCenter.y - (dy / distance) * CONNECTOR_STOP_DISTANCE;
+        
+        // Create curved bezier path (tail-like connection)
+        // Control points create a smooth curve from bubble to marker
+        const controlOffset = distance * 0.4; // 40% of distance for smooth curve
+        const controlX1 = bubblePoint.x + (dx / distance) * controlOffset;
+        const controlY1 = bubblePoint.y;
+        const controlX2 = circleEdgeX - (dx / distance) * controlOffset;
+        const controlY2 = circleEdgeY;
+        
+        const pathData = `M ${bubblePoint.x},${bubblePoint.y} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${circleEdgeX},${circleEdgeY}`;
+        
+        if (connector.path) {
+            connector.path.setAttribute('d', pathData);
+            connector.path.style.opacity = isVisible ? '' : '0';
+        }
     }
 
     /**
