@@ -29,6 +29,7 @@ const SPREAD_BASE = 1;                 // Avoid sqrt(0) spacing
 const MARKER_ICON_CENTER_OFFSET_Y = -48; // Negative = upward offset from anchor
 const MARKER_CIRCLE_RADIUS = 20; // Radius of circle around marker icon
 const CONNECTOR_STOP_DISTANCE = MARKER_CIRCLE_RADIUS + 2; // Stop connector before reaching circle
+const BEZIER_CONTROL_POINT_FACTOR = 0.4; // Control points at 40% of distance for smooth curves
 
 // Filter bar constants
 const FILTER_BAR_PADDING = 20;         // Extra padding below filter bar
@@ -615,7 +616,7 @@ class SpeechBubbles {
         
         // Create curved bezier path (tail-like connection)
         // Control points create a smooth curve from bubble to marker
-        const controlOffset = distance * 0.4; // 40% of distance for smooth curve
+        const controlOffset = distance * BEZIER_CONTROL_POINT_FACTOR;
         const controlX1 = bubblePoint.x + (dx / distance) * controlOffset;
         const controlY1 = bubblePoint.y;
         const controlX2 = circleEdgeX - (dx / distance) * controlOffset;
