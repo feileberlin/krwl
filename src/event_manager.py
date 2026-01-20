@@ -982,6 +982,10 @@ def cli_publish_event(base_path, event_id):
     events.pop(event_index)
     save_pending_events(base_path, pending_data)
     
+    # Update pending count in events.json
+    from modules.utils import update_pending_count_in_events
+    update_pending_count_in_events(base_path)
+    
     print(f"✓ Published event: {event.get('title')}")
     
     # Update events in HTML
@@ -1017,6 +1021,10 @@ def cli_reject_event(base_path, event_id):
     # Remove from pending
     events.pop(event_index)
     save_pending_events(base_path, pending_data)
+    
+    # Update pending count in events.json
+    from modules.utils import update_pending_count_in_events
+    update_pending_count_in_events(base_path)
     
     print(f"✓ Rejected event: {event_title}")
     print(f"✓ Added to rejected_events.json")
@@ -1168,6 +1176,10 @@ def cli_bulk_publish_events(base_path, event_ids_str):
         save_events(base_path, events_data)
         save_pending_events(base_path, pending_data)
         
+        # Update pending count in events.json
+        from modules.utils import update_pending_count_in_events
+        update_pending_count_in_events(base_path)
+        
         print("🔄 Updating events in HTML...")
         update_events_in_html(base_path)
     
@@ -1270,6 +1282,11 @@ def cli_bulk_reject_events(base_path, event_ids_str):
     # Save changes
     if rejected_count > 0:
         save_pending_events(base_path, pending_data)
+        
+        # Update pending count in events.json
+        from modules.utils import update_pending_count_in_events
+        update_pending_count_in_events(base_path)
+        
         print(f"\n✓ Added {rejected_count} event(s) to rejected_events.json")
     
     # Summary
