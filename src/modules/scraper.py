@@ -632,8 +632,9 @@ class EventScraper:
             # Initialize EventSchema with AI categorization
             schema = EventSchema(self.config, self.base_path)
             
-            # Apply full schema migration BEFORE validation
+            # Apply full schema migration BEFORE validation (fail-fast approach)
             # This ensures all required fields (teaser, category, etc.) are generated
+            # Note: Migration is idempotent, so it's safe if called multiple times
             event_data = schema.migrate_event(event_data)
             
             # Validate event structure

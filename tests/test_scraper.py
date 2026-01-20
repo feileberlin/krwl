@@ -525,6 +525,81 @@ class ScraperTester:
         finally:
             self.cleanup_test_environment()
     
+    def test_migration_before_validation(self):
+        """Test that events without teaser are migrated before validation"""
+        print("\n=== Testing Migration Before Validation ===")
+        
+        test_path, config = self.setup_test_environment()
+        
+        try:
+            from modules.scraper import EventScraper
+            from modules.utils import load_pending_events
+            
+            scraper = EventScraper(config, test_path)
+            
+            # Create an event without teaser (simulating VHS scraper behavior)
+            event_without_teaser = {
+                'id': 'test_vhs_event_123',
+                'title': 'VHS Cooking Workshop',
+                'description': 'Learn to cook traditional German dishes in this hands-on workshop',
+                'location': {
+                    'name': 'VHS Hofer Land',
+                    'lat': 50.3167,
+                    'lon': 11.9167
+                },
+                'start_time': '2026-02-01T18:00:00',
+                'source': 'https://www.vhshoferland.de/test',
+                'status': 'pending'
+                # Note: 'teaser' field is intentionally missing
+            }
+            
+            # Load pending data
+            pending_data = load_pending_events(test_path)
+            
+            # Call the internal validation method that should migrate first
+            result = scraper._validate_and_add_event(event_without_teaser, pending_data)
+            
+            self.assert_test(
+                result is True,
+                "Event without teaser passes validation after migration",
+                "Event should be migrated (teaser generated) before validation"
+            )
+            
+            # Verify event was added to pending queue
+            self.assert_test(
+                len(pending_data['pending_events']) == 1,
+                "Migrated event added to pending queue",
+                f"Expected 1 event, found {len(pending_data['pending_events'])}"
+            )
+            
+            # Verify teaser was generated
+            if len(pending_data['pending_events']) > 0:
+                added_event = pending_data['pending_events'][0]
+                has_teaser = 'teaser' in added_event and len(added_event['teaser']) >= 10
+                self.assert_test(
+                    has_teaser,
+                    "Teaser field generated from description",
+                    f"Teaser: {added_event.get('teaser', 'MISSING')}"
+                )
+                
+                # Verify teaser content is reasonable
+                self.log(f"Generated teaser: '{added_event.get('teaser', '')}'")
+                
+                # Verify category was inferred
+                has_category = 'category' in added_event and added_event['category']
+                self.assert_test(
+                    has_category,
+                    "Category field inferred from content",
+                    f"Category: {added_event.get('category', 'MISSING')}"
+                )
+            
+        except Exception as e:
+            self.assert_test(False, "Migration before validation", f"Exception: {e}")
+            import traceback
+            traceback.print_exc()
+        finally:
+            self.cleanup_test_environment()
+    
     def run_all_tests(self):
         """Run all scraper tests"""
         print("=" * 70)
@@ -537,6 +612,7 @@ class ScraperTester:
         self.test_data_validation()
         self.test_scrape_all_sources()
         self.test_error_handling()
+        self.test_migration_before_validation()
         
         print("\n" + "=" * 70)
         print(f"Test Results: {self.tests_passed} passed, {self.tests_failed} failed")

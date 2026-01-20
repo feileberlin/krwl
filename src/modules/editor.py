@@ -104,6 +104,10 @@ class EventEditor:
                 
         # Save updated pending events
         save_pending_events(self.base_path, pending_data)
+        
+        # Update pending count in events.json
+        from .utils import update_pending_count_in_events
+        update_pending_count_in_events(self.base_path)
     
     def _batch_approve(self, pending_events, selected_indices):
         """Batch approve selected events"""
@@ -120,6 +124,10 @@ class EventEditor:
         pending_data = {'pending_events': pending_events}
         save_pending_events(self.base_path, pending_data)
         
+        # Update pending count in events.json
+        from .utils import update_pending_count_in_events
+        update_pending_count_in_events(self.base_path)
+        
         # Update HTML
         from .utils import update_events_in_html
         update_events_in_html(self.base_path)
@@ -135,6 +143,10 @@ class EventEditor:
         # Save changes
         pending_data = {'pending_events': pending_events}
         save_pending_events(self.base_path, pending_data)
+        
+        # Update pending count in events.json
+        from .utils import update_pending_count_in_events
+        update_pending_count_in_events(self.base_path)
     
     def _print_review_footer(self):
         """Print footer with editorial tooltips"""

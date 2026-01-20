@@ -352,16 +352,9 @@ def save_pending_events(base_path, pending_data):
     pending_path = base_path / 'assets' / 'json' / 'pending_events.json'
     pending_path.parent.mkdir(parents=True, exist_ok=True)
     
-    # Apply migration to all pending events (KISS: one place, automatic)
-    try:
-        schema = EventSchema()
-        for event in pending_data.get('pending_events', []):
-            # Migrate in-place
-            migrated = schema.migrate_event(event)
-            event.clear()
-            event.update(migrated)
-    except Exception as e:
-        logger.warning(f"Migration skipped during save: {e}")
+    # Note: Schema migration is applied in the scraper during validation (fail-fast)
+    # Events in pending_events.json are already migrated and validated
+    # This avoids redundant migration on every save operation
     
     pending_data['last_scraped'] = datetime.now().isoformat()
     with open(pending_path, 'w') as f:
