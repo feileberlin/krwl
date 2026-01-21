@@ -52,9 +52,10 @@ const ANIMATION_DURATION = 600;        // ms for collision resolution animation
 const COLLISION_CHECK_INTERVAL = 100;  // ms between collision checks
 
 class SpeechBubbles {
-    constructor(config, storage) {
+    constructor(config, storage, onBubbleClick = null) {
         this.config = config;
         this.storage = storage;
+        this.onBubbleClick = onBubbleClick; // Callback for bubble clicks
         this.speechBubbles = [];
         this.map = null;
         this.bubbleData = []; // Store bubble-marker associations for updates
@@ -62,7 +63,7 @@ class SpeechBubbles {
         this.connectorLayer = null;
         this.markers = [];
         
-        // Drag state
+        // Drag state - track if user actually dragged vs just clicked
         this.dragState = {
             isDragging: false,
             bubble: null,
@@ -71,7 +72,8 @@ class SpeechBubbles {
             bubbleOffsetX: 0,
             bubbleOffsetY: 0,
             mapOffsetX: 0,
-            mapOffsetY: 0
+            mapOffsetY: 0,
+            hasMoved: false // Track if mouse/touch moved during drag
         };
         
         // Force-directed layout state
@@ -87,6 +89,7 @@ class SpeechBubbles {
         this.handleDragStart = this.handleDragStart.bind(this);
         this.handleDragMove = this.handleDragMove.bind(this);
         this.handleDragEnd = this.handleDragEnd.bind(this);
+        this.handleBubbleClick = this.handleBubbleClick.bind(this);
         
         // Bind force-directed handlers
         this.applyForces = this.applyForces.bind(this);
@@ -301,6 +304,7 @@ class SpeechBubbles {
         this.bubbleData.push({
             bubble: bubble,
             marker: marker,
+            event: event, // Store event data for click handler
             index: index,
             userOffset: null, // Track user-applied drag offset
             connector: connectorLine
@@ -308,6 +312,9 @@ class SpeechBubbles {
         
         // Add drag event listeners for repositioning
         this.setupDragListeners(bubble);
+        
+        // Add click handler for opening event details
+        bubble.addEventListener('click', this.handleBubbleClick);
         
         // Fade in animation
         setTimeout(() => bubble.classList.add('visible'), 10);
@@ -364,7 +371,8 @@ class SpeechBubbles {
             bubbleOffsetY: clientY - rect.top,
             // Map container's position for coordinate conversion
             mapOffsetX: mapRect.left,
-            mapOffsetY: mapRect.top
+            mapOffsetY: mapRect.top,
+            hasMoved: false // Reset movement tracking
         };
         
         bubble.classList.add('dragging');
@@ -390,6 +398,15 @@ class SpeechBubbles {
         
         const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
         const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+        
+        // Track if user actually moved the mouse/touch (not just a click)
+        const dx = Math.abs(clientX - this.dragState.startX);
+        const dy = Math.abs(clientY - this.dragState.startY);
+        const DRAG_THRESHOLD = 5; // pixels - movement threshold to consider it a drag
+        
+        if (dx > DRAG_THRESHOLD || dy > DRAG_THRESHOLD) {
+            this.dragState.hasMoved = true;
+        }
         
         const mapContainer = document.getElementById('map');
         const mapRect = mapContainer.getBoundingClientRect();
@@ -465,10 +482,46 @@ class SpeechBubbles {
             bubbleOffsetX: 0,
             bubbleOffsetY: 0,
             mapOffsetX: 0,
-            mapOffsetY: 0
+            mapOffsetY: 0,
+            hasMoved: false
         };
         
         this.log('Drag ended');
+    }
+    
+    /**
+     * Handle bubble click to open event details
+     * Only triggers if user didn't drag the bubble
+     * @param {Event} e - Click event
+     */
+    handleBubbleClick(e) {
+        // Don't open event detail if user was dragging
+        if (this.dragState.hasMoved) {
+            return;
+        }
+        
+        // Don't trigger if clicking on bookmark button (it has its own handler)
+        if (e.target.closest('.bubble-bookmark')) {
+            return;
+        }
+        
+        const bubble = e.currentTarget;
+        if (!bubble) return;
+        
+        // Find the event data associated with this bubble
+        const bubbleData = this.bubbleData.find(data => data.bubble === bubble);
+        if (!bubbleData || !bubbleData.event) {
+            this.log('Warning: No event data found for clicked bubble');
+            return;
+        }
+        
+        // Call the callback if provided
+        if (this.onBubbleClick && typeof this.onBubbleClick === 'function') {
+            this.log('Opening event detail for:', bubbleData.event.title);
+            this.onBubbleClick(bubbleData.event);
+        } else {
+            this.log('Warning: No onBubbleClick callback provided');
+        }
     }
     
     /**

@@ -31,7 +31,7 @@ class EventsApp {
         this.storage = new EventStorage(this.config);
         this.eventFilter = new EventFilter(this.config, this.storage);
         this.mapManager = new MapManager(this.config, this.storage);
-        this.speechBubbles = new SpeechBubbles(this.config, this.storage);
+        this.speechBubbles = new SpeechBubbles(this.config, this.storage, (event) => this.showEventDetail(event));
         this.utils = new EventUtils(this.config);
         this.dashboardUI = new DashboardUI(this.config, this.utils);
         this.filterDescriptionUI = new FilterDescriptionUI(this.config);

@@ -145,10 +145,12 @@ displayEvents()
 ### Speech Bubbles
 - [ ] Load page → bubbles appear automatically
 - [ ] Check time is headline (prominent)
-- [ ] Click bubble → opens full event detail
+- [ ] Bubbles contain all event details (time, date, title, location, distance)
+- [ ] Bubbles are draggable to manually adjust position
 - [ ] Verify max 20 bubbles shown
 - [ ] Test mobile → smaller bubbles
 - [ ] Test with many close markers → no major overlap
+- [ ] Verify comic-style tail/connector points to marker
 
 ### Responsive Design
 - [ ] Desktop: bubbles position around markers
