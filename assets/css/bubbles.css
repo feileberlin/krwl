@@ -78,7 +78,7 @@
     width: 0;
     height: 0;
     border-style: solid;
-    border-width: 15px 10px 0 10px;
+    border-width: calc(15px * var(--tail-scale, 1)) calc(10px * var(--tail-scale, 1)) 0 calc(10px * var(--tail-scale, 1));
     border-color: var(--color-primary) transparent transparent transparent;
     /* Position controlled by CSS custom properties set from JavaScript */
     left: var(--tail-x, 50%);
@@ -98,7 +98,7 @@
     width: 0;
     height: 0;
     border-style: solid;
-    border-width: 13px 8px 0 8px;
+    border-width: calc(13px * var(--tail-scale, 1)) calc(8px * var(--tail-scale, 1)) 0 calc(8px * var(--tail-scale, 1));
     border-color: rgba(13, 17, 23, 0.95) transparent transparent transparent;
     /* Position controlled by CSS custom properties set from JavaScript */
     left: var(--tail-x, 50%);

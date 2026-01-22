@@ -31,6 +31,7 @@ const MARKER_ICON_CENTER_OFFSET_Y = -48; // Negative = upward offset from anchor
 const MARKER_CIRCLE_RADIUS = 24; // Radius of circle around marker icon (increased from 20 to prevent crossing)
 const CONNECTOR_STOP_DISTANCE = MARKER_CIRCLE_RADIUS + 4; // Stop connector 4px before circle edge (increased clearance)
 const BEZIER_CONTROL_POINT_FACTOR = 0.4; // Control points at 40% of distance for smooth curves
+const CSS_TAIL_HEIGHT = 15; // Height of CSS tail triangle in pixels (must match CSS border-width)
 
 // Filter bar constants
 const FILTER_BAR_PADDING = 20;         // Extra padding below filter bar
@@ -731,8 +732,9 @@ class SpeechBubbles {
         
         // CRITICAL FIX: Ensure second control point never enters marker boundary
         // When bubble is dragged close to marker, prevent curve from crossing through icon
-        // Second control point offset must be at least the marker radius to stay outside
-        const minControlOffset = MARKER_CIRCLE_RADIUS + 2; // Minimum safe distance from marker center
+        // Second control point must be well beyond the connector stop distance for safe clearance
+        // This ensures even with Bezier curve interpolation, path stays outside marker
+        const minControlOffset = CONNECTOR_STOP_DISTANCE + 8; // 28px + 8px margin = 36px minimum
         const secondControlOffset = Math.max(minControlOffset, controlOffset * 0.5);
         
         // Path 1: from startPoint1 to circleEdge
@@ -778,10 +780,22 @@ class SpeechBubbles {
             const angleRad = Math.atan2(tailDy, tailDx);
             const angleDeg = (angleRad * 180 / Math.PI) + 90; // +90 because tail points down by default
             
+            // CRITICAL FIX: Scale tail size based on distance to prevent crossing marker
+            // When bubble is very close to marker, reduce tail size so it doesn't reach marker
+            // CSS tail is normally 15px (CSS_TAIL_HEIGHT), but we scale it down when close
+            const tailDistance = Math.sqrt(tailDx * tailDx + tailDy * tailDy);
+            const minSafeDistance = CONNECTOR_STOP_DISTANCE; // 28px - tail should not reach marker
+            const tailScale = Math.min(1.0, tailDistance / (minSafeDistance + CSS_TAIL_HEIGHT));
+            
             // Set CSS custom properties for tail positioning
             entry.bubble.style.setProperty('--tail-x', `${tailX}%`);
             entry.bubble.style.setProperty('--tail-y', `${tailY}%`);
             entry.bubble.style.setProperty('--tail-angle', `${angleDeg}deg`);
+            // Only update scale if it changed significantly (performance optimization)
+            const currentScale = parseFloat(entry.bubble.style.getPropertyValue('--tail-scale')) || 1.0;
+            if (Math.abs(currentScale - tailScale) > 0.01) {
+                entry.bubble.style.setProperty('--tail-scale', tailScale.toFixed(2));
+            }
         }
     }
 
