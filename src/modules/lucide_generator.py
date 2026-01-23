@@ -14,7 +14,7 @@ Usage:
     
 The script will:
 1. Scan assets/js/*.js and assets/html/*.html for data-lucide attributes
-2. Fetch SVG paths for each unique icon from Lucide CDN (or use embedded map)
+2. Resolve SVG paths for each unique icon using the embedded LUCIDE_SVG_MAP (offline, no CDN fetch)
 3. Generate src/modules/lucide_markers.py with the icon map
 4. Report statistics on icons found and generated
 
@@ -25,10 +25,9 @@ Run this script:
 """
 
 import re
-import json
-import os
+import sys
 from pathlib import Path
-from typing import Set, Dict
+from typing import Set
 
 # ============================================================================
 # EMBEDDED LUCIDE ICON SVG PATHS
@@ -79,9 +78,6 @@ def find_icon_usage(base_path: Path) -> Set[str]:
         r'<i\s+data-lucide=["\']([^"\']+)["\']',  # Template strings with <i> tags
     ]
     
-    # Additional patterns for hardcoded icon strings (e.g., 'map-pin' : 'edit-3')
-    icon_string_pattern = r"['\"]([a-z][a-z0-9-]{2,})['\"]"  # Match potential icon names
-    
     # Scan JavaScript files
     js_path = base_path / 'assets' / 'js'
     if js_path.exists():
@@ -90,9 +86,6 @@ def find_icon_usage(base_path: Path) -> Set[str]:
             for pattern in patterns:
                 matches = re.findall(pattern, content)
                 icons.update(matches)
-            
-            # Look for hardcoded icon strings in conditions/assignments
-            # e.g., iconType = loc.fromPredefined ? 'map-pin' : 'edit-3'
             ternary_matches = re.findall(r"[?:]\s*['\"]([a-z][a-z0-9-]{2,})['\"]", content)
             for match in ternary_matches:
                 # Only add if it looks like a Lucide icon name (hyphenated)
@@ -124,16 +117,6 @@ def generate_lucide_markers_module(icons: Set[str], output_path: Path,
         output_path: Path to output lucide_markers.py file
         regenerate_maps: Which maps to regenerate ('all', 'marker', 'map', 'dashboard', or 'map,dashboard')
     """
-def generate_lucide_markers_module(icons: Set[str], output_path: Path, 
-                                   regenerate_maps: str = 'all') -> None:
-    """
-    Generate src/modules/lucide_markers.py with icon maps.
-    
-    Args:
-        icons: Set of icon names to include
-        output_path: Path to output lucide_markers.py file
-        regenerate_maps: Which maps to regenerate ('all', 'marker', 'map', 'dashboard', or 'map,dashboard')
-    """
     # Parse which maps to regenerate
     maps_to_regenerate = set(regenerate_maps.split(',')) if regenerate_maps != 'all' else {'marker', 'map', 'dashboard'}
     
@@ -147,9 +130,6 @@ def generate_lucide_markers_module(icons: Set[str], output_path: Path,
         try:
             with open(output_path, 'r', encoding='utf-8') as f:
                 content = f.read()
-                
-            # Extract existing maps using regex
-            import re
             
             # Extract MAP_ICONS_MAP
             map_match = re.search(r'MAP_ICONS_MAP = \{([^}]+)\}', content, re.DOTALL)
@@ -367,6 +347,5 @@ def main():
         traceback.print_exc()
         return 1
 
-
 if __name__ == '__main__':
-    main()
+    sys.exit(main())

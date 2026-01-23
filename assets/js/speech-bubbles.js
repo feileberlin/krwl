@@ -24,13 +24,13 @@ const GOLDEN_ANGLE = 2.399963229728653; // Golden ratio angle (≈137.5°) in ra
 const SPREAD_BASE = 1;                 // Avoid sqrt(0) spacing
 
 // Marker icon offset constants (for connector lines)
-// Category markers are 96x96px with anchor at [48, 96] (bottom-center)
-// Visual icon center is ~48px above the anchor point (at y=48 in the SVG)
-// Lucide icons are ~36x36px scaled, with stroke-width: 2px → effective visual radius ~20-22px
-const MARKER_ICON_CENTER_OFFSET_Y = -48; // Negative = upward offset from anchor
-const MARKER_CIRCLE_RADIUS = 24; // Logical "protection" radius around marker icon; increased from 20px to give Bezier connectors more clearance and reduce crossings.
-const CONNECTOR_STOP_DISTANCE = MARKER_CIRCLE_RADIUS + 4; // Stop connector 4px outside circle edge (28px from marker center, increased clearance)
-const BEZIER_CONTROL_POINT_FACTOR = 0.4; // Control points at 40% of distance for smooth curves; tuned together with the clearance constants to mitigate (but not mathematically prevent) line/marker intersections.
+// Category markers are 200x200px with anchor at [100, 200] (bottom-center)
+// Visual icon center is ~100px above the anchor point (at y=100 in the SVG)
+// Lucide icons are scaled proportionally
+const MARKER_ICON_CENTER_OFFSET_Y = -100; // Negative = upward offset from anchor (was -48 for 96px)
+const MARKER_CIRCLE_RADIUS = 50; // Logical "protection" radius around marker icon (was 24 for 96px, now 50 for 200px)
+const CONNECTOR_STOP_DISTANCE = MARKER_CIRCLE_RADIUS + 4; // Stop connector 4px outside circle edge
+const BEZIER_CONTROL_POINT_FACTOR = 0.4; // Control points at 40% of distance for smooth curves
 const CSS_TAIL_HEIGHT = 15; // Height of CSS tail triangle in pixels (must match CSS border-width)
 
 // Filter bar constants

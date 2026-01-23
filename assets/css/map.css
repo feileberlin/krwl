@@ -28,6 +28,13 @@
     filter: none !important;
 }
 
+/* Custom marker icon container (divIcon) */
+.custom-marker-icon {
+    position: relative;
+    background: transparent !important;
+    border: none !important;
+}
+
 #map-overlay {
     position: absolute;
     top: 10px;
@@ -48,15 +55,15 @@
     top: 5px;
     left: 50%;
     transform: translateX(-50%);
-    background: linear-gradient(135deg, #D689B8 0%, #E5A4C8 100%); /* ecoBarbie gradient */
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%); /* ecoBarbie gradient */
+    color: var(--color-tint-100);
     font-size: 14px;
     font-weight: 700;
     padding: 4px 8px;
     border-radius: 4px;
-    border: 2px solid #ffffff;
-    box-shadow: 0 2px 6px rgba(214, 137, 184, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.3);
-    pointer-events: none;
+    border: 2px solid var(--color-tint-100);
+    box-shadow: 0 2px 6px var(--color-primary), inset 0 1px 2px rgba(255, 255, 255, 0.3);
+    pointer-events: auto; /* Allow pointer events for tooltip hover */
     z-index: 20; /* One layer above connectors (z-index: 10) - fully opaque badges */
     white-space: nowrap;
     font-family: var(--font-family-base);
@@ -73,7 +80,7 @@
     position: absolute;
     width: 3px;
     height: 3px;
-    background: #ffffff;
+    background: var(--color-tint-100);
     border-radius: 50%;
     top: 50%;
     left: 4px;

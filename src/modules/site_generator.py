@@ -1825,7 +1825,7 @@ window.DASHBOARD_ICONS = {json.dumps(all_ui_icons, ensure_ascii=False)};'''
             )
             dashboard_icons_wrapped = self.wrap_with_debug_comment(
                 dashboard_icons_json, 'json', 'src/modules/lucide_markers.py',
-                {'description': 'Dashboard UI icons', 'count': len(DASHBOARD_ICONS_MAP)}
+                {'description': 'UI icons (MAP + DASHBOARD combined)', 'count': len(all_ui_icons)}
             )
             debug_info_wrapped = self.wrap_with_debug_comment(
                 debug_info_json, 'json', '(generated)',

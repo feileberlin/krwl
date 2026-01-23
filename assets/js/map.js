@@ -257,9 +257,11 @@ class MapManager {
             window.MARKER_ICONS && window.MARKER_ICONS['marker-default'] ||
             'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSIjRDY4OUI4IiBkPSJNMTIgMkM4LjEzIDIgNSA1LjEzIDUgOWMwIDUuMjUgNyAxMyA3IDEzczctNy43NSA3LTEzYzAtMy44Ny0zLjEzLTctNy03em0wIDkuNWMtMS4zOCAwLTIuNS0xLjEyLTIuNS0yLjVzMS4xMi0yLjUgMi41LTIuNSAyLjUgMS4xMiAyLjUgMi41LTEuMTIgMi41LTIuNSAyLjV6Ii8+PC9zdmc+';
         
-        const markerIcon = L.icon({
-            iconUrl: iconUrl,
-            iconSize: [200, 200],  // Large size for better visibility
+        // Use divIcon to allow HTML content (time badge overlay)
+        const markerIcon = L.divIcon({
+            className: 'custom-marker-icon',
+            html: `<img src="${iconUrl}" alt="${category} event marker" style="width: 200px; height: 200px; display: block;" />`,
+            iconSize: [200, 200],
             iconAnchor: [100, 200],  // Center bottom
             popupAnchor: [0, -200]  // Above marker
         });
@@ -317,7 +319,6 @@ class MapManager {
         if (!marker._icon || !event.start_time) return;
         
         const startTime = new Date(event.start_time);
-        const now = new Date();
         const timeFilter = this.storage.getFilters().timeFilter || 'sunrise';
         
         // Determine badge content:
@@ -338,10 +339,12 @@ class MapManager {
         const badge = document.createElement('div');
         badge.className = 'marker-time-badge';
         badge.textContent = badgeText;
-        badge.title = startTime.toLocaleString();
         
-        // Append to marker icon
+        // Append to marker icon (divIcon allows this)
         marker._icon.appendChild(badge);
+        
+        // Add tooltip to marker element for hover functionality
+        marker._icon.title = startTime.toLocaleString();
         
         this.log('Time badge added to marker', { badgeText, eventTitle: event.title });
     }
