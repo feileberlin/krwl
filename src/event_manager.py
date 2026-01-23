@@ -397,6 +397,15 @@ COMMANDS:
     docs generate             Run all generation tasks
     docs validate             Run all validation tasks
     
+    workflow                  List all available GitHub Actions workflows
+    workflow --list           List all available GitHub Actions workflows
+    workflow list             List all available GitHub Actions workflows
+    workflow run WORKFLOW_ID  Trigger a workflow (requires GitHub CLI auth)
+    workflow run WORKFLOW_ID --branch BRANCH  Run on specific branch
+    workflow run WORKFLOW_ID --input KEY=VALUE  Pass input to workflow
+    workflow status WORKFLOW_ID  Show recent workflow runs
+    workflow status WORKFLOW_ID --limit N  Show N recent runs
+    
     archive-monthly           Archive old events based on retention window
     archive-monthly --dry-run Preview archiving without making changes
     archive-info              Show archiving configuration and existing archives
@@ -484,6 +493,14 @@ EXAMPLES:
     python3 event_manager.py docs lint-markdown --fix --all
     python3 event_manager.py docs generate
     python3 event_manager.py docs validate
+    
+    # GitHub Actions workflows
+    python3 event_manager.py workflow list
+    python3 event_manager.py workflow run scrape-events
+    python3 event_manager.py workflow run scrape-events --branch preview
+    python3 event_manager.py workflow run scrape-events --input force_deploy=true
+    python3 event_manager.py workflow status scrape-events
+    python3 event_manager.py workflow status scrape-events --limit 10
     
     # Get help
     python3 event_manager.py --help
@@ -1942,6 +1959,124 @@ def cli_pin_status(base_path):
     return 0
 
 
+def cli_workflow(base_path, subcommand, workflow_args):
+    """
+    Handle workflow commands (list, run, status).
+    
+    This delegates to the WorkflowLauncher module to manage
+    GitHub Actions workflows via GitHub CLI.
+    
+    Args:
+        base_path: Repository root path
+        subcommand: Workflow subcommand (list, run, status, or None)
+        workflow_args: Additional arguments for the subcommand
+        
+    Returns:
+        Exit code (0 for success, 1 for error)
+    """
+    from modules.workflow_launcher import WorkflowLauncher
+    
+    launcher = WorkflowLauncher(base_path)
+    
+    # Handle 'list' or no subcommand -> list workflows
+    if subcommand is None or subcommand == 'list' or subcommand == '--list':
+        from modules.workflow_launcher import print_workflows
+        print_workflows(launcher)
+        return 0
+    
+    # Handle 'run' subcommand
+    elif subcommand == 'run':
+        if not workflow_args:
+            print("Error: Missing workflow ID")
+            print("Usage: python3 event_manager.py workflow run WORKFLOW_ID [--branch BRANCH] [--input KEY=VALUE]")
+            return 1
+        
+        workflow_id = workflow_args[0]
+        branch = 'preview'  # Default branch
+        inputs = {}
+        
+        # Parse remaining arguments
+        i = 1
+        while i < len(workflow_args):
+            if workflow_args[i] == '--branch' and i + 1 < len(workflow_args):
+                branch = workflow_args[i + 1]
+                i += 2
+            elif workflow_args[i] == '--input' and i + 1 < len(workflow_args):
+                # Parse KEY=VALUE format
+                input_arg = workflow_args[i + 1]
+                if '=' in input_arg:
+                    key, value = input_arg.split('=', 1)
+                    inputs[key] = value
+                i += 2
+            else:
+                i += 1
+        
+        print(f"Triggering workflow '{workflow_id}' on branch '{branch}'...")
+        if inputs:
+            print(f"Inputs: {inputs}")
+        
+        success, message = launcher.trigger_workflow(workflow_id, branch, inputs)
+        print(message)
+        return 0 if success else 1
+    
+    # Handle 'status' subcommand
+    elif subcommand == 'status':
+        if not workflow_args:
+            print("Error: Missing workflow ID")
+            print("Usage: python3 event_manager.py workflow status WORKFLOW_ID [--limit N]")
+            return 1
+        
+        workflow_id = workflow_args[0]
+        limit = 5  # Default limit
+        
+        # Parse --limit flag
+        if '--limit' in workflow_args:
+            try:
+                limit_idx = workflow_args.index('--limit')
+                if limit_idx + 1 < len(workflow_args):
+                    limit = int(workflow_args[limit_idx + 1])
+            except (ValueError, IndexError):
+                print("Warning: Invalid --limit value, using default (5)")
+        
+        print(f"Recent runs of workflow '{workflow_id}':")
+        success, runs = launcher.get_workflow_runs(workflow_id, limit)
+        
+        if success and runs:
+            print("-" * 80)
+            for run in runs:
+                status = run.get('status', 'unknown')
+                conclusion = run.get('conclusion', '-')
+                branch = run.get('headBranch', '-')
+                created = run.get('createdAt', '-')
+                event = run.get('event', '-')
+                
+                # Basic run info
+                print(f"Run #{run.get('databaseId')}: {status} / {conclusion}")
+                print(f"  Branch: {branch}, Event: {event}, Created: {created}")
+                
+                # Show workflow dispatch inputs if available
+                inputs = run.get('inputs')
+                if inputs:
+                    print(f"  Dispatch Options:")
+                    for key, value in inputs.items():
+                        print(f"    • {key}: {value}")
+                
+                print()  # Blank line between runs
+            print("-" * 80)
+        elif success:
+            print("No recent runs found.")
+        else:
+            print("Failed to fetch workflow runs.")
+        
+        return 0
+    
+    else:
+        print(f"Error: Unknown workflow subcommand '{subcommand}'")
+        print("Usage: python3 event_manager.py workflow [list|run|status]")
+        return 1
+
+
+
 def _execute_command(args, base_path, config):
     """Execute the specified CLI command.
     
@@ -2101,6 +2236,13 @@ def _execute_command(args, base_path, config):
         
         # Otherwise run as individual task
         return 0 if runner.run_task(task_name, task_args) else 1
+    
+    if command == 'workflow':
+        # Delegate to workflow launcher module (KISS: keep main CLI simple)
+        # Handle GitHub Actions workflow management via GitHub CLI
+        subcommand = args.args[0] if args.args else None
+        workflow_args = args.args[1:] if args.args and len(args.args) > 1 else []
+        return cli_workflow(base_path, subcommand, workflow_args)
     
     if command == 'archive-monthly':
         # Archive old events based on config retention window
