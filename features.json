@@ -561,11 +561,12 @@
     {
       "id": "workflow-launcher",
       "name": "GitHub Actions Workflow Launcher",
-      "description": "Launch and manage GitHub Actions workflows using GitHub CLI. View workflow runs with dispatch options displayed in the status overview. Shows which inputs were selected when manually triggering workflows via workflow_dispatch.",
+      "description": "Launch and manage GitHub Actions workflows using GitHub CLI. Integrated into event_manager.py main CLI with 'workflow' command for unified management. View workflow runs with dispatch options displayed in the status overview. Shows which inputs were selected when manually triggering workflows via workflow_dispatch.",
       "category": "backend",
       "implemented": true,
       "files": [
         "src/modules/workflow_launcher.py",
+        "src/event_manager.py",
         "tests/test_workflow_inputs.py"
       ],
       "code_patterns": [
@@ -573,11 +574,16 @@
           "file": "src/modules/workflow_launcher.py",
           "pattern": "class WorkflowLauncher|def trigger_workflow|def get_workflow_run_inputs|gh workflow run",
           "description": "Workflow launcher class with dispatch options display"
+        },
+        {
+          "file": "src/event_manager.py",
+          "pattern": "def cli_workflow|command == 'workflow'",
+          "description": "CLI integration for workflow commands"
         }
       ],
       "test_method": "run_custom_test",
       "test_file": "tests/test_workflow_inputs.py",
-      "test_instructions": "1. Run workflow input tests: python3 tests/test_workflow_inputs.py\n2. View demo: python3 examples/demo_workflow_inputs.py\n3. List workflows: python3 src/modules/workflow_launcher.py list\n4. Check status (requires gh auth): python3 src/modules/workflow_launcher.py status scrape-events"
+      "test_instructions": "1. Run workflow input tests: python3 tests/test_workflow_inputs.py\n2. View demo: python3 examples/demo_workflow_inputs.py\n3. List workflows: python3 src/event_manager.py workflow list\n4. Check status (requires gh auth): python3 src/event_manager.py workflow status scrape-events\n5. Trigger workflow: python3 src/event_manager.py workflow run scrape-events --branch preview --input force_deploy=true\n6. Verify help text: python3 src/event_manager.py --help | grep workflow"
     },
     {
       "id": "copilot-custom-instructions",
