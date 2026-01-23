@@ -727,10 +727,23 @@ strong, b {
     transform: translateY(-1px);
 }
 
+/* Custom locations list - two column layout */
+#custom-locations-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+/* Stack to single column on mobile */
+@media (max-width: 500px) {
+    #custom-locations-list {
+        grid-template-columns: 1fr;
+    }
+}
+
 .custom-location-item {
     background: var(--bg-tertiary);
     padding: 0.8rem;
-    margin-bottom: 0.5rem;
     border-radius: var(--radius-medium);
     border: 1px solid var(--border-secondary);
 }
