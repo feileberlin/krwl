@@ -26,10 +26,12 @@ const SPREAD_BASE = 1;                 // Avoid sqrt(0) spacing
 // Marker icon offset constants (for connector lines)
 // Category markers are 96x96px with anchor at [48, 96] (bottom-center)
 // Visual icon center is ~48px above the anchor point (at y=48 in the SVG)
+// Lucide icons are ~36x36px scaled, with stroke-width: 2px → effective visual radius ~20-22px
 const MARKER_ICON_CENTER_OFFSET_Y = -48; // Negative = upward offset from anchor
-const MARKER_CIRCLE_RADIUS = 20; // Radius of circle around marker icon
-const CONNECTOR_STOP_DISTANCE = MARKER_CIRCLE_RADIUS + 2; // Stop connector before reaching circle
-const BEZIER_CONTROL_POINT_FACTOR = 0.4; // Control points at 40% of distance for smooth curves
+const MARKER_CIRCLE_RADIUS = 24; // Logical "protection" radius around marker icon; increased from 20px to give Bezier connectors more clearance and reduce crossings.
+const CONNECTOR_STOP_DISTANCE = MARKER_CIRCLE_RADIUS + 4; // Stop connector 4px outside circle edge (28px from marker center, increased clearance)
+const BEZIER_CONTROL_POINT_FACTOR = 0.4; // Control points at 40% of distance for smooth curves; tuned together with the clearance constants to mitigate (but not mathematically prevent) line/marker intersections.
+const CSS_TAIL_HEIGHT = 15; // Height of CSS tail triangle in pixels (must match CSS border-width)
 
 // Filter bar constants
 const FILTER_BAR_PADDING = 20;         // Extra padding below filter bar
@@ -728,17 +730,50 @@ class SpeechBubbles {
         // Create two curved bezier paths that merge at the circle edge
         const controlOffset = distance * BEZIER_CONTROL_POINT_FACTOR;
         
+        // CRITICAL FIX: Keep second control point safely away from the marker boundary
+        // When the bubble is dragged close to the marker, bias the curve so it does not visually cross the icon
+        // Use at least the marker radius plus a small padding as a heuristic safe distance for the control point
+        const minControlOffset = MARKER_CIRCLE_RADIUS + 2; // Marker radius + 2px padding from marker center
+        const secondControlOffset = Math.max(minControlOffset, controlOffset * 0.5);
+        
+        // Calculate initial control point positions
         // Path 1: from startPoint1 to circleEdge
         const controlX1_1 = startPoint1.x + (dx / distance) * controlOffset;
         const controlY1_1 = startPoint1.y + (dy / distance) * (controlOffset * 0.3);
-        const controlX1_2 = circleEdgeX - (dx / distance) * (controlOffset * 0.5);
-        const controlY1_2 = circleEdgeY - (dy / distance) * (controlOffset * 0.5);
+        let controlX1_2 = markerIconCenter.x - (dx / distance) * secondControlOffset;
+        let controlY1_2 = markerIconCenter.y - (dy / distance) * secondControlOffset;
         
         // Path 2: from startPoint2 to circleEdge (mirrors path 1)
         const controlX2_1 = startPoint2.x + (dx / distance) * controlOffset;
         const controlY2_1 = startPoint2.y + (dy / distance) * (controlOffset * 0.3);
-        const controlX2_2 = circleEdgeX - (dx / distance) * (controlOffset * 0.5);
-        const controlY2_2 = circleEdgeY - (dy / distance) * (controlOffset * 0.5);
+        let controlX2_2 = markerIconCenter.x - (dx / distance) * secondControlOffset;
+        let controlY2_2 = markerIconCenter.y - (dy / distance) * secondControlOffset;
+        
+        // Additional safety: Ensure control points maintain minimum radial distance from marker center
+        // This addresses the mathematical issue that directional offset alone doesn't guarantee clearance
+        const minRadialDistance = MARKER_CIRCLE_RADIUS + 4; // Minimum distance control point must be from marker center
+        
+        // Check and correct control point 1_2 if too close to marker center
+        const radialDist1_2 = Math.sqrt(
+            Math.pow(controlX1_2 - markerIconCenter.x, 2) + 
+            Math.pow(controlY1_2 - markerIconCenter.y, 2)
+        );
+        if (radialDist1_2 < minRadialDistance) {
+            const scale = minRadialDistance / radialDist1_2;
+            controlX1_2 = markerIconCenter.x + (controlX1_2 - markerIconCenter.x) * scale;
+            controlY1_2 = markerIconCenter.y + (controlY1_2 - markerIconCenter.y) * scale;
+        }
+        
+        // Check and correct control point 2_2 if too close to marker center
+        const radialDist2_2 = Math.sqrt(
+            Math.pow(controlX2_2 - markerIconCenter.x, 2) + 
+            Math.pow(controlY2_2 - markerIconCenter.y, 2)
+        );
+        if (radialDist2_2 < minRadialDistance) {
+            const scale = minRadialDistance / radialDist2_2;
+            controlX2_2 = markerIconCenter.x + (controlX2_2 - markerIconCenter.x) * scale;
+            controlY2_2 = markerIconCenter.y + (controlY2_2 - markerIconCenter.y) * scale;
+        }
         
         // Combine both paths into a single SVG path with two curves merging at one point
         const pathData = `
@@ -771,10 +806,22 @@ class SpeechBubbles {
             const angleRad = Math.atan2(tailDy, tailDx);
             const angleDeg = (angleRad * 180 / Math.PI) + 90; // +90 because tail points down by default
             
+            // CRITICAL FIX: Scale tail size based on distance to prevent crossing marker
+            // When bubble is very close to marker, reduce tail size so it doesn't reach marker
+            // CSS tail is normally 15px (CSS_TAIL_HEIGHT), but we scale it down when close
+            const tailDistance = Math.sqrt(tailDx * tailDx + tailDy * tailDy);
+            const minSafeDistance = CONNECTOR_STOP_DISTANCE; // 28px - tail should not reach marker
+            const tailScale = Math.min(1.0, tailDistance / (minSafeDistance + CSS_TAIL_HEIGHT));
+            
             // Set CSS custom properties for tail positioning
             entry.bubble.style.setProperty('--tail-x', `${tailX}%`);
             entry.bubble.style.setProperty('--tail-y', `${tailY}%`);
             entry.bubble.style.setProperty('--tail-angle', `${angleDeg}deg`);
+            // Only update scale if it changed significantly (performance optimization)
+            const currentScale = parseFloat(entry.bubble.style.getPropertyValue('--tail-scale')) || 1.0;
+            if (Math.abs(currentScale - tailScale) > 0.01) {
+                entry.bubble.style.setProperty('--tail-scale', tailScale.toFixed(2));
+            }
         }
     }
 
