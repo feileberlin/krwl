@@ -2007,8 +2007,14 @@ def cli_workflow(base_path, subcommand, workflow_args):
                 if '=' in input_arg:
                     key, value = input_arg.split('=', 1)
                     inputs[key] = value
+                else:
+                    print(f"Warning: Invalid input format '{input_arg}' (expected KEY=VALUE)")
                 i += 2
+            elif workflow_args[i].startswith('--'):
+                print(f"Warning: Unrecognized option '{workflow_args[i]}'")
+                i += 1
             else:
+                print(f"Warning: Unexpected argument '{workflow_args[i]}'")
                 i += 1
         
         print(f"Triggering workflow '{workflow_id}' on branch '{branch}'...")
@@ -2241,7 +2247,7 @@ def _execute_command(args, base_path, config):
         # Delegate to workflow launcher module (KISS: keep main CLI simple)
         # Handle GitHub Actions workflow management via GitHub CLI
         subcommand = args.args[0] if args.args else None
-        workflow_args = args.args[1:] if args.args and len(args.args) > 1 else []
+        workflow_args = args.args[1:] if args.args else []
         return cli_workflow(base_path, subcommand, workflow_args)
     
     if command == 'archive-monthly':
