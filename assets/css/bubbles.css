@@ -33,13 +33,15 @@
     transition: opacity 0.3s ease;
 }
 
-/* Circle around marker icon - INVISIBLE (only used as boundary) */
+/* Visible boundary circle around marker icons */
 .bubble-connector-circle {
-    fill: none;
-    stroke: none; /* Made invisible - serves only as stopping boundary */
-    stroke-width: 0;
-    opacity: 0; /* Invisible */
+    fill: none; /* Transparent interior */
+    stroke: var(--color-primary); /* EcoBarbie pink border */
+    stroke-width: 1.5;
+    stroke-opacity: 0.4; /* Subtle, not overpowering */
+    stroke-dasharray: 3, 3; /* Dashed line for visual interest */
     pointer-events: none;
+    transition: stroke-opacity 0.3s ease, stroke-width 0.3s ease;
 }
 
 .speech-bubble {
