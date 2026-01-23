@@ -5,7 +5,7 @@ Extract icons from marker SVGs and create icon-only versions (no gyro shape).
 SIMPLE APPROACH (KISS):
 1. Read all marker-*.svg files
 2. Remove the standard gyro-shaped pin outline
-3. Scale up the remaining content by 3x (72x72px)
+3. Scale up the remaining content by 6.25x (200x200px)
 4. Save back to assets/svg/ directory
 
 Usage: python3 scripts/extract_icon_only_markers.py
@@ -18,9 +18,9 @@ from pathlib import Path
 # Configuration
 BASE_DIR = Path(__file__).parent.parent
 MARKER_DIR = BASE_DIR / 'assets' / 'svg'
-SCALE_FACTOR = 3  # 3x larger
+SCALE_FACTOR = 6.25  # 6.25x larger (200/32)
 ORIGINAL_SIZE = (32, 48)  # Original marker size
-NEW_SIZE = (96, 96)  # Square icon, 3x scale of 32px width
+NEW_SIZE = (200, 200)  # Square icon, 6.25x scale of 32px width
 COLOR = "#D689B8"  # ecoBarbie color
 
 def remove_gyro_outline(svg_content):
@@ -40,63 +40,60 @@ def remove_gyro_outline(svg_content):
     return svg_content
 
 def scale_svg_3x(svg_content):
-    """Scale SVG from 32x48 to 96x96 (3x) and center the icon."""
+    """Scale SVG from 32x48 to 200x200 (6.25x) and center the icon."""
     
     # Remove gyro outline first
     svg_content = remove_gyro_outline(svg_content)
     
     # Update viewBox and dimensions
+    # Match both original 32x48 and current 96x96 formats
     svg_content = re.sub(
-        r'viewBox="0 0 32 48"',
+        r'viewBox="0 0 (?:32 48|96 96)"',
         f'viewBox="0 0 {NEW_SIZE[0]} {NEW_SIZE[1]}"',
         svg_content
     )
     
     svg_content = re.sub(
-        r'width="32"',
+        r'width="(?:32|96)"',
         f'width="{NEW_SIZE[0]}"',
         svg_content
     )
     
     svg_content = re.sub(
-        r'height="48"',
+        r'height="(?:48|96)"',
         f'height="{NEW_SIZE[1]}"',
         svg_content
     )
     
     # Scale and center the icon content
     # Original content was centered around (16, ~15-20) in 32x48 viewBox
-    # New viewBox is 96x96, so center is at (48, 48)
-    # Scale factor is 3x, so we need to scale and translate
+    # Current viewBox may be 96x96 (center at 48, 48) or 32x48
+    # New viewBox is 200x200, so center is at (100, 100)
+    # Scale factor is 6.25x, so we need to scale and translate
     
     # Find the content after drop shadow and before </svg>
-    # Note: ellipse is self-closing, so it's <ellipse .../> not </ellipse>
-    match = re.search(r'(<!-- Drop shadow -->.*?<ellipse[^>]*/>)(.*)(</svg>)', svg_content, re.DOTALL)
+    # Extract the innermost Lucide icon content, ignoring previous scaling wrappers
+    # Pattern matches: <!-- Lucide icon --> ... up to the last </g> before </svg>
+    match = re.search(r'<!-- Lucide icon.*?-->(.*?)(?:</g>\s*){1,}</svg>', svg_content, re.DOTALL)
     
     if match:
-        drop_shadow_part = match.group(1)
-        icon_content = match.group(2).strip()
-        closing_tag = match.group(3)
+        icon_content = match.group(1).strip()
         
-        # Scale the drop shadow position and size
-        new_drop_shadow = f'''<!-- Drop shadow for depth -->
-  <ellipse cx="{NEW_SIZE[0]/2}" cy="{NEW_SIZE[1]-6}" rx="{NEW_SIZE[0]/5}" ry="{NEW_SIZE[1]/16}" fill="#000" opacity="0.3"/>'''
+        # No drop shadow - per user requirement
         
         # Wrap icon content in a scaled and centered group
-        # Offset to center: original (16, 15) -> new (48, 48)
-        # We scale by 3, so translate by (48 - 16*3, 48 - 15*3) = (0, 3)
+        # Offset to center: original (16, 15) -> new (100, 100)
+        # We scale by 6.25, so translate by (100 - 16*6.25, 100 - 15*6.25) = (0, 6.25)
         centered_content = f'''
-  
-  <!-- Icon content scaled 3x and centered -->
+  <!-- Icon content scaled 6.25x and centered -->
   <g transform="translate({NEW_SIZE[0]/2 - 16*SCALE_FACTOR}, {NEW_SIZE[1]/2 - 15*SCALE_FACTOR}) scale({SCALE_FACTOR})">
-{icon_content}
+<!-- Lucide icon (scaled and positioned) -->{icon_content}
   </g>'''
         
         svg_content = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {NEW_SIZE[0]} {NEW_SIZE[1]}" width="{NEW_SIZE[0]}" height="{NEW_SIZE[1]}">
-  <!-- Icon-only marker (no gyro outline) - 3x larger -->
-  
-{new_drop_shadow}{centered_content}
-{closing_tag}'''
+  <!-- Icon-only marker (no gyro outline) - 6.25x larger -->
+{centered_content}
+</svg>'''
     
     return svg_content
 
@@ -111,7 +108,7 @@ def process_markers():
     
     print(f"🔍 Found {len(marker_files)} marker files")
     print(f"📂 Input directory: {MARKER_DIR}")
-    print(f"📏 Output size: {NEW_SIZE[0]}x{NEW_SIZE[1]}px (3x scale)")
+    print(f"📏 Output size: {NEW_SIZE[0]}x{NEW_SIZE[1]}px (6.25x scale)")
     print()
     
     processed = 0
@@ -139,7 +136,7 @@ def process_markers():
     print(f"✨ Processed {processed} markers")
     print()
     print("🎯 Next steps:")
-    print("   1. Update map.js to use new marker size (96x96)")
+    print("   1. Verify marker size (200x200px)")
     print("   2. Regenerate site: python3 src/event_manager.py generate")
 
 if __name__ == '__main__':

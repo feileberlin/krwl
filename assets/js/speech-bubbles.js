@@ -695,7 +695,7 @@ class SpeechBubbles {
         // Get closest point on bubble rectangle as center reference
         const bubbleCenterPoint = this.getClosestPointOnRect(markerIconCenter, bubbleRect);
         
-        // Calculate endpoint on circle perimeter (where both paths merge)
+        // Calculate initial vector from marker to bubble (for perpendicular fork spread)
         const dx = markerIconCenter.x - bubbleCenterPoint.x;
         const dy = markerIconCenter.y - bubbleCenterPoint.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
@@ -707,9 +707,6 @@ class SpeechBubbles {
             if (connector.circle) connector.circle.style.opacity = '0';
             return;
         }
-        
-        const circleEdgeX = markerIconCenter.x - (dx / distance) * CONNECTOR_STOP_DISTANCE;
-        const circleEdgeY = markerIconCenter.y - (dy / distance) * CONNECTOR_STOP_DISTANCE;
         
         // Create TWO starting points at bottom of bubble (forked tail)
         const forkSpacing = 12; // Distance between the two fork points
@@ -727,27 +724,46 @@ class SpeechBubbles {
             y: bubbleCenterPoint.y - perpY * forkSpacing
         };
         
-        // Create two curved bezier paths that merge at the circle edge
-        const controlOffset = distance * BEZIER_CONTROL_POINT_FACTOR;
+        // Calculate separate endpoints on circle perimeter for each fork path
+        // Each fork connects to its own nearest point on the circle
+        
+        // For fork 1 (startPoint1):
+        const dx1 = markerIconCenter.x - startPoint1.x;
+        const dy1 = markerIconCenter.y - startPoint1.y;
+        const dist1 = Math.sqrt(dx1 * dx1 + dy1 * dy1);
+        const circleEdge1X = markerIconCenter.x - (dx1 / dist1) * CONNECTOR_STOP_DISTANCE;
+        const circleEdge1Y = markerIconCenter.y - (dy1 / dist1) * CONNECTOR_STOP_DISTANCE;
+        
+        // For fork 2 (startPoint2):
+        const dx2 = markerIconCenter.x - startPoint2.x;
+        const dy2 = markerIconCenter.y - startPoint2.y;
+        const dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+        const circleEdge2X = markerIconCenter.x - (dx2 / dist2) * CONNECTOR_STOP_DISTANCE;
+        const circleEdge2Y = markerIconCenter.y - (dy2 / dist2) * CONNECTOR_STOP_DISTANCE;
+        
+        // Calculate control points for each path using their respective distances
+        const controlOffset1 = dist1 * BEZIER_CONTROL_POINT_FACTOR;
+        const controlOffset2 = dist2 * BEZIER_CONTROL_POINT_FACTOR;
         
         // CRITICAL FIX: Keep second control point safely away from the marker boundary
         // When the bubble is dragged close to the marker, bias the curve so it does not visually cross the icon
         // Use at least the marker radius plus a small padding as a heuristic safe distance for the control point
         const minControlOffset = MARKER_CIRCLE_RADIUS + 2; // Marker radius + 2px padding from marker center
-        const secondControlOffset = Math.max(minControlOffset, controlOffset * 0.5);
+        const secondControlOffset1 = Math.max(minControlOffset, controlOffset1 * 0.5);
+        const secondControlOffset2 = Math.max(minControlOffset, controlOffset2 * 0.5);
         
         // Calculate initial control point positions
-        // Path 1: from startPoint1 to circleEdge
-        const controlX1_1 = startPoint1.x + (dx / distance) * controlOffset;
-        const controlY1_1 = startPoint1.y + (dy / distance) * (controlOffset * 0.3);
-        let controlX1_2 = markerIconCenter.x - (dx / distance) * secondControlOffset;
-        let controlY1_2 = markerIconCenter.y - (dy / distance) * secondControlOffset;
+        // Path 1: from startPoint1 to circleEdge1
+        const controlX1_1 = startPoint1.x + (dx1 / dist1) * controlOffset1;
+        const controlY1_1 = startPoint1.y + (dy1 / dist1) * (controlOffset1 * 0.3);
+        let controlX1_2 = markerIconCenter.x - (dx1 / dist1) * secondControlOffset1;
+        let controlY1_2 = markerIconCenter.y - (dy1 / dist1) * secondControlOffset1;
         
-        // Path 2: from startPoint2 to circleEdge (mirrors path 1)
-        const controlX2_1 = startPoint2.x + (dx / distance) * controlOffset;
-        const controlY2_1 = startPoint2.y + (dy / distance) * (controlOffset * 0.3);
-        let controlX2_2 = markerIconCenter.x - (dx / distance) * secondControlOffset;
-        let controlY2_2 = markerIconCenter.y - (dy / distance) * secondControlOffset;
+        // Path 2: from startPoint2 to circleEdge2
+        const controlX2_1 = startPoint2.x + (dx2 / dist2) * controlOffset2;
+        const controlY2_1 = startPoint2.y + (dy2 / dist2) * (controlOffset2 * 0.3);
+        let controlX2_2 = markerIconCenter.x - (dx2 / dist2) * secondControlOffset2;
+        let controlY2_2 = markerIconCenter.y - (dy2 / dist2) * secondControlOffset2;
         
         // Additional safety: Ensure control points maintain minimum radial distance from marker center
         // This addresses the mathematical issue that directional offset alone doesn't guarantee clearance
@@ -775,12 +791,12 @@ class SpeechBubbles {
             controlY2_2 = markerIconCenter.y + (controlY2_2 - markerIconCenter.y) * scale;
         }
         
-        // Combine both paths into a single SVG path with two curves merging at one point
+        // Combine both paths into a single SVG path, each ending at its own circle edge point
         const pathData = `
             M ${startPoint1.x},${startPoint1.y} 
-            C ${controlX1_1},${controlY1_1} ${controlX1_2},${controlY1_2} ${circleEdgeX},${circleEdgeY}
+            C ${controlX1_1},${controlY1_1} ${controlX1_2},${controlY1_2} ${circleEdge1X},${circleEdge1Y}
             M ${startPoint2.x},${startPoint2.y} 
-            C ${controlX2_1},${controlY2_1} ${controlX2_2},${controlY2_2} ${circleEdgeX},${circleEdgeY}
+            C ${controlX2_1},${controlY2_1} ${controlX2_2},${controlY2_2} ${circleEdge2X},${circleEdge2Y}
         `.trim();
         
         if (connector.path) {
@@ -790,11 +806,11 @@ class SpeechBubbles {
         
         // Update CSS-based tail on bubble element
         // The tail should point toward the circle edge (stopping point), not the icon center
-        // This creates the "comic book" effect where the tail doesn't touch the subject
+        // Use the average of the two circle edge points for the tail target
         if (entry.bubble) {
-            // Calculate position where tail should point to (circle edge, not icon center)
-            const tailTargetX = circleEdgeX;
-            const tailTargetY = circleEdgeY;
+            // Calculate position where tail should point to (average of both circle edges)
+            const tailTargetX = (circleEdge1X + circleEdge2X) / 2;
+            const tailTargetY = (circleEdge1Y + circleEdge2Y) / 2;
             
             // Calculate tail attachment point relative to bubble
             const tailX = ((bubbleCenterPoint.x - bubbleRect.x) / bubbleRect.width) * 100;

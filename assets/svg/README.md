@@ -1,75 +1,91 @@
 # Custom SVG Map Markers
 
-Terminal/hacker style map markers with green (#00ff00) outlines matching the application theme.
+Icon-only category markers in ecoBarbie pink (#D689B8) for the KRWL HOF Community Events map.
 
 ## Design Philosophy
 
-All markers follow the terminal aesthetic:
-- **No fill colors** - Transparent backgrounds
-- **Green outlines only** - #00ff00 (bright green)
-- **Distinct shapes** - Different geometric shapes for easy identification
-- **Minimalist icons** - Simple, readable symbols
-- **Consistent size** - All 32x48px for uniform appearance
-- **Drop shadows** - For depth on dark backgrounds
+All markers follow a clean, minimalist design:
+- **Icon-only design** - No pin/gyro outline shapes
+- **ecoBarbie pink color** - #D689B8
+- **Square format** - All markers are 200x200px
+- **Lucide icons** - Simple, readable icon designs
+- **No drop shadows** - Clean, flat design
+- **Centered anchoring** - Anchor point at [100, 200] (bottom-center)
 
-## Location Markers
+## Current Markers
+
+All markers are icon-only versions at 200x200px, using Lucide icons:
+
+## Current Markers
+
+All markers are icon-only versions at 200x200px, using Lucide icons:
+
+### Location Markers
 
 ### Geolocation (`marker-geolocation.svg`)
-- **Shape**: Square pin
 - **Icon**: Person silhouette
 - **Use**: "You are here" - user's current location
-- **Size**: 32x48px
+- **Size**: 200x200px
+- **Anchor**: [100, 200]
 
 ### Main Station (`marker-main-station.svg`)
-- **Shape**: Rectangle with railroad crossing X
+
 - **Icon**: Train/rails
 - **Use**: Main train/bus station location
-- **Size**: 32x48px
+- **Size**: 200x200px
+- **Anchor**: [100, 200]
 
 ### City Center (`marker-city-center.svg`)
 - **Shape**: Octagon (8-sided)
 - **Icon**: Crosshair/target center point
 - **Use**: City center reference point
-- **Size**: 32x48px
+- **Size**: 200x200px
+- **Anchor**: [100, 200]
 
 ### Mayor's Office (`marker-mayors-office.svg`)
-- **Shape**: Building with pillars
+
 - **Icon**: Classical building facade with female symbol (♀)
 - **Use**: Government building, mayor's office
-- **Size**: 32x48px
+- **Size**: 200x200px
+- **Anchor**: [100, 200]
 
 ## Event Category Markers
 
 ### Default Event (`marker-default.svg`)
-- **Shape**: Classic teardrop pin
+
 - **Icon**: Circle with center dot
 - **Use**: Default event marker, all events
-- **Size**: 32x48px
+- **Size**: 200x200px
+- **Anchor**: [100, 200]
 
 ### Active/Selected (`marker-active.svg`)
-- **Shape**: Teardrop pin with glow
+
 - **Icon**: Larger glowing center dot
 - **Use**: Currently selected or hovered event
-- **Size**: 32x48px
+- **Size**: 200x200px
+- **Anchor**: [100, 200]
 - **Features**: Thicker strokes, outer glow effect
 
 ### On Stage (`marker-on-stage.svg`)
-- **Shape**: Diamond pin
+
 - **Icon**: Microphone
 - **Use**: Music, theater, performances
-- **Size**: 32x48px
+- **Size**: 200x200px
+- **Anchor**: [100, 200]
 
 ### Pub Games (`marker-pub-games.svg`)
-- **Shape**: Hexagon pin
+
 - **Icon**: Beer mug
 - **Use**: Pub quizzes, game nights, social events
-- **Size**: 32x48px
+- **Size**: 200x200px
+- **Anchor**: [100, 200]
 
 ### Festivals (`marker-festivals.svg`)
-- **Shape**: Star pin
+
 - **Icon**: Festival flag
 - **Use**: Festivals, celebrations, large events
-- **Size**: 32x48px
+- **Size**: 200x200px
+- **Anchor**: [100, 200]
 
 ## Community Place Markers
 
@@ -77,61 +93,71 @@ All markers follow the terminal aesthetic:
 - **Shape**: Cross-shaped pin
 - **Icon**: Christian cross
 - **Use**: Churches, chapels, religious buildings
-- **Size**: 32x48px
+- **Size**: 200x200px
+- **Anchor**: [100, 200]
 
 ### Swimming Pool (`marker-swimming.svg`)
 - **Shape**: Wave-topped pin
 - **Icon**: Waves and swimmer
 - **Use**: Swimming pools, aquatic centers, beaches
-- **Size**: 32x48px
+- **Size**: 200x200px
+- **Anchor**: [100, 200]
 
 ### Sports Field (`marker-sports-field.svg`)
-- **Shape**: Rectangular stadium pin
+
 - **Icon**: Playing field with goals
 - **Use**: Sports fields, stadiums, athletic facilities
-- **Size**: 32x48px
+- **Size**: 200x200px
+- **Anchor**: [100, 200]
 
 ### Cemetery (`marker-cemetery.svg`)
-- **Shape**: Rounded tombstone pin
+
 - **Icon**: Cross on tombstone
 - **Use**: Cemeteries, memorial gardens
-- **Size**: 32x48px
+- **Size**: 200x200px
+- **Anchor**: [100, 200]
 
 ### Library (`marker-library.svg`)
-- **Shape**: Book spine pin
+
 - **Icon**: Book with pages
 - **Use**: Libraries, reading rooms, archives
-- **Size**: 32x48px
+- **Size**: 200x200px
+- **Anchor**: [100, 200]
 
 ### Hospital (`marker-hospital.svg`)
-- **Shape**: Pentagon pin
+
 - **Icon**: Medical cross (equal arms)
 - **Use**: Hospitals, clinics, medical centers
-- **Size**: 32x48px
+- **Size**: 200x200px
+- **Anchor**: [100, 200]
 
 ### Park/Garden (`marker-park.svg`)
-- **Shape**: Tree crown pin
+
 - **Icon**: Tree with multiple circular crowns
 - **Use**: Parks, gardens, green spaces
-- **Size**: 32x48px
+- **Size**: 200x200px
+- **Anchor**: [100, 200]
 
 ### School (`marker-school.svg`)
-- **Shape**: Trapezoid (graduation cap) pin
+
 - **Icon**: Graduation cap with tassel
 - **Use**: Schools, universities, educational institutions
-- **Size**: 32x48px
+- **Size**: 200x200px
+- **Anchor**: [100, 200]
 
 ### Shopping (`marker-shopping.svg`)
-- **Shape**: Shopping bag pin
+
 - **Icon**: Bag with handles and items
 - **Use**: Shopping centers, markets, retail areas
-- **Size**: 32x48px
+- **Size**: 200x200px
+- **Anchor**: [100, 200]
 
 ### Museum (`marker-museum.svg`)
-- **Shape**: Classical temple pin
+
 - **Icon**: Temple with columns and pediment
 - **Use**: Museums, galleries, cultural centers
-- **Size**: 32x48px
+- **Size**: 200x200px
+- **Anchor**: [100, 200]
 
 ## Terminal Color Palette
 
