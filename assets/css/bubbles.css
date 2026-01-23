@@ -36,10 +36,10 @@
 /* Visible boundary circle around marker icons */
 .bubble-connector-circle {
     fill: none; /* Transparent interior */
-    stroke: var(--color-primary); /* EcoBarbie pink border */
-    stroke-width: 1.5;
-    stroke-opacity: 0.4; /* Subtle, not overpowering */
-    stroke-dasharray: 3, 3; /* Dashed line for visual interest */
+    stroke: var(--color-primary); /* EcoBarbie pink border - same as connectors */
+    stroke-width: 2; /* Match connector path width */
+    stroke-opacity: 0.85; /* Match connector path opacity for consistency */
+    stroke-dasharray: none; /* Solid line to match connector paths */
     pointer-events: none;
     transition: stroke-opacity 0.3s ease, stroke-width 0.3s ease;
 }
