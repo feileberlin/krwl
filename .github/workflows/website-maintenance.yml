@@ -552,6 +552,12 @@ jobs:
         run: |
           python3 src/event_manager.py dependencies check
       
+      - name: Generate Lucide icon map
+        run: |
+          echo "🎨 Generating Lucide icons map..."
+          python3 src/event_manager.py generate-icons
+          echo "✓ Icon map generated"
+      
       - name: Full site generation
         run: |
           echo "🔨 Building site..."
@@ -1529,6 +1535,11 @@ jobs:
       - name: Fetch frontend libraries
         run: |
           python3 src/event_manager.py dependencies fetch
+      
+      - name: Generate Lucide icon map
+        run: |
+          echo "🎨 Generating Lucide icons map..."
+          python3 scripts/generate_lucide_icons.py
       
       - name: Generate preview site
         env:
