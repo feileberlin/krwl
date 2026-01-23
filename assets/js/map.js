@@ -210,7 +210,7 @@ class MapManager {
         const userIconUrl = userMarkerConfig.icon || 
             (window.MARKER_ICONS && window.MARKER_ICONS['marker-geolocation']) ||
             'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI4IiBmaWxsPSIjNENBRjUwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjMiIGZpbGw9IiNmZmYiLz48L3N2Zz4=';
-        const userIconSize = userMarkerConfig.size || [96, 96];  // 3x larger (was 32x48)
+        const userIconSize = userMarkerConfig.size || [64, 96];  // 2x original size to match event markers
         const userIconAnchor = userMarkerConfig.anchor || [userIconSize[0] / 2, userIconSize[1]];
         const userPopupAnchor = userMarkerConfig.popup_anchor || [0, -userIconSize[1]];
         
@@ -259,8 +259,8 @@ class MapManager {
         
         const markerIcon = L.icon({
             iconUrl: iconUrl,
-            iconSize: [96, 96],  // 3x larger (was 32x48)
-            iconAnchor: [48, 96],  // Center bottom (was 16x48)
+            iconSize: [64, 96],  // 2x original size (was 32x48, then 96x96)
+            iconAnchor: [32, 96],  // Center bottom (was 16x48, then 48x96)
             popupAnchor: [0, -96]  // Above marker (was 0x-48)
         });
         
@@ -291,6 +291,9 @@ class MapManager {
             marker._icon.classList.add('bookmarked-marker');
         }
         
+        // Add time badge to marker icon
+        this.addTimeBadgeToMarker(marker, event);
+        
         // Store event data on marker (for backward compatibility)
         marker.eventData = event;
         
@@ -303,6 +306,44 @@ class MapManager {
         this.log('Marker added for event', event.title);
         
         return marker;
+    }
+    
+    /**
+     * Add time badge to marker showing start time or day of month
+     * @param {Object} marker - Leaflet marker
+     * @param {Object} event - Event data
+     */
+    addTimeBadgeToMarker(marker, event) {
+        if (!marker._icon || !event.start_time) return;
+        
+        const startTime = new Date(event.start_time);
+        const now = new Date();
+        const timeFilter = this.storage.getFilters().timeFilter || 'sunrise';
+        
+        // Determine badge content:
+        // - If timeFilter is "sunrise" (til sunrise): show HH:MM
+        // - Otherwise: show day of month
+        let badgeText;
+        if (timeFilter === 'sunrise') {
+            // Show HH:MM format
+            const hours = startTime.getHours().toString().padStart(2, '0');
+            const minutes = startTime.getMinutes().toString().padStart(2, '0');
+            badgeText = `${hours}:${minutes}`;
+        } else {
+            // Show day of month
+            badgeText = startTime.getDate().toString();
+        }
+        
+        // Create badge element
+        const badge = document.createElement('div');
+        badge.className = 'marker-time-badge';
+        badge.textContent = badgeText;
+        badge.title = startTime.toLocaleString();
+        
+        // Append to marker icon
+        marker._icon.appendChild(badge);
+        
+        this.log('Time badge added to marker', { badgeText, eventTitle: event.title });
     }
     
     /**
