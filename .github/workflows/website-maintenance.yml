@@ -1,15 +1,48 @@
-name: 🤖 Event Scraping, Weather Updates & Site Deployment
+name: 🚀 Website Maintenance & Deployment
 
-# Comprehensive automation workflow for the KRWL HOF community events site
-# Handles: event scraping from RSS/HTML sources, weather updates, HTML generation, 
-# editorial workflow (review/publish), event archiving, and GitHub Pages deployment
-# This workflow dynamically adapts to scraper configuration changes
+# ============================================================================
+# KRWL HOF Community Events - Comprehensive Automation Workflow
+# ============================================================================
 #
-# CONSOLIDATED WORKFLOW - Integrates functionality from:
-# - pr-preview.yml - PR preview builds
-# - wishlist-ci.yml - Linting and testing
-# - config-validation.yml - Configuration validation
-# - auto-generate-html.yml - Auto HTML generation
+# This is the MAIN workflow that handles all site operations:
+#
+# 📅 SCHEDULED TASKS (Automatic):
+#   - Event scraping from RSS/HTML sources (daily at 4am & 4pm Berlin time)
+#   - Weather updates (hourly)
+#   - Site deployment to GitHub Pages
+#
+# 🎯 MANUAL TASKS (workflow_dispatch):
+#   Content Management:
+#     • scrape-and-deploy - Scrape events + deploy (most common)
+#     • scrape-only - Scrape without deploying
+#     • update-events - Fast event data update
+#     • scrape-weather - Update weather dresscode
+#     • review-pending - Editorial workflow (publish pending events)
+#   
+#   Deployment:
+#     • force-deploy - Force full rebuild + deploy
+#   
+#   Telegram Integration:
+#     • process-telegram-flyer - Process uploaded flyer (OCR)
+#     • process-telegram-contact - Process contact form
+#     • process-telegram-pin - Trusted organizer PIN publish
+#   
+#   Diagnostics:
+#     • info - Show scraper configuration
+#     • validate-config - Validate config.json
+#     • run-tests - Run linting + tests
+#
+# 🔄 AUTOMATIC TRIGGERS:
+#   - Pull requests: Linting, testing, preview generation
+#   - Push to main: Auto-deployment on config/code changes
+#   - Telegram bot: repository_dispatch events
+#
+# 📋 CONSOLIDATED FROM:
+#   ✓ pr-preview.yml - PR preview builds
+#   ✓ wishlist-ci.yml - Linting and testing
+#   ✓ config-validation.yml - Configuration validation
+#   ✓ auto-generate-html.yml - Auto HTML generation
+# ============================================================================
 
 on:
   schedule:
@@ -54,76 +87,94 @@ on:
   
   workflow_dispatch:  # Manual trigger with comprehensive task options
     inputs:
+      # ========================================================================
+      # MAIN TASK SELECTION
+      # ========================================================================
       task:
-        description: '🎯 Action to perform - Select the maintenance task you want to execute'
+        description: '🎯 Main Action - Select what you want to do'
         required: true
         type: choice
         options:
-          - 'scrape-only'        # Scrape events from RSS/HTML sources without deployment
-          - 'scrape-and-deploy'  # Scrape new events and automatically deploy changes to production
-          - 'force-deploy'       # Force complete site rebuild and deployment (ignores cache)
-          - 'update-events'      # Fast path: Update event data in HTML without full rebuild
-          - 'review-pending'     # Editorial workflow: Review and publish pending events awaiting approval
-          - 'scrape-weather'     # Fetch current weather and clothing recommendations for map location
-          - 'info'               # Display scraper configuration and capabilities (diagnostic tool)
-          - 'process-telegram-flyer'    # Process Telegram flyer submission with OCR
-          - 'process-telegram-contact'  # Process Telegram contact form submission
-          - 'process-telegram-pin'      # Process Telegram PIN publishing submission
-          - 'run-tests'          # Run linting and tests (CI job)
-          - 'validate-config'    # Validate configuration files
+          # === Content Management ===
+          - 'scrape-and-deploy'      # ⭐ Most common: Scrape events + deploy site
+          - 'scrape-only'            # Scrape events without deploying
+          - 'update-events'          # Fast update: Event data only (no rebuild)
+          - 'scrape-weather'         # Update weather dresscode
+          - 'review-pending'         # Editorial: Publish pending events
+          
+          # === Deployment ===
+          - 'force-deploy'           # Force full site rebuild + deploy
+          
+          # === Telegram Integration ===
+          - 'process-telegram-flyer'    # Process uploaded flyer (OCR)
+          - 'process-telegram-contact'  # Process contact form
+          - 'process-telegram-pin'      # Trusted organizer PIN publish
+          
+          # === Diagnostics & Testing ===
+          - 'info'                   # Show scraper configuration
+          - 'validate-config'        # Validate config.json
+          - 'run-tests'              # Run linting + tests
         default: 'scrape-and-deploy'
       
+      # ========================================================================
+      # CONTENT MANAGEMENT OPTIONS
+      # ========================================================================
       force_scrape:
-        description: '🔄 Force scraping even if source URLs have not changed since last run'
+        description: '🔄 Force Scraping - Scrape even if URLs unchanged'
         type: boolean
         default: false
       
-      # Editorial workflow options (used with 'review-pending' task)
+      # ========================================================================
+      # EDITORIAL WORKFLOW OPTIONS (for "review-pending" task)
+      # ========================================================================
       event_ids:
-        description: '📝 Event IDs to publish - Comma-separated list (e.g., "pending_123,pending_456") or "all" for bulk approval'
+        description: '📝 Event IDs - Comma-separated (e.g., "pending_123,pending_456") or "all"'
         type: string
         required: false
       
       auto_publish_pattern:
-        description: '🔍 Auto-publish events matching glob pattern - Example: "pending_*" publishes all pending events automatically'
+        description: '🔍 Auto-publish Pattern - Glob pattern (e.g., "pending_*" for all)'
         type: string
         required: false
       
-      # Telegram processing options (used with process-telegram-* tasks)
+      # ========================================================================
+      # TELEGRAM INTEGRATION OPTIONS (for "process-telegram-*" tasks)
+      # ========================================================================
       telegram_file_id:
-        description: '📁 Telegram file ID for flyer processing'
+        description: '📁 Telegram File ID - For flyer processing'
         type: string
         required: false
       
       telegram_message:
-        description: '💬 Telegram contact message text'
+        description: '💬 Telegram Message - Contact form text'
         type: string
         required: false
       
       telegram_user_id:
-        description: '👤 Telegram user ID'
+        description: '👤 Telegram User ID - Sender identification'
         type: string
         required: false
       
       telegram_pin:
-        description: '🔐 4-digit PIN for trusted organizer publishing'
+        description: '🔐 Telegram PIN - 4-digit trusted organizer PIN'
         type: string
         required: false
       
       telegram_event_json:
-        description: '📋 Event JSON data for PIN publishing'
+        description: '📋 Event JSON - Event data for PIN publishing'
         type: string
         required: false
       
-      # PR preview options
+      # ========================================================================
+      # CI/CD OPTIONS
+      # ========================================================================
       enable_pr_preview:
-        description: '🔍 Enable PR preview generation for pull requests'
+        description: '🔍 PR Preview - Generate preview for pull requests'
         type: boolean
         default: true
       
-      # CI options
       verbose_tests:
-        description: '🐛 Enable verbose output for tests and linting'
+        description: '🐛 Verbose Output - Enable detailed test/lint output'
         type: boolean
         default: false
 
