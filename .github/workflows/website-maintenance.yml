@@ -415,11 +415,12 @@ jobs:
             echo "⚠️ Weather update in HTML failed (will need full rebuild)"
           fi
       
-      - name: Commit and push weather cache and HTML
+      - name: Commit and push weather cache
         if: steps.check_changes.outputs.changes_detected == 'true'
         run: |
           TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M UTC')
-          git add assets/json/weather_cache.json public/index.html
+          # Only commit weather cache (public/index.html is gitignored and regenerated on CI runs)
+          git add assets/json/weather_cache.json
           git commit -m "chore: update weather data - $TIMESTAMP [skip ci]"
           
           # Pull with rebase to handle concurrent changes
@@ -430,7 +431,7 @@ jobs:
           fi
           
           git push
-          echo "✓ Weather cache and HTML committed and pushed"
+          echo "✓ Weather cache committed and pushed (HTML will be regenerated on next CI run)"
       
       - name: Generate weather summary
         run: |
@@ -1677,30 +1678,20 @@ jobs:
           echo "🔨 Auto-generating HTML from source files..."
           python3 src/event_manager.py generate
       
-      - name: Check for changes
+      - name: Check if HTML was generated
         id: check_changes
         run: |
-          if git diff --quiet public/index.html; then
-            echo "changes=false" >> $GITHUB_OUTPUT
-            echo "No changes to HTML"
-          else
+          # Always deploy if HTML exists (public/index.html is gitignored, always generated fresh)
+          if [ -f public/index.html ]; then
             echo "changes=true" >> $GITHUB_OUTPUT
-            echo "HTML changed, will commit"
+            echo "✓ HTML generated successfully, will deploy to GitHub Pages"
+          else
+            echo "changes=false" >> $GITHUB_OUTPUT
+            echo "❌ HTML generation failed"
           fi
       
-      - name: Commit and push if changed
-        if: steps.check_changes.outputs.changes == 'true'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          
-          git add public/index.html
-          git commit -m "🤖 Auto-generate HTML after source changes
-          
-          Triggered by: ${{ github.event.head_commit.message }}
-          Commit: ${{ github.sha }}"
-          
-          git push
+      # Note: We no longer commit public/index.html to git (it's gitignored)
+      # GitHub Pages deployment uses the artifact upload instead
       
       - name: Upload Pages artifact
         if: steps.check_changes.outputs.changes == 'true'
