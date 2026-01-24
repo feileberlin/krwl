@@ -17,28 +17,24 @@
       "_preview_primary": "#D689B8 - ecoBarbie base color (HSV: 323.4°, 36%, 84%)",
       "primary_hover": "#E8A5C8",
       "_preview_primary_hover": "#E8A5C8 - Hover state (10% lighter, 8% more saturated)",
-      
       "_comment_tints_section": "─── TINTS (Lighter - Add White) ───",
       "_comment_tints_usage": "Usage: Backgrounds, hover states, light accents. Simple 2-step system (50%, 100%) - base is 'primary'.",
       "tint_50": "#eac0da",
       "_preview_tint_50": "#eac0da - 50% lighter (light backgrounds, hover states)",
       "tint_100": "#ffffff",
       "_preview_tint_100": "#ffffff - 100% lighter (pure white, maximum contrast)",
-      
       "_comment_shades_section": "─── SHADES (Darker - Add Black) ───",
       "_comment_shades_usage": "Usage: Text, borders, dark accents, depth. Simple 2-step system (50%, 100%) - base is 'primary'.",
       "shade_50": "#6b445c",
       "_preview_shade_50": "#6b445c - 50% darker (dark accents, borders, text on light)",
       "shade_100": "#000000",
       "_preview_shade_100": "#000000 - 100% darker (pure black, maximum contrast)",
-      
       "_comment_tones_section": "─── TONES (Muted - Add Grey) ───",
       "_comment_tones_usage": "Usage: Disabled states, secondary elements, soft UI. Simple 2-step system (50%, 100%) - base is 'primary'.",
       "tone_50": "#d6afc7",
       "_preview_tone_50": "#d6afc7 - 50% muted (disabled states, secondary text)",
       "tone_100": "#d6d6d6",
       "_preview_tone_100": "#d6d6d6 - 100% muted (neutral grey, fully desaturated)",
-      
       "_comment_backgrounds_section": "─── BACKGROUND COLORS (Very Dark Shades) ───",
       "_comment_backgrounds_usage": "Monochromatic dark backgrounds derived from ecoBarbie",
       "bg_primary": "#110a0e",
@@ -47,7 +43,6 @@
       "_preview_bg_secondary": "#150d12 - Secondary background (90% darker ecoBarbie shade)",
       "bg_tertiary": "#191016",
       "_preview_bg_tertiary": "#191016 - Tertiary background (88% darker ecoBarbie shade)",
-      
       "_comment_text_section": "─── TEXT COLORS (Very Light Tints) ───",
       "_comment_text_usage": "Monochromatic light text colors derived from ecoBarbie for high contrast",
       "text_primary": "#f9f5f8",
@@ -56,14 +51,12 @@
       "_preview_text_secondary": "#f2e9ee - Secondary text (95% lighter ecoBarbie tint)",
       "text_tertiary": "#eadde5",
       "_preview_text_tertiary": "#eadde5 - Tertiary text (92% lighter ecoBarbie tint)",
-      
       "_comment_borders_section": "─── BORDER COLORS (Medium Dark Shades) ───",
       "_comment_borders_usage": "Monochromatic borders derived from ecoBarbie",
       "border_primary": "#35222e",
       "_preview_border_primary": "#35222e - Primary border (75% darker ecoBarbie shade)",
       "border_secondary": "#2f1e28",
       "_preview_border_secondary": "#2f1e28 - Secondary border (78% darker ecoBarbie shade)",
-      
       "_comment_accents_section": "─── ACCENT COLORS (Monochromatic Variants) ───",
       "_comment_accents_usage": "ALL derived from ecoBarbie with saturation/value adjustments for visual distinction",
       "success": "#D689B8",
@@ -139,6 +132,260 @@
       "footer_text": "Built with Leaflet.js | Icons by Lucide | 💖 ecoBarbie Theme"
     }
   },
+  "_comment_regions_header": "═══════════════════════════════════════════════════════════════════════════════",
+  "_comment_regions_intro": "🗺️  MULTI-REGION SUPPORT - Different map views of same event data",
+  "_comment_regions_usage": "URL path (e.g., /hof, /nbg, /bayreuth) centers map on different cities",
+  "_comment_regions_data": "All regions share the same events.json - no data splitting!",
+  "_comment_regions_purpose": "Each region defines: map center, zoom, custom filter presets for that area",
+  "_comment_regions_separator": "═══════════════════════════════════════════════════════════════════════════════",
+  "regions": {
+    "hof": {
+      "name": "hof",
+      "displayName": "Hof (Saale)",
+      "center": {
+        "lat": 50.3167,
+        "lng": 11.9167
+      },
+      "zoom": 13,
+      "boundingBox": {
+        "north": 50.4,
+        "south": 50.2,
+        "east": 12.0,
+        "west": 11.8
+      },
+      "dataSource": "events.json",
+      "defaultLanguage": "de",
+      "customFilters": [
+        {
+          "id": "innenstadt",
+          "name": {
+            "de": "Innenstadt",
+            "en": "City Center"
+          },
+          "center": {
+            "lat": 50.3197,
+            "lng": 11.9177
+          },
+          "radius": 1.5,
+          "zoom": 14
+        },
+        {
+          "id": "altstadt",
+          "name": {
+            "de": "Altstadt",
+            "en": "Old Town"
+          },
+          "center": {
+            "lat": 50.322,
+            "lng": 11.915
+          },
+          "radius": 1.0,
+          "zoom": 15
+        },
+        {
+          "id": "theresienstein",
+          "name": {
+            "de": "Theresienstein",
+            "en": "Theresienstein Park"
+          },
+          "center": {
+            "lat": 50.3289,
+            "lng": 11.9089
+          },
+          "radius": 0.8,
+          "zoom": 15
+        }
+      ]
+    },
+    "nbg": {
+      "name": "nuernberg",
+      "displayName": "Nürnberg",
+      "center": {
+        "lat": 49.4521,
+        "lng": 11.0767
+      },
+      "zoom": 12,
+      "boundingBox": {
+        "north": 49.5,
+        "south": 49.4,
+        "east": 11.2,
+        "west": 11.0
+      },
+      "dataSource": "events.json",
+      "defaultLanguage": "de",
+      "customFilters": [
+        {
+          "id": "altstadt",
+          "name": {
+            "de": "Altstadt",
+            "en": "Old Town"
+          },
+          "center": {
+            "lat": 49.4541,
+            "lng": 11.0767
+          },
+          "radius": 1.2,
+          "zoom": 14
+        },
+        {
+          "id": "gostenhof",
+          "name": {
+            "de": "Gostenhof",
+            "en": "Gostenhof"
+          },
+          "center": {
+            "lat": 49.458,
+            "lng": 11.058
+          },
+          "radius": 1.0,
+          "zoom": 15
+        },
+        {
+          "id": "suedstadt",
+          "name": {
+            "de": "Südstadt",
+            "en": "South District"
+          },
+          "center": {
+            "lat": 49.435,
+            "lng": 11.08
+          },
+          "radius": 1.5,
+          "zoom": 14
+        }
+      ]
+    },
+    "bayreuth": {
+      "name": "bayreuth",
+      "displayName": "Bayreuth",
+      "center": {
+        "lat": 49.9481,
+        "lng": 11.5783
+      },
+      "zoom": 13,
+      "boundingBox": {
+        "north": 50.0,
+        "south": 49.9,
+        "east": 11.6,
+        "west": 11.5
+      },
+      "dataSource": "events.json",
+      "defaultLanguage": "de",
+      "customFilters": [
+        {
+          "id": "innenstadt",
+          "name": {
+            "de": "Innenstadt",
+            "en": "City Center"
+          },
+          "center": {
+            "lat": 49.9459,
+            "lng": 11.5787
+          },
+          "radius": 1.0,
+          "zoom": 15
+        },
+        {
+          "id": "festspielhaus",
+          "name": {
+            "de": "Festspielhaus",
+            "en": "Festival Theatre"
+          },
+          "center": {
+            "lat": 49.9583,
+            "lng": 11.5833
+          },
+          "radius": 0.5,
+          "zoom": 16
+        },
+        {
+          "id": "universitaet",
+          "name": {
+            "de": "Universität",
+            "en": "University"
+          },
+          "center": {
+            "lat": 49.9269,
+            "lng": 11.5861
+          },
+          "radius": 1.2,
+          "zoom": 15
+        }
+      ]
+    },
+    "selb": {
+      "name": "selb",
+      "displayName": "Selb",
+      "center": {
+        "lat": 50.1705,
+        "lng": 12.1328
+      },
+      "zoom": 13,
+      "boundingBox": {
+        "north": 50.2,
+        "south": 50.1,
+        "east": 12.2,
+        "west": 12.0
+      },
+      "dataSource": "events.json",
+      "defaultLanguage": "de",
+      "customFilters": [
+        {
+          "id": "innenstadt",
+          "name": {
+            "de": "Innenstadt",
+            "en": "City Center"
+          },
+          "center": {
+            "lat": 50.1705,
+            "lng": 12.1328
+          },
+          "radius": 1.0,
+          "zoom": 14
+        }
+      ]
+    },
+    "rehau": {
+      "name": "rehau",
+      "displayName": "Rehau",
+      "center": {
+        "lat": 50.2489,
+        "lng": 12.0364
+      },
+      "zoom": 13,
+      "boundingBox": {
+        "north": 50.3,
+        "south": 50.2,
+        "east": 12.1,
+        "west": 11.9
+      },
+      "dataSource": "events.json",
+      "defaultLanguage": "de",
+      "customFilters": [
+        {
+          "id": "marktplatz",
+          "name": {
+            "de": "Marktplatz",
+            "en": "Market Square"
+          },
+          "center": {
+            "lat": 50.2489,
+            "lng": 12.0364
+          },
+          "radius": 0.8,
+          "zoom": 15
+        }
+      ]
+    }
+  },
+  "defaultRegion": "hof",
+  "_comment_defaultRegion": "Which region to use when no URL path specified (e.g., visiting root /)",
+  "supportedLanguages": [
+    "de",
+    "en",
+    "cs"
+  ],
+  "_comment_supportedLanguages": "Languages available for UI and content translations",
   "_comment_environment_override": "═══════════════════════════════════════════════════════════════════════════════",
   "_comment_override_help": "ENVIRONMENT OVERRIDE - Set to force a specific environment, bypassing auto-detection",
   "_comment_override_values": "  • 'development' - Force dev mode (debug=true, demo events, DEV watermark)",
@@ -843,7 +1090,9 @@
     "_comment_security": "Keep bot_token secret! Use environment variable in production: TELEGRAM_BOT_TOKEN",
     "bot_token": "",
     "_comment_token": "Get token from @BotFather on Telegram. Leave empty to use env var TELEGRAM_BOT_TOKEN",
-    "admin_chat_ids": ["8535072704"],
+    "admin_chat_ids": [
+      "8535072704"
+    ],
     "_comment_admin_ids": "Telegram user IDs that receive admin notifications (get via /start command)",
     "features": {
       "event_submission": true,

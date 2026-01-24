@@ -2,7 +2,8 @@
 """
 Test Region Data Files
 
-Tests that region-specific event data files exist and are properly structured.
+Tests that the shared events.json file exists and is properly structured.
+All regions share the same event data - no data splitting by region.
 """
 
 import json
@@ -14,7 +15,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 
 class TestRegionDataFiles:
-    """Test suite for region-specific data files"""
+    """Test suite for shared event data file (regions share same data)"""
     
     def __init__(self):
         self.base_path = Path(__file__).parent.parent
@@ -35,12 +36,14 @@ class TestRegionDataFiles:
             return False
     
     def test_events_directory_exists(self):
-        """Test that events directory exists"""
-        print("  Testing: Events directory exists...")
+        """Test that events directory exists (for archived events)"""
+        print("  Testing: Events directory exists (for archived events)...")
         
+        # Note: This directory is for archived events, not region-specific data
+        # All regions share the main events.json file
         if not self.events_dir.exists():
-            self.errors.append(f"Events directory not found: {self.events_dir}")
-            return False
+            self.warnings.append(f"Events directory not found: {self.events_dir} (will be created when archiving)")
+            return True
         
         if not self.events_dir.is_dir():
             self.errors.append(f"Events path is not a directory: {self.events_dir}")
@@ -50,119 +53,124 @@ class TestRegionDataFiles:
         return True
     
     def test_region_data_files_exist(self):
-        """Test that data file exists for each region"""
-        print("  Testing: Region data files exist...")
+        """Test that all regions point to valid data source (shared events.json)"""
+        print("  Testing: Regions point to shared data source...")
         
         if not self.config or 'regions' not in self.config:
-            self.warnings.append("No regions in config, skipping data file check")
-            return True
-        
-        regions = self.config['regions']
-        all_exist = True
-        
-        for region_id, region_config in regions.items():
-            if 'dataSource' not in region_config:
-                self.warnings.append(f"Region '{region_id}' has no dataSource defined")
-                continue
-            
-            data_source = region_config['dataSource']
-            data_file = self.events_dir / data_source
-            
-            if not data_file.exists():
-                self.errors.append(f"Data file not found for region '{region_id}': {data_file}")
-                all_exist = False
-            else:
-                print(f"    ✓ {region_id}: {data_source}")
-        
-        return all_exist
-    
-    def test_data_files_are_valid_json(self):
-        """Test that all region data files are valid JSON"""
-        print("  Testing: Data files are valid JSON...")
-        
-        if not self.config or 'regions' not in self.config:
+            self.warnings.append("No regions in config, skipping data source check")
             return True
         
         regions = self.config['regions']
         all_valid = True
         
+        # Check that all regions point to the same shared data source
+        data_sources = set()
+        
         for region_id, region_config in regions.items():
             if 'dataSource' not in region_config:
+                # dataSource is optional - regions can share default events.json
                 continue
             
             data_source = region_config['dataSource']
-            data_file = self.events_dir / data_source
-            
-            if not data_file.exists():
-                continue
-            
-            try:
-                with open(data_file, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                
-                # Check it's an array
-                if not isinstance(data, list):
-                    self.errors.append(f"Data file for '{region_id}' must be a JSON array")
-                    all_valid = False
-                else:
-                    print(f"    ✓ {region_id}: {len(data)} events")
-            
-            except json.JSONDecodeError as e:
-                self.errors.append(f"Invalid JSON in data file for '{region_id}': {e}")
-                all_valid = False
-            except Exception as e:
-                self.errors.append(f"Error reading data file for '{region_id}': {e}")
-                all_valid = False
+            data_sources.add(data_source)
+        
+        if len(data_sources) > 1:
+            self.warnings.append(
+                f"Multiple data sources found: {data_sources}. "
+                "Consider using single shared events.json for all regions."
+            )
+        
+        # Check that main events.json exists
+        main_events = self.base_path / "assets" / "json" / "events.json"
+        if not main_events.exists():
+            self.errors.append(f"Main events.json not found: {main_events}")
+            all_valid = False
+        else:
+            print(f"    ✓ Shared data source: events.json")
         
         return all_valid
+    
+    def test_data_files_are_valid_json(self):
+        """Test that shared events.json is valid JSON"""
+        print("  Testing: Shared events.json is valid JSON...")
+        
+        main_events = self.base_path / "assets" / "json" / "events.json"
+        
+        if not main_events.exists():
+            self.errors.append("Main events.json not found")
+            return False
+        
+        try:
+            with open(main_events, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            
+            # Check structure - can be array or object with "events" key
+            if isinstance(data, list):
+                events = data
+                print(f"    ✓ events.json: {len(events)} events (array format)")
+            elif isinstance(data, dict) and 'events' in data:
+                events = data['events']
+                if not isinstance(events, list):
+                    self.errors.append("events.json 'events' field must be an array")
+                    return False
+                print(f"    ✓ events.json: {len(events)} events (object format, shared by all regions)")
+            else:
+                self.errors.append("events.json must be array or object with 'events' key")
+                return False
+            
+            return True
+        
+        except json.JSONDecodeError as e:
+            self.errors.append(f"Invalid JSON in events.json: {e}")
+            return False
+        except Exception as e:
+            self.errors.append(f"Error reading events.json: {e}")
+            return False
     
     def test_event_schema_basic(self):
         """Test that events have basic required fields"""
         print("  Testing: Events have basic schema...")
         
-        if not self.config or 'regions' not in self.config:
-            return True
+        main_events = self.base_path / "assets" / "json" / "events.json"
         
-        regions = self.config['regions']
+        if not main_events.exists():
+            return True  # Already caught in previous test
+        
         all_valid = True
-        required_fields = ['id', 'title', 'start', 'location']
+        required_fields = ['id', 'title', 'start_time', 'location']
         
-        for region_id, region_config in regions.items():
-            if 'dataSource' not in region_config:
-                continue
+        try:
+            with open(main_events, 'r', encoding='utf-8') as f:
+                data = json.load(f)
             
-            data_source = region_config['dataSource']
-            data_file = self.events_dir / data_source
+            # Handle both array and object format
+            if isinstance(data, list):
+                events = data
+            elif isinstance(data, dict) and 'events' in data:
+                events = data['events']
+            else:
+                return True  # Already caught in previous test
             
-            if not data_file.exists():
-                continue
+            if not isinstance(events, list):
+                return True  # Already caught in previous test
             
-            try:
-                with open(data_file, 'r', encoding='utf-8') as f:
-                    events = json.load(f)
-                
-                if not isinstance(events, list):
+            # Check first few events for schema
+            sample_size = min(5, len(events))
+            for i, event in enumerate(events[:sample_size]):
+                if not isinstance(event, dict):
+                    self.errors.append(f"Event {i} is not a dictionary")
+                    all_valid = False
                     continue
                 
-                # Check first few events for schema
-                sample_size = min(5, len(events))
-                for i, event in enumerate(events[:sample_size]):
-                    if not isinstance(event, dict):
-                        self.errors.append(
-                            f"Region '{region_id}' event {i} is not a dictionary"
-                        )
-                        all_valid = False
-                        continue
-                    
-                    missing = [f for f in required_fields if f not in event]
-                    if missing:
-                        self.warnings.append(
-                            f"Region '{region_id}' event {i} missing: {', '.join(missing)}"
-                        )
-            
-            except Exception:
-                # Already caught in previous test
-                pass
+                missing = [f for f in required_fields if f not in event]
+                if missing:
+                    self.warnings.append(
+                        f"Event {i} (id: {event.get('id', 'unknown')}) missing: {', '.join(missing)}"
+                    )
+        
+        except Exception:
+            # Already caught in previous test
+            pass
         
         if all_valid:
             print(f"    ✓ Event schemas look good")
@@ -185,10 +193,17 @@ class TestRegionDataFiles:
             with open(main_events, 'r', encoding='utf-8') as f:
                 data = json.load(f)
             
-            if not isinstance(data, list):
-                self.warnings.append("Main events.json should be a JSON array")
+            # Handle both formats
+            if isinstance(data, list):
+                print(f"    ✓ Main events.json exists ({len(data)} events, array format)")
+            elif isinstance(data, dict) and 'events' in data:
+                events = data['events']
+                if isinstance(events, list):
+                    print(f"    ✓ Main events.json exists ({len(events)} events, object format)")
+                else:
+                    self.warnings.append("Main events.json 'events' field should be an array")
             else:
-                print(f"    ✓ Main events.json exists ({len(data)} events)")
+                self.warnings.append("Main events.json has unexpected structure")
         
         except json.JSONDecodeError:
             self.warnings.append("Main events.json has invalid JSON")
@@ -198,7 +213,7 @@ class TestRegionDataFiles:
     def run_all_tests(self, verbose=False):
         """Run all tests and report results"""
         print("\n" + "="*60)
-        print("Region Data Files Tests")
+        print("Shared Event Data Tests (All Regions Use Same Data)")
         print("="*60)
         
         # Load config
