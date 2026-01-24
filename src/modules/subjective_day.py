@@ -341,6 +341,7 @@ class SubjectiveTime:
             # Calculate position within day
             day_length = (sunset - sunrise).total_seconds()
             elapsed = (dt - sunrise).total_seconds()
+            remaining = day_length - elapsed
             
             # Each day hour
             hour_length = day_length / 12
@@ -356,6 +357,10 @@ class SubjectiveTime:
             minute = int(minute_fraction * 60)
             
             hour_length_minutes = hour_length / 60
+            
+            # Calculate hours since sunrise and until sunset (rounded)
+            hours_since_sunrise = round(elapsed / 3600)
+            hours_until_sunset = round(remaining / 3600)
             
         else:
             # Nighttime
@@ -390,12 +395,16 @@ class SubjectiveTime:
             minute = int(minute_fraction * 60)
             
             hour_length_minutes = hour_length / 60
+            
+            # Calculate hours until sunrise (rounded)
+            time_until_sunrise = (night_end - dt).total_seconds()
+            hours_until_sunrise = round(time_until_sunrise / 3600)
         
         # Generate ordinal suffix for English
         ordinal_suffix = self._get_ordinal_suffix(hour)
         
         # Build result
-        return {
+        result = {
             'polar': False,
             'is_day': is_day,
             'hour': hour,
@@ -414,6 +423,38 @@ class SubjectiveTime:
             'day_hour_length_minutes': round(sun_data['day_hour_length_minutes'], 2),
             'night_hour_length_minutes': round(sun_data['night_hour_length_minutes'], 2)
         }
+        
+        # Add hours info for daytime
+        if is_day:
+            result['hours_since_sunrise'] = hours_since_sunrise
+            result['hours_until_sunset'] = hours_until_sunset
+            
+            # German and English descriptions
+            if hours_since_sunrise == 1:
+                result['since_sunrise_de'] = "1 Stunde seit Sonnenaufgang"
+                result['since_sunrise_en'] = "1 hour since sunrise"
+            else:
+                result['since_sunrise_de'] = f"{hours_since_sunrise} Stunden seit Sonnenaufgang"
+                result['since_sunrise_en'] = f"{hours_since_sunrise} hours since sunrise"
+            
+            if hours_until_sunset == 1:
+                result['until_sunset_de'] = "Noch 1 Stunde bis Sonnenuntergang"
+                result['until_sunset_en'] = "1 hour until sunset"
+            else:
+                result['until_sunset_de'] = f"Noch {hours_until_sunset} Stunden bis Sonnenuntergang"
+                result['until_sunset_en'] = f"{hours_until_sunset} hours until sunset"
+        
+        # Add hours until sunrise for nighttime
+        if not is_day:
+            result['hours_until_sunrise'] = hours_until_sunrise
+            if hours_until_sunrise == 1:
+                result['until_sunrise_de'] = "Noch 1 Stunde bis Sonnenaufgang"
+                result['until_sunrise_en'] = "1 hour until sunrise"
+            else:
+                result['until_sunrise_de'] = f"Noch {hours_until_sunrise} Stunden bis Sonnenaufgang"
+                result['until_sunrise_en'] = f"{hours_until_sunrise} hours until sunrise"
+        
+        return result
     
     def _get_ordinal_suffix(self, n: int) -> str:
         """Get English ordinal suffix for a number."""
@@ -676,6 +717,13 @@ def run_api_server(host: str = '127.0.0.1', port: int = 8080):
         """Format result as plain text ASCII art."""
         period_icon = "☀️" if result['is_day'] else "🌙"
         
+        # Add time progress line
+        progress_line = ""
+        if result['is_day'] and 'hours_since_sunrise' in result:
+            progress_line = f"\n│     ⏰ {result['since_sunrise_en']} · {result['until_sunset_en']:<20} │"
+        elif not result['is_day'] and 'hours_until_sunrise' in result:
+            progress_line = f"\n│     ⏰ {result['until_sunrise_en']:<49} │"
+        
         return f"""
 ┌───────────────────────────────────────────────────────────┐
 │  🕐 Subjective Time for {location_name:<32} │
@@ -683,7 +731,7 @@ def run_api_server(host: str = '127.0.0.1', port: int = 8080):
 │                                                           │
 │     {period_icon}  {result['display_en']:<47} │
 │                                                           │
-│     Subjective Time:  {result['time_formatted']:>5} ({result['period_en']})                      │
+│     Subjective Time:  {result['time_formatted']:>5} ({result['period_en']})                      │{progress_line}
 │                                                           │
 ├───────────────────────────────────────────────────────────┤
 │  ☀️  Sunrise:  {result['sunrise']:<8}    🌅 Sunset:  {result['sunset']:<8}        │
@@ -698,7 +746,15 @@ def run_api_server(host: str = '127.0.0.1', port: int = 8080):
     def format_one_line(result: dict) -> str:
         """Format result as one line for scripts."""
         period = "day" if result['is_day'] else "night"
-        return f"{result['hour']}:{result['minute']:02d} {period} ({result['hour_length_minutes']:.1f}min/hr) | ☀️{result['sunrise']} 🌅{result['sunset']}\n"
+        base = f"{result['hour']}:{result['minute']:02d} {period} ({result['hour_length_minutes']:.1f}min/hr) | ☀️{result['sunrise']} 🌅{result['sunset']}"
+        
+        # Add time progress info
+        if result['is_day'] and 'hours_until_sunset' in result:
+            base += f" | ⏰{result['hours_until_sunset']}h to sunset"
+        elif not result['is_day'] and 'hours_until_sunrise' in result:
+            base += f" | ⏰{result['hours_until_sunrise']}h to sunrise"
+        
+        return base + "\n"
 
     def format_table(day_hours: dict, location_name: str) -> str:
         """Format day hours as ASCII table."""
