@@ -1,22 +1,42 @@
 """
 Nürnberger Uhr (Nuremberg Clock) - Subjective Time Calculator
 
-This module implements the historical "Nürnberger Uhr" timekeeping system,
-which uses "unequal hours" (temporal hours) based on sunrise and sunset.
+Die Nürnberger Uhr / The Nuremberg Clock System
 
-Historical Background:
-- Used in Nuremberg and other medieval cities
-- Day is divided into 12 equal "day hours" (sunrise to sunset)
-- Night is divided into 12 equal "night hours" (sunset to sunrise)
-- Hour length varies throughout the year (longer summer days, shorter winter days)
-- In Nuremberg's latitude, day hours range from ~42-45 min (winter) to ~77-80 min (summer)
+This module implements the historical "Nürnberger Uhr" timekeeping system,
+which uses "unequal hours" (temporale Stunden) based on sunrise and sunset.
+
+Historical Background (from Friedrich Nicolai, 1783):
+    "Zu den Gewohnheiten, welche bloß beybehalten werden, weil sie alt sind,
+     gehört auch die sogenannte große Uhr. Man nennt in Nürnberg die sonst
+     gewöhnliche Art von 1 bis 12 zu schlagen die kleine Uhr."
+    
+    (Among customs preserved merely because they are old, is the so-called
+     große Uhr. In Nuremberg, the usual way of striking 1 to 12 is called
+     the kleine Uhr.)
+
+The System:
+- "Große Uhr" (great clock): The Nürnberger seasonal hour system
+- "Kleine Uhr" (small clock): The standard 12-hour system we use today
+- Wendetage: 16 adjustment days per year to keep hours aligned with sunrise/sunset
+- Garaus: The horn signal for closing city gates at sunset
+- Türmer: Tower watchmen who rang the bells using sundials, water clocks, and stars
+
+Seasonal Variation:
+- Winter Solstice: 8 Tagstunden (day hours), 16 Nachtstunden (night hours)
+- Summer Solstice: 16 Tagstunden (day hours), 8 Nachtstunden (night hours)  
+- Equinox: 12 Tagstunden = 12 Nachtstunden (~60 min each)
+- Day hours range from ~40-45 min (winter) to ~75-80 min (summer)
 
 API Usage (wttr.in style):
     curl localhost:8080/Berlin            # Plain text output
     curl localhost:8080/50.3,11.9         # Coordinates
     curl localhost:8080/munich?format=j   # JSON output
-    curl localhost:8080/hof?format=1      # One-line (for scripts)
+    curl localhost:8080/hof?format=watch  # Smartwatch format
     curl localhost:8080/:help             # Help page
+    curl localhost:8080/:about            # Historical information
+    curl localhost:8080/:learn            # Tutorial & lessons
+    curl localhost:8080/:nocturnal        # Digital star clock
 
 Python Usage:
     from src.modules.subjective_day import SubjectiveTime
@@ -27,8 +47,10 @@ Start Server:
     python3 src/modules/subjective_day.py --serve --port 8080
 
 References:
-- https://de.wikipedia.org/wiki/Nürnberger_Uhr
+- Friedrich Nicolai: "Beschreibung einer Reise durch Deutschland" (1783)
 - https://nuernberginfos.de/nuernberg-mix/nuernberger-uhr.php
+- https://de.wikipedia.org/wiki/Nürnberger_Uhr
+- https://www.chemie-schule.de/KnowHow/Nürnberger_Uhr
 """
 
 import math
@@ -1004,46 +1026,117 @@ def run_api_server(host: str = '127.0.0.1', port: int = 8080):
 """
 
     def get_about_text():
-        """Generate about page."""
+        """Generate about page with historical information from nuernberginfos.de."""
         return """
 ╔═══════════════════════════════════════════════════════════════════════════════╗
-║                        🕐 About Nürnberger Uhr                                ║
+║                        🕐 DIE NÜRNBERGER UHR                                  ║
+║                    (The Nuremberg Clock System)                               ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║                                                                               ║
-║  The Nürnberger Uhr (Nuremberg Clock) was a historical timekeeping system     ║
-║  used in Nuremberg and other Central European cities during medieval times.   ║
+║  The Nürnberger Uhr was a unique historical timekeeping method used in        ║
+║  Nuremberg and neighboring cities from the Middle Ages. Its distinctive       ║
+║  feature was adapting to the changing length of daylight across seasons.      ║
 ║                                                                               ║
-║  Unlike modern 24-hour clocks with equal hours, this system used "temporal    ║
-║  hours" or "unequal hours" that varied with the seasons:                      ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║  📜 FRIEDRICH NICOLAI (1783)                                                  ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
 ║                                                                               ║
-║  📅 HOW IT WORKS:                                                             ║
+║  "Zu den Gewohnheiten, welche bloß beybehalten werden, weil sie alt sind,     ║
+║   gehört auch die sogenannte große Uhr. Man nennt in Nürnberg die sonst       ║
+║   gewöhnliche Art von 1 bis 12 zu schlagen die kleine Uhr, welche auch        ║
+║   von verschiedenen Thürmen in der Stadt schlägt."                            ║
 ║                                                                               ║
-║    ☀️  DAY HOURS (1-12):                                                       ║
-║        The time from sunrise to sunset is divided into 12 equal parts.        ║
-║        In winter, day hours are SHORT (~45 minutes in Nuremberg)              ║
-║        In summer, day hours are LONG (~75 minutes in Nuremberg)               ║
+║  Translation:                                                                 ║
+║  "Among the customs preserved merely because they are old, is the so-called   ║
+║   große Uhr (great clock). In Nuremberg, the usual way of striking 1 to 12    ║
+║   is called the kleine Uhr (small clock), which also strikes from various     ║
+║   towers in the city."                                                        ║
 ║                                                                               ║
-║    🌙 NIGHT HOURS (1-12):                                                      ║
-║        The time from sunset to sunrise is divided into 12 equal parts.        ║
-║        In winter, night hours are LONG (~75 minutes)                          ║
-║        In summer, night hours are SHORT (~45 minutes)                         ║
+║  — Friedrich Nicolai, "Beschreibung einer Reise durch Deutschland             ║
+║    und die Schweiz im Jahre 1781" (published 1783)                            ║
 ║                                                                               ║
-║  📊 SEASONAL VARIATION (at Nuremberg's latitude):                             ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║  📅 TEMPORALE STUNDEN (Seasonal/Unequal Hours)                                ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
 ║                                                                               ║
-║    Winter Solstice (Dec 21):  Day hour ≈ 40 min, Night hour ≈ 80 min          ║
-║    Equinox (Mar/Sep 21):      Day hour ≈ 60 min, Night hour ≈ 60 min          ║
-║    Summer Solstice (Jun 21):  Day hour ≈ 80 min, Night hour ≈ 40 min          ║
+║  Unlike modern equal hours, day and night were each divided into a set        ║
+║  number of hours, but the length of an hour changed with the seasons:         ║
 ║                                                                               ║
-║  🏛️ HISTORICAL CONTEXT:                                                       ║
+║    ❄️  WINTER (around Dec 21):                                                 ║
+║        • 8 Tagstunden (day hours) - SHORT                                     ║
+║        • 16 Nachtstunden (night hours) - LONG                                 ║
 ║                                                                               ║
-║    This system was practical for medieval life:                               ║
-║    • Work hours aligned with daylight                                         ║
-║    • Church bells marked the canonical hours                                  ║
-║    • Sundials naturally showed temporal hours                                 ║
+║    ☀️  SUMMER (around Jun 21):                                                 ║
+║        • 16 Tagstunden (day hours) - LONG                                     ║
+║        • 8 Nachtstunden (night hours) - SHORT                                 ║
 ║                                                                               ║
-║  📚 REFERENCES:                                                               ║
-║    • https://de.wikipedia.org/wiki/Nürnberger_Uhr                             ║
-║    • https://nuernberginfos.de/nuernberg-mix/nuernberger-uhr.php              ║
+║    🌗 EQUINOX (Mar 21 / Sep 21):                                               ║
+║        • 12 Tagstunden = 12 Nachtstunden (equal length, ~60 min each)         ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║  🔄 WENDETAGE (Turning Days)                                                  ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  To keep hours as "even" as possible, adjustments called "Wendetage" were     ║
+║  made about 16 times per year. The number of day/night hours changed in       ║
+║  one-hour steps to match sunrise and sunset times.                            ║
+║                                                                               ║
+║  This gradual transition ensured the system remained practical for daily      ║
+║  life while following the natural rhythm of the sun.                          ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║  🔔 TÜRMER UND GLOCKEN (Tower Watchmen & Bells)                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  Early mechanical clocks could not easily accommodate changing intervals.     ║
+║  Instead, time was announced by the city's TÜRMER (tower watchmen), who       ║
+║  rang bells at the appropriate intervals using:                               ║
+║                                                                               ║
+║    • Sundials (during daylight)                                               ║
+║    • Water clocks / Clepsydra (at night)                                      ║
+║    • Candle clocks with hour markings                                         ║
+║    • Star positions (nocturnal instrument)                                    ║
+║                                                                               ║
+║  📯 THE GARAUS:                                                                ║
+║  The closing of city gates followed sunset, announced by horn from the        ║
+║  city towers. Events were commonly scheduled "one hour after sunset"          ║
+║  (which fell at different times by season).                                   ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║  ⚙️  TRANSITION TO MECHANICAL CLOCKS                                          ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  The Nürnberger Uhr was a blend between the old system of "temporale          ║
+║  Stunden" and the new mechanical clocks based on "äquinoktiale Stunden"       ║
+║  (equal hours), which became dominant across Europe in the early modern era.  ║
+║                                                                               ║
+║  🥚 THE NÜRNBERGER EI (Nuremberg Egg):                                         ║
+║  Nuremberg became famous in the 16th century for portable timepieces          ║
+║  created by PETER HENLEIN. These early pocket watches ("Nürnberger Ei")       ║
+║  marked the transition to personal, standardized timekeeping - though         ║
+║  they no longer used seasonal hours.                                          ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║  💡 WHY THIS SYSTEM MADE SENSE                                                 ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  Before artificial lighting, this system was deeply practical:                ║
+║                                                                               ║
+║    • Work hours naturally aligned with available daylight                     ║
+║    • "First hour of day" always meant sunrise (start of work)                 ║
+║    • "Twelfth hour of day" always meant sunset (end of work)                  ║
+║    • Church prayers (canonical hours) followed the sun                        ║
+║    • Sundials automatically showed temporal hours                             ║
+║                                                                               ║
+║  Medieval people didn't count minutes - the bell's ring was the reference.    ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║  📚 REFERENCES                                                                ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  • https://nuernberginfos.de/nuernberg-mix/nuernberger-uhr.php                ║
+║  • https://de.wikipedia.org/wiki/Nürnberger_Uhr                               ║
+║  • https://www.chemie-schule.de/KnowHow/Nürnberger_Uhr                        ║
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 """
