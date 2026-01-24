@@ -10,7 +10,7 @@
 
 ## 🎯 What is This?
 
-A **grassroots, mobile-first** Progressive Web App (PWA) for discovering local community events in Hof and surrounding region (Bavaria, Germany). Built by and for the local community - from punk concerts to farmers markets, from Off-Theater to VHS courses.
+A **grassroots, mobile-first** Progressive Web App (PWA) for discovering community events around. Built by and for the local community - from punk concerts to farmers markets, from Off-Theater to VHS courses.
 
 **Visit the live app at [krwl.in](https://krwl.in)** to see events on an interactive map!
 
