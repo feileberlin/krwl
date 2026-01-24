@@ -87,7 +87,7 @@ class SubjectiveTime:
         '3. Stunde des Tages (3rd hour of day)'
     """
     
-    def __init__(self, lat: float, lon: float, tz_offset_hours: float = None, system: str = "kleine"):
+    def __init__(self, lat: float, lon: float, tz_offset_hours: float = None, system: str = "grosse"):
         """
         Initialize the Nürnberger Uhr calculator.
         
@@ -96,8 +96,8 @@ class SubjectiveTime:
             lon: Longitude in decimal degrees (positive = East, range: -180 to 180)
             tz_offset_hours: Timezone offset from UTC in hours (auto-detected if None)
             system: Clock system to use:
-                - "kleine" (default): Simplified 12/12 system - always 12 day + 12 night hours
-                - "große" or "grosse": Historical Nuremberg system - 8-16 variable hour counts
+                - "große" or "grosse" (default): Historical Nuremberg system - 8-16 variable hour counts
+                - "kleine": Simplified 12/12 system - always 12 day + 12 night hours
         
         Raises:
             ValueError: If latitude or longitude is out of valid range
@@ -113,11 +113,11 @@ class SubjectiveTime:
         self._last_polar_type = None
         
         # Set clock system
-        system_lower = system.lower() if system else "kleine"
-        if system_lower in ("große", "grosse", "gross", "big", "historical"):
-            self.system = "große"
-        else:
+        system_lower = system.lower() if system else "grosse"
+        if system_lower in ("kleine", "klein", "small", "modern", "12"):
             self.system = "kleine"
+        else:
+            self.system = "große"
         
         # Auto-detect timezone offset if not provided
         if tz_offset_hours is None:
@@ -824,12 +824,12 @@ def run_api_server(host: str = '127.0.0.1', port: int = 8080):
 ║  🕐 CLOCK SYSTEMS (Große Uhr vs Kleine Uhr)                                   ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║                                                                               ║
-║    ?system=kleine  (default) Simplified 12/12 system - always 12 hours        ║
-║    ?system=grosse  Historical 8-16 system - variable hour counts              ║
+║    ?system=grosse  (default) Historical 8-16 system - variable hour counts    ║
+║    ?system=kleine  Simplified 12/12 system - always 12 hours                  ║
 ║                                                                               ║
 ║  Examples:                                                                    ║
-║    curl {host}:{port}/hof?system=grosse    # Historical Große Uhr             ║
-║    curl {host}:{port}/hof?system=kleine    # Modern Kleine Uhr (default)      ║
+║    curl {host}:{port}/hof?system=grosse    # Historical Große Uhr (default)   ║
+║    curl {host}:{port}/hof?system=kleine    # Modern Kleine Uhr               ║
 ║                                                                               ║
 ║  KLEINE UHR (small clock): Always 12 day + 12 night hours                     ║
 ║    • Hour LENGTH varies (winter days ~45 min/hr, summer ~75 min/hr)           ║
@@ -1381,7 +1381,7 @@ def run_api_server(host: str = '127.0.0.1', port: int = 8080):
             fmt = query.get('format', [''])[0].lower()
             
             # Get system parameter (große/kleine Uhr)
-            system_param = query.get('system', query.get('uhr', ['kleine']))[0].lower()
+            system_param = query.get('system', query.get('uhr', ['grosse']))[0].lower()
             
             try:
                 # Handle special pages
