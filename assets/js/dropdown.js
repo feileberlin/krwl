@@ -78,15 +78,28 @@ class CustomDropdown {
             itemEl.classList.add('selected');
         }
         
+        // Handle disabled items
+        if (item.disabled) {
+            itemEl.classList.add('disabled');
+            itemEl.style.textDecoration = 'line-through';
+            itemEl.style.color = '#888';
+            itemEl.style.cursor = 'not-allowed';
+            itemEl.style.opacity = '0.6';
+        }
+        
         itemEl.textContent = item.label;
-        itemEl.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.onSelect(item.value);
-            this.currentValue = this.currentValueProvider
-                ? this.currentValueProvider()
-                : item.value;
-            this.close();
-        });
+        
+        // Only add click listener if not disabled
+        if (!item.disabled) {
+            itemEl.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.onSelect(item.value);
+                this.currentValue = this.currentValueProvider
+                    ? this.currentValueProvider()
+                    : item.value;
+                this.close();
+            });
+        }
         
         return itemEl;
     }

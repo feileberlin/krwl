@@ -310,11 +310,21 @@ class EventListeners {
             // Sort by timestamp (earliest first)
             ranges.sort((a, b) => a.timestamp - b.timestamp);
             
-            // Add "upcoming (all events)" at the end
-            ranges.push({
+            // Note: "upcoming (all events)" temporarily disabled for performance reasons
+            // Loading all events without time limit can cause browser slowdown with large datasets
+            // Commented out - uncomment when performance optimizations are implemented
+            /* ranges.push({
                 value: 'all',
                 label: 'upcoming (all events)',
                 timestamp: Infinity
+            }); */
+            
+            // Add disabled placeholder to show option exists but is unavailable
+            ranges.push({
+                value: 'all',
+                label: '~~upcoming (all events)~~ (disabled for performance)',
+                timestamp: Infinity,
+                disabled: true
             });
             
             return ranges;

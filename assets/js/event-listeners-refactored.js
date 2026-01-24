@@ -481,6 +481,9 @@ class EventListeners {
                 // Currently using hardcoded English text to match existing pattern
                 // Translation keys exist in content.json: time_ranges.sunday-primetime, time_ranges.full-moon
                 // Future: Use i18n.t('time_ranges.sunday-primetime') when i18n is fully integrated
+                
+                // Note: "All upcoming events" temporarily disabled for performance reasons
+                // Loading all events without time limit can cause browser slowdown with large datasets
                 const content = `
                     <select id="time-filter">
                         <option value="sunrise">Next Sunrise (6 AM)</option>
@@ -490,7 +493,7 @@ class EventListeners {
                         <option value="12h">Next 12 hours</option>
                         <option value="24h">Next 24 hours</option>
                         <option value="48h">Next 48 hours</option>
-                        <option value="all">All upcoming events</option>
+                        <option value="all" disabled style="text-decoration: line-through; color: #888;">All upcoming events (disabled for performance)</option>
                     </select>
                 `;
                 const dropdown = createDropdown(content, timeTextEl);
