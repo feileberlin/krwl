@@ -22,11 +22,19 @@ The System:
 - Garaus: The horn signal for closing city gates at sunset
 - Türmer: Tower watchmen who rang the bells using sundials, water clocks, and stars
 
-Seasonal Variation:
-- Winter Solstice: 8 Tagstunden (day hours), 16 Nachtstunden (night hours)
-- Summer Solstice: 16 Tagstunden (day hours), 8 Nachtstunden (night hours)  
-- Equinox: 12 Tagstunden = 12 Nachtstunden (~60 min each)
+Implementation Note:
+    This implementation uses the simplified "temporal hours" system (12/12 division),
+    which is the more widely recognized interpretation of medieval timekeeping.
+    The historical Nuremberg system actually used variable hour counts:
+    - Winter Solstice: 8 Tagstunden + 16 Nachtstunden
+    - Summer Solstice: 16 Tagstunden + 8 Nachtstunden
+    Our 12/12 system keeps hour COUNT constant but varies hour LENGTH seasonally,
+    which is the approach used by most temporal hour implementations today.
+
+Seasonal Variation (in our 12/12 implementation):
 - Day hours range from ~40-45 min (winter) to ~75-80 min (summer)
+- Night hours range from ~75-80 min (winter) to ~40-45 min (summer)
+- At equinox: both day and night hours ≈ 60 min each
 
 API Usage (wttr.in style):
     curl localhost:8080/Berlin            # Plain text output
@@ -1059,8 +1067,7 @@ def run_api_server(host: str = '127.0.0.1', port: int = 8080):
 ║  📅 TEMPORALE STUNDEN (Seasonal/Unequal Hours)                                ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║                                                                               ║
-║  Unlike modern equal hours, day and night were each divided into a set        ║
-║  number of hours, but the length of an hour changed with the seasons:         ║
+║  THE HISTORICAL NUREMBERG SYSTEM varied the NUMBER of hours:                  ║
 ║                                                                               ║
 ║    ❄️  WINTER (around Dec 21):                                                 ║
 ║        • 8 Tagstunden (day hours) - SHORT                                     ║
@@ -1072,6 +1079,13 @@ def run_api_server(host: str = '127.0.0.1', port: int = 8080):
 ║                                                                               ║
 ║    🌗 EQUINOX (Mar 21 / Sep 21):                                               ║
 ║        • 12 Tagstunden = 12 Nachtstunden (equal length, ~60 min each)         ║
+║                                                                               ║
+║  THIS API uses the simplified 12/12 "temporal hours" interpretation:          ║
+║    • Always 12 day hours + 12 night hours                                     ║
+║    • Hour LENGTH varies seasonally (not count)                                ║
+║    • Winter day hours: ~45 min, night hours: ~75 min                          ║
+║    • Summer day hours: ~75 min, night hours: ~45 min                          ║
+║    • This is the more common modern interpretation of "unequal hours"         ║
 ║                                                                               ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║  🔄 WENDETAGE (Turning Days)                                                  ║
