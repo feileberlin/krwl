@@ -52,25 +52,63 @@ class SubjectiveTime:
         Initialize the Nürnberger Uhr calculator.
         
         Args:
-            lat: Latitude in decimal degrees (positive = North)
-            lon: Longitude in decimal degrees (positive = East)
+            lat: Latitude in decimal degrees (positive = North, range: -90 to 90)
+            lon: Longitude in decimal degrees (positive = East, range: -180 to 180)
             tz_offset_hours: Timezone offset from UTC in hours (auto-detected if None)
+        
+        Raises:
+            ValueError: If latitude or longitude is out of valid range
         """
+        # Validate coordinates
+        if not -90 <= lat <= 90:
+            raise ValueError(f"Latitude must be between -90 and 90, got {lat}")
+        if not -180 <= lon <= 180:
+            raise ValueError(f"Longitude must be between -180 and 180, got {lon}")
+        
         self.lat = lat
         self.lon = lon
+        self._last_polar_type = None
         
-        # Auto-detect timezone offset if not provided (approximate from longitude)
+        # Auto-detect timezone offset if not provided
         if tz_offset_hours is None:
             # Central European Time approximation (Germany)
             # Use CET (UTC+1) in winter, CEST (UTC+2) in summer
             now = datetime.now()
-            # Simple DST check (March-October for Europe)
-            if 3 <= now.month <= 10:
-                self.tz_offset_hours = 2  # CEST
-            else:
-                self.tz_offset_hours = 1  # CET
+            # European DST: last Sunday of March to last Sunday of October
+            self.tz_offset_hours = self._get_cet_offset(now)
         else:
             self.tz_offset_hours = tz_offset_hours
+    
+    def _get_cet_offset(self, dt: datetime) -> int:
+        """
+        Get Central European Time offset for a given date.
+        
+        European DST runs from the last Sunday of March (02:00) 
+        to the last Sunday of October (03:00).
+        
+        Args:
+            dt: Datetime to check
+            
+        Returns:
+            1 for CET (winter), 2 for CEST (summer)
+        """
+        year = dt.year
+        
+        # Find last Sunday of March
+        march_last_day = datetime(year, 3, 31)
+        march_last_sunday = march_last_day - timedelta(days=(march_last_day.weekday() + 1) % 7)
+        dst_start = march_last_sunday.replace(hour=2, minute=0, second=0, microsecond=0)
+        
+        # Find last Sunday of October
+        october_last_day = datetime(year, 10, 31)
+        october_last_sunday = october_last_day - timedelta(days=(october_last_day.weekday() + 1) % 7)
+        dst_end = october_last_sunday.replace(hour=3, minute=0, second=0, microsecond=0)
+        
+        # Check if in DST period
+        if dst_start <= dt < dst_end:
+            return 2  # CEST (summer time)
+        else:
+            return 1  # CET (winter time)
     
     def _calculate_julian_day(self, dt: datetime) -> float:
         """
@@ -146,7 +184,7 @@ class SubjectiveTime:
             dt: Datetime (only date portion is used)
             
         Returns:
-            Tuple of (sunrise_datetime, sunset_datetime)
+            Tuple of (sunrise_datetime, sunset_datetime) or (None, None, polar_type) for polar regions
         """
         # Use noon on the given day for calculation
         noon = dt.replace(hour=12, minute=0, second=0, microsecond=0)
@@ -164,12 +202,17 @@ class SubjectiveTime:
                           math.sin(lat_rad) * math.sin(decl_rad)) / \
                          (math.cos(lat_rad) * math.cos(decl_rad))
         
+        # Store polar type for later reference
+        self._last_polar_type = None
+        
         # Handle polar day/night
         if cos_hour_angle > 1:
-            # Polar night - sun never rises
+            # Polar night - sun never rises (cos > 1 means sun is always below horizon)
+            self._last_polar_type = 'night'
             return None, None
         elif cos_hour_angle < -1:
-            # Polar day - sun never sets
+            # Polar day - sun never sets (cos < -1 means sun is always above horizon)
+            self._last_polar_type = 'day'
             return None, None
         
         hour_angle = math.acos(cos_hour_angle) * RAD_TO_DEG
@@ -205,9 +248,10 @@ class SubjectiveTime:
         sunrise, sunset = self._calculate_sunrise_sunset(dt)
         
         if sunrise is None or sunset is None:
+            polar_type = getattr(self, '_last_polar_type', 'night')
             return {
                 'polar': True,
-                'polar_type': 'day' if sunrise is None and sunset is not None else 'night',
+                'polar_type': polar_type,
                 'sunrise': None,
                 'sunset': None
             }
@@ -490,23 +534,41 @@ def run_api_server(host: str = '127.0.0.1', port: int = 8080):
     import json as json_module
     
     class SubjectiveTimeHandler(http.server.BaseHTTPRequestHandler):
-        def do_GET(self):
-            # Parse URL
-            parsed = urllib.parse.urlparse(self.path)
-            query = urllib.parse.parse_qs(parsed.query)
-            
-            # Add CORS headers for local development
-            self.send_response(200)
+        def _send_response(self, status_code: int, data: dict):
+            """Send JSON response with appropriate headers."""
+            self.send_response(status_code)
             self.send_header('Content-Type', 'application/json')
             self.send_header('Access-Control-Allow-Origin', '*')
             self.send_header('Access-Control-Allow-Methods', 'GET, OPTIONS')
             self.send_header('Access-Control-Allow-Headers', 'Content-Type')
             self.end_headers()
+            self.wfile.write(json_module.dumps(data, indent=2).encode())
+        
+        def _send_error(self, status_code: int, message: str):
+            """Send error response."""
+            self._send_response(status_code, {'error': message})
+        
+        def do_GET(self):
+            # Parse URL
+            parsed = urllib.parse.urlparse(self.path)
+            query = urllib.parse.parse_qs(parsed.query)
             
             try:
-                # Get coordinates from query params
-                lat = float(query.get('lat', [50.3167])[0])  # Default: Hof
-                lon = float(query.get('lon', [11.9167])[0])
+                # Get and validate coordinates from query params
+                try:
+                    lat = float(query.get('lat', [50.3167])[0])  # Default: Hof
+                    lon = float(query.get('lon', [11.9167])[0])
+                except (ValueError, TypeError):
+                    self._send_error(400, "Invalid coordinates: lat and lon must be numbers")
+                    return
+                
+                # Validate coordinate ranges
+                if not -90 <= lat <= 90:
+                    self._send_error(400, f"Invalid latitude: must be between -90 and 90, got {lat}")
+                    return
+                if not -180 <= lon <= 180:
+                    self._send_error(400, f"Invalid longitude: must be between -180 and 180, got {lon}")
+                    return
                 
                 uhr = SubjectiveTime(lat, lon)
                 
@@ -524,21 +586,19 @@ def run_api_server(host: str = '127.0.0.1', port: int = 8080):
                 elif parsed.path == '/api/health':
                     result = {'status': 'ok', 'service': 'nuernberger-uhr'}
                 else:
-                    result = {
-                        'error': 'Unknown endpoint',
-                        'endpoints': [
-                            '/api/subjective-time?lat=<lat>&lon=<lon>',
-                            '/api/sunrise-sunset?lat=<lat>&lon=<lon>',
-                            '/api/day-hours?lat=<lat>&lon=<lon>',
-                            '/api/health'
-                        ]
-                    }
+                    self._send_error(404, 'Unknown endpoint. Available: /api/subjective-time, /api/sunrise-sunset, /api/day-hours, /api/health')
+                    return
                 
-                self.wfile.write(json_module.dumps(result, indent=2).encode())
+                self._send_response(200, result)
                 
-            except Exception as e:
-                error = {'error': str(e)}
-                self.wfile.write(json_module.dumps(error).encode())
+            except ValueError as e:
+                # Validation errors (e.g., invalid coordinates)
+                self._send_error(400, str(e))
+            except Exception:
+                # Log internally but don't expose details to client
+                import traceback
+                traceback.print_exc()
+                self._send_error(500, "Internal server error")
         
         def do_OPTIONS(self):
             """Handle CORS preflight requests."""

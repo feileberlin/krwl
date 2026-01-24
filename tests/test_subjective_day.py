@@ -224,6 +224,95 @@ class TestOrdinalSuffix(unittest.TestCase):
         self.assertEqual(uhr._get_ordinal_suffix(12), 'th')
 
 
+class TestInputValidation(unittest.TestCase):
+    """Test input validation for coordinates."""
+    
+    def test_valid_coordinates(self):
+        """Test that valid coordinates are accepted."""
+        # Valid latitude and longitude
+        uhr = SubjectiveTime(lat=50.0, lon=10.0)
+        self.assertEqual(uhr.lat, 50.0)
+        self.assertEqual(uhr.lon, 10.0)
+        
+        # Edge cases - poles and international date line
+        uhr_north_pole = SubjectiveTime(lat=90.0, lon=0.0)
+        self.assertEqual(uhr_north_pole.lat, 90.0)
+        
+        uhr_south_pole = SubjectiveTime(lat=-90.0, lon=0.0)
+        self.assertEqual(uhr_south_pole.lat, -90.0)
+        
+        uhr_date_line = SubjectiveTime(lat=0.0, lon=180.0)
+        self.assertEqual(uhr_date_line.lon, 180.0)
+        
+        uhr_date_line_west = SubjectiveTime(lat=0.0, lon=-180.0)
+        self.assertEqual(uhr_date_line_west.lon, -180.0)
+    
+    def test_invalid_latitude(self):
+        """Test that invalid latitude raises ValueError."""
+        with self.assertRaises(ValueError):
+            SubjectiveTime(lat=91.0, lon=0.0)
+        
+        with self.assertRaises(ValueError):
+            SubjectiveTime(lat=-91.0, lon=0.0)
+    
+    def test_invalid_longitude(self):
+        """Test that invalid longitude raises ValueError."""
+        with self.assertRaises(ValueError):
+            SubjectiveTime(lat=0.0, lon=181.0)
+        
+        with self.assertRaises(ValueError):
+            SubjectiveTime(lat=0.0, lon=-181.0)
+
+
+class TestDSTCalculation(unittest.TestCase):
+    """Test DST calculation for Central European Time."""
+    
+    def test_winter_time(self):
+        """Test that winter dates get CET (UTC+1)."""
+        uhr = SubjectiveTime(lat=50.0, lon=10.0)
+        
+        # January should be CET
+        january = datetime(2026, 1, 15, 12, 0, 0)
+        self.assertEqual(uhr._get_cet_offset(january), 1)
+        
+        # December should be CET
+        december = datetime(2026, 12, 15, 12, 0, 0)
+        self.assertEqual(uhr._get_cet_offset(december), 1)
+    
+    def test_summer_time(self):
+        """Test that summer dates get CEST (UTC+2)."""
+        uhr = SubjectiveTime(lat=50.0, lon=10.0)
+        
+        # July should be CEST
+        july = datetime(2026, 7, 15, 12, 0, 0)
+        self.assertEqual(uhr._get_cet_offset(july), 2)
+        
+        # June should be CEST
+        june = datetime(2026, 6, 15, 12, 0, 0)
+        self.assertEqual(uhr._get_cet_offset(june), 2)
+    
+    def test_dst_transitions(self):
+        """Test DST transition dates."""
+        uhr = SubjectiveTime(lat=50.0, lon=10.0)
+        
+        # 2026: DST starts March 29, ends October 25
+        # Before DST starts (March 28)
+        before_dst = datetime(2026, 3, 28, 12, 0, 0)
+        self.assertEqual(uhr._get_cet_offset(before_dst), 1)
+        
+        # After DST starts (March 30)
+        after_dst_start = datetime(2026, 3, 30, 12, 0, 0)
+        self.assertEqual(uhr._get_cet_offset(after_dst_start), 2)
+        
+        # Before DST ends (October 24)
+        before_dst_end = datetime(2026, 10, 24, 12, 0, 0)
+        self.assertEqual(uhr._get_cet_offset(before_dst_end), 2)
+        
+        # After DST ends (October 26)
+        after_dst_end = datetime(2026, 10, 26, 12, 0, 0)
+        self.assertEqual(uhr._get_cet_offset(after_dst_end), 1)
+
+
 if __name__ == '__main__':
     print("=" * 60)
     print("Subjective Time (Nürnberger Uhr) - Test Suite")
