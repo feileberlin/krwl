@@ -10,7 +10,7 @@ name: 🚀 Website Maintenance & Deployment
 #   - Event scraping from RSS/HTML sources (daily at 03:00 & 15:00 UTC / 04:00 & 16:00 CET)
 #   - Weather updates (hourly)
 #   - Site deployment to GitHub Pages
-#   Note: During CEST (daylight saving), times shift to 05:00 & 17:00 Berlin time
+#   Note: GitHub Actions cron runs in UTC. During CEST (daylight saving), Berlin time shifts to 05:00 & 17:00
 #
 # 🎯 MANUAL TASKS (workflow_dispatch):
 #   Content Management:

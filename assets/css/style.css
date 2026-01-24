@@ -734,8 +734,8 @@ strong, b {
     gap: 0.75rem;
 }
 
-/* Stack to single column on mobile */
-@media (max-width: 500px) {
+/* Stack to single column on mobile (matches standard 480px breakpoint) */
+@media (max-width: 480px) {
     #custom-locations-list {
         grid-template-columns: 1fr;
     }
