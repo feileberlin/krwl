@@ -842,6 +842,24 @@ python3 src/tools/generate_design_tokens.py
 
 **This project uses authentic comic book-style speech bubbles with specific design requirements.**
 
+#### 🎯 Quick Reference - The Golden Rules
+
+**Remember: "ECO-BARBIE BORDERLESS UNIFIED"**
+
+1. **ECO**Barbie colors only (`#D689B8` spectrum)
+2. **BORDER**less design (no borders, plain fills)
+3. **UNIFIED** tail tip (single point, 15px gap)
+
+**The 3-Second Check:**
+- ✅ Colors from EcoBarbie palette? (`--color-*` variables)
+- ✅ No borders on bubble or tail?
+- ✅ Both curves meet at one tip point?
+- ✅ Shadow on parent element only? (`filter: drop-shadow`)
+
+If all YES → you're good! If any NO → review guidelines below.
+
+---
+
 #### Mandatory Design Rules
 
 1. **EcoBarbie Color Spectrum ONLY**
