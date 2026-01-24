@@ -87,7 +87,7 @@ class SubjectiveTime:
         '3. Stunde des Tages (3rd hour of day)'
     """
     
-    def __init__(self, lat: float, lon: float, tz_offset_hours: float = None):
+    def __init__(self, lat: float, lon: float, tz_offset_hours: float = None, system: str = "kleine"):
         """
         Initialize the Nürnberger Uhr calculator.
         
@@ -95,6 +95,9 @@ class SubjectiveTime:
             lat: Latitude in decimal degrees (positive = North, range: -90 to 90)
             lon: Longitude in decimal degrees (positive = East, range: -180 to 180)
             tz_offset_hours: Timezone offset from UTC in hours (auto-detected if None)
+            system: Clock system to use:
+                - "kleine" (default): Simplified 12/12 system - always 12 day + 12 night hours
+                - "große" or "grosse": Historical Nuremberg system - 8-16 variable hour counts
         
         Raises:
             ValueError: If latitude or longitude is out of valid range
@@ -108,6 +111,13 @@ class SubjectiveTime:
         self.lat = lat
         self.lon = lon
         self._last_polar_type = None
+        
+        # Set clock system
+        system_lower = system.lower() if system else "kleine"
+        if system_lower in ("große", "grosse", "gross", "big", "historical"):
+            self.system = "große"
+        else:
+            self.system = "kleine"
         
         # Auto-detect timezone offset if not provided
         if tz_offset_hours is None:
@@ -309,6 +319,41 @@ class SubjectiveTime:
             'night_hour_length_minutes': (night_length / 12) / 60
         }
     
+    def _get_grosse_uhr_hours(self, day_length_hours: float) -> Tuple[int, int]:
+        """
+        Calculate the number of day and night hours for the Große Uhr system.
+        
+        The historical Nuremberg system divided the 24-hour period into day and night
+        hours based on actual daylight. The number of hours varied from 8 to 16:
+        
+        - Winter solstice (~8h daylight): 8 day hours, 16 night hours
+        - Summer solstice (~16h daylight): 16 day hours, 8 night hours
+        - Equinox (~12h daylight): 12 day hours, 12 night hours
+        
+        The Wendetage (turning days) adjusted in 1-hour steps, about 16 times per year.
+        
+        Args:
+            day_length_hours: Length of day in hours (sunrise to sunset)
+            
+        Returns:
+            Tuple of (day_hours, night_hours) - sum is always 24
+        """
+        # Calculate proportion of day vs total
+        # Map day length (roughly 8-16 hours in central Europe) to 8-16 hour counts
+        # Using linear interpolation: 8h daylight -> 8 day hours, 16h daylight -> 16 day hours
+        
+        # Clamp to reasonable range (8-16 hours of daylight)
+        clamped_day = max(8.0, min(16.0, day_length_hours))
+        
+        # Round to nearest whole hour for the historical step-based system
+        day_hours = round(clamped_day)
+        
+        # Ensure we stay in valid range
+        day_hours = max(8, min(16, day_hours))
+        night_hours = 24 - day_hours
+        
+        return day_hours, night_hours
+    
     def get_subjective_day(self, dt: datetime = None) -> Dict[str, Any]:
         """
         Calculate the subjective time according to Nürnberger Uhr.
@@ -362,6 +407,17 @@ class SubjectiveTime:
         tomorrow_sunrise, _ = self._calculate_sunrise_sunset(tomorrow)
         
         # Determine if it's day or night and calculate subjective hour
+        # Calculate hour counts based on system
+        day_length_real = (sunset - sunrise).total_seconds()
+        day_length_hours = day_length_real / 3600
+        
+        if self.system == "große":
+            # Historical Große Uhr: variable hour counts (8-16)
+            num_day_hours, num_night_hours = self._get_grosse_uhr_hours(day_length_hours)
+        else:
+            # Simplified Kleine Uhr: always 12/12
+            num_day_hours, num_night_hours = 12, 12
+        
         if sunrise <= dt < sunset:
             # Daytime
             is_day = True
@@ -369,18 +425,18 @@ class SubjectiveTime:
             period_en = "day"
             
             # Calculate position within day
-            day_length = (sunset - sunrise).total_seconds()
+            day_length = day_length_real
             elapsed = (dt - sunrise).total_seconds()
             remaining = day_length - elapsed
             
-            # Each day hour
-            hour_length = day_length / 12
+            # Each day hour (divide by actual number of hours for this system)
+            hour_length = day_length / num_day_hours
             
-            # Current hour (1-12)
+            # Current hour (1 to num_day_hours)
             hour_float = elapsed / hour_length
             hour = int(hour_float) + 1
-            if hour > 12:
-                hour = 12
+            if hour > num_day_hours:
+                hour = num_day_hours
             
             # Minutes within hour (scaled to 0-59)
             minute_fraction = hour_float - int(hour_float)
@@ -411,14 +467,14 @@ class SubjectiveTime:
             night_length = (night_end - night_start).total_seconds()
             elapsed = (dt - night_start).total_seconds()
             
-            # Each night hour
-            hour_length = night_length / 12
+            # Each night hour (divide by actual number of hours for this system)
+            hour_length = night_length / num_night_hours
             
-            # Current hour (1-12)
+            # Current hour (1 to num_night_hours)
             hour_float = elapsed / hour_length
             hour = int(hour_float) + 1
-            if hour > 12:
-                hour = 12
+            if hour > num_night_hours:
+                hour = num_night_hours
             
             # Minutes within hour (scaled to 0-59)
             minute_fraction = hour_float - int(hour_float)
@@ -442,9 +498,13 @@ class SubjectiveTime:
             'is_day': is_day,
             'hour': hour,
             'minute': minute,
+            'max_hours': num_day_hours if is_day else num_night_hours,  # Max hours for this period
             'hour_length_minutes': round(hour_length_minutes, 2),
             'period': period,
             'period_en': period_en,
+            'system': self.system,  # "große" or "kleine"
+            'system_name_de': "Große Uhr" if self.system == "große" else "Kleine Uhr",
+            'system_name_en': "Great Clock" if self.system == "große" else "Small Clock",
             'display': f"{hour}. Stunde des {period}s",
             'display_de': f"{hour}. Stunde des {period}s ({hour_length_minutes:.1f} min/Std)",
             'display_en': f"{hour}{ordinal_suffix} hour of {period_en} ({hour_length_minutes:.1f} min/hr)",
@@ -453,8 +513,10 @@ class SubjectiveTime:
             'location': {'lat': self.lat, 'lon': self.lon},
             'sunrise': sunrise.strftime('%H:%M'),
             'sunset': sunset.strftime('%H:%M'),
-            'day_hour_length_minutes': round(sun_data['day_hour_length_minutes'], 2),
-            'night_hour_length_minutes': round(sun_data['night_hour_length_minutes'], 2),
+            'num_day_hours': num_day_hours,
+            'num_night_hours': num_night_hours,
+            'day_hour_length_minutes': round((day_length_real / num_day_hours) / 60, 2),
+            'night_hour_length_minutes': round(((86400 - day_length_real) / num_night_hours) / 60, 2),
             # Canonical hour (Horae Canonicae)
             'canonical_latin': canonical['latin'],
             'canonical_german': canonical['german'],
@@ -759,6 +821,26 @@ def run_api_server(host: str = '127.0.0.1', port: int = 8080):
 ║    ?format=watch   ⌚ Smartwatch complication data (minimal JSON)             ║
 ║                                                                               ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
+║  🕐 CLOCK SYSTEMS (Große Uhr vs Kleine Uhr)                                   ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║    ?system=kleine  (default) Simplified 12/12 system - always 12 hours        ║
+║    ?system=grosse  Historical 8-16 system - variable hour counts              ║
+║                                                                               ║
+║  Examples:                                                                    ║
+║    curl {host}:{port}/hof?system=grosse    # Historical Große Uhr             ║
+║    curl {host}:{port}/hof?system=kleine    # Modern Kleine Uhr (default)      ║
+║                                                                               ║
+║  KLEINE UHR (small clock): Always 12 day + 12 night hours                     ║
+║    • Hour LENGTH varies (winter days ~45 min/hr, summer ~75 min/hr)           ║
+║    • Modern interpretation used in most temporal hour systems                 ║
+║                                                                               ║
+║  GROßE UHR (great clock): Variable hour counts (8-16)                         ║
+║    • Winter: 8 day hours + 16 night hours                                     ║
+║    • Summer: 16 day hours + 8 night hours                                     ║
+║    • Historical Nuremberg system until 1806 (as described by Nicolai)         ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
 ║  ⌚ SMARTWATCH APPS                                                           ║
 ║    curl {host}:{port}/berlin?format=watch                                       ║
 ║                                                                               ║
@@ -779,6 +861,7 @@ def run_api_server(host: str = '127.0.0.1', port: int = 8080):
 ║    curl {host}:{port}/berlin?format=j                                           ║
 ║    curl {host}:{port}/munich?format=watch                                       ║
 ║    curl {host}:{port}/hof?format=table                                          ║
+║    curl {host}:{port}/hof?system=grosse                                         ║
 ║    curl {host}:{port}/:nocturnal                                                ║
 ║    curl {host}:{port}/:learn                                                    ║
 ║                                                                               ║
@@ -1052,16 +1135,30 @@ def run_api_server(host: str = '127.0.0.1', port: int = 8080):
 ║  "Zu den Gewohnheiten, welche bloß beybehalten werden, weil sie alt sind,     ║
 ║   gehört auch die sogenannte große Uhr. Man nennt in Nürnberg die sonst       ║
 ║   gewöhnliche Art von 1 bis 12 zu schlagen die kleine Uhr, welche auch        ║
-║   von verschiedenen Thürmen in der Stadt schlägt."                            ║
+║   von verschiedenen Thürmen in der Stadt schlägt. [...]                       ║
+║                                                                               ║
+║   Da kein mechanisches Uhrwerk in der Lage war, dem entsprechenden            ║
+║   Tag-/Nachtrhythmus zu folgen, musste die Zeit durch Turmwächter             ║
+║   angeschlagen werden, die auf den Kirchtürmen von St. Sebald und             ║
+║   St. Lorenz, sowie auf dem Weißen Turm und dem Laufer Schlagturm             ║
+║   positioniert waren."                                                        ║
 ║                                                                               ║
 ║  Translation:                                                                 ║
 ║  "Among the customs preserved merely because they are old, is the so-called   ║
 ║   große Uhr (great clock). In Nuremberg, the usual way of striking 1 to 12    ║
 ║   is called the kleine Uhr (small clock), which also strikes from various     ║
-║   towers in the city."                                                        ║
+║   towers in the city. [...]                                                   ║
+║                                                                               ║
+║   Since no mechanical clockwork was able to follow the corresponding          ║
+║   day/night rhythm, the time had to be struck by tower watchmen who were      ║
+║   positioned on the church towers of St. Sebald and St. Lorenz, as well as    ║
+║   on the White Tower (Weißer Turm) and the Laufer Schlagturm."                ║
 ║                                                                               ║
 ║  — Friedrich Nicolai, "Beschreibung einer Reise durch Deutschland             ║
 ║    und die Schweiz im Jahre 1781" (published 1783)                            ║
+║                                                                               ║
+║  NOTE: The "kleine Uhr" (since 1436 at St. Katharina) became standard,        ║
+║  while the "große Uhr" remained in use until Nuremberg joined Bavaria (1806). ║
 ║                                                                               ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║  📅 TEMPORALE STUNDEN (Seasonal/Unequal Hours)                                ║
@@ -1283,6 +1380,9 @@ def run_api_server(host: str = '127.0.0.1', port: int = 8080):
             # Get format parameter
             fmt = query.get('format', [''])[0].lower()
             
+            # Get system parameter (große/kleine Uhr)
+            system_param = query.get('system', query.get('uhr', ['kleine']))[0].lower()
+            
             try:
                 # Handle special pages
                 if path in ['/:help', '/help', '/:h']:
@@ -1320,8 +1420,8 @@ def run_api_server(host: str = '127.0.0.1', port: int = 8080):
                     self._send_text(400, f"Error: Invalid longitude {lon} (must be -180 to 180)\n")
                     return
                 
-                # Calculate subjective time
-                uhr = SubjectiveTime(lat, lon)
+                # Calculate subjective time with selected system
+                uhr = SubjectiveTime(lat, lon, system=system_param)
                 
                 # Handle different formats
                 if fmt in ['j', 'json']:
