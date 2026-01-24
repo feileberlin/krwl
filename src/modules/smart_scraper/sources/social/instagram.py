@@ -126,8 +126,8 @@ class InstagramSource(BaseSource):
             })
             # Set timeout for all requests
             self.request_timeout = 15
-            # Add delay between requests (in seconds)
-            self.request_delay = 3  # Instagram is more sensitive than Facebook
+            # Add delay between requests (in seconds) to respect rate limits
+            self.request_delay = options_config.get('request_delay', 3)
         
         # Initialize image analyzer for OCR
         self.image_analyzer = None
@@ -692,8 +692,9 @@ class InstagramSource(BaseSource):
             first_line = lines[0].strip()
             # Limit length and clean up
             if len(first_line) > 10 and len(first_line) < 100:
-                # Remove emojis and excess whitespace
-                title = re.sub(r'[^\w\s\-.,!?&äöüÄÖÜß]', '', first_line)
+                # Remove emojis and non-alphanumeric characters while keeping
+                # Unicode letters (including umlauts, accents, etc.) and common punctuation
+                title = re.sub(r'[^\w\s\-.,!?&]', '', first_line, flags=re.UNICODE)
                 title = ' '.join(title.split())
                 if title:
                     return title
@@ -875,10 +876,8 @@ class InstagramSource(BaseSource):
             match = re.search(pattern, url)
             if match:
                 account_name = match.group(1)
-                # Clean up account name
+                # Clean up account name - replace underscores/dots with spaces
                 account_name = account_name.replace('_', ' ').replace('.', ' ')
-                # Remove common suffixes
-                account_name = re.sub(r'\s*(official|hof|berlin)$', '', account_name, flags=re.IGNORECASE)
                 return account_name.strip()
         
         return None
