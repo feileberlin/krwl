@@ -403,6 +403,9 @@ class SubjectiveTime:
         # Generate ordinal suffix for English
         ordinal_suffix = self._get_ordinal_suffix(hour)
         
+        # Get canonical hour (Horae Canonicae)
+        canonical = self._get_canonical_hour(hour, is_day)
+        
         # Build result
         result = {
             'polar': False,
@@ -421,7 +424,12 @@ class SubjectiveTime:
             'sunrise': sunrise.strftime('%H:%M'),
             'sunset': sunset.strftime('%H:%M'),
             'day_hour_length_minutes': round(sun_data['day_hour_length_minutes'], 2),
-            'night_hour_length_minutes': round(sun_data['night_hour_length_minutes'], 2)
+            'night_hour_length_minutes': round(sun_data['night_hour_length_minutes'], 2),
+            # Canonical hour (Horae Canonicae)
+            'canonical_latin': canonical['latin'],
+            'canonical_german': canonical['german'],
+            'canonical_english': canonical['english'],
+            'canonical_description': canonical['description']
         }
         
         # Add hours info for daytime
@@ -461,6 +469,87 @@ class SubjectiveTime:
         if 11 <= n <= 13:
             return 'th'
         return {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')
+    
+    def _get_canonical_hour(self, hour: int, is_day: bool) -> Dict[str, str]:
+        """
+        Get the canonical hour (Horae Canonicae) for the current subjective hour.
+        
+        The canonical hours were the fixed times of daily prayer in medieval 
+        monastic tradition. They map approximately to the temporal hours:
+        
+        Day Hours (Horae Diurnae):
+            - Prima (1st hour) - Sunrise, beginning of work
+            - Tertia (3rd hour) - Mid-morning prayer
+            - Sexta (6th hour) - Noon prayer (origin: Latin "sixth")
+            - Nona (9th hour) - Afternoon prayer (origin of English "noon")
+            - Vesper (12th hour) - Evening prayer at sunset
+            
+        Night Hours (Horae Nocturnae):
+            - Compline (1st night hour) - Before sleep
+            - Matins/Vigils (6th night hour) - Midnight prayer, deepest night
+            - Lauds (12th night hour) - Dawn prayer, praise at first light
+        
+        Returns:
+            Dict with 'latin', 'german', 'english', 'description' keys
+        """
+        if is_day:
+            # Day canonical hours
+            canonical_hours = {
+                1: {'latin': 'Prima', 'german': 'Prim', 'english': 'Prime',
+                    'description': 'Erste Tagstunde / First hour of day'},
+                2: {'latin': 'Hora Secunda', 'german': 'Zweite Stunde', 'english': 'Second Hour',
+                    'description': 'Zweite Tagstunde'},
+                3: {'latin': 'Tertia', 'german': 'Terz', 'english': 'Terce',
+                    'description': 'Dritte Tagstunde / Mid-morning prayer'},
+                4: {'latin': 'Hora Quarta', 'german': 'Vierte Stunde', 'english': 'Fourth Hour',
+                    'description': 'Vierte Tagstunde'},
+                5: {'latin': 'Hora Quinta', 'german': 'Fünfte Stunde', 'english': 'Fifth Hour',
+                    'description': 'Fünfte Tagstunde'},
+                6: {'latin': 'Sexta', 'german': 'Sext', 'english': 'Sext',
+                    'description': 'Mittag / Noon - Sixth hour prayer'},
+                7: {'latin': 'Hora Septima', 'german': 'Siebte Stunde', 'english': 'Seventh Hour',
+                    'description': 'Siebte Tagstunde'},
+                8: {'latin': 'Hora Octava', 'german': 'Achte Stunde', 'english': 'Eighth Hour',
+                    'description': 'Achte Tagstunde'},
+                9: {'latin': 'Nona', 'german': 'Non', 'english': 'None',
+                    'description': 'Neunte Tagstunde / Afternoon prayer (origin of "noon")'},
+                10: {'latin': 'Hora Decima', 'german': 'Zehnte Stunde', 'english': 'Tenth Hour',
+                     'description': 'Zehnte Tagstunde'},
+                11: {'latin': 'Hora Undecima', 'german': 'Elfte Stunde', 'english': 'Eleventh Hour',
+                     'description': 'Elfte Tagstunde'},
+                12: {'latin': 'Vesper', 'german': 'Vesper', 'english': 'Vespers',
+                     'description': 'Abendgebet bei Sonnenuntergang / Evening prayer at sunset'}
+            }
+        else:
+            # Night canonical hours
+            canonical_hours = {
+                1: {'latin': 'Completorium', 'german': 'Komplet', 'english': 'Compline',
+                    'description': 'Nachtgebet vor dem Schlaf / Night prayer before sleep'},
+                2: {'latin': 'Hora Secunda Noctis', 'german': 'Zweite Nachtstunde', 'english': 'Second Night Hour',
+                    'description': 'Zweite Nachtstunde'},
+                3: {'latin': 'Hora Tertia Noctis', 'german': 'Dritte Nachtstunde', 'english': 'Third Night Hour',
+                    'description': 'Dritte Nachtstunde'},
+                4: {'latin': 'Hora Quarta Noctis', 'german': 'Vierte Nachtstunde', 'english': 'Fourth Night Hour',
+                    'description': 'Vierte Nachtstunde'},
+                5: {'latin': 'Hora Quinta Noctis', 'german': 'Fünfte Nachtstunde', 'english': 'Fifth Night Hour',
+                    'description': 'Fünfte Nachtstunde'},
+                6: {'latin': 'Matutinum', 'german': 'Matutin (Vigilien)', 'english': 'Matins (Vigils)',
+                    'description': 'Mitternachtsgebet / Midnight prayer - deepest night'},
+                7: {'latin': 'Hora Septima Noctis', 'german': 'Siebte Nachtstunde', 'english': 'Seventh Night Hour',
+                    'description': 'Siebte Nachtstunde'},
+                8: {'latin': 'Hora Octava Noctis', 'german': 'Achte Nachtstunde', 'english': 'Eighth Night Hour',
+                    'description': 'Achte Nachtstunde'},
+                9: {'latin': 'Hora Nona Noctis', 'german': 'Neunte Nachtstunde', 'english': 'Ninth Night Hour',
+                    'description': 'Neunte Nachtstunde'},
+                10: {'latin': 'Hora Decima Noctis', 'german': 'Zehnte Nachtstunde', 'english': 'Tenth Night Hour',
+                     'description': 'Zehnte Nachtstunde'},
+                11: {'latin': 'Hora Undecima Noctis', 'german': 'Elfte Nachtstunde', 'english': 'Eleventh Night Hour',
+                     'description': 'Elfte Nachtstunde'},
+                12: {'latin': 'Laudes', 'german': 'Laudes', 'english': 'Lauds',
+                     'description': 'Morgenlob bei Tagesanbruch / Dawn prayer - praise at first light'}
+            }
+        
+        return canonical_hours.get(hour, {'latin': '', 'german': '', 'english': '', 'description': ''})
     
     def get_full_day_hours(self, dt: datetime = None) -> Dict[str, Any]:
         """
@@ -724,6 +813,11 @@ def run_api_server(host: str = '127.0.0.1', port: int = 8080):
         elif not result['is_day'] and 'hours_until_sunrise' in result:
             progress_line = f"\n│     ⏰ {result['until_sunrise_en']:<49} │"
         
+        # Add canonical hour line
+        canonical_line = ""
+        if result.get('canonical_latin'):
+            canonical_line = f"\n│     ⛪ {result['canonical_latin']} ({result['canonical_english']})                              │"
+        
         return f"""
 ┌───────────────────────────────────────────────────────────┐
 │  🕐 Subjective Time for {location_name:<32} │
@@ -731,7 +825,7 @@ def run_api_server(host: str = '127.0.0.1', port: int = 8080):
 │                                                           │
 │     {period_icon}  {result['display_en']:<47} │
 │                                                           │
-│     Subjective Time:  {result['time_formatted']:>5} ({result['period_en']})                      │{progress_line}
+│     Subjective Time:  {result['time_formatted']:>5} ({result['period_en']})                      │{progress_line}{canonical_line}
 │                                                           │
 ├───────────────────────────────────────────────────────────┤
 │  ☀️  Sunrise:  {result['sunrise']:<8}    🌅 Sunset:  {result['sunset']:<8}        │
