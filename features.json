@@ -1352,6 +1352,32 @@
       "test_method": "manual",
       "test_instructions": "1. Add TELEGRAM_BOT_TOKEN to GitHub repository secrets\n2. Go to Actions → Telegram Bot workflow\n3. Click 'Run workflow' → Select duration and mode\n4. Verify bot starts running in CI environment\n5. Send a message to the bot on Telegram\n6. Wait for workflow to complete\n7. Check that pending_events.json was updated with new submission\n8. Verify commit was made by 'Telegram Bot' user\n9. Check workflow logs for submission statistics",
       "documentation": "README.md section: Telegram Bot GitHub Actions Integration"
+    },
+    {
+      "id": "instagram-scraper",
+      "name": "Instagram Event Scraper",
+      "description": "Scrapes public Instagram profiles for event posts and flyers. Uses OCR to extract event information from posted images. Supports multiple Instagram accounts via config.json. Includes web search fallback for CI environments where direct Instagram access may be blocked.",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/modules/smart_scraper/sources/social/instagram.py",
+        "src/modules/smart_scraper/image_analyzer/ocr.py",
+        "src/modules/smart_scraper/image_analyzer/analyzer.py"
+      ],
+      "config_keys": [
+        "scraping.sources"
+      ],
+      "dependencies": {
+        "python": [
+          "requests>=2.31.0",
+          "beautifulsoup4>=4.12.0",
+          "lxml>=4.9.0"
+        ]
+      },
+      "test_method": "run_custom_test",
+      "test_file": "tests/test_instagram_scraper.py",
+      "test_instructions": "1. Run tests: python3 tests/test_instagram_scraper.py --verbose\n2. Add an Instagram source to config.json with type 'instagram'\n3. Run scraping: python3 src/event_manager.py scrape\n4. Verify Instagram events appear in pending_events.json",
+      "documentation": "See instagram.py module docstring for configuration examples"
     }
   ]
 }
