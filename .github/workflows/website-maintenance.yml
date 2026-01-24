@@ -36,14 +36,9 @@ on:
     branches:
       - main
     paths:
-      - 'assets/json/events.json'       # Published events data
-      - 'assets/json/events.demo.json'  # Demo events data
-      - 'config.json'                   # Configuration changes
-      - 'src/modules/scraper.py'        # Scraper changes trigger workflow update
-      - 'assets/css/**'                 # CSS changes trigger HTML regeneration
-      - 'assets/js/**'                  # JavaScript changes trigger HTML regeneration
-      - 'assets/html/**'                # HTML component changes trigger regeneration
-      - 'src/modules/site_generator.py' # Generator logic changes
+      - 'assets/**'      # Any asset changes (CSS, JS, HTML, JSON, SVG)
+      - 'src/**'         # Any source code changes (Python modules, tools)
+      - 'config.json'    # Configuration changes
   
   # Telegram bot integration via repository_dispatch
   repository_dispatch:
