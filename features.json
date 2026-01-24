@@ -1270,19 +1270,18 @@
     {
       "id": "telegram-bot",
       "name": "Telegram Bot for Event Submissions",
-      "description": "Telegram bot that allows community members to submit events, upload flyer images with OCR processing, and contact admins. All submissions are saved to pending_events.json for editorial review.",
+      "description": "Simple stateless Telegram bot for event submissions. Uses shared OCR infrastructure from smart_scraper for flyer processing. Supports flyer uploads with OCR, PIN publishing for trusted organizers, and contact form messages.",
       "category": "backend",
       "implemented": true,
       "files": [
-        "src/modules/telegram_bot.py"
+        "src/modules/telegram_bot_simple.py",
+        "src/modules/smart_scraper/sources/social/telegram.py",
+        "src/modules/pin_manager.py"
       ],
       "config_keys": [
         "telegram.enabled",
         "telegram.bot_token",
-        "telegram.admin_chat_ids",
-        "telegram.features",
-        "telegram.limits",
-        "telegram.messages"
+        "telegram.admin_chat_ids"
       ],
       "dependencies": {
         "python": [
@@ -1293,8 +1292,8 @@
         "telegram-bot"
       ],
       "test_method": "manual",
-      "test_instructions": "1. Get bot token from @BotFather on Telegram\n2. Set telegram.enabled: true in config.json\n3. Add bot token to config or TELEGRAM_BOT_TOKEN env var\n4. Run: python3 src/event_manager.py telegram-bot\n5. Open Telegram and send /start to your bot\n6. Test /submit command for manual event entry\n7. Test photo upload for flyer OCR\n8. Test /contact command\n9. Verify submissions appear in assets/json/pending_events.json\n10. Stop bot with Ctrl+C",
-      "documentation": "README.md section: Telegram Bot Integration (to be added)"
+      "test_instructions": "1. Get bot token from @BotFather on Telegram\n2. Set TELEGRAM_BOT_TOKEN env var\n3. Run: python3 src/modules/telegram_bot_simple.py\n4. Send /start to your bot\n5. Test photo upload for flyer OCR (uses shared smart_scraper OCR)\n6. Test contact messages\n7. For PIN publishing: set up ORGANIZER_PIN_HASH_* secrets\n8. Verify submissions appear in assets/json/pending_events.json",
+      "documentation": "docs/TELEGRAM_INTEGRATION.md"
     },
     {
       "id": "dashboard-contact-form",

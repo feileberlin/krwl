@@ -1,15 +1,8 @@
 # Scripts Directory
 
-This directory contains shell scripts and standalone Python scripts for hosting setup, configuration, and Telegram bot management.
+This directory contains shell scripts for hosting setup and configuration.
 
 ## Contents
-
-### Telegram Bot Scripts (NEW)
-
-- **telegram_bot.py** - Simple Telegram bot for event submissions (✅ Active - replaces old bot)
-- **manage_pins.py** - PIN management helper for trusted organizers
-
-See [Telegram Integration Documentation](../docs/TELEGRAM_INTEGRATION.md) for full details.
 
 ### Shell Scripts
 - **setup-hosting-gitignore.sh** - Setup .gitignore for different hosting platforms (GitHub Pages, Netlify, Vercel)
@@ -20,6 +13,41 @@ See [Telegram Integration Documentation](../docs/TELEGRAM_INTEGRATION.md) for fu
 
 ### Configuration Templates
 - **.gitignore.hosting.example** - Example .gitignore configurations for various hosting platforms
+
+## Telegram Bot (Moved to src/modules/)
+
+**Telegram bot scripts have been consolidated with scraper modules for code sharing:**
+
+- ✅ `telegram_bot.py` → **MOVED** to `src/modules/telegram_bot_simple.py`
+- ✅ `manage_pins.py` → **DELETED** (duplicate of `src/modules/pin_manager.py`)
+
+The Telegram integration now shares OCR infrastructure with social media scrapers (Instagram, Facebook, etc.).
+
+See [Telegram Integration Documentation](../docs/TELEGRAM_INTEGRATION.md) for full details.
+
+**Run the bot:**
+```bash
+# Set environment variables
+export TELEGRAM_BOT_TOKEN="your_bot_token_from_botfather"
+export GITHUB_TOKEN="your_github_pat"
+export GITHUB_REPOSITORY="owner/repo"
+
+# Run bot (from repository root)
+python3 src/modules/telegram_bot_simple.py
+```
+
+**Manage PINs (via integrated CLI):**
+```bash
+# Generate new random PIN
+python3 src/event_manager.py pin-generate
+
+# Show hash for existing PIN
+python3 src/event_manager.py pin-hash 1234
+
+# Or use the TUI
+python3 src/event_manager.py
+# → Choose option 9: "🔐 Manage Organizer PINs"
+```
 
 ## Python Tools Moved
 
@@ -36,50 +64,10 @@ See [Telegram Integration Documentation](../docs/TELEGRAM_INTEGRATION.md) for fu
 - ✅ `lint_markdown.py` → **MOVED** to `src/tools/lint_markdown.py`
 - ✅ `test_documentation.py` → **MOVED** to `src/tools/test_documentation.py`
 - ✅ `validate_docs.py` → **MOVED** to `src/tools/validate_docs.py`
+- ✅ `telegram_bot.py` → **MOVED** to `src/modules/telegram_bot_simple.py`
+- ✅ `manage_pins.py` → **DELETED** (duplicate of `src/modules/pin_manager.py`)
 
 ## Usage
-
-### Telegram Bot Scripts
-
-#### Run Simple Telegram Bot
-
-```bash
-# Set environment variables
-export TELEGRAM_BOT_TOKEN="your_bot_token_from_botfather"
-export GITHUB_TOKEN="your_github_pat"
-export GITHUB_REPOSITORY="owner/repo"
-
-# Run bot
-python3 scripts/telegram_bot.py
-```
-
-**Features:**
-- 📸 Flyer uploads → cached and dispatched for OCR processing
-- 💬 Contact messages → create GitHub issues
-- 🔐 PIN publishing → direct to production (trusted organizers only)
-
-See [Telegram Integration Documentation](../docs/TELEGRAM_INTEGRATION.md)
-
-#### Manage PINs for Trusted Organizers
-
-```bash
-# Generate new random PIN
-python3 scripts/manage_pins.py generate
-
-# Show hash for existing PIN
-python3 scripts/manage_pins.py hash 1234
-
-# Validate PIN format
-python3 scripts/manage_pins.py validate 5678
-
-# Help
-python3 scripts/manage_pins.py --help
-```
-
-**Security:**
-- Never commit PINs to repository
-- Store only SHA256 hashes in GitHub Secrets
-- Rotate PINs regularly
 
 ### Shell Scripts
 
