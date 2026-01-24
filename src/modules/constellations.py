@@ -45,6 +45,296 @@ DEG_TO_RAD = math.pi / 180.0
 RAD_TO_DEG = 180.0 / math.pi
 
 
+# =============================================================================
+# Navigation Stars - Used for Medieval Timekeeping
+# =============================================================================
+# Stars selected for brightness, visibility, and historical importance
+# for navigation, timekeeping, and astronomical observation.
+# 
+# References:
+# - https://de.wikipedia.org/wiki/Stern
+# - https://en.wikipedia.org/wiki/List_of_stars_for_navigation
+
+NAVIGATION_STARS = {
+    'polaris': {
+        'name': 'Polaris',
+        'name_de': 'Polarstern',
+        'designation': 'α Ursae Minoris',
+        'constellation': 'Ursa Minor',
+        'magnitude': 1.98,  # Apparent magnitude
+        'spectral_type': 'F7Ib',  # Yellow-white supergiant
+        'distance_ly': 433,  # Light years
+        'color': 'yellow-white',
+        'color_de': 'gelblich-weiß',
+        'ra_hours': 2.53,
+        'dec_degrees': 89.26,  # Almost exactly at North Celestial Pole
+        'description': 'The North Star - appears stationary while other stars rotate around it',
+        'description_de': 'Der Nordstern - erscheint stationär während andere Sterne um ihn rotieren',
+        'medieval_use': 'Fixed point for nocturnal instruments; always shows true north',
+        'medieval_use_de': 'Fixpunkt für Nokturnal-Instrumente; zeigt immer wahren Norden',
+        'navigation': 'Latitude can be determined from Polaris altitude above horizon',
+        'ascii': '''
+           ★ Polaris
+            (North Star)
+             Always points north!
+        '''
+    },
+    'sirius': {
+        'name': 'Sirius',
+        'name_de': 'Sirius (Hundsstern)',
+        'designation': 'α Canis Majoris',
+        'constellation': 'Canis Major',
+        'magnitude': -1.46,  # Brightest star in the night sky!
+        'spectral_type': 'A1V',  # White main sequence
+        'distance_ly': 8.6,  # One of the closest stars
+        'color': 'blue-white',
+        'color_de': 'blau-weiß',
+        'ra_hours': 6.75,
+        'dec_degrees': -16.72,
+        'description': 'Brightest star in the night sky; the "Dog Star"',
+        'description_de': 'Hellster Stern am Nachthimmel; der "Hundsstern"',
+        'medieval_use': 'Followed Orion; its rising signaled the flooding of the Nile (Egypt)',
+        'medieval_use_de': 'Folgte Orion; sein Aufgang signalisierte die Nilflut (Ägypten)',
+        'navigation': 'Important winter navigation star; visible worldwide',
+        'ascii': '''
+           ★★★ Sirius
+          (Brightest star!)
+          Mag: -1.46
+        '''
+    },
+    'betelgeuse': {
+        'name': 'Betelgeuse',
+        'name_de': 'Beteigeuze',
+        'designation': 'α Orionis',
+        'constellation': 'Orion',
+        'magnitude': 0.42,  # Variable: 0.0 to 1.6
+        'spectral_type': 'M1-2Ia-ab',  # Red supergiant
+        'distance_ly': 700,
+        'color': 'red',
+        'color_de': 'rot',
+        'ra_hours': 5.92,
+        'dec_degrees': 7.41,
+        'description': 'Red supergiant marking Orion\'s shoulder; one of the largest known stars',
+        'description_de': 'Roter Überriese an Orions Schulter; einer der größten bekannten Sterne',
+        'medieval_use': 'Distinctive red color made it easy to identify Orion at night',
+        'medieval_use_de': 'Auffällige rote Farbe machte Orion leicht identifizierbar',
+        'navigation': 'Winter navigation; marks the hunter\'s shoulder',
+        'ascii': '''
+           ★ Betelgeuse
+          (Red supergiant)
+           Variable brightness
+        '''
+    },
+    'rigel': {
+        'name': 'Rigel',
+        'name_de': 'Rigel',
+        'designation': 'β Orionis',
+        'constellation': 'Orion',
+        'magnitude': 0.13,
+        'spectral_type': 'B8Ia',  # Blue supergiant
+        'distance_ly': 860,
+        'color': 'blue-white',
+        'color_de': 'blau-weiß',
+        'ra_hours': 5.24,
+        'dec_degrees': -8.20,
+        'description': 'Blue supergiant at Orion\'s foot; 7th brightest star',
+        'description_de': 'Blauer Überriese an Orions Fuß; 7. hellster Stern',
+        'medieval_use': 'Contrasts with red Betelgeuse; helps identify Orion',
+        'medieval_use_de': 'Kontrast zum roten Beteigeuze; hilft Orion zu identifizieren',
+        'navigation': 'Winter navigation star',
+        'ascii': '''
+           ★ Rigel
+          (Blue supergiant)
+           Orion's foot
+        '''
+    },
+    'vega': {
+        'name': 'Vega',
+        'name_de': 'Wega',
+        'designation': 'α Lyrae',
+        'constellation': 'Lyra',
+        'magnitude': 0.03,
+        'spectral_type': 'A0V',  # White main sequence
+        'distance_ly': 25,
+        'color': 'blue-white',
+        'color_de': 'blau-weiß',
+        'ra_hours': 18.62,
+        'dec_degrees': 38.78,
+        'description': 'Part of the Summer Triangle; 5th brightest star',
+        'description_de': 'Teil des Sommerdreiecks; 5. hellster Stern',
+        'medieval_use': 'Bright summer star; was the North Star ~12,000 years ago',
+        'medieval_use_de': 'Heller Sommerstern; war vor ~12.000 Jahren der Nordstern',
+        'navigation': 'Summer Triangle anchor star',
+        'ascii': '''
+           ★ Vega
+          (Summer Triangle)
+           Future North Star
+        '''
+    },
+    'capella': {
+        'name': 'Capella',
+        'name_de': 'Kapella',
+        'designation': 'α Aurigae',
+        'constellation': 'Auriga',
+        'magnitude': 0.08,
+        'spectral_type': 'G3III + G0III',  # Yellow giant binary
+        'distance_ly': 43,
+        'color': 'yellow',
+        'color_de': 'gelb',
+        'ra_hours': 5.28,
+        'dec_degrees': 45.99,
+        'description': 'The "Little She-Goat"; 6th brightest star, actually a quadruple system',
+        'description_de': 'Die "Kleine Ziege"; 6. hellster Stern, tatsächlich ein Vierfachsystem',
+        'medieval_use': 'Circumpolar from mid-northern latitudes; visible year-round',
+        'medieval_use_de': 'Zirkumpolar in mittleren nördlichen Breiten; ganzjährig sichtbar',
+        'navigation': 'Year-round northern hemisphere star',
+        'ascii': '''
+           ★ Capella
+          (The Little Goat)
+           Quadruple star!
+        '''
+    },
+    'arcturus': {
+        'name': 'Arcturus',
+        'name_de': 'Arktur',
+        'designation': 'α Boötis',
+        'constellation': 'Boötes',
+        'magnitude': -0.05,
+        'spectral_type': 'K1.5III',  # Orange giant
+        'distance_ly': 37,
+        'color': 'orange',
+        'color_de': 'orange',
+        'ra_hours': 14.26,
+        'dec_degrees': 19.18,
+        'description': '4th brightest star; "Follow the arc to Arcturus"',
+        'description_de': '4. hellster Stern; "Folge dem Bogen zu Arktur"',
+        'medieval_use': 'Spring star; follow Big Dipper handle arc to find it',
+        'medieval_use_de': 'Frühlingsstern; folge dem Bogen der Großen-Wagen-Deichsel',
+        'navigation': 'Spring navigation; found via Big Dipper',
+        'ascii': '''
+           ★ Arcturus
+          "Arc to Arcturus"
+           Orange giant
+        '''
+    },
+    'aldebaran': {
+        'name': 'Aldebaran',
+        'name_de': 'Aldebaran',
+        'designation': 'α Tauri',
+        'constellation': 'Taurus',
+        'magnitude': 0.85,
+        'spectral_type': 'K5III',  # Orange giant
+        'distance_ly': 65,
+        'color': 'orange-red',
+        'color_de': 'orange-rot',
+        'ra_hours': 4.60,
+        'dec_degrees': 16.51,
+        'description': 'The "Follower" (of the Pleiades); the Bull\'s eye',
+        'description_de': 'Der "Folger" (der Plejaden); das Auge des Stiers',
+        'medieval_use': 'Rises after the Pleiades; marks late autumn/winter',
+        'medieval_use_de': 'Geht nach den Plejaden auf; markiert Spätherbst/Winter',
+        'navigation': 'Winter navigation star; easy to find near Pleiades',
+        'ascii': '''
+           ★ Aldebaran
+          (Bull's Eye)
+           Follows Pleiades
+        '''
+    },
+    'antares': {
+        'name': 'Antares',
+        'name_de': 'Antares',
+        'designation': 'α Scorpii',
+        'constellation': 'Scorpius',
+        'magnitude': 1.06,
+        'spectral_type': 'M1.5Iab',  # Red supergiant
+        'distance_ly': 550,
+        'color': 'red',
+        'color_de': 'rot',
+        'ra_hours': 16.49,
+        'dec_degrees': -26.43,
+        'description': '"Rival of Mars" - red color rivals the planet; heart of the Scorpion',
+        'description_de': '"Rivale des Mars" - rote Farbe rivalisiert mit dem Planeten; Herz des Skorpions',
+        'medieval_use': 'Summer star; low in southern sky from Europe',
+        'medieval_use_de': 'Sommerstern; tief am südlichen Himmel von Europa',
+        'navigation': 'Summer navigation; marks the Scorpion\'s heart',
+        'ascii': '''
+           ★ Antares
+          "Rival of Mars"
+           Red supergiant
+        '''
+    },
+    'deneb': {
+        'name': 'Deneb',
+        'name_de': 'Deneb',
+        'designation': 'α Cygni',
+        'constellation': 'Cygnus',
+        'magnitude': 1.25,
+        'spectral_type': 'A2Ia',  # White supergiant
+        'distance_ly': 2600,  # Very distant!
+        'color': 'blue-white',
+        'color_de': 'blau-weiß',
+        'ra_hours': 20.69,
+        'dec_degrees': 45.28,
+        'description': 'Tail of the Swan; part of Summer Triangle; one of most luminous known stars',
+        'description_de': 'Schwanz des Schwans; Teil des Sommerdreiecks; einer der leuchtkräftigsten bekannten Sterne',
+        'medieval_use': 'Summer Triangle star; marks the Northern Cross',
+        'medieval_use_de': 'Sommerdreieck-Stern; markiert das Nördliche Kreuz',
+        'navigation': 'Summer navigation; flies along the Milky Way',
+        'ascii': '''
+           ★ Deneb
+          (Swan's Tail)
+           2600 light-years!
+        '''
+    },
+    'altair': {
+        'name': 'Altair',
+        'name_de': 'Atair',
+        'designation': 'α Aquilae',
+        'constellation': 'Aquila',
+        'magnitude': 0.77,
+        'spectral_type': 'A7V',  # White main sequence
+        'distance_ly': 17,  # Close neighbor
+        'color': 'white',
+        'color_de': 'weiß',
+        'ra_hours': 19.85,
+        'dec_degrees': 8.87,
+        'description': 'The Eagle; part of Summer Triangle; very fast rotation',
+        'description_de': 'Der Adler; Teil des Sommerdreiecks; sehr schnelle Rotation',
+        'medieval_use': 'Summer Triangle star; bright summer evening marker',
+        'medieval_use_de': 'Sommerdreieck-Stern; heller Sommerabend-Markierer',
+        'navigation': 'Summer navigation star',
+        'ascii': '''
+           ★ Altair
+          (The Eagle)
+           Only 17 ly away
+        '''
+    },
+    'regulus': {
+        'name': 'Regulus',
+        'name_de': 'Regulus',
+        'designation': 'α Leonis',
+        'constellation': 'Leo',
+        'magnitude': 1.40,
+        'spectral_type': 'B8IVn',  # Blue-white subgiant
+        'distance_ly': 79,
+        'color': 'blue-white',
+        'color_de': 'blau-weiß',
+        'ra_hours': 10.14,
+        'dec_degrees': 11.97,
+        'description': 'The "Little King" at the Lion\'s heart; on the ecliptic',
+        'description_de': 'Der "Kleine König" am Herzen des Löwen; auf der Ekliptik',
+        'medieval_use': 'Spring star; one of four Royal Stars of ancient Persia',
+        'medieval_use_de': 'Frühlingsstern; einer der vier Königssterne des alten Persien',
+        'navigation': 'Spring navigation; lies on the ecliptic (planets pass by)',
+        'ascii': '''
+           ★ Regulus
+          (The Little King)
+           Royal Star
+        '''
+    }
+}
+
+
 class ConstellationViewer:
     """
     Viewer for constellation ASCII art and visibility information.
@@ -503,6 +793,96 @@ class ConstellationViewer:
                 'description': const['description'][:60] + '...'
             })
         return result
+    
+    def get_star(self, name: str) -> Dict[str, Any]:
+        """
+        Get detailed information about a navigation star.
+        
+        Args:
+            name: Star name (e.g., 'polaris', 'sirius', 'betelgeuse')
+            
+        Returns:
+            Dict with star information
+        """
+        name_lower = name.lower().replace(' ', '-').replace('_', '-')
+        
+        if name_lower not in NAVIGATION_STARS:
+            return {'error': f"Unknown star: {name}. Use :stars to see available stars."}
+        
+        star = NAVIGATION_STARS[name_lower]
+        return {
+            'name': star['name'],
+            'name_de': star['name_de'],
+            'designation': star['designation'],
+            'constellation': star['constellation'],
+            'magnitude': star['magnitude'],
+            'spectral_type': star['spectral_type'],
+            'distance_ly': star['distance_ly'],
+            'color': star['color'],
+            'color_de': star['color_de'],
+            'description': star['description'],
+            'description_de': star['description_de'],
+            'medieval_use': star['medieval_use'],
+            'medieval_use_de': star['medieval_use_de'],
+            'navigation': star['navigation'],
+            'ascii': star['ascii'],
+            'location': {'lat': self.lat, 'lon': self.lon}
+        }
+    
+    def list_stars(self) -> List[Dict[str, Any]]:
+        """List all navigation stars with key information."""
+        result = []
+        for key, star in NAVIGATION_STARS.items():
+            result.append({
+                'id': key,
+                'name': star['name'],
+                'name_de': star['name_de'],
+                'constellation': star['constellation'],
+                'magnitude': star['magnitude'],
+                'color': star['color'],
+                'description': star['description'][:50] + '...'
+            })
+        # Sort by magnitude (brightest first)
+        result.sort(key=lambda x: x['magnitude'])
+        return result
+    
+    def get_stars_table(self) -> str:
+        """Get formatted table of navigation stars."""
+        stars = self.list_stars()
+        
+        lines = []
+        lines.append("╔═══════════════════════════════════════════════════════════════════════════════╗")
+        lines.append("║              ⭐ NAVIGATION STARS - Medieval Timekeeping ⭐                    ║")
+        lines.append("╠═══════════════════════════════════════════════════════════════════════════════╣")
+        lines.append("║                                                                               ║")
+        lines.append("║  These stars were used by medieval navigators and bell-ringers to tell       ║")
+        lines.append("║  time at night before the invention of mechanical clocks.                    ║")
+        lines.append("║                                                                               ║")
+        lines.append("╠═══════════════════════════════════════════════════════════════════════════════╣")
+        lines.append("║  Star         │ Mag   │ Color       │ Constellation │ Medieval Use           ║")
+        lines.append("╠═══════════════════════════════════════════════════════════════════════════════╣")
+        
+        for star in stars:
+            full_star = NAVIGATION_STARS[star['id']]
+            name = star['name'][:12].ljust(12)
+            mag = f"{star['magnitude']:+.2f}".ljust(5)
+            color = star['color'][:11].ljust(11)
+            const = full_star['constellation'][:13].ljust(13)
+            use = full_star['medieval_use'][:22].ljust(22)
+            lines.append(f"║  {name} │ {mag} │ {color} │ {const} │ {use} ║")
+        
+        lines.append("╠═══════════════════════════════════════════════════════════════════════════════╣")
+        lines.append("║                                                                               ║")
+        lines.append("║  💡 MAGNITUDE: Lower = brighter. Sirius (-1.46) is the brightest!            ║")
+        lines.append("║  🔭 SPECTRAL TYPES: O B A F G K M (Oh Be A Fine Guy/Girl Kiss Me)            ║")
+        lines.append("║                                                                               ║")
+        lines.append("╠═══════════════════════════════════════════════════════════════════════════════╣")
+        lines.append("║  Usage:  curl localhost:PORT/star/polaris                                    ║")
+        lines.append("║          curl localhost:PORT/star/sirius                                     ║")
+        lines.append("║          curl localhost:PORT/:stars?format=j   (JSON)                        ║")
+        lines.append("╚═══════════════════════════════════════════════════════════════════════════════╝")
+        
+        return '\n'.join(lines)
 
 
 # =============================================================================
@@ -536,15 +916,24 @@ class ConstellationHTTPHandler(BaseHTTPRequestHandler):
             self._send_list(fmt)
         elif path == ':about':
             self._send_about()
+        elif path == ':stars':
+            self._send_stars(fmt)
+        elif path.startswith('star/'):
+            star_name = path[5:]  # Remove 'star/' prefix
+            self._send_star(star_name, fmt)
         elif path in ConstellationViewer.CONSTELLATIONS:
             self._send_constellation(path, fmt)
+        elif path in NAVIGATION_STARS:
+            self._send_star(path, fmt)
         else:
             # Try to match constellation name
             path_normalized = path.lower().replace(' ', '-').replace('_', '-')
             if path_normalized in ConstellationViewer.CONSTELLATIONS:
                 self._send_constellation(path_normalized, fmt)
+            elif path_normalized in NAVIGATION_STARS:
+                self._send_star(path_normalized, fmt)
             else:
-                self._send_error(404, f"Unknown constellation: {path}\n\nUse :list to see available constellations.")
+                self._send_error(404, f"Unknown: {path}\n\nUse :list for constellations, :stars for stars.")
     
     def _send_constellation(self, name: str, fmt: str):
         """Send constellation data."""
@@ -596,6 +985,76 @@ class ConstellationHTTPHandler(BaseHTTPRequestHandler):
         """Send JSON response."""
         self._send_response(200, json.dumps(data, indent=2, ensure_ascii=False), 'application/json')
     
+    def _send_star(self, name: str, fmt: str):
+        """Send star data."""
+        result = self.viewer.get_star(name)
+        
+        if 'error' in result:
+            self._send_error(404, result['error'])
+            return
+        
+        if fmt in ['j', 'json']:
+            self._send_json(result)
+        else:
+            self._send_star_plain_text(result)
+    
+    def _send_star_plain_text(self, star: dict):
+        """Send star as plain text."""
+        # Magnitude display (negative is brighter)
+        mag = star['magnitude']
+        if mag < 0:
+            brightness = "★★★ VERY BRIGHT"
+        elif mag < 1:
+            brightness = "★★ Bright"
+        else:
+            brightness = "★ Visible"
+        
+        output = f"""
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║  ★ {star['name']:<73} ║
+║    {star['name_de']:<73} ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  📍 Constellation:  {star['constellation']:<55} ║
+║  🔬 Designation:    {star['designation']:<55} ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║  PHYSICAL PROPERTIES                                                          ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  🌟 Magnitude:      {mag:+.2f}  ({brightness:<32})        ║
+║  🎨 Color:          {star['color']:<55} ║
+║  🔭 Spectral Type:  {star['spectral_type']:<55} ║
+║  📏 Distance:       {star['distance_ly']} light-years{'':<44}║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║  🏛️ MEDIEVAL TIMEKEEPING USE                                                  ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  {star['medieval_use'][:75]:<75}║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║  🧭 NAVIGATION                                                                ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  {star['navigation']:<75}║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║  📖 {star['description']:<72} ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+"""
+        self._send_response(200, output, 'text/plain; charset=utf-8')
+    
+    def _send_stars(self, fmt: str):
+        """Send list of navigation stars."""
+        stars = self.viewer.list_stars()
+        
+        if fmt in ['j', 'json']:
+            self._send_json(stars)
+        else:
+            output = self.viewer.get_stars_table()
+            self._send_response(200, output, 'text/plain; charset=utf-8')
+    
     def _send_list(self, fmt: str):
         """Send list of constellations."""
         constellations = self.viewer.list_constellations()
@@ -627,13 +1086,15 @@ class ConstellationHTTPHandler(BaseHTTPRequestHandler):
         """Send help page."""
         help_text = """
 ╔═══════════════════════════════════════════════════════════════════════════════╗
-║                    ⭐ Constellation Viewer - Help ⭐                           ║
+║                    ⭐ Constellation & Star Viewer - Help ⭐                    ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║                                                                               ║
 ║  USAGE:                                                                       ║
 ║                                                                               ║
 ║    curl localhost:PORT/CONSTELLATION   # View constellation ASCII art        ║
 ║    curl localhost:PORT/:list           # List all constellations              ║
+║    curl localhost:PORT/:stars          # List all navigation stars            ║
+║    curl localhost:PORT/star/NAME       # View individual star info            ║
 ║    curl localhost:PORT/:help           # This help page                       ║
 ║    curl localhost:PORT/:about          # About this tool                      ║
 ║                                                                               ║
@@ -650,6 +1111,17 @@ class ConstellationHTTPHandler(BaseHTTPRequestHandler):
 ║    /pleiades           Seven Sisters star cluster                             ║
 ║                                                                               ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
+║  ★ NAVIGATION STARS (for Medieval Timekeeping):                               ║
+║                                                                               ║
+║    /star/polaris       North Star - fixed point for finding north             ║
+║    /star/sirius        Brightest star (-1.46 mag), "Dog Star"                 ║
+║    /star/betelgeuse    Red supergiant in Orion's shoulder                     ║
+║    /star/vega          Summer Triangle star                                   ║
+║    /star/arcturus      "Follow the arc to Arcturus"                           ║
+║    /star/antares       "Rival of Mars", red heart of Scorpion                 ║
+║    /:stars             Full table with magnitude, color, medieval use         ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
 ║  OUTPUT FORMATS:                                                              ║
 ║                                                                               ║
 ║    ?format=j           JSON output                                            ║
@@ -659,16 +1131,18 @@ class ConstellationHTTPHandler(BaseHTTPRequestHandler):
 ║  EXAMPLES:                                                                    ║
 ║                                                                               ║
 ║    curl localhost:PORT/orion                                                  ║
+║    curl localhost:PORT/star/sirius                                            ║
+║    curl localhost:PORT/:stars?format=j                                        ║
 ║    curl localhost:PORT/ursa-major?format=j                                    ║
-║    curl localhost:PORT/pleiades                                               ║
 ║                                                                               ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║  🏛️ MEDIEVAL CONTEXT:                                                         ║
 ║                                                                               ║
-║    Before mechanical clocks, people used constellations to tell time:         ║
+║    Before mechanical clocks, people used stars to tell time:                  ║
+║    • Polaris - Fixed point for nocturnal instruments                         ║
+║    • Sirius - Brightest star; Egyptians based calendar on its rising         ║
 ║    • Orion setting before dawn → approaching sunrise (winter)                 ║
-║    • Polaris + Big Dipper → night hour via nocturnal instrument               ║
-║    • Pleiades rising → harvest time (autumn)                                  ║
+║    • Big Dipper rotating around Polaris → night hour                          ║
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 """
