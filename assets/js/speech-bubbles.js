@@ -729,22 +729,19 @@ class SpeechBubbles {
             y: bubbleCenterPoint.y - perpY * forkSpacing
         };
         
-        // Calculate separate endpoints on circle perimeter for each fork path
-        // Each fork connects to its own nearest point on the circle
+        // Calculate single tip point where both forks converge (classic comic book tail)
+        // The tip should point toward the marker center, stopping at CONNECTOR_STOP_DISTANCE
+        const tipX = markerIconCenter.x - (dx / distance) * CONNECTOR_STOP_DISTANCE;
+        const tipY = markerIconCenter.y - (dy / distance) * CONNECTOR_STOP_DISTANCE;
         
-        // For fork 1 (startPoint1):
-        const dx1 = markerIconCenter.x - startPoint1.x;
-        const dy1 = markerIconCenter.y - startPoint1.y;
+        // Calculate distances from each fork start to the tip
+        const dx1 = tipX - startPoint1.x;
+        const dy1 = tipY - startPoint1.y;
         const dist1 = Math.sqrt(dx1 * dx1 + dy1 * dy1);
-        const circleEdge1X = markerIconCenter.x - (dx1 / dist1) * CONNECTOR_STOP_DISTANCE;
-        const circleEdge1Y = markerIconCenter.y - (dy1 / dist1) * CONNECTOR_STOP_DISTANCE;
         
-        // For fork 2 (startPoint2):
-        const dx2 = markerIconCenter.x - startPoint2.x;
-        const dy2 = markerIconCenter.y - startPoint2.y;
+        const dx2 = tipX - startPoint2.x;
+        const dy2 = tipY - startPoint2.y;
         const dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
-        const circleEdge2X = markerIconCenter.x - (dx2 / dist2) * CONNECTOR_STOP_DISTANCE;
-        const circleEdge2Y = markerIconCenter.y - (dy2 / dist2) * CONNECTOR_STOP_DISTANCE;
         
         // Calculate control points for each path using their respective distances
         const controlOffset1 = dist1 * BEZIER_CONTROL_POINT_FACTOR;
@@ -758,17 +755,17 @@ class SpeechBubbles {
         const secondControlOffset2 = Math.max(minControlOffset, controlOffset2 * 0.5);
         
         // Calculate initial control point positions
-        // Path 1: from startPoint1 to circleEdge1
+        // Path 1: from startPoint1 to tip
         const controlX1_1 = startPoint1.x + (dx1 / dist1) * controlOffset1;
         const controlY1_1 = startPoint1.y + (dy1 / dist1) * (controlOffset1 * 0.3);
-        let controlX1_2 = markerIconCenter.x - (dx1 / dist1) * secondControlOffset1;
-        let controlY1_2 = markerIconCenter.y - (dy1 / dist1) * secondControlOffset1;
+        let controlX1_2 = tipX - (dx1 / dist1) * secondControlOffset1;
+        let controlY1_2 = tipY - (dy1 / dist1) * secondControlOffset1;
         
-        // Path 2: from startPoint2 to circleEdge2
+        // Path 2: from startPoint2 to tip
         const controlX2_1 = startPoint2.x + (dx2 / dist2) * controlOffset2;
         const controlY2_1 = startPoint2.y + (dy2 / dist2) * (controlOffset2 * 0.3);
-        let controlX2_2 = markerIconCenter.x - (dx2 / dist2) * secondControlOffset2;
-        let controlY2_2 = markerIconCenter.y - (dy2 / dist2) * secondControlOffset2;
+        let controlX2_2 = tipX - (dx2 / dist2) * secondControlOffset2;
+        let controlY2_2 = tipY - (dy2 / dist2) * secondControlOffset2;
         
         // Additional safety: Ensure control points maintain minimum radial distance from marker center
         // This addresses the mathematical issue that directional offset alone doesn't guarantee clearance
@@ -796,12 +793,12 @@ class SpeechBubbles {
             controlY2_2 = markerIconCenter.y + (controlY2_2 - markerIconCenter.y) * scale;
         }
         
-        // Create filled tail shape connecting the two fork paths
-        // This creates the solid colored area between the connector lines
+        // Create filled tail shape connecting the two fork paths to a single tip
+        // This creates the solid colored area forming the speech bubble tail
         const fillData = `
             M ${startPoint1.x},${startPoint1.y}
-            C ${controlX1_1},${controlY1_1} ${controlX1_2},${controlY1_2} ${circleEdge1X},${circleEdge1Y}
-            L ${circleEdge2X},${circleEdge2Y}
+            C ${controlX1_1},${controlY1_1} ${controlX1_2},${controlY1_2} ${tipX},${tipY}
+            L ${tipX},${tipY}
             C ${controlX2_2},${controlY2_2} ${controlX2_1},${controlY2_1} ${startPoint2.x},${startPoint2.y}
             Z
         `.trim();
@@ -811,12 +808,12 @@ class SpeechBubbles {
             connector.fill.style.opacity = isVisible ? '' : '0';
         }
         
-        // Combine both paths into a single SVG path, each ending at its own circle edge point
+        // Combine both paths converging to a single tip point
         const pathData = `
             M ${startPoint1.x},${startPoint1.y} 
-            C ${controlX1_1},${controlY1_1} ${controlX1_2},${controlY1_2} ${circleEdge1X},${circleEdge1Y}
+            C ${controlX1_1},${controlY1_1} ${controlX1_2},${controlY1_2} ${tipX},${tipY}
             M ${startPoint2.x},${startPoint2.y} 
-            C ${controlX2_1},${controlY2_1} ${controlX2_2},${controlY2_2} ${circleEdge2X},${circleEdge2Y}
+            C ${controlX2_1},${controlY2_1} ${controlX2_2},${controlY2_2} ${tipX},${tipY}
         `.trim();
         
         if (connector.path) {
@@ -825,12 +822,11 @@ class SpeechBubbles {
         }
         
         // Update CSS-based tail on bubble element
-        // The tail should point toward the circle edge (stopping point), not the icon center
-        // Use the average of the two circle edge points for the tail target
+        // The tail should point toward the single tip point
         if (entry.bubble) {
-            // Calculate position where tail should point to (average of both circle edges)
-            const tailTargetX = (circleEdge1X + circleEdge2X) / 2;
-            const tailTargetY = (circleEdge1Y + circleEdge2Y) / 2;
+            // Calculate position where tail should point to (the single tip point)
+            const tailTargetX = tipX;
+            const tailTargetY = tipY;
             
             // Calculate tail attachment point relative to bubble
             const tailX = ((bubbleCenterPoint.x - bubbleRect.x) / bubbleRect.width) * 100;
