@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subjective Day - Nürnberger Uhr Calculator</title>
+    <meta name="description" content="Calculate subjective time based on the historical Nürnberger Uhr (Nuremberg Clock) system. Uses unequal hours where day and night are each divided into 12 hours.">
+    <style>
+        :root {
+            --color-primary: #D689B8;
+            --color-text: #6b445c;
+            --color-bg: #faf7f9;
+            --color-card: #ffffff;
+            --color-border: #eac0da;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: var(--color-primary);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+        
+        .card {
+            background: var(--color-card);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .card h2 {
+            color: var(--color-primary);
+            margin-bottom: 16px;
+            font-size: 1.3rem;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .input-field {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .input-field label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        
+        .input-field input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .input-field input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+        
+        button {
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        button:hover {
+            opacity: 0.9;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: var(--color-bg);
+            border-radius: 8px;
+        }
+        
+        .result-main {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 12px;
+        }
+        
+        .result-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        
+        .detail-item {
+            padding: 8px 12px;
+            background: var(--color-card);
+            border-radius: 6px;
+        }
+        
+        .detail-label {
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+        
+        .detail-value {
+            font-weight: 500;
+        }
+        
+        .hours-table {
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        th {
+            background: var(--color-bg);
+            font-weight: 600;
+        }
+        
+        .api-info {
+            font-family: monospace;
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        
+        .api-info code {
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .info-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 16px;
+            margin-top: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        footer a {
+            color: var(--color-primary);
+        }
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            .result-main {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🕐 Subjective Day Calculator</h1>
+            <p class="subtitle">Based on the historical Nürnberger Uhr (Nuremberg Clock) system</p>
+        </header>
+        
+        <div class="card">
+            <h2>Calculate Subjective Time</h2>
+            <div class="input-group">
+                <div class="input-field">
+                    <label for="lat">Latitude</label>
+                    <input type="number" id="lat" value="50.3167" step="0.0001" min="-90" max="90">
+                </div>
+                <div class="input-field">
+                    <label for="lon">Longitude</label>
+                    <input type="number" id="lon" value="11.9167" step="0.0001" min="-180" max="180">
+                </div>
+            </div>
+            <button onclick="calculateTime()">Calculate Now</button>
+            <button onclick="useMyLocation()" style="margin-left: 10px; background: var(--color-text);">📍 Use My Location</button>
+            
+            <div id="result" class="result" style="display: none;">
+                <div id="resultMain" class="result-main"></div>
+                <div id="resultDetails" class="result-details"></div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Hour Table for Today</h2>
+            <div id="hoursTable" class="hours-table">
+                <p>Click "Calculate Now" to see the hour table.</p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>How It Works</h2>
+            <p>The <strong>Nürnberger Uhr</strong> (Nuremberg Clock) was a medieval timekeeping system used in Nuremberg and other Central European cities. Unlike modern equal hours:</p>
+            <ul style="margin: 16px 0 16px 20px;">
+                <li><strong>Day hours:</strong> The period from sunrise to sunset is divided into 12 equal parts</li>
+                <li><strong>Night hours:</strong> The period from sunset to sunrise is divided into 12 equal parts</li>
+                <li>Hour lengths vary seasonally – in winter, day hours are short (~45 min) and night hours are long (~75 min)</li>
+            </ul>
+            
+            <div class="info-box">
+                <strong>💡 GitHub Pages Compatible!</strong><br>
+                This calculator runs entirely in your browser using JavaScript. No server required – it can be hosted on GitHub Pages, Netlify, or any static hosting.
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>JavaScript API</h2>
+            <p style="margin-bottom: 12px;">Use the SubjectiveDay class in your own projects:</p>
+            <div class="api-info">
+<code>&lt;script src="../assets/js/subjective-day.js"&gt;&lt;/script&gt;</code>
+<code>&lt;script&gt;</code>
+<code>  const calc = new SubjectiveDay(50.3167, 11.9167);</code>
+<code>  const result = calc.getSubjectiveTime();</code>
+<code>  console.log(result.display_en);</code>
+<code>  // "2nd hour of night (75.4 min/hr)"</code>
+<code>&lt;/script&gt;</code>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Based on the historical <a href="https://de.wikipedia.org/wiki/N%C3%BCrnberger_Uhr" target="_blank">Nürnberger Uhr</a></p>
+            <p>Part of <a href="index.html">KRWL HOF Community Events</a></p>
+        </footer>
+    </div>
+    
+    <script src="../assets/js/subjective-day.js"></script>
+    <script>
+        function calculateTime() {
+            const lat = parseFloat(document.getElementById('lat').value);
+            const lon = parseFloat(document.getElementById('lon').value);
+            
+            try {
+                const calc = new SubjectiveDay(lat, lon);
+                const result = calc.getSubjectiveTime();
+                const dayHours = calc.getFullDayHours();
+                
+                // Show main result
+                document.getElementById('resultMain').textContent = result.display_en;
+                
+                // Show details
+                const detailsHtml = `
+                    <div class="detail-item">
+                        <div class="detail-label">Subjective Time</div>
+                        <div class="detail-value">${result.timeFormatted} (${result.periodEn})</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Sunrise</div>
+                        <div class="detail-value">${result.sunrise}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Sunset</div>
+                        <div class="detail-value">${result.sunset}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Day Hour Length</div>
+                        <div class="detail-value">${result.dayHourLengthMinutes} minutes</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Night Hour Length</div>
+                        <div class="detail-value">${result.nightHourLengthMinutes} minutes</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Location</div>
+                        <div class="detail-value">${lat.toFixed(4)}°N, ${lon.toFixed(4)}°E</div>
+                    </div>
+                `;
+                document.getElementById('resultDetails').innerHTML = detailsHtml;
+                document.getElementById('result').style.display = 'block';
+                
+                // Show hours table
+                let tableHtml = '<table><thead><tr><th>Hour</th><th>Day Start</th><th>Day End</th><th>Night Start</th><th>Night End</th></tr></thead><tbody>';
+                for (let i = 0; i < 12; i++) {
+                    const dayHour = dayHours.dayHours[i];
+                    const nightHour = dayHours.nightHours[i];
+                    tableHtml += `<tr>
+                        <td><strong>${i + 1}</strong></td>
+                        <td>${dayHour.start.substring(0, 5)}</td>
+                        <td>${dayHour.end.substring(0, 5)}</td>
+                        <td>${nightHour.start.substring(0, 5)}</td>
+                        <td>${nightHour.end.substring(0, 5)}</td>
+                    </tr>`;
+                }
+                tableHtml += '</tbody></table>';
+                tableHtml += `<p style="margin-top: 12px; opacity: 0.7;">Day hour: ${dayHours.dayHourLengthMinutes} min | Night hour: ${dayHours.nightHourLengthMinutes} min</p>`;
+                document.getElementById('hoursTable').innerHTML = tableHtml;
+                
+            } catch (e) {
+                alert('Error: ' + e.message);
+            }
+        }
+        
+        function useMyLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        document.getElementById('lat').value = position.coords.latitude.toFixed(4);
+                        document.getElementById('lon').value = position.coords.longitude.toFixed(4);
+                        calculateTime();
+                    },
+                    (error) => {
+                        alert('Could not get your location: ' + error.message);
+                    }
+                );
+            } else {
+                alert('Geolocation is not supported by your browser');
+            }
+        }
+        
+        // Calculate on page load with default values
+        calculateTime();
+    </script>
+</body>
+</html>

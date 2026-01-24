@@ -1391,7 +1391,7 @@
       "files": [
         "src/modules/subjective_day.py",
         "assets/js/subjective-day.js",
-        "public/subjective-day.html"
+        "examples/subjective-day-demo.html"
       ],
       "config_keys": [],
       "dependencies": {
