@@ -4,11 +4,23 @@ Simple Telegram Bot for KRWL HOF Community Events
 
 A straightforward bot that handles:
 1. Photo/document uploads (flyers) - cached and dispatched for OCR processing
-2. PIN publishing (format: "PIN:1234") - for trusted organizers
+2. PIN publishing (format: "PIN:1234") - for trusted organizers  
 3. Contact messages - forwarded to admins via GitHub issues
 
-This replaces the overcomplicated conversation-based bot with a proven, simple approach.
-All processing is done via GitHub Actions workflows triggered by repository_dispatch events.
+This bot uses a simple stateless design and dispatches processing to GitHub Actions
+via repository_dispatch events. It shares utilities with the scraper modules.
+
+Integration with scraper modules:
+- Uses pin_manager.py for PIN validation (via GitHub Actions)
+- Processing jobs in website-maintenance.yml use smart_scraper OCR capabilities
+- Event data follows same schema as scraped events
+
+Usage:
+    # As standalone script
+    python3 src/modules/telegram_bot_simple.py
+    
+    # Or import the class
+    from src.modules.telegram_bot_simple import SimpleTelegramBot
 """
 
 import os
@@ -33,9 +45,8 @@ try:
     from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
     TELEGRAM_AVAILABLE = True
 except ImportError:
-    logger.error("python-telegram-bot not installed. Install with: pip install python-telegram-bot>=20.0")
     TELEGRAM_AVAILABLE = False
-    sys.exit(1)
+    logger.warning("python-telegram-bot not installed. Install with: pip install python-telegram-bot>=20.0")
 
 # Try to import requests for GitHub API
 try:
@@ -45,12 +56,29 @@ except ImportError:
     logger.warning("requests not installed. GitHub dispatch will not work.")
     REQUESTS_AVAILABLE = False
 
+# Try to import shared OCR infrastructure from smart_scraper
+try:
+    from .smart_scraper.sources.social.telegram import TelegramSource, process_telegram_flyer
+    from .smart_scraper.image_analyzer.ocr import is_ocr_available
+    LOCAL_OCR_AVAILABLE = is_ocr_available()
+except ImportError:
+    LOCAL_OCR_AVAILABLE = False
+    TelegramSource = None
+    process_telegram_flyer = None
+    logger.info("Local OCR not available - will dispatch to GitHub Actions for processing")
+
 
 class SimpleTelegramBot:
-    """Simple Telegram bot for event submissions via dispatch to GitHub Actions."""
+    """Simple Telegram bot for event submissions via dispatch to GitHub Actions.
+    
+    This bot integrates with the smart_scraper infrastructure:
+    - Uses shared OCR/image_analyzer for local flyer processing (when available)
+    - Falls back to GitHub Actions dispatch for CI processing
+    - Shares event schema and validation with other scrapers
+    """
     
     def __init__(self, bot_token: str, github_token: Optional[str] = None, 
-                 github_repo: Optional[str] = None):
+                 github_repo: Optional[str] = None, use_local_ocr: bool = True):
         """
         Initialize the simple Telegram bot.
         
@@ -58,10 +86,12 @@ class SimpleTelegramBot:
             bot_token: Telegram bot token from @BotFather
             github_token: GitHub personal access token (optional, for repository_dispatch)
             github_repo: GitHub repository in format "owner/repo" (optional)
+            use_local_ocr: If True, process flyers locally when OCR is available
         """
         self.bot_token = bot_token
         self.github_token = github_token
         self.github_repo = github_repo
+        self.use_local_ocr = use_local_ocr and LOCAL_OCR_AVAILABLE
         
         # Set up cache directory
         self.cache_dir = Path.cwd() / ".cache" / "telegram"
@@ -117,7 +147,11 @@ class SimpleTelegramBot:
         await update.message.reply_text(help_msg, parse_mode='Markdown')
     
     async def handle_media(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
-        """Handle photo or document upload (flyers)."""
+        """Handle photo or document upload (flyers).
+        
+        Uses shared OCR infrastructure from smart_scraper when available locally,
+        otherwise dispatches to GitHub Actions for processing.
+        """
         user = update.effective_user
         
         # Determine media type and get file
@@ -163,7 +197,32 @@ class SimpleTelegramBot:
             with open(metadata_path, 'w') as f:
                 json.dump(metadata, f, indent=2)
             
-            # Dispatch to GitHub Actions
+            # Try local OCR processing first (uses shared smart_scraper infrastructure)
+            if self.use_local_ocr and process_telegram_flyer:
+                logger.info("Using local OCR processing (shared with smart_scraper)")
+                event = process_telegram_flyer(
+                    str(cache_path),
+                    user_id=str(user.id),
+                    username=user.username or 'unknown',
+                    caption=update.message.caption or ''
+                )
+                
+                if event:
+                    # Save extracted event to pending
+                    await self._save_pending_event(event)
+                    
+                    confidence = event.get('metadata', {}).get('ocr_confidence', 0)
+                    await update.message.reply_text(
+                        "✅ Flyer processed!\n\n"
+                        f"OCR confidence: {confidence:.0%}\n"
+                        "A draft event has been created for review."
+                    )
+                    logger.info(f"Local OCR extracted event with confidence {confidence}")
+                    return
+                else:
+                    logger.warning("Local OCR failed to extract event data")
+            
+            # Fall back to GitHub Actions dispatch
             await self._dispatch_to_github(
                 event_type='telegram_flyer_submission',
                 client_payload={
@@ -181,6 +240,7 @@ class SimpleTelegramBot:
                 "I've saved it and triggered OCR processing. "
                 "A draft event will be created for review shortly."
             )
+            
             
         except Exception as e:
             logger.error(f"Error handling media: {e}")
@@ -286,6 +346,51 @@ class SimpleTelegramBot:
             await update.message.reply_text(
                 "❌ Error sending message. Please try again or contact support."
             )
+    
+    async def _save_pending_event(self, event: Dict[str, Any]):
+        """Save extracted event to pending_events.json.
+        
+        Uses the shared utils module for consistent event storage.
+        
+        Args:
+            event: Event dictionary to save
+        """
+        try:
+            # Try to use shared utils
+            from .utils import load_pending_events, save_pending_events
+            
+            base_path = Path.cwd()
+            pending = load_pending_events(base_path)
+            
+            # Add to pending list
+            if 'pending_events' not in pending:
+                pending['pending_events'] = []
+            pending['pending_events'].append(event)
+            
+            save_pending_events(base_path, pending)
+            logger.info(f"Saved event {event.get('id')} to pending_events.json")
+            
+        except ImportError:
+            # Fallback: save directly to JSON file
+            pending_file = Path.cwd() / 'assets' / 'json' / 'pending_events.json'
+            
+            try:
+                if pending_file.exists():
+                    with open(pending_file, 'r') as f:
+                        pending = json.load(f)
+                else:
+                    pending = {'pending_events': []}
+                
+                pending['pending_events'].append(event)
+                
+                with open(pending_file, 'w') as f:
+                    json.dump(pending, f, indent=2, ensure_ascii=False)
+                
+                logger.info(f"Saved event {event.get('id')} to {pending_file}")
+                
+            except Exception as e:
+                logger.error(f"Error saving pending event: {e}")
+                raise
     
     async def _dispatch_to_github(self, event_type: str, client_payload: Dict[str, Any]):
         """

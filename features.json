@@ -1270,19 +1270,18 @@
     {
       "id": "telegram-bot",
       "name": "Telegram Bot for Event Submissions",
-      "description": "Telegram bot that allows community members to submit events, upload flyer images with OCR processing, and contact admins. All submissions are saved to pending_events.json for editorial review.",
+      "description": "Simple stateless Telegram bot for event submissions. Uses shared OCR infrastructure from smart_scraper for flyer processing. Supports flyer uploads with OCR, PIN publishing for trusted organizers, and contact form messages.",
       "category": "backend",
       "implemented": true,
       "files": [
-        "src/modules/telegram_bot.py"
+        "src/modules/telegram_bot_simple.py",
+        "src/modules/smart_scraper/sources/social/telegram.py",
+        "src/modules/pin_manager.py"
       ],
       "config_keys": [
         "telegram.enabled",
         "telegram.bot_token",
-        "telegram.admin_chat_ids",
-        "telegram.features",
-        "telegram.limits",
-        "telegram.messages"
+        "telegram.admin_chat_ids"
       ],
       "dependencies": {
         "python": [
@@ -1293,8 +1292,8 @@
         "telegram-bot"
       ],
       "test_method": "manual",
-      "test_instructions": "1. Get bot token from @BotFather on Telegram\n2. Set telegram.enabled: true in config.json\n3. Add bot token to config or TELEGRAM_BOT_TOKEN env var\n4. Run: python3 src/event_manager.py telegram-bot\n5. Open Telegram and send /start to your bot\n6. Test /submit command for manual event entry\n7. Test photo upload for flyer OCR\n8. Test /contact command\n9. Verify submissions appear in assets/json/pending_events.json\n10. Stop bot with Ctrl+C",
-      "documentation": "README.md section: Telegram Bot Integration (to be added)"
+      "test_instructions": "1. Get bot token from @BotFather on Telegram\n2. Set TELEGRAM_BOT_TOKEN env var\n3. Run: python3 src/modules/telegram_bot_simple.py\n4. Send /start to your bot\n5. Test photo upload for flyer OCR (uses shared smart_scraper OCR)\n6. Test contact messages\n7. For PIN publishing: set up ORGANIZER_PIN_HASH_* secrets\n8. Verify submissions appear in assets/json/pending_events.json",
+      "documentation": "docs/TELEGRAM_INTEGRATION.md"
     },
     {
       "id": "dashboard-contact-form",
@@ -1329,12 +1328,13 @@
     {
       "id": "telegram-bot-github-actions",
       "name": "Telegram Bot GitHub Actions Integration",
-      "description": "Phase 2 Backend Integration: GitHub Actions workflow that runs the Telegram bot to proxy event submissions. Uses TELEGRAM_BOT_TOKEN secret, forwards contact messages to admin chat IDs, saves flyer uploads to pending_events.json, and commits changes back to the repository.",
+      "description": "Simplified Telegram integration using repository_dispatch events. The simple bot (scripts/telegram_bot.py) dispatches events to GitHub Actions for processing: flyer uploads with OCR, contact form submissions, and PIN publishing for trusted organizers.",
       "category": "infrastructure",
       "implemented": true,
       "files": [
-        ".github/workflows/telegram-bot.yml",
-        "src/modules/telegram_bot.py"
+        ".github/workflows/website-maintenance.yml",
+        "scripts/telegram_bot.py",
+        "scripts/manage_pins.py"
       ],
       "config_keys": [
         "telegram.enabled",
@@ -1343,15 +1343,18 @@
       ],
       "dependencies": {
         "github_secrets": [
-          "TELEGRAM_BOT_TOKEN"
+          "TELEGRAM_BOT_TOKEN",
+          "ORGANIZER_PIN_HASH_1",
+          "ORGANIZER_PIN_HASH_2",
+          "ORGANIZER_PIN_HASH_3"
         ],
         "python": [
           "python-telegram-bot>=20.0"
         ]
       },
       "test_method": "manual",
-      "test_instructions": "1. Add TELEGRAM_BOT_TOKEN to GitHub repository secrets\n2. Go to Actions → Telegram Bot workflow\n3. Click 'Run workflow' → Select duration and mode\n4. Verify bot starts running in CI environment\n5. Send a message to the bot on Telegram\n6. Wait for workflow to complete\n7. Check that pending_events.json was updated with new submission\n8. Verify commit was made by 'Telegram Bot' user\n9. Check workflow logs for submission statistics",
-      "documentation": "README.md section: Telegram Bot GitHub Actions Integration"
+      "test_instructions": "1. Add TELEGRAM_BOT_TOKEN to GitHub repository secrets\n2. Run scripts/telegram_bot.py locally with env vars set\n3. Send a flyer photo to the bot - verify OCR processing workflow runs\n4. Send a contact message - verify GitHub issue is created\n5. For PIN publishing: add ORGANIZER_PIN_HASH_* secrets, test PIN:1234 with JSON event",
+      "documentation": "docs/TELEGRAM_INTEGRATION.md"
     },
     {
       "id": "instagram-scraper",

@@ -184,8 +184,11 @@ python3 -c "import ast; ast.parse(open('scripts/telegram_bot.py').read())"
 ### Modified Files
 - `.github/workflows/website-maintenance.yml` - Added 3 new jobs and triggers
 - `src/modules/telegram_bot.py` - Added deprecation notice
-- `.github/workflows/telegram-bot.yml` - Added deprecation notice
 - `scripts/README.md` - Added Telegram bot documentation
+
+### Removed Files (Deprecated)
+- `.github/workflows/telegram-bot.yml` - Deprecated workflow removed (functionality now in website-maintenance.yml)
+- `tests/test_telegram_bot.py` - Deprecated test removed
 
 ### Total Changes
 - **New code:** ~553 lines
