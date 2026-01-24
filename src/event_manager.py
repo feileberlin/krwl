@@ -386,6 +386,11 @@ COMMANDS:
     regions remove REGION_ID  Remove a region from configuration
     regions view REGION_ID    View detailed region configuration
     regions set-default REGION_ID  Set the default region
+    regions list-filters REGION_ID  List custom filters for a region
+    regions list-filters REGION_ID --format json  Output filters as JSON
+    regions add-filter REGION_ID --filter-id ID --name-de "German Name" --name-en "English Name" --lat LAT --lng LNG --radius RADIUS --zoom ZOOM
+                              Add custom location filter (neighborhood/district preset)
+    regions remove-filter REGION_ID FILTER_ID  Remove custom filter from region
     
     test                      Run all tests
     test --list               List available test categories and tests
@@ -2564,6 +2569,48 @@ def _execute_command(args, base_path, config):
                             i += 1
                 elif subcommand in ['remove', 'view', 'set-default']:
                     self.region_id = remaining_args[0] if remaining_args else None
+                elif subcommand == 'list-filters':
+                    self.region_id = remaining_args[0] if remaining_args else None
+                    self.format = 'json' if '--format' in remaining_args and 'json' in remaining_args else 'text'
+                elif subcommand == 'add-filter':
+                    # Parse: add-filter REGION_ID --filter-id ID --name-de NAME --name-en NAME --lat LAT --lng LNG --radius RADIUS --zoom ZOOM
+                    self.region_id = remaining_args[0] if remaining_args else None
+                    self.filter_id = None
+                    self.name_de = None
+                    self.name_en = None
+                    self.lat = None
+                    self.lng = None
+                    self.radius = None
+                    self.zoom = None
+                    i = 1  # Start after REGION_ID
+                    while i < len(remaining_args):
+                        if remaining_args[i] == '--filter-id' and i + 1 < len(remaining_args):
+                            self.filter_id = remaining_args[i + 1]
+                            i += 2
+                        elif remaining_args[i] == '--name-de' and i + 1 < len(remaining_args):
+                            self.name_de = remaining_args[i + 1]
+                            i += 2
+                        elif remaining_args[i] == '--name-en' and i + 1 < len(remaining_args):
+                            self.name_en = remaining_args[i + 1]
+                            i += 2
+                        elif remaining_args[i] == '--lat' and i + 1 < len(remaining_args):
+                            self.lat = remaining_args[i + 1]
+                            i += 2
+                        elif remaining_args[i] == '--lng' and i + 1 < len(remaining_args):
+                            self.lng = remaining_args[i + 1]
+                            i += 2
+                        elif remaining_args[i] == '--radius' and i + 1 < len(remaining_args):
+                            self.radius = remaining_args[i + 1]
+                            i += 2
+                        elif remaining_args[i] == '--zoom' and i + 1 < len(remaining_args):
+                            self.zoom = remaining_args[i + 1]
+                            i += 2
+                        else:
+                            i += 1
+                elif subcommand == 'remove-filter':
+                    # Parse: remove-filter REGION_ID FILTER_ID
+                    self.region_id = remaining_args[0] if len(remaining_args) > 0 else None
+                    self.filter_id = remaining_args[1] if len(remaining_args) > 1 else None
         
         region_args = RegionArgs(args.args[0], args.args[1:] if len(args.args) > 1 else [])
         cli = RegionCLI(base_path)

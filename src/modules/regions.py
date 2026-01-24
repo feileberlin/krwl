@@ -51,7 +51,8 @@ class RegionTUI:
         print("4. Remove Region")
         print("5. Set Default Region")
         print("6. View Region Details")
-        print("7. Back to Main Menu")
+        print("7. Manage Custom Filters")
+        print("8. Back to Main Menu")
         print("-" * 70)
         print()
     
@@ -271,11 +272,177 @@ class RegionTUI:
         print(f"\n✅ Default region set to '{region_id}'")
         input("\nPress Enter to continue...")
     
+    def manage_custom_filters(self):
+        """Manage custom filters for a region"""
+        self.clear_screen()
+        self.print_header()
+        print("Manage Custom Filters:")
+        print("-" * 70)
+        
+        regions = get_all_regions(self.base_path)
+        if not regions:
+            print("No regions configured.")
+            input("\nPress Enter to continue...")
+            return
+        
+        # Select region
+        print("\nAvailable regions:")
+        for region_id in regions.keys():
+            print(f"  • {region_id}")
+        
+        region_id = input("\nEnter region ID: ").strip().lower()
+        
+        if not validate_region(region_id, self.base_path):
+            print(f"❌ Region '{region_id}' not found")
+            input("\nPress Enter to continue...")
+            return
+        
+        # Show filter submenu
+        while True:
+            self.clear_screen()
+            self.print_header()
+            print(f"Custom Filters for '{region_id}':")
+            print("-" * 70)
+            
+            region_config = get_region_config(region_id, self.base_path)
+            filters = region_config.get('customFilters', [])
+            
+            print("\nCurrent Custom Filters:")
+            if not filters:
+                print("  No custom filters configured")
+            else:
+                for i, f in enumerate(filters, 1):
+                    name_de = f.get('name', {}).get('de', 'N/A')
+                    print(f"  {i}. {f.get('id')} - {name_de}")
+                    print(f"     Center: {f.get('center', {}).get('lat')}, {f.get('center', {}).get('lng')}")
+                    print(f"     Radius: {f.get('radius')} km, Zoom: {f.get('zoom')}")
+            
+            print("\nOptions:")
+            print("1. Add Custom Filter")
+            print("2. Remove Custom Filter")
+            print("3. Back to Main Menu")
+            
+            choice = input("\nEnter your choice (1-3): ").strip()
+            
+            if choice == '1':
+                self.add_custom_filter(region_id)
+            elif choice == '2':
+                self.remove_custom_filter(region_id)
+            elif choice == '3':
+                break
+            else:
+                print("\nInvalid choice. Please try again.")
+                input("\nPress Enter to continue...")
+    
+    def add_custom_filter(self, region_id: str):
+        """Add a custom filter to a region"""
+        print("\n" + "=" * 70)
+        print("Add Custom Filter")
+        print("=" * 70)
+        
+        filter_id = input("\nFilter ID (e.g., 'innenstadt', 'altstadt'): ").strip().lower()
+        if not filter_id:
+            print("❌ Filter ID cannot be empty")
+            input("\nPress Enter to continue...")
+            return
+        
+        name_de = input("Name (German): ").strip()
+        name_en = input("Name (English): ").strip()
+        
+        try:
+            lat = float(input("Center Latitude (4 decimals, e.g., 50.3167): ").strip())
+            lng = float(input("Center Longitude (4 decimals, e.g., 11.9167): ").strip())
+            radius = float(input("Radius in km (e.g., 1.5): ").strip())
+            zoom = int(input("Zoom level (e.g., 14): ").strip())
+        except ValueError:
+            print("❌ Invalid numeric input")
+            input("\nPress Enter to continue...")
+            return
+        
+        # Format to 4 decimal places
+        lat = round(lat, 4)
+        lng = round(lng, 4)
+        
+        # Create filter object
+        new_filter = {
+            "id": filter_id,
+            "name": {
+                "de": name_de,
+                "en": name_en
+            },
+            "center": {
+                "lat": lat,
+                "lng": lng
+            },
+            "radius": radius,
+            "zoom": zoom
+        }
+        
+        # Load config
+        with open(self.config_path, 'r', encoding='utf-8') as f:
+            config = json.load(f)
+        
+        # Add filter
+        if 'customFilters' not in config['regions'][region_id]:
+            config['regions'][region_id]['customFilters'] = []
+        
+        config['regions'][region_id]['customFilters'].append(new_filter)
+        
+        # Save config
+        with open(self.config_path, 'w', encoding='utf-8') as f:
+            json.dump(config, f, indent=2, ensure_ascii=False)
+        
+        print(f"\n✅ Custom filter '{filter_id}' added to region '{region_id}'")
+        input("\nPress Enter to continue...")
+    
+    def remove_custom_filter(self, region_id: str):
+        """Remove a custom filter from a region"""
+        print("\n" + "=" * 70)
+        print("Remove Custom Filter")
+        print("=" * 70)
+        
+        region_config = get_region_config(region_id, self.base_path)
+        filters = region_config.get('customFilters', [])
+        
+        if not filters:
+            print("\nNo custom filters to remove")
+            input("\nPress Enter to continue...")
+            return
+        
+        print("\nCurrent filters:")
+        for i, f in enumerate(filters, 1):
+            name_de = f.get('name', {}).get('de', 'N/A')
+            print(f"  {i}. {f.get('id')} - {name_de}")
+        
+        filter_id = input("\nEnter filter ID to remove: ").strip().lower()
+        
+        # Load config
+        with open(self.config_path, 'r', encoding='utf-8') as f:
+            config = json.load(f)
+        
+        # Find and remove filter
+        filters_list = config['regions'][region_id].get('customFilters', [])
+        original_count = len(filters_list)
+        filters_list = [f for f in filters_list if f.get('id') != filter_id]
+        
+        if len(filters_list) == original_count:
+            print(f"❌ Filter '{filter_id}' not found")
+        else:
+            config['regions'][region_id]['customFilters'] = filters_list
+            
+            # Save config
+            with open(self.config_path, 'w', encoding='utf-8') as f:
+                json.dump(config, f, indent=2, ensure_ascii=False)
+            
+            print(f"✅ Custom filter '{filter_id}' removed from region '{region_id}'")
+        
+        input("\nPress Enter to continue...")
+    
     def run(self):
         """Main TUI loop"""
         while self.running:
             self.show_menu()
-            choice = input("Enter your choice (1-7): ").strip()
+            choice = input("Enter your choice (1-8): ").strip()
             
             if choice == '1':
                 self.list_regions()
@@ -291,6 +458,8 @@ class RegionTUI:
             elif choice == '6':
                 self.view_region_details()
             elif choice == '7':
+                self.manage_custom_filters()
+            elif choice == '8':
                 self.running = False
             else:
                 print("\nInvalid choice. Please try again.")
@@ -318,9 +487,15 @@ class RegionCLI:
             return self.view_region(args)
         elif command == 'set-default':
             return self.set_default_region(args)
+        elif command == 'add-filter':
+            return self.add_custom_filter(args)
+        elif command == 'remove-filter':
+            return self.remove_custom_filter(args)
+        elif command == 'list-filters':
+            return self.list_custom_filters(args)
         else:
             print(f"❌ Unknown region command: {command}")
-            print("Usage: python3 src/event_manager.py regions [list|add|remove|view|set-default]")
+            print("Usage: python3 src/event_manager.py regions [list|add|remove|view|set-default|add-filter|remove-filter|list-filters]")
             return 1
     
     def list_regions(self, args):
@@ -488,4 +663,133 @@ class RegionCLI:
             json.dump(config, f, indent=2, ensure_ascii=False)
         
         print(f"✅ Default region set to '{region_id}'")
+        return 0
+    
+    def list_custom_filters(self, args):
+        """List custom filters for a region"""
+        if not hasattr(args, 'region_id') or not args.region_id:
+            print("❌ Error: region ID required")
+            print("Usage: python3 src/event_manager.py regions list-filters REGION_ID")
+            return 1
+        
+        region_id = args.region_id.strip().lower()
+        
+        if not validate_region(region_id, self.base_path):
+            print(f"❌ Region '{region_id}' not found")
+            return 1
+        
+        region_config = get_region_config(region_id, self.base_path)
+        filters = region_config.get('customFilters', [])
+        
+        if getattr(args, 'format', 'text') == 'json':
+            print(json.dumps(filters, indent=2, ensure_ascii=False))
+        else:
+            print(f"Custom Filters for '{region_id}':")
+            print("-" * 70)
+            if not filters:
+                print("No custom filters configured")
+            else:
+                for f in filters:
+                    name_de = f.get('name', {}).get('de', 'N/A')
+                    print(f"\n{f.get('id')} - {name_de}")
+                    print(f"  Center: {f.get('center', {}).get('lat')}, {f.get('center', {}).get('lng')}")
+                    print(f"  Radius: {f.get('radius')} km, Zoom: {f.get('zoom')}")
+        
+        return 0
+    
+    def add_custom_filter(self, args):
+        """Add custom filter via CLI"""
+        if not hasattr(args, 'region_id') or not args.region_id:
+            print("❌ Error: region ID required")
+            print("Usage: python3 src/event_manager.py regions add-filter REGION_ID --filter-id ID --name-de NAME --name-en NAME --lat LAT --lng LNG --radius RADIUS --zoom ZOOM")
+            return 1
+        
+        region_id = args.region_id.strip().lower()
+        
+        if not validate_region(region_id, self.base_path):
+            print(f"❌ Region '{region_id}' not found")
+            return 1
+        
+        # Validate required arguments
+        required = ['filter_id', 'name_de', 'name_en', 'lat', 'lng', 'radius', 'zoom']
+        for req in required:
+            if not hasattr(args, req) or getattr(args, req) is None:
+                print(f"❌ Error: --{req.replace('_', '-')} is required")
+                return 1
+        
+        # Format coordinates to 4 decimal places
+        lat = round(float(args.lat), 4)
+        lng = round(float(args.lng), 4)
+        
+        # Create filter object
+        new_filter = {
+            "id": args.filter_id.strip().lower(),
+            "name": {
+                "de": args.name_de.strip(),
+                "en": args.name_en.strip()
+            },
+            "center": {
+                "lat": lat,
+                "lng": lng
+            },
+            "radius": float(args.radius),
+            "zoom": int(args.zoom)
+        }
+        
+        # Load config
+        with open(self.config_path, 'r', encoding='utf-8') as f:
+            config = json.load(f)
+        
+        # Add filter
+        if 'customFilters' not in config['regions'][region_id]:
+            config['regions'][region_id]['customFilters'] = []
+        
+        config['regions'][region_id]['customFilters'].append(new_filter)
+        
+        # Save config
+        with open(self.config_path, 'w', encoding='utf-8') as f:
+            json.dump(config, f, indent=2, ensure_ascii=False)
+        
+        print(f"✅ Custom filter '{args.filter_id}' added to region '{region_id}'")
+        return 0
+    
+    def remove_custom_filter(self, args):
+        """Remove custom filter via CLI"""
+        if not hasattr(args, 'region_id') or not args.region_id:
+            print("❌ Error: region ID required")
+            print("Usage: python3 src/event_manager.py regions remove-filter REGION_ID FILTER_ID")
+            return 1
+        
+        if not hasattr(args, 'filter_id') or not args.filter_id:
+            print("❌ Error: filter ID required")
+            print("Usage: python3 src/event_manager.py regions remove-filter REGION_ID FILTER_ID")
+            return 1
+        
+        region_id = args.region_id.strip().lower()
+        filter_id = args.filter_id.strip().lower()
+        
+        if not validate_region(region_id, self.base_path):
+            print(f"❌ Region '{region_id}' not found")
+            return 1
+        
+        # Load config
+        with open(self.config_path, 'r', encoding='utf-8') as f:
+            config = json.load(f)
+        
+        # Find and remove filter
+        filters_list = config['regions'][region_id].get('customFilters', [])
+        original_count = len(filters_list)
+        filters_list = [f for f in filters_list if f.get('id') != filter_id]
+        
+        if len(filters_list) == original_count:
+            print(f"❌ Filter '{filter_id}' not found in region '{region_id}'")
+            return 1
+        
+        config['regions'][region_id]['customFilters'] = filters_list
+        
+        # Save config
+        with open(self.config_path, 'w', encoding='utf-8') as f:
+            json.dump(config, f, indent=2, ensure_ascii=False)
+        
+        print(f"✅ Custom filter '{filter_id}' removed from region '{region_id}'")
         return 0
