@@ -1385,11 +1385,13 @@
     {
       "id": "subjective-day-api",
       "name": "Subjective Day API (N\u00fcrnberger Uhr)",
-      "description": "API for calculating subjective time based on the historical N\u00fcrnberger Uhr (Nuremberg Clock) system. Uses unequal hours where day is divided into 12 hours (sunrise to sunset) and night into 12 hours (sunset to sunrise), with hour lengths varying seasonally. Provides both Python API and HTTP REST endpoints.",
+      "description": "API for calculating subjective time based on the historical N\u00fcrnberger Uhr (Nuremberg Clock) system. Available as both Python server API and client-side JavaScript for GitHub Pages hosting. Uses unequal hours where day is divided into 12 hours (sunrise to sunset) and night into 12 hours (sunset to sunrise).",
       "category": "backend",
       "implemented": true,
       "files": [
-        "src/modules/subjective_day.py"
+        "src/modules/subjective_day.py",
+        "assets/js/subjective-day.js",
+        "public/subjective-day.html"
       ],
       "config_keys": [],
       "dependencies": {
