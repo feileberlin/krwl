@@ -29,7 +29,7 @@ const SPREAD_BASE = 1;                 // Avoid sqrt(0) spacing
 // Lucide icons are scaled proportionally
 const MARKER_ICON_CENTER_OFFSET_Y = -100; // Negative = upward offset from anchor (was -48 for 96px)
 const MARKER_CIRCLE_RADIUS = 50; // Logical "protection" radius around marker icon (was 24 for 96px, now 50 for 200px)
-const CONNECTOR_STOP_DISTANCE = MARKER_CIRCLE_RADIUS + 4; // Stop connector 4px outside circle edge
+const CONNECTOR_STOP_DISTANCE = MARKER_CIRCLE_RADIUS + 15; // Stop connector 15px outside circle edge for comic book effect
 const BEZIER_CONTROL_POINT_FACTOR = 0.4; // Control points at 40% of distance for smooth curves
 const CSS_TAIL_HEIGHT = 15; // Height of CSS tail triangle in pixels (must match CSS border-width)
 
