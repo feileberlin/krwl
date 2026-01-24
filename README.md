@@ -29,7 +29,7 @@ A **grassroots, mobile-first** Progressive Web App (PWA) for discovering local c
 
 ### 🏙️ Multi-Region Support
 
-KRWL HOF now supports viewing events from different Franconian cities! Each region has its own map center, zoom level, and custom neighborhood filters - all sharing the same event data.
+KRWL HOF now supports viewing events from different Franconian cities! **URL path segment reads config variables (map center, zoom) to position the map** - all regions share the same event data.
 
 **Supported Regions:**
 - 🏛️ **Hof (Saale)** - Default region (50.3167°N, 11.9167°E)
@@ -37,6 +37,13 @@ KRWL HOF now supports viewing events from different Franconian cities! Each regi
 - 🎭 **Bayreuth** - Festival city (49.9481°N, 11.5783°E)
 - 🏺 **Selb** - Porcelain city (50.1705°N, 12.1328°E)
 - 🏔️ **Rehau** - Mountain town (50.2489°N, 12.0364°E)
+
+**What this provides:**
+- ✅ Configuration structure for multiple cities
+- ✅ URL path determines map center and zoom
+- ✅ Utility functions for region config access
+- ❌ **NO filter bar changes** - existing UI unchanged
+- ❌ **NO data splitting** - single shared events.json
 
 **For Developers:**
 - See [`docs/MULTI_REGION_QUICK_START.md`](docs/MULTI_REGION_QUICK_START.md) for usage guide

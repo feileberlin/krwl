@@ -10,7 +10,14 @@ KRWL HOF now supports **multiple regions** (cities) viewing the same event data 
 - `/selb` - Selb view
 - `/rehau` - Rehau view
 
-**Key principle:** All regions share the same `events.json` data file. The URL path just centers the map on different locations with region-specific zoom levels and custom filter presets.
+**Key principle:** All regions share the same `events.json` data file. **The URL path segment just reads config variables (map center and zoom) to center the map** - no filter bar changes or UI modifications.
+
+**What this infrastructure provides:**
+- ✅ Configuration structure for 5 Franconian cities
+- ✅ URL path determines map center and zoom
+- ✅ Utility functions to read region config
+- ❌ **NO filter bar changes** - customFilters are just data structure for future
+- ❌ **NO UI modifications** - existing interface unchanged
 
 ## Architecture
 
@@ -37,12 +44,14 @@ KRWL HOF now supports **multiple regions** (cities) viewing the same event data 
 
 Each region in `config.json` specifies:
 
-1. **Map Center** - Where to center the map (lat/lng)
-2. **Default Zoom** - Initial zoom level
+1. **Map Center** - Where to center the map (lat/lng) - **ACTIVE: Used to center map based on URL**
+2. **Default Zoom** - Initial zoom level - **ACTIVE: Applied when map loads**
 3. **Bounding Box** - Suggested area boundaries (optional filtering)
-4. **Custom Filters** - Neighborhood/district quick filters
+4. **Custom Filters** - Neighborhood/district data structure - **NOT USED YET: Just configuration for future**
 5. **Display Name** - Human-readable name (e.g., "Hof (Saale)")
 6. **Default Language** - Preferred language for the region
+
+**Important:** Only map center and zoom are actively used. The URL path segment reads these config variables to center the map. Custom filters are just data structure for future implementation - **no filter bar changes in this PR**.
 
 ## Configuration Structure
 
@@ -358,20 +367,17 @@ const currentRegion = pathSegments[0] || 'hof';
 fetch(`/${currentRegion}/config.json`)
   .then(res => res.json())
   .then(regionConfig => {
-    // Initialize map with region center and zoom
+    // Initialize map with region center and zoom from config
+    // This is the main purpose: URL path determines map view
     const map = L.map('map').setView(
       [regionConfig.center.lat, regionConfig.center.lng],
       regionConfig.zoom
     );
     
-    // Load custom filters
-    const filterSelect = document.getElementById('location-filter');
-    regionConfig.customFilters.forEach(filter => {
-      const option = document.createElement('option');
-      option.value = filter.id;
-      option.textContent = filter.name[currentLang];
-      filterSelect.appendChild(option);
-    });
+    // Note: customFilters are available in regionConfig but NOT used yet
+    // No filter bar changes in this implementation - filters are just data structure
+    // Example for future use (not implemented):
+    // regionConfig.customFilters.forEach(filter => { ... });
     
     // Load events (same for all regions)
     fetch(`/${currentRegion}/api/events`)

@@ -4,6 +4,10 @@
 
 The KRWL HOF event map now supports **multiple Franconian cities** viewing the same event data from different perspectives. Think of it like Google Maps - same data, different starting locations.
 
+**What it does:** URL path segment reads corresponding config variables (map center, zoom) to position the map.
+
+**What it does NOT do:** No filter bar changes, no UI modifications. Custom filters are just data structure for future use.
+
 ## 5-Minute Overview
 
 ### The Concept
@@ -22,9 +26,10 @@ Single events.json → Multiple city views (Hof, Nürnberg, Bayreuth, etc.)
 - `/selb` → Map centered on Selb
 - `/rehau` → Map centered on Rehau
 
-Each URL shows:
-- Different map center and zoom
-- Region-specific custom filters (neighborhoods)
+**Each URL reads config to:**
+- Center map at region's coordinates
+- Apply region's default zoom
+- **NO filter bar changes** - customFilters are just data structure
 - **Same event data from events.json**
 
 ## Current Status
