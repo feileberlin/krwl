@@ -765,7 +765,7 @@ strong, b {
 
 .custom-location-coords {
     font-size: 0.8rem;
-    color: var(--text-secondary);
+    color: var(--color-text-secondary);
     font-family: var(--font-family-mono);
 }
 
@@ -794,7 +794,7 @@ strong, b {
 /* Edit mode coordinates container - same structure as view */
 .custom-location-coords-edit {
     font-size: 0.8rem;
-    color: var(--text-secondary);
+    color: var(--color-text-secondary);
     font-family: var(--font-family-mono);
     display: flex;
     align-items: center;
@@ -899,7 +899,7 @@ strong, b {
 .custom-locations-empty {
     text-align: center;
     padding: 1.5rem;
-    color: var(--text-secondary);
+    color: var(--color-text-secondary);
     font-size: 0.9rem;
 }
 
@@ -960,7 +960,7 @@ strong, b {
 
 .form-group label {
     font-size: 0.8rem;
-    color: var(--text-secondary);
+    color: var(--color-text-secondary);
     font-weight: 500;
 }
 
@@ -1056,7 +1056,7 @@ strong, b {
 /* Cancel button - secondary action */
 .custom-location-btn--cancel {
     background: var(--bg-secondary);
-    color: var(--text-secondary);
+    color: var(--color-text-secondary);
     border-color: var(--border-secondary);
     display: flex;
     align-items: center;
@@ -1259,7 +1259,7 @@ strong, b {
 .form-status--loading {
     background: color-mix(in srgb, var(--color-primary) 10%, transparent);
     border: 1px solid var(--color-primary);
-    color: var(--text-secondary);
+    color: var(--color-text-secondary);
 }
 
 @keyframes fadeIn {

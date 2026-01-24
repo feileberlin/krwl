@@ -7,9 +7,10 @@ name: 🚀 Website Maintenance & Deployment
 # This is the MAIN workflow that handles all site operations:
 #
 # 📅 SCHEDULED TASKS (Automatic):
-#   - Event scraping from RSS/HTML sources (daily at 4am & 4pm Berlin time)
+#   - Event scraping from RSS/HTML sources (daily at 03:00 & 15:00 UTC / 04:00 & 16:00 CET)
 #   - Weather updates (hourly)
 #   - Site deployment to GitHub Pages
+#   Note: During CEST (daylight saving), times shift to 05:00 & 17:00 Berlin time
 #
 # 🎯 MANUAL TASKS (workflow_dispatch):
 #   Content Management:
