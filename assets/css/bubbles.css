@@ -22,22 +22,21 @@
     filter: drop-shadow(0 0 4px rgba(214, 137, 184, 0.6)); /* Matches --color-primary glow */
 }
 
-/* Filled tail shape between connector lines (comic book style) */
+/* Filled tail shape between connector lines (borderless, seamless merge) */
 .bubble-connector-fill {
     fill: #ffffff; /* White fill matching bubble background */
-    stroke: none;
+    stroke: none; /* No border - seamless merge with bubble */
     opacity: 1;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1)); /* Subtle shadow for depth */
     transition: opacity 0.3s ease;
 }
 
-/* Connector path strokes (dark borders for comic style) */
+/* Connector path strokes - DISABLED for borderless design */
 .bubble-connector-path {
     fill: none;
-    stroke: #1a1a2e; /* Dark blue-gray strokes - more authentic than pure black */
-    stroke-width: 3;
-    stroke-linecap: round;
-    opacity: 1;
-    filter: drop-shadow(2px 2px 0px rgba(0, 0, 0, 0.15)); /* Comic book shadow */
+    stroke: none; /* No stroke - borderless design for seamless merge */
+    stroke-width: 0;
+    opacity: 0; /* Hidden - only fill is visible */
     transition: opacity 0.3s ease;
 }
 
@@ -54,16 +53,16 @@
 
 .speech-bubble {
     position: absolute;
-    /* Comic book style: white background with bold dark border */
+    /* Comic book style: white background, no border - tail and bubble merge seamlessly */
     background: #ffffff;
-    border: 3px solid #1a1a2e; /* Dark blue-gray instead of pure black - more comic book authentic */
+    border: none; /* No border - plain color fill for seamless merge */
     border-radius: 20px; /* Very rounded for authentic comic look */
     padding: 14px 16px; /* Slightly more padding for comic style */
     width: 220px;
     z-index: 1000;
-    /* Comic book drop shadow - strong and defined */
-    box-shadow: 4px 4px 0px rgba(26, 26, 46, 0.3), /* Offset shadow for depth */
-                0 2px 8px rgba(0, 0, 0, 0.15); /* Subtle soft shadow */
+    /* Comic book drop shadow - provides definition without borders */
+    box-shadow: 4px 4px 8px rgba(107, 68, 92, 0.25), /* EcoBarbie shade_50 shadow */
+                0 2px 12px rgba(0, 0, 0, 0.1); /* Subtle soft shadow for depth */
     cursor: grab;
     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
                 box-shadow 0.3s ease, 
@@ -73,7 +72,7 @@
     pointer-events: auto;
     font-size: 0.9rem;
     font-weight: 500; /* Slightly bolder text for readability */
-    color: #1a1a2e; /* Dark blue-gray text matching border */
+    color: #6b445c; /* shade_50 - EcoBarbie spectrum text */
     /* Organic appearance */
     transform-origin: center;
     will-change: transform;
@@ -84,7 +83,7 @@
     overflow: visible;
 }
 
-/* CSS-based tail (triangular pointer) - Comic book style */
+/* CSS-based tail (triangular pointer) - No border, seamless merge */
 .speech-bubble::after {
     content: '';
     position: absolute;
@@ -92,50 +91,33 @@
     height: 0;
     border-style: solid;
     border-width: calc(16px * var(--tail-scale, 1)) calc(11px * var(--tail-scale, 1)) 0 calc(11px * var(--tail-scale, 1));
-    border-color: #1a1a2e transparent transparent transparent; /* Dark blue-gray border */
+    border-color: #ffffff transparent transparent transparent; /* White fill - no separate border */
     /* Position controlled by CSS custom properties set from JavaScript */
     left: var(--tail-x, 50%);
     top: var(--tail-y, 100%);
     transform: translate(-50%, 0) rotate(var(--tail-angle, 0deg));
     transform-origin: top center;
     pointer-events: none;
-    filter: drop-shadow(2px 2px 0px rgba(0, 0, 0, 0.2)); /* Comic book shadow */
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1)); /* Subtle shadow for depth */
     z-index: 1;
 }
 
-/* Tail background fill (creates white filled triangle) */
+/* Tail background fill - removed (no longer needed without border) */
 .speech-bubble::before {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: calc(13px * var(--tail-scale, 1)) calc(8px * var(--tail-scale, 1)) 0 calc(8px * var(--tail-scale, 1));
-    border-color: #ffffff transparent transparent transparent; /* White fill */
-    /* Position controlled by CSS custom properties set from JavaScript */
-    left: var(--tail-x, 50%);
-    top: var(--tail-y, 100%);
-    transform: translate(-50%, -2px) rotate(var(--tail-angle, 0deg));
-    transform-origin: top center;
-    pointer-events: none;
-    z-index: 1;
+    content: none; /* Disabled - single filled tail is enough */
 }
 
 /* Bookmarked bubble - different color accent (comic style) */
 .speech-bubble.bubble-is-bookmarked {
-    border: 3px solid #FF0066; /* Bright pink/red border for bookmarked bubbles */
-    background: #FFF5F8; /* Slightly pink-tinted white background */
-    box-shadow: 4px 4px 0px rgba(255, 0, 102, 0.25), /* Colored shadow */
-                0 2px 8px rgba(0, 0, 0, 0.15);
+    border: none; /* No border - seamless design */
+    background: #eac0da; /* tint_50 - EcoBarbie spectrum light pink tint */
+    box-shadow: 4px 4px 8px rgba(214, 137, 184, 0.3), /* EcoBarbie primary shadow */
+                0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* Bookmarked bubble tail colors */
 .speech-bubble.bubble-is-bookmarked::after {
-    border-color: #FF0066 transparent transparent transparent; /* Pink border */
-}
-
-.speech-bubble.bubble-is-bookmarked::before {
-    border-color: #FFF5F8 transparent transparent transparent; /* Pink-tinted fill */
+    border-color: #eac0da transparent transparent transparent; /* tint_50 - matches bubble background */
 }
 
 /* Change all text colors inside bookmarked bubble to match border */
@@ -237,7 +219,7 @@
 
 /* Speech bubble headline - START TIME */
 .bubble-time-headline {
-    color: #FF0066; /* Bright accent color for comic style */
+    color: #D689B8; /* primary - EcoBarbie pink for accent */
     font-size: 1.1rem;
     font-weight: 700;
     margin-bottom: 4px;
@@ -248,7 +230,7 @@
 
 /* Speech bubble date */
 .bubble-date {
-    color: #5a5a6e; /* Medium gray for readability */
+    color: #6b445c; /* shade_50 - EcoBarbie spectrum for readability */
     font-size: 0.75rem;
     margin-bottom: 8px;
     line-height: 1.2;
@@ -256,7 +238,7 @@
 
 /* Speech bubble title */
 .bubble-title {
-    color: #1a1a2e; /* Dark blue-gray for maximum readability */
+    color: #6b445c; /* shade_50 - EcoBarbie spectrum for maximum readability */
     font-size: 0.9rem;
     font-weight: 600; /* Bolder for comic style */
     margin-bottom: 6px;
@@ -265,7 +247,7 @@
 
 /* Speech bubble location */
 .bubble-location {
-    color: #2a2a3e; /* Dark gray */
+    color: #6b445c; /* shade_50 - EcoBarbie spectrum */
     font-size: 0.8rem;
     margin-bottom: 4px;
     line-height: 1.2;
@@ -286,7 +268,7 @@
 
 /* Speech bubble distance */
 .bubble-distance {
-    color: #5a5a6e; /* Medium gray */
+    color: #6b445c; /* shade_50 - EcoBarbie spectrum */
     font-size: 0.75rem;
     margin-bottom: 8px;
     line-height: 1.2;
