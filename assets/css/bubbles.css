@@ -27,7 +27,7 @@
     fill: #ffffff; /* White fill matching bubble background */
     stroke: none; /* No border - seamless merge with bubble */
     opacity: 1;
-    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1)); /* Subtle shadow for depth */
+    /* No separate shadow - unified shadow applied to bubble element encompasses entire visual */
     transition: opacity 0.3s ease;
 }
 
@@ -60,12 +60,11 @@
     padding: 14px 16px; /* Slightly more padding for comic style */
     width: 220px;
     z-index: 1000;
-    /* Comic book drop shadow - provides definition without borders */
-    box-shadow: 4px 4px 8px rgba(107, 68, 92, 0.25), /* EcoBarbie shade_50 shadow */
-                0 2px 12px rgba(0, 0, 0, 0.1); /* Subtle soft shadow for depth */
+    /* Unified drop shadow - applies to bubble AND tail as one grouped object */
+    filter: drop-shadow(4px 4px 8px rgba(107, 68, 92, 0.25)) 
+            drop-shadow(0 2px 12px rgba(0, 0, 0, 0.1));
     cursor: grab;
     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
-                box-shadow 0.3s ease, 
                 opacity 0.4s ease,
                 filter 0.3s ease;
     opacity: 0;
@@ -98,7 +97,7 @@
     transform: translate(-50%, 0) rotate(var(--tail-angle, 0deg));
     transform-origin: top center;
     pointer-events: none;
-    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1)); /* Subtle shadow for depth */
+    /* No separate shadow - parent's filter: drop-shadow applies to both bubble and tail as one object */
     z-index: 1;
 }
 
@@ -111,8 +110,9 @@
 .speech-bubble.bubble-is-bookmarked {
     border: none; /* No border - seamless design */
     background: #eac0da; /* tint_50 - EcoBarbie spectrum light pink tint */
-    box-shadow: 4px 4px 8px rgba(214, 137, 184, 0.3), /* EcoBarbie primary shadow */
-                0 2px 12px rgba(0, 0, 0, 0.1);
+    /* Unified drop shadow for grouped bubble+tail object */
+    filter: drop-shadow(4px 4px 8px rgba(214, 137, 184, 0.3)) 
+            drop-shadow(0 2px 12px rgba(0, 0, 0, 0.1));
 }
 
 /* Bookmarked bubble tail colors */
