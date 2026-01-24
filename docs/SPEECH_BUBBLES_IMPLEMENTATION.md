@@ -3,6 +3,16 @@
 ## Overview
 Implemented automatic event detail display as "speech bubbles" on page load, filter persistence, and bookmarking system.
 
+## Visual Demo: Unified Shadow Fix
+
+The speech bubbles use a unified shadow approach for seamless appearance. See the before/after comparison:
+
+![Unified Shadow Fix - Before/After](screenshots/unified-shadow-fix-before-after.png)
+
+**Key improvements:**
+- ❌ **Before**: Separate shadows on bubble and tail create visible artifacts at intersection
+- ✅ **After**: Single `filter: drop-shadow` on parent treats bubble + tail as one grouped object
+
 ## Key Features Implemented
 
 ### 1. Speech Bubbles (Event Details on Load)
