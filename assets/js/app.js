@@ -89,12 +89,13 @@ class EventsApp {
             debug: false,
             app: { environment: 'unknown' },
             map: {
-                default_center: { lat: 50.3167, lon: 11.9167 },
-                default_zoom: 13,
+                default_center: { lat: 50.3167, lon: 11.9167 },  // Fallback only
+                default_zoom: 13,  // Fallback only
                 tile_provider: 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             },
-            data: { source: 'real', sources: {} }
+            data: { source: 'real', sources: {} },
+            _comment: 'Fallback config only - actual config loaded from window.APP_CONFIG'
         };
     }
     

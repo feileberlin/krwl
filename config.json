@@ -155,6 +155,40 @@
       },
       "dataSource": "events.json",
       "defaultLanguage": "de",
+      "distancePresets": [
+        {
+          "id": "nearby",
+          "name": {
+            "de": "In der Nähe",
+            "en": "Nearby"
+          },
+          "distance_km": 1.0
+        },
+        {
+          "id": "neighborhood",
+          "name": {
+            "de": "Stadtteil",
+            "en": "Neighborhood"
+          },
+          "distance_km": 3.0
+        },
+        {
+          "id": "citywide",
+          "name": {
+            "de": "Stadtgebiet",
+            "en": "City-wide"
+          },
+          "distance_km": 5.0
+        },
+        {
+          "id": "region",
+          "name": {
+            "de": "Region",
+            "en": "Region"
+          },
+          "distance_km": 10.0
+        }
+      ],
       "customFilters": [
         {
           "id": "innenstadt",
@@ -213,6 +247,40 @@
       },
       "dataSource": "events.json",
       "defaultLanguage": "de",
+      "distancePresets": [
+        {
+          "id": "nearby",
+          "name": {
+            "de": "In der Nähe",
+            "en": "Nearby"
+          },
+          "distance_km": 1.0
+        },
+        {
+          "id": "neighborhood",
+          "name": {
+            "de": "Stadtteil",
+            "en": "Neighborhood"
+          },
+          "distance_km": 3.0
+        },
+        {
+          "id": "citywide",
+          "name": {
+            "de": "Stadtgebiet",
+            "en": "City-wide"
+          },
+          "distance_km": 5.0
+        },
+        {
+          "id": "metropolitan",
+          "name": {
+            "de": "Großraum",
+            "en": "Metropolitan Area"
+          },
+          "distance_km": 15.0
+        }
+      ],
       "customFilters": [
         {
           "id": "altstadt",
@@ -271,6 +339,40 @@
       },
       "dataSource": "events.json",
       "defaultLanguage": "de",
+      "distancePresets": [
+        {
+          "id": "nearby",
+          "name": {
+            "de": "In der Nähe",
+            "en": "Nearby"
+          },
+          "distance_km": 1.0
+        },
+        {
+          "id": "neighborhood",
+          "name": {
+            "de": "Stadtteil",
+            "en": "Neighborhood"
+          },
+          "distance_km": 2.5
+        },
+        {
+          "id": "citywide",
+          "name": {
+            "de": "Stadtgebiet",
+            "en": "City-wide"
+          },
+          "distance_km": 5.0
+        },
+        {
+          "id": "region",
+          "name": {
+            "de": "Region",
+            "en": "Region"
+          },
+          "distance_km": 10.0
+        }
+      ],
       "customFilters": [
         {
           "id": "innenstadt",
@@ -329,6 +431,32 @@
       },
       "dataSource": "events.json",
       "defaultLanguage": "de",
+      "distancePresets": [
+        {
+          "id": "nearby",
+          "name": {
+            "de": "In der Nähe",
+            "en": "Nearby"
+          },
+          "distance_km": 0.5
+        },
+        {
+          "id": "citywide",
+          "name": {
+            "de": "Stadtgebiet",
+            "en": "City-wide"
+          },
+          "distance_km": 2.0
+        },
+        {
+          "id": "region",
+          "name": {
+            "de": "Region",
+            "en": "Region"
+          },
+          "distance_km": 5.0
+        }
+      ],
       "customFilters": [
         {
           "id": "innenstadt",
@@ -361,6 +489,32 @@
       },
       "dataSource": "events.json",
       "defaultLanguage": "de",
+      "distancePresets": [
+        {
+          "id": "nearby",
+          "name": {
+            "de": "In der Nähe",
+            "en": "Nearby"
+          },
+          "distance_km": 0.5
+        },
+        {
+          "id": "citywide",
+          "name": {
+            "de": "Stadtgebiet",
+            "en": "City-wide"
+          },
+          "distance_km": 2.0
+        },
+        {
+          "id": "region",
+          "name": {
+            "de": "Region",
+            "en": "Region"
+          },
+          "distance_km": 5.0
+        }
+      ],
       "customFilters": [
         {
           "id": "marktplatz",

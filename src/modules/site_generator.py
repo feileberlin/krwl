@@ -1742,7 +1742,10 @@ window.DASHBOARD_ICONS = {json.dumps(all_ui_icons, ensure_ascii=False)};'''
             'data': {
                 'source': primary_config.get('data', {}).get('source', 'real'),
                 'sources': primary_config.get('data', {}).get('sources', {})
-            }
+            },
+            'regions': primary_config.get('regions', {}),
+            'defaultRegion': primary_config.get('defaultRegion', 'hof'),
+            'supportedLanguages': primary_config.get('supportedLanguages', ['de', 'en'])
         }
         
         # Add weather to runtime config if enabled (simplified: single location weather embedded in config)
