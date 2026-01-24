@@ -1,12 +1,9 @@
-# IMPORTANT: static/ should contain ONLY index.html
+# IMPORTANT: public/ contains generated files only
 # All source files belong in assets/ or other directories
 # Everything is inlined into index.html during build
 
-# Ignore everything in this directory
+# Ignore everything in this directory (including index.html)
 *
-
-# EXCEPT index.html (the generated file)
-!index.html
 
 # EXCEPT docs/ directory (generated documentation)
 !docs/
@@ -14,3 +11,7 @@
 
 # And this .gitignore file itself
 !.gitignore
+
+# Note: index.html is now gitignored (see root .gitignore line 92)
+# It is generated fresh on each CI run and should be regenerated locally
+# To regenerate: ./scripts/regenerate_html.sh
