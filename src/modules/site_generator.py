@@ -1081,20 +1081,20 @@ class SiteGenerator:
         """
         Generate a map of marker icon names to base64 data URLs.
         
-        Uses Lucide icons wrapped in gyro marker shape as the primary source.
-        Falls back to local SVG files if Lucide markers not available.
+        Loads custom SVG marker icons from assets/svg/ directory.
+        Optionally uses Lucide-based markers if LUCIDE_MARKER_BASE64_MAP is populated.
         
         Returns:
             Dictionary mapping marker names (without .svg extension) to data URLs
             Example: {'marker-on-stage': 'data:image/svg+xml;base64,...'}
         """
-        # Try to use Lucide markers first (imported at module level)
+        # Use Lucide markers if available (currently empty, uses custom SVG markers)
         if LUCIDE_MARKER_BASE64_MAP:
             print(f"✅ Using {len(LUCIDE_MARKER_BASE64_MAP)} Lucide-based markers")
             return LUCIDE_MARKER_BASE64_MAP.copy()
         
-        # Fallback: Load from local SVG files
-        print("⚠️  Lucide markers not available, loading from SVG files...")
+        # Load from local custom SVG marker files (this is the expected behavior)
+        print("📍 Loading custom SVG markers from assets/svg/...")
         
         # List of markers actually used in JavaScript getMarkerIconForCategory
         # This should match the unique values in the iconNameMap in app.js
