@@ -61,28 +61,7 @@ jobs:
       - name: Fetch dependencies
         run: |
           echo "📦 Fetching dependencies for preview..."
-          echo ""
-          
-          # Check if we have internet access
-          if curl -s --connect-timeout 5 https://unpkg.com > /dev/null 2>&1; then
-            echo "✅ Internet access available - fetching dependencies"
-            
-            if python3 src/event_manager.py dependencies fetch; then
-              echo "✅ Dependencies fetched successfully!"
-              echo ""
-              echo "Preview will include embedded Leaflet - works offline after download"
-              ls -lah lib/leaflet/ 2>&1 | head -10 || true
-            else
-              echo "❌ Dependency fetch failed despite internet access"
-              echo "⚠️  Preview will use CDN fallbacks (requires internet when viewing)"
-            fi
-          else
-            echo "⚠️  No internet access during build"
-            echo "⚠️  Preview will use CDN fallbacks (requires internet when viewing)"
-            echo ""
-            echo "Note: This is expected in some CI environments."
-            echo "In GitHub Actions with internet, dependencies are embedded automatically."
-          fi
+          python3 src/event_manager.py dependencies fetch || echo "⚠️ Dependency fetch failed - will use CDN fallbacks"
       
       - name: Generate preview site
         run: |

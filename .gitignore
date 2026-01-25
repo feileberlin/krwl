@@ -84,13 +84,12 @@ KISS_IMPLEMENTATION.md
 static/css/style.css.backup
 static/logo.svg
 
-# Build artifacts - dependencies committed for reliable PR previews
-# Leaflet and fonts are committed to ensure previews work offline
-# lib/leaflet/     # Now committed
-# lib/roboto/      # Now committed
-# lib/roboto-mono/ # Now committed
-lib/lucide/        # Still fetched (changes frequently)
-public/index.html  # Generated
+# Build artifacts - dependencies are fetched at build time
+lib/leaflet/
+lib/lucide/
+lib/roboto/
+lib/roboto-mono/
+public/index.html
 
 # WCAG protocol (auto-generated during build)
 public/wcag_protocol.txt
