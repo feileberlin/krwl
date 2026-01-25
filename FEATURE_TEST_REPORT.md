@@ -104,10 +104,10 @@ These features are documented but marked as not yet implemented:
 
 ```
 Total Tests:     196
-Passed:          182 (93%)
+Passed:          180 (92%)
 Failed:          12 (6%)
-Errors:          2 (1%)
-Warnings:        68
+Errors:          4 (2%)
+Warnings:        66
 ```
 
 ### ✅ Passing Test Suites (40+)
