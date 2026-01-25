@@ -1952,6 +1952,181 @@ window.DEBUG_INFO = {debug_info_json};'''
         
         return '\n'.join(html_parts)
     
+    def generate_preview_instructions(self) -> None:
+        """
+        Generate PREVIEW_INSTRUCTIONS.html file for PR artifacts.
+        
+        This file provides clear instructions for reviewers on how to view
+        PR previews, including troubleshooting for the "Map Loading..." issue.
+        """
+        instructions_html = '''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PR Preview Instructions - KRWL HOF</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+            color: #c9d1d9;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #161b22;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid #30363d;
+        }
+        h1 { color: #D689B8; margin-bottom: 10px; font-size: 2.5em; }
+        h2 { color: #D689B8; margin-top: 30px; margin-bottom: 15px; font-size: 1.5em; border-bottom: 2px solid #D689B8; padding-bottom: 10px; }
+        h3 { color: #8b949e; margin-top: 20px; }
+        .subtitle { color: #8b949e; font-size: 1.1em; margin-bottom: 30px; }
+        .warning { background: #3d2817; border-left: 4px solid #d29922; padding: 15px; margin: 20px 0; border-radius: 6px; }
+        .warning strong { color: #d29922; }
+        .info { background: #1f2d3d; border-left: 4px solid #58a6ff; padding: 15px; margin: 20px 0; border-radius: 6px; }
+        .info strong { color: #58a6ff; }
+        .success { background: #1a3d2e; border-left: 4px solid #4CAF50; padding: 15px; margin: 20px 0; border-radius: 6px; }
+        .success strong { color: #4CAF50; }
+        code { background: #0d1117; padding: 2px 6px; border-radius: 3px; font-family: 'Consolas', 'Monaco', monospace; color: #79c0ff; }
+        pre { background: #0d1117; padding: 15px; border-radius: 6px; overflow-x: auto; border: 1px solid #30363d; }
+        pre code { background: none; padding: 0; }
+        ol, ul { margin-left: 25px; margin-top: 10px; }
+        li { margin: 10px 0; }
+        a { color: #58a6ff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .button { display: inline-block; background: #D689B8; color: #0d1117; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; margin: 20px 10px 20px 0; transition: background 0.3s; }
+        .button:hover { background: #E8A5C8; text-decoration: none; }
+        .file-list { background: #0d1117; padding: 15px; border-radius: 6px; border: 1px solid #30363d; font-family: 'Consolas', 'Monaco', monospace; margin: 15px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 PR Preview Instructions</h1>
+        <p class="subtitle">How to view this pull request preview</p>
+        
+        <div class="warning">
+            <strong>⚠️ Known Issue:</strong> The main <code>index.html</code> file shows "Map Loading..." when opened directly from the file system due to browser security restrictions and missing Leaflet library.
+        </div>
+        
+        <h2>✅ Recommended: Use Local Web Server</h2>
+        
+        <div class="success">
+            <strong>Best Method:</strong> Run a local web server to view the preview with full functionality (map, markers, interactive features).
+        </div>
+        
+        <p>Choose one of these methods:</p>
+        
+        <h3>Method 1: Python (Easiest)</h3>
+        <pre><code># Navigate to the extracted folder
+cd path/to/preview-folder
+
+# Start server (Python 3)
+python3 -m http.server 8000
+
+# Or Python 2
+python -m SimpleHTTPServer 8000
+
+# Open browser to:
+# http://localhost:8000/index.html</code></pre>
+        
+        <h3>Method 2: Node.js</h3>
+        <pre><code># Install http-server globally (once)
+npm install -g http-server
+
+# Navigate to folder and start
+cd path/to/preview-folder
+http-server -p 8000
+
+# Open: http://localhost:8000/index.html</code></pre>
+        
+        <h3>Method 3: VS Code</h3>
+        <ol>
+            <li>Install "Live Server" extension</li>
+            <li>Right-click <code>index.html</code></li>
+            <li>Select "Open with Live Server"</li>
+        </ol>
+        
+        <h2>📋 What's in This Preview</h2>
+        
+        <div class="file-list">
+index.html ← Main application (requires web server)<br>
+PREVIEW_INSTRUCTIONS.html ← This file<br>
+wcag_protocol.txt ← Accessibility report
+        </div>
+        
+        <div class="info">
+            <strong>ℹ️ Development Build:</strong> This preview is built in development mode with:
+            <ul style="margin-top: 10px; margin-left: 20px;">
+                <li>Debug logging enabled</li>
+                <li>Demo events included (pink markers)</li>
+                <li>DEV watermark visible</li>
+                <li>Verbose console output</li>
+            </ul>
+        </div>
+        
+        <h2>🐛 Troubleshooting</h2>
+        
+        <h3>Problem: "Map Loading..." persists</h3>
+        <p><strong>Solution:</strong> You must use a local web server (see methods above). Opening <code>index.html</code> directly from file system won't work due to:</p>
+        <ul>
+            <li>Browser CORS restrictions</li>
+            <li>CDN loading blocked from <code>file://</code> protocol</li>
+            <li>Missing Leaflet.js library</li>
+        </ul>
+        
+        <h3>Problem: No events showing</h3>
+        <p><strong>Check:</strong></p>
+        <ol>
+            <li>Open browser console (F12)</li>
+            <li>Look for log messages: <code>[KRWL] Events loaded: X events</code></li>
+            <li>Check for JavaScript errors</li>
+        </ol>
+        
+        <h3>Problem: Map shows but no markers</h3>
+        <p><strong>This is the bug being fixed!</strong> Check console for:</p>
+        <pre><code>[KRWL] Events loaded: X events
+[KRWL] Displaying events: Y filtered from X total
+[KRWL] Created Z markers on map</code></pre>
+        
+        <h2>📞 Need Help?</h2>
+        
+        <p>If you're still having issues:</p>
+        <ol>
+            <li>Take a screenshot of the page</li>
+            <li>Open browser console (F12) and screenshot any errors</li>
+            <li>Comment on the PR with both screenshots</li>
+        </ol>
+        
+        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #30363d; color: #8b949e; text-align: center;">
+            <p>KRWL HOF Community Events | PR Preview Build</p>
+        </div>
+    </div>
+    
+    <script>
+        // Add a helpful popup if user tries to run without server
+        if (window.location.protocol === 'file:') {
+            setTimeout(() => {
+                alert('⚠️ You\\'re viewing this from file:// protocol.\\n\\nFor best results, use a local web server (see instructions on this page).\\n\\nThe main index.html will NOT work without a server due to browser security restrictions.');
+            }, 1000);
+        }
+    </script>
+</body>
+</html>'''
+        
+        # Write to public/ directory
+        instructions_file = self.static_path / 'PREVIEW_INSTRUCTIONS.html'
+        with open(instructions_file, 'w', encoding='utf-8') as f:
+            f.write(instructions_html)
+        
+        print(f"✅ Generated preview instructions: {instructions_file}")
+    
     def generate_site(self, skip_lint: bool = False) -> bool:
         """
         Generate complete static site with inlined HTML.
@@ -2136,6 +2311,9 @@ window.DEBUG_INFO = {debug_info_json};'''
         output_file = self.static_path / 'index.html'
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write(html_de)
+        
+        # Generate preview instructions file (for PR artifacts)
+        self.generate_preview_instructions()
         
         print(f"\n✅ Static site generated successfully!")
         print(f"   Output: {output_file} ({len(html_de) / 1024:.1f} KB)")

@@ -50,6 +50,14 @@ jobs:
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
       
+      - name: Cache frontend dependencies
+        uses: actions/cache@v4
+        with:
+          path: lib/
+          key: frontend-deps-${{ hashFiles('src/modules/site_generator.py') }}
+          restore-keys: |
+            frontend-deps-
+      
       - name: Fetch dependencies
         run: |
           echo "📦 Fetching dependencies for preview..."
@@ -60,11 +68,23 @@ jobs:
           echo "🔨 Building preview site for PR #${{ github.event.pull_request.number }}..."
           python3 src/event_manager.py generate
           
+          # Verify preview instructions are generated
+          if [ ! -f public/PREVIEW_INSTRUCTIONS.html ]; then
+            echo "❌ ERROR: PREVIEW_INSTRUCTIONS.html not generated!"
+            exit 1
+          fi
+          echo "✅ Preview instructions file generated"
+          
           echo "## 🔍 PR Preview Build" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**PR:** #${{ github.event.pull_request.number }}" >> $GITHUB_STEP_SUMMARY
           echo "**Branch:** ${{ github.event.pull_request.head.ref }}" >> $GITHUB_STEP_SUMMARY
           echo "**Time:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Files in artifact:**" >> $GITHUB_STEP_SUMMARY
+          echo "- index.html (main app)" >> $GITHUB_STEP_SUMMARY
+          echo "- PREVIEW_INSTRUCTIONS.html (setup guide)" >> $GITHUB_STEP_SUMMARY
+          echo "- wcag_protocol.txt (accessibility report)" >> $GITHUB_STEP_SUMMARY
       
       - name: Upload preview artifact
         uses: actions/upload-artifact@v4
@@ -92,7 +112,19 @@ jobs:
             
             1. Go to the [workflow run](https://github.com/${repo.owner}/${repo.repo}/actions/runs/${runId})
             2. Download the \`pr-preview-${prNumber}\` artifact
-            3. Extract and open \`public/index.html\` in your browser
+            3. Extract the ZIP file
+            4. **Open \`PREVIEW_INSTRUCTIONS.html\` first** for setup instructions
+            5. Run a local web server (see instructions file for methods)
+            6. Open \`index.html\` in your browser via the server
+            
+            ### ⚠️ Important: Use Local Web Server
+            
+            **Do NOT open \`index.html\` directly from file system** - it will show "Map Loading..." due to browser security restrictions.
+            
+            The \`PREVIEW_INSTRUCTIONS.html\` file included in the artifact provides:
+            - ✅ Step-by-step server setup (Python, Node.js, VS Code)
+            - ✅ Troubleshooting guide
+            - ✅ What to check when testing
             
             ### ℹ️ Note
             
