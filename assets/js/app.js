@@ -135,23 +135,29 @@ class EventsApp {
             console.warn('Map initialization failed:', error.message);
         }
         
-        // Get user location via MapManager (still works without map for filtering)
+        // Get user location via MapManager (DON'T display events yet - wait for data)
         this.mapManager.getUserLocation(
             (location) => {
-                this.displayEvents();
+                this.log('User location acquired', location);
+                // DON'T call displayEvents() here - wait for events to load first
             },
             (error) => {
-                this.displayEvents();
+                this.log('User location failed, using fallback', error);
+                // DON'T call displayEvents() here - wait for events to load first
             }
         );
         
-        // Load events
+        // Load events (MUST complete before displaying)
         try {
             await this.loadEvents();
+            this.log(`Events loaded: ${this.events.length} events`);
         } catch (error) {
             console.error('Failed to load events:', error);
             this.showMainContent();
         }
+        
+        // NOW display events (both location and events are ready)
+        this.displayEvents();
         
         // Load weather
         await this.loadWeather();
@@ -210,6 +216,7 @@ class EventsApp {
                 window.__EVENTS_DATA__ = data;
                 this.log(`Loaded ${this.events.length} events from inline data`);
                 this.events = this.utils.processTemplateEvents(this.events, this.eventFilter);
+                this.log(`After processing: ${this.events.length} events`);
                 return;
             }
             
@@ -245,6 +252,7 @@ class EventsApp {
             }
             
             this.events = this.utils.processTemplateEvents(allEvents, this.eventFilter);
+            this.log(`Final event count: ${this.events.length}`);
             this.updateDashboard();
         } catch (error) {
             console.error('Error loading events:', error);
@@ -464,6 +472,8 @@ class EventsApp {
         const location = this.getReferenceLocation();
         const filteredEvents = this.eventFilter.filterEvents(this.events, this.filters, location);
         
+        this.log(`Displaying events: ${filteredEvents.length} filtered from ${this.events.length} total`);
+        
         this.updateFilterDescription(filteredEvents.length);
         this.updateDashboard();
         this.showMainContent();
@@ -472,21 +482,32 @@ class EventsApp {
         this.mapManager.clearMarkers();
         this.speechBubbles.clearSpeechBubbles();
         
-        if (filteredEvents.length === 0) return;
+        if (filteredEvents.length === 0) {
+            this.log('No events to display after filtering');
+            return;
+        }
         
         filteredEvents.sort((a, b) => (a.distance || 0) - (b.distance || 0));
         
-        // Add markers via MapManager
+        // Add markers via MapManager (filter out nulls if map not initialized)
         const markers = [];
         filteredEvents.forEach(event => {
             const marker = this.mapManager.addEventMarker(event, (evt, mkr) => {
                 this.showEventDetail(evt);
             });
-            markers.push(marker);
+            if (marker) {  // Only add non-null markers
+                markers.push(marker);
+            } else {
+                this.log('Marker creation failed for event:', event.title);
+            }
         });
         
-        // Fit map
-        this.mapManager.fitMapToMarkers();
+        this.log(`Created ${markers.length} markers on map`);
+        
+        // Fit map (only if we have markers)
+        if (markers.length > 0) {
+            this.mapManager.fitMapToMarkers();
+        }
         
         // Show speech bubbles via SpeechBubbles module
         setTimeout(() => {

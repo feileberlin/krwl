@@ -248,7 +248,15 @@ class MapManager {
      * @returns {Object} Leaflet marker
      */
     addEventMarker(event, onClick) {
-        if (!this.map || !event.location) return null;
+        if (!this.map) {
+            console.warn('Cannot add marker: map not initialized');
+            return null;
+        }
+        
+        if (!event.location) {
+            console.warn('Cannot add marker: event has no location', event.title);
+            return null;
+        }
         
         // Get marker icon based on category (uses SVG filename pattern: marker-{category})
         // Fallback uses ecoBarbie color #D689B8 (same as SVG markers)
@@ -256,6 +264,10 @@ class MapManager {
         const iconUrl = window.MARKER_ICONS && window.MARKER_ICONS[`marker-${category}`] || 
             window.MARKER_ICONS && window.MARKER_ICONS['marker-default'] ||
             'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSIjRDY4OUI4IiBkPSJNMTIgMkM4LjEzIDIgNSA1LjEzIDUgOWMwIDUuMjUgNyAxMyA3IDEzczctNy43NSA3LTEzYzAtMy44Ny0zLjEzLTctNy03em0wIDkuNWMtMS4zOCAwLTIuNS0xLjEyLTIuNS0yLjVzMS4xMi0yLjUgMi41LTIuNSAyLjUgMS4xMiAyLjUgMi41LTEuMTIgMi41LTIuNSAyLjV6Ii8+PC9zdmc+';
+        
+        if (!window.MARKER_ICONS) {
+            console.warn('MARKER_ICONS not loaded, using fallback icon');
+        }
         
         // Use divIcon to allow HTML content (time badge overlay)
         const markerIcon = L.divIcon({
