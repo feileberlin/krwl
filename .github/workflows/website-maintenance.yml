@@ -1,54 +1,128 @@
 name: 🤖 Event Scraping, Weather Updates & Site Deployment
 
-# Comprehensive automation workflow for the KRWL HOF community events site
-# Handles: event scraping from RSS/HTML sources, weather updates, HTML generation, 
-# editorial workflow (review/publish), event archiving, and GitHub Pages deployment
-# This workflow dynamically adapts to scraper configuration changes
+# ═══════════════════════════════════════════════════════════════════════════════
+# KRWL HOF Community Events - Automated Workflow
+# ═══════════════════════════════════════════════════════════════════════════════
 #
-# CONSOLIDATED WORKFLOW - Integrates functionality from:
+# PURPOSE:
+# This is the main automation workflow for the KRWL HOF community events website.
+# It handles everything from data collection to deployment in a fully automated way.
+#
+# WHAT THIS WORKFLOW DOES:
+# 1. 📥 Collects event data from RSS feeds and HTML sources
+# 2. 🌤️ Updates weather information and clothing recommendations
+# 3. 🔨 Builds the static website with all latest data
+# 4. 🚀 Deploys the updated site to GitHub Pages
+# 5. ✏️ Provides editorial tools for event curation
+# 6. 📱 Integrates with Telegram bot for community submissions
+# 7. 🧪 Runs automated tests and quality checks
+#
+# WHEN IT RUNS:
+# - Automatically twice daily (4 AM and 4 PM Berlin time)
+# - On every push to main branch (ensures deployment)
+# - On pull requests (for code review and testing)
+# - Manually via "Run workflow" button with task selection
+# - Via Telegram bot events (flyer submission, contact form, etc.)
+#
+# WORKFLOW STRUCTURE (7 Phases):
+# Phase 1: Configuration Discovery - Read settings and capabilities
+# Phase 2: Data Collection - Scrape events and weather
+# Phase 3: Build & Generation - Create HTML and update content
+# Phase 4: Deployment - Publish to live site
+# Phase 5: Editorial & Maintenance - Review events, archive old ones
+# Phase 6: Telegram Integration - Process bot submissions
+# Phase 7: CI/CD & Quality - Run tests and validation
+#
+# CONSOLIDATED WORKFLOW - Replaces previous separate workflows:
 # - pr-preview.yml - PR preview builds
 # - wishlist-ci.yml - Linting and testing
 # - config-validation.yml - Configuration validation
-# Note: Auto HTML generation now handled by full-rebuild job for all push events
+# - auto-generate-html.yml - HTML generation (now in full-rebuild job)
+#
+# ═══════════════════════════════════════════════════════════════════════════════
 
 on:
+  # ═══════════════════════════════════════════════════════════════════════════
+  # TRIGGER 1: Scheduled Runs (Automatic)
+  # Runs twice daily to keep the site fresh with latest events
+  # ═══════════════════════════════════════════════════════════════════════════
   schedule:
     # Dynamic scheduling based on config.json scraping.schedule
     # These times are read from scraper capabilities at runtime
     # Default: 04:00 and 16:00 Europe/Berlin (03:00 and 15:00 UTC)
-    - cron: '0 3 * * *'   # 4:00 AM Berlin time (CET)
-    - cron: '0 15 * * *'  # 4:00 PM Berlin time (CET)
+    - cron: '0 3 * * *'   # 4:00 AM Berlin time - Morning update
+    - cron: '0 15 * * *'  # 4:00 PM Berlin time - Afternoon update
   
+  # ═══════════════════════════════════════════════════════════════════════════
+  # TRIGGER 2: Pull Requests (Code Review)
+  # Validates changes before merging to main
+  # ═══════════════════════════════════════════════════════════════════════════
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
-      # Trigger on changes that affect site generation or code quality
-      - 'assets/css/**'
-      - 'assets/js/**'
-      - 'assets/html/**'
-      - 'assets/json/**'
-      - 'config.json'
-      - 'src/**'
-      - 'tests/**'
-      - 'features.json'
+      # Only trigger on changes that affect site generation or code quality
+      - 'assets/css/**'          # Styles
+      - 'assets/js/**'           # JavaScript  
+      - 'assets/html/**'         # HTML templates
+      - 'assets/json/**'         # JSON data
+      - 'config.json'            # Configuration
+      - 'src/**'                 # Python source code
+      - 'tests/**'               # Test files
+      - 'features.json'          # Feature registry
   
+  # ═══════════════════════════════════════════════════════════════════════════
+  # TRIGGER 3: Push to Main (Deployment)
+  # CRITICAL: ALL pushes to main now trigger deployment (no path filters)
+  # This ensures every merge results in a deployment - preventing silent failures
+  # ═══════════════════════════════════════════════════════════════════════════
   push:
     branches:
       - main
-    # Note: No paths filter here - ALL pushes to main should trigger deployment
+    # Note: No paths filter here - ALL pushes to main trigger workflow
+    # This prevents the "changes merged but not deployed" issue
     # Path-based optimizations are handled within individual jobs
   
-  # Telegram bot integration via repository_dispatch
+  # ═══════════════════════════════════════════════════════════════════════════
+  # TRIGGER 4: Telegram Bot Integration
+  # Receives events from the Telegram bot for community submissions
+  # ═══════════════════════════════════════════════════════════════════════════
   repository_dispatch:
     types:
-      - telegram_flyer_submission    # Flyer upload for OCR processing
-      - telegram_contact_submission  # Contact form message
-      - telegram_pin_submission      # PIN publishing by trusted organizer
+      - telegram_flyer_submission    # User uploads event flyer for OCR
+      - telegram_contact_submission  # User sends contact form message
+      - telegram_pin_submission      # Trusted organizer publishes with PIN
   
-  workflow_dispatch:  # Manual trigger with comprehensive task options
+  # ═══════════════════════════════════════════════════════════════════════════
+  # TRIGGER 5: Manual Execution
+  # Run specific tasks on demand via GitHub UI "Run workflow" button
+  # ═══════════════════════════════════════════════════════════════════════════
+  workflow_dispatch:
     inputs:
       task:
-        description: '🎯 Action to perform - Select the maintenance task you want to execute'
+        description: |
+          🎯 Select the task you want to run:
+          
+          📥 Data Collection:
+          - scrape-only: Get new events without deploying
+          - scrape-and-deploy: Get events + deploy immediately
+          - scrape-weather: Update weather info only
+          
+          🔨 Build & Deploy:
+          - force-deploy: Rebuild everything and deploy
+          - update-events: Fast event update (no full rebuild)
+          
+          ✏️ Editorial:
+          - review-pending: Review and publish awaiting events
+          
+          📱 Telegram:
+          - process-telegram-flyer: Process flyer submission
+          - process-telegram-contact: Process contact message
+          - process-telegram-pin: Process PIN publish
+          
+          🧪 Diagnostics:
+          - info: Show configuration and capabilities
+          - run-tests: Run linting and tests
+          - validate-config: Check configuration files
         required: true
         type: choice
         options:
@@ -67,74 +141,114 @@ on:
         default: 'scrape-and-deploy'
       
       force_scrape:
-        description: '🔄 Force scraping even if source URLs have not changed since last run'
+        description: |
+          🔄 Force re-scraping even if URLs haven't changed
+          (Useful when source sites updated content without changing URLs)
         type: boolean
         default: false
       
-      # Editorial workflow options (used with 'review-pending' task)
+      # ═════════════════════════════════════════════════════════════════════
+      # Editorial Workflow Options (for 'review-pending' task)
+      # ═════════════════════════════════════════════════════════════════════
       event_ids:
-        description: '📝 Event IDs to publish - Comma-separated list (e.g., "pending_123,pending_456") or "all" for bulk approval'
+        description: |
+          📝 Event IDs to publish (comma-separated)
+          Examples:
+          - "pending_123,pending_456" - Publish specific events
+          - "all" - Publish all pending events
         type: string
         required: false
       
       auto_publish_pattern:
-        description: '🔍 Auto-publish events matching glob pattern - Example: "pending_*" publishes all pending events automatically'
+        description: |
+          🔍 Auto-publish pattern (glob syntax)
+          Examples:
+          - "pending_*" - Publish all pending events
+          - "pending_202601*" - Publish January 2026 events
         type: string
         required: false
       
-      # Telegram processing options (used with process-telegram-* tasks)
+      # ═════════════════════════════════════════════════════════════════════
+      # Telegram Processing Options (for process-telegram-* tasks)
+      # ═════════════════════════════════════════════════════════════════════
       telegram_file_id:
-        description: '📁 Telegram file ID for flyer processing'
+        description: |
+          📁 Telegram file ID (for flyer uploads)
+          Format: File ID from Telegram Bot API
         type: string
         required: false
       
       telegram_message:
-        description: '💬 Telegram contact message text'
+        description: |
+          💬 Contact message text
+          The actual message content from user
         type: string
         required: false
       
       telegram_user_id:
-        description: '👤 Telegram user ID'
+        description: |
+          👤 Telegram user ID
+          Numeric ID of the user who submitted
         type: string
         required: false
       
       telegram_pin:
-        description: '🔐 4-digit PIN for trusted organizer publishing'
+        description: |
+          🔐 4-digit PIN (for trusted organizers only)
+          Used to publish events without review
         type: string
         required: false
       
       telegram_event_json:
-        description: '📋 Event JSON data for PIN publishing'
+        description: |
+          📋 Event JSON data (for PIN publishing)
+          Complete event object in JSON format
         type: string
         required: false
       
-      # PR preview options
+      # ═════════════════════════════════════════════════════════════════════
+      # Development & Testing Options
+      # ═════════════════════════════════════════════════════════════════════
       enable_pr_preview:
-        description: '🔍 Enable PR preview generation for pull requests'
+        description: |
+          🔍 Enable PR preview generation
+          Creates a preview deployment for pull requests
         type: boolean
         default: true
       
-      # CI options
       verbose_tests:
-        description: '🐛 Enable verbose output for tests and linting'
+        description: |
+          🐛 Enable verbose test output
+          Shows detailed information from tests and linting
         type: boolean
         default: false
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# Permissions Required
+# These permissions allow the workflow to interact with GitHub
+# ═══════════════════════════════════════════════════════════════════════════════
 permissions:
-  contents: write
-  pages: write
-  id-token: write
-  issues: write
-  pull-requests: write  # For PR comments
+  contents: write        # Push commits (weather updates, event data)
+  pages: write           # Deploy to GitHub Pages
+  id-token: write        # GitHub Pages deployment authentication
+  issues: write          # Create issues from Telegram submissions
+  pull-requests: write   # Comment on PRs with preview links
 
-# Prevent concurrent runs to avoid conflicts
+# ═══════════════════════════════════════════════════════════════════════════════
+# Concurrency Control
+# Prevents multiple workflow runs from interfering with each other
+# ═══════════════════════════════════════════════════════════════════════════════
 concurrency:
   group: "website-maintenance"
-  cancel-in-progress: false
+  cancel-in-progress: false  # Let running workflows finish (don't cancel)
 
 jobs:
   # ═══════════════════════════════════════════════════════════════════════════
   # 📊 PHASE 1: Configuration & Discovery
+  # 
+  # Purpose: Read configuration and determine scraper capabilities
+  # This job runs first to discover what sources are enabled and what
+  # capabilities are available, which informs how other jobs will run.
   # ═══════════════════════════════════════════════════════════════════════════
   
   discover-capabilities:
