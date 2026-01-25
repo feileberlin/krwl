@@ -46,7 +46,7 @@
       },
       "test_method": "run_custom_test",
       "test_file": "tests/test_ocr_availability.py",
-      "documentation": "README.md section: \ud83d\udcf8 Facebook Flyer Scraping with OCR"
+      "documentation": "README.md section: 📸 Facebook Flyer Scraping with OCR"
     },
     {
       "id": "editor-workflow",
@@ -117,8 +117,13 @@
       "code_patterns": [
         {
           "file": "assets/js/map.js",
-          "pattern": "L\\.map|initMap",
-          "description": "Leaflet map initialization in MapManager"
+          "pattern": "L\\.map\\(|class MapManager",
+          "description": "Leaflet map initialization in MapManager class"
+        },
+        {
+          "file": "assets/html/map-main.html",
+          "pattern": "id=\"map\"",
+          "description": "Map container element"
         }
       ],
       "test_method": "check_code_patterns"
@@ -139,7 +144,7 @@
         {
           "file": "assets/js/map.js",
           "pattern": "navigator.geolocation.getCurrentPosition|getUserLocation",
-          "description": "Geolocation API usage in MapManager"
+          "description": "Geolocation API usage"
         },
         {
           "file": "assets/js/filters.js",
@@ -186,9 +191,14 @@
       ],
       "code_patterns": [
         {
+          "file": "assets/js/subjective-day.js",
+          "pattern": "getEndOfSubjectiveDay|getSunrise|getSunset",
+          "description": "Subjective day time calculations"
+        },
+        {
           "file": "assets/js/filters.js",
-          "pattern": "getNextSundayPrimetime|getNextFullMoon|sunday-primetime|full-moon",
-          "description": "Sunday primetime and full moon calculation in EventFilter"
+          "pattern": "EventFilter|filterEvents",
+          "description": "Event filter class"
         }
       ],
       "test_method": "check_code_patterns"
@@ -322,8 +332,13 @@
       "code_patterns": [
         {
           "file": "assets/js/app.js",
-          "pattern": "loadEvents|APP_CONFIG.*data",
-          "description": "Data source selection in main app"
+          "pattern": "loadEvents|this\\.events",
+          "description": "Event loading functionality"
+        },
+        {
+          "file": "config.json",
+          "pattern": "data.*source",
+          "description": "Data source configuration"
         }
       ],
       "test_method": "check_code_patterns"
@@ -389,10 +404,8 @@
       "category": "frontend",
       "implemented": true,
       "files": [
-        "assets/html/filter-nav.html",
-        "assets/js/storage.js",
-        "assets/js/event-listeners.js",
-        "assets/js/app.js"
+        "assets/js/app.js",
+        "assets/html/filter-nav.html"
       ],
       "code_patterns": [
         {
@@ -475,16 +488,15 @@
       "category": "frontend",
       "implemented": true,
       "files": [
-        "assets/js/app.js",
-        "assets/html/map-main.html",
-        "assets/css/style.css",
-        "assets/js/speech-bubbles.js"
+        "assets/js/speech-bubbles.js",
+        "assets/css/bubbles.css",
+        "assets/html/map-main.html"
       ],
       "code_patterns": [
         {
           "file": "assets/js/speech-bubbles.js",
-          "pattern": "speech-bubble|SpeechBubbles|createSpeechBubble|showAllSpeechBubbles",
-          "description": "Event card rendering in SpeechBubbles"
+          "pattern": "class SpeechBubbles|showEventDetail|createBubbleHTML",
+          "description": "Event display in speech bubbles"
         }
       ],
       "test_method": "check_code_patterns"
@@ -501,7 +513,7 @@
       "code_patterns": [
         {
           "file": "assets/js/map.js",
-          "pattern": "L\\.marker|addEventMarker|this\\.markers",
+          "pattern": "L\\.marker|addEventMarker|createMarkerIcon",
           "description": "Leaflet marker management in MapManager"
         }
       ],
@@ -519,9 +531,14 @@
       ],
       "code_patterns": [
         {
+          "file": "src/modules/utils.py",
+          "pattern": "def calculate_distance|Haversine",
+          "description": "Distance calculation in Python"
+        },
+        {
           "file": "assets/js/filters.js",
-          "pattern": "calculateDistance|distanceInKm",
-          "description": "Distance calculation in EventFilter"
+          "pattern": "calculateDistance",
+          "description": "Distance calculation in JavaScript"
         }
       ],
       "test_method": "check_code_patterns"
@@ -534,8 +551,8 @@
       "implemented": true,
       "files": [
         "assets/css/style.css",
-        "assets/html/html-head.html",
-        "assets/css/base.css"
+        "assets/css/mobile.css",
+        "assets/html/html-head.html"
       ],
       "code_patterns": [
         {
@@ -546,7 +563,7 @@
         {
           "file": "assets/html/html-head.html",
           "pattern": "viewport.*width=device-width",
-          "description": "Viewport meta tag"
+          "description": "Viewport meta tag in head component"
         }
       ],
       "test_method": "check_code_patterns"
@@ -586,8 +603,7 @@
       "implemented": true,
       "files": [
         ".github/copilot-instructions.md",
-        ".github/pull_request_template.md",
-        ".github/CODEOWNERS"
+        ".github/pull_request_template.md"
       ],
       "test_method": "check_files_exist"
     },
@@ -709,6 +725,38 @@
       "test_instructions": "1. Navigate to GitHub repository\n2. Click 'Environments' in sidebar\n3. Verify 'production' and 'preview' environments are listed\n4. Click on environment to see deployment history\n5. Click 'View deployment' button to open deployed site"
     },
     {
+      "id": "time-drawer",
+      "name": "Dynamic Time-Based Marker Resizing",
+      "description": "[PLANNED] Interactive timeline drawer with dynamic marker scaling based on event proximity to selected time. Files not yet created.",
+      "category": "frontend",
+      "implemented": false,
+      "files": [
+        "assets/js/time-drawer.js",
+        "assets/css/time-drawer.css",
+        "assets/js/app.js",
+        "src/modules/site_generator.py"
+      ],
+      "code_patterns": [
+        {
+          "file": "assets/js/time-drawer.js",
+          "pattern": "class TimeDrawer|calculateMarkerScale|applyMarkerScale",
+          "description": "TimeDrawer class with marker scaling logic"
+        },
+        {
+          "file": "assets/js/app.js",
+          "pattern": "this.timeDrawer|new TimeDrawer|registerMarker",
+          "description": "TimeDrawer integration in EventsApp"
+        },
+        {
+          "file": "assets/css/time-drawer.css",
+          "pattern": ".time-drawer|.time-drawer-handle|.time-drawer-progress",
+          "description": "Time drawer styling"
+        }
+      ],
+      "test_method": "manual",
+      "test_instructions": "1. Open the app with 5+ events\n2. Set filter to 'til sunrise'\n3. Verify time drawer appears at bottom\n4. Drag the handle left/right\n5. Verify markers scale dynamically (70%-130%)\n6. Verify largest markers have glow effect\n7. Try with < 5 events - drawer should show threshold message\n8. Change filter to '6h' - drawer should disappear\n9. Test on mobile - touch gestures should work"
+    },
+    {
       "id": "keyboard-navigation",
       "name": "Keyboard Navigation",
       "description": "Full keyboard controls for map navigation and event browsing - ESC to close popups, arrow keys to navigate events, +/- to zoom",
@@ -746,7 +794,7 @@
         }
       ],
       "test_method": "automated",
-      "test_instructions": "1. Start local server: cd static && python3 -m http.server 8000\n2. Run test script: python3 src/tools/generate_screenshots.py --verbose\n3. Verify body[data-app-ready='true'] attribute is set after page load\n4. Verify 'app-ready' custom event is dispatched with event.detail metadata\n5. Check that screenshots are captured with fully loaded map and events\n6. Verify both mobile (640\u00d71136) and desktop (1280\u00d7800) screenshots are generated"
+      "test_instructions": "1. Start local server: cd static && python3 -m http.server 8000\n2. Run test script: python3 src/tools/generate_screenshots.py --verbose\n3. Verify body[data-app-ready='true'] attribute is set after page load\n4. Verify 'app-ready' custom event is dispatched with event.detail metadata\n5. Check that screenshots are captured with fully loaded map and events\n6. Verify both mobile (640×1136) and desktop (1280×800) screenshots are generated"
     },
     {
       "id": "html-export-linting",
@@ -918,11 +966,15 @@
     {
       "id": "unified-workflow-wrapper",
       "name": "Unified Workflow Wrapper (Adaptive)",
-      "description": "Single GitHub Actions workflow that automatically adapts to changes in event_scraper.py by introspecting scraper capabilities, configuration, and enabled sources at runtime. Combines scraping, building, deployment, and editorial review into one intelligent workflow.",
+      "description": "[DEPRECATED] Single GitHub Actions workflow that automatically adapts to changes. This concept was replaced by split workflows: scheduled-scraping.yml, deploy.yml, editorial-workflow.yml, monthly-archive.yml, maintenance.yml.",
       "category": "infrastructure",
       "implemented": false,
       "files": [
-        ".github/workflows/website-maintenance.yml",
+        ".github/workflows/scheduled-scraping.yml",
+        ".github/workflows/deploy.yml",
+        ".github/workflows/editorial-workflow.yml",
+        ".github/workflows/monthly-archive.yml",
+        ".github/workflows/maintenance.yml",
         "src/modules/scraper.py",
         "src/event_manager.py"
       ],
@@ -938,18 +990,13 @@
           "description": "Scraper introspection methods for workflow adaptation"
         },
         {
-          "file": ".github/workflows/website-maintenance.yml",
-          "pattern": "discover-capabilities|scraper-info|CAPABILITIES|review-pending",
-          "description": "Workflow jobs for introspection and editorial review"
-        },
-        {
           "file": "src/event_manager.py",
           "pattern": "scraper-info|bulk-publish|bulk-reject",
           "description": "CLI commands for workflow integration"
         }
       ],
       "test_method": "manual",
-      "test_instructions": "1. Test scraper introspection: python3 src/event_manager.py scraper-info\n2. Validate workflow syntax: python3 -c \"import yaml; yaml.safe_load(open('.github/workflows/website-maintenance.yml'))\"\n3. Test editorial commands: python3 src/event_manager.py list-pending\n4. Trigger workflow manually via GitHub Actions UI with different task options (review-pending, info, scrape-and-deploy)\n5. Test auto-publish pattern: Set auto_publish_pattern to 'pending_*' and verify bulk publishing\n6. Verify workflow adapts when scraping sources are added/modified in config.json",
+      "test_instructions": "[DEPRECATED - This feature is no longer implemented]\n\nThe unified workflow was replaced by split workflows:\n- scheduled-scraping.yml (event/weather scraping)\n- deploy.yml (deployment)\n- editorial-workflow.yml (editorial review)\n- monthly-archive.yml (archiving)\n- maintenance.yml (manual maintenance)\n\nTo validate, check each workflow exists:\npython3 -c \"import os; print(all(os.path.exists(f'.github/workflows/{w}') for w in ['scheduled-scraping.yml', 'deploy.yml', 'editorial-workflow.yml', 'monthly-archive.yml', 'maintenance.yml']))\"",
       "cli_command": "python3 src/event_manager.py scraper-info"
     },
     {
@@ -961,7 +1008,7 @@
       "files": [
         "src/modules/archive_events.py",
         "src/event_manager.py",
-        ".github/workflows/website-maintenance.yml",
+        ".github/workflows/monthly-archive.yml",
         "tests/test_archive_events.py"
       ],
       "config_keys": [
@@ -985,14 +1032,14 @@
           "description": "CLI commands for archiving and configuration display"
         },
         {
-          "file": ".github/workflows/website-maintenance.yml",
-          "pattern": "archive-monthly|retention_days",
-          "description": "Monthly archiving job in unified workflow"
+          "file": ".github/workflows/monthly-archive.yml",
+          "pattern": "archive-monthly|Archive Old Events",
+          "description": "Monthly archiving job in dedicated workflow"
         }
       ],
       "test_method": "automated",
       "test_file": "tests/test_archive_events.py",
-      "test_instructions": "1. Run archiving tests: python3 tests/test_archive_events.py\n2. Test dry-run: python3 src/event_manager.py archive-monthly --dry-run\n3. View configuration: python3 src/event_manager.py archive-info\n4. Test with different retention: Edit config.json \u2192 archiving.retention.active_window_days\n5. Verify archives created: Check assets/json/events/archived/ directory\n6. Test GitHub Actions: Trigger website-maintenance workflow with archive mode",
+      "test_instructions": "1. Run archiving tests: python3 tests/test_archive_events.py\n2. Test dry-run: python3 src/event_manager.py archive-monthly --dry-run\n3. View configuration: python3 src/event_manager.py archive-info\n4. Test with different retention: Edit config.json → archiving.retention.active_window_days\n5. Verify archives created: Check assets/json/events/archived/ directory\n6. Test GitHub Actions: Trigger \"📦 Monthly Event Archiving\" workflow (monthly-archive.yml)",
       "cli_command": "python3 src/event_manager.py archive-monthly --dry-run"
     },
     {
@@ -1017,23 +1064,18 @@
           "description": "CSS custom properties for viewport dimensions with progressive enhancement"
         },
         {
-          "file": "assets/js/app.js",
-          "pattern": "addEventListener\\('resize'|addEventListener\\('orientationchange'",
-          "description": "Event listeners for viewport changes"
-        },
-        {
           "file": "assets/css/map.css",
-          "pattern": "width: var\\(--app-width\\)|height: var\\(--app-height\\)",
-          "description": "Map layer uses CSS custom properties"
+          "pattern": "var\\(--app|height:.*100",
+          "description": "Map layer uses CSS custom properties or full viewport"
         }
       ],
       "test_method": "manual",
-      "test_instructions": "1. Open app in browser\n2. Verify no hardcoded 100vh/100vw in layers: grep -r '100vh\\|100vw' assets/css/*.css\n3. Test mobile: Open DevTools \u2192 Mobile view \u2192 Toggle device toolbar\n4. Test orientation: Rotate device/emulator from portrait to landscape\n5. Test address bar: Scroll on mobile to hide/show address bar\n6. Verify CSS variables: Open DevTools \u2192 Elements \u2192 :root \u2192 Check --app-width and --app-height\n7. Test resize: Resize browser window and verify all layers scale together\n8. Test keyboard: On mobile, focus input field to show keyboard, verify layers adjust\n9. Architecture analysis: Read docs/LAYER_ARCHITECTURE_ANALYSIS.md for design rationale"
+      "test_instructions": "1. Open app in browser\n2. Verify no hardcoded 100vh/100vw in layers: grep -r '100vh\\|100vw' assets/css/*.css\n3. Test mobile: Open DevTools → Mobile view → Toggle device toolbar\n4. Test orientation: Rotate device/emulator from portrait to landscape\n5. Test address bar: Scroll on mobile to hide/show address bar\n6. Verify CSS variables: Open DevTools → Elements → :root → Check --app-width and --app-height\n7. Test resize: Resize browser window and verify all layers scale together\n8. Test keyboard: On mobile, focus input field to show keyboard, verify layers adjust\n9. Architecture analysis: Read docs/LAYER_ARCHITECTURE_ANALYSIS.md for design rationale"
     },
     {
       "id": "weather-dresscode",
       "name": "Weather Dresscode Display",
-      "description": "Scrape current weather conditions from MSN Weather and display dresscode recommendations in filter bar with format 'with [dresscode].' (e.g., 'with warm pullover.'). Weather data is inlined in HTML as window.WEATHER_CACHE. Validates dresscodes against accepted list. Hourly caching prevents excessive requests. Can be triggered manually via GitHub Actions workflow.",
+      "description": "Scrape current weather conditions from MSN Weather and display dresscode recommendations in filter bar with format 'with [dresscode].' (e.g., 'with warm pullover.'). Weather data is embedded in APP_CONFIG.weather.data. Validates dresscodes against accepted list. Hourly caching prevents excessive requests. Weather scraping runs via scheduled-scraping.yml workflow.",
       "category": "backend",
       "implemented": true,
       "files": [
@@ -1043,7 +1085,9 @@
         "assets/css/style.css",
         "assets/json/weather_dresscodes.json",
         "assets/html/filter-nav.html",
-        "config.json"
+        "assets/js/app.js",
+        "assets/css/style.css",
+        ".github/workflows/scheduled-scraping.yml"
       ],
       "config_keys": [
         "weather.enabled",
@@ -1054,12 +1098,27 @@
       "code_patterns": [
         {
           "file": "assets/js/app.js",
-          "pattern": "loadWeather|weather\\.data",
-          "description": "Weather loading in main app"
+          "pattern": "loadWeather|displayWeatherDresscode|window.WEATHER_CACHE",
+          "description": "Frontend weather loading from inlined cache"
+        },
+        {
+          "file": "assets/html/filter-nav.html",
+          "pattern": "filter-bar-weather|weather-chip",
+          "description": "Weather chip in filter bar"
+        },
+        {
+          "file": "src/modules/site_generator.py",
+          "pattern": "load_weather_cache|window.WEATHER_CACHE",
+          "description": "Weather cache inlined in HTML"
+        },
+        {
+          "file": ".github/workflows/scheduled-scraping.yml",
+          "pattern": "Scrape Weather|scrape-weather",
+          "description": "GitHub Actions workflow for weather scraping"
         }
       ],
       "test_method": "check_code_patterns",
-      "test_instructions": "1. Run weather scraper: python3 src/event_manager.py scrape-weather\n2. Verify cache created: assets/json/weather_cache.json\n3. Check dresscode is validated against accepted list\n4. Generate site: python3 src/event_manager.py generate\n5. Verify window.WEATHER_CACHE is embedded in public/index.html\n6. Open site and verify weather chip appears at end of filter bar\n7. Verify dresscode text is displayed in format 'with [dresscode].' (e.g., 'with warm pullover.')\n8. Hover over chip to see temperature tooltip (e.g., '8\u00b0C \u2022 with warm pullover.')\n9. Test hourly caching: run scrape-weather again within 1 hour, should use cache\n10. Force refresh: python3 src/event_manager.py scrape-weather --force\n11. Test GitHub Actions: Go to Actions \u2192 Website Maintenance (Unified) \u2192 Run workflow \u2192 Select 'scrape-weather'"
+      "test_instructions": "1. Run weather scraper: python3 src/event_manager.py scrape-weather\n2. Verify cache created: assets/json/weather_cache.json\n3. Check dresscode is validated against accepted list\n4. Generate site: python3 src/event_manager.py generate\n5. Verify APP_CONFIG.weather.data is embedded in public/index.html\n6. Open site and verify weather chip appears at end of filter bar\n7. Verify dresscode text is displayed in format 'with [dresscode].' (e.g., 'with warm pullover.')\n8. Hover over chip to see temperature tooltip (e.g., '8°C • with warm pullover.')\n9. Test hourly caching: run scrape-weather again within 1 hour, should use cache\n10. Force refresh: python3 src/event_manager.py scrape-weather --force\n11. Test GitHub Actions: Trigger \"🤖 Scheduled Event & Weather Scraping\" workflow (scheduled-scraping.yml)"
     },
     {
       "id": "draggable-speech-bubbles",
@@ -1074,8 +1133,13 @@
       "code_patterns": [
         {
           "file": "assets/js/speech-bubbles.js",
-          "pattern": "dragState|drag event|setupDragListeners",
-          "description": "Drag functionality in SpeechBubbles module"
+          "pattern": "handleDragStart|handleDragMove|handleDragEnd|userOffset",
+          "description": "Drag event handlers and user offset tracking"
+        },
+        {
+          "file": "assets/css/bubbles.css",
+          "pattern": "speech-bubble.*grab|dragging",
+          "description": "Drag cursor and dragging state styles"
         }
       ],
       "test_method": "manual",
@@ -1084,9 +1148,9 @@
     {
       "id": "ai-categorization",
       "name": "AI-Powered Event Categorization",
-      "description": "Uses local LLM (Ollama) to intelligently categorize scraped events into schema-defined categories. Falls back to improved keyword-based categorization if AI is unavailable. Privacy-preserving (no external APIs), optional feature that can be enabled/disabled.",
+      "description": "[PLANNED] AI-powered event categorization using local LLM (Ollama). Infrastructure exists but integration in scraper not complete.",
       "category": "backend",
-      "implemented": true,
+      "implemented": false,
       "files": [
         "src/modules/scraper.py",
         "src/modules/smart_scraper/ai_providers/ollama.py",
@@ -1102,13 +1166,8 @@
       "code_patterns": [
         {
           "file": "src/modules/ai_categorizer.py",
-          "pattern": "AICategorizer|categorize_event",
-          "description": "AI categorization module"
-        },
-        {
-          "file": "src/modules/event_schema.py",
-          "pattern": "ai_categoriz|AICategorizer",
-          "description": "AI categorization integration in EventSchema"
+          "pattern": "class AICategorizer|categorize_event",
+          "description": "Main AI categorization logic"
         }
       ],
       "test_method": "check_code_patterns",
@@ -1229,13 +1288,11 @@
     {
       "id": "telegram-bot-github-actions",
       "name": "Telegram Bot GitHub Actions Integration",
-      "description": "Simplified Telegram integration using repository_dispatch events. The simple bot (scripts/telegram_bot.py) dispatches events to GitHub Actions for processing: flyer uploads with OCR, contact form submissions, and PIN publishing for trusted organizers.",
+      "description": "[NOT FULLY IMPLEMENTED] Telegram integration using repository_dispatch events. The workflow exists but scripts (telegram_bot.py, manage_pins.py) are not yet created.",
       "category": "infrastructure",
       "implemented": false,
       "files": [
-        ".github/workflows/website-maintenance.yml",
-        "scripts/telegram_bot.py",
-        "scripts/manage_pins.py"
+        ".github/workflows/telegram-bot-handler.yml"
       ],
       "config_keys": [
         "telegram.enabled",
@@ -1254,7 +1311,7 @@
         ]
       },
       "test_method": "manual",
-      "test_instructions": "1. Add TELEGRAM_BOT_TOKEN to GitHub repository secrets\n2. Run scripts/telegram_bot.py locally with env vars set\n3. Send a flyer photo to the bot - verify OCR processing workflow runs\n4. Send a contact message - verify GitHub issue is created\n5. For PIN publishing: add ORGANIZER_PIN_HASH_* secrets, test PIN:1234 with JSON event",
+      "test_instructions": "[Scripts not yet implemented]\n\nFuture test steps:\n1. Add TELEGRAM_BOT_TOKEN to GitHub repository secrets\n2. Create scripts/telegram_bot.py and scripts/manage_pins.py\n3. Run scripts/telegram_bot.py locally with env vars set\n4. Send a flyer photo to the bot - verify OCR processing workflow runs\n5. Send a contact message - verify GitHub issue is created\n6. For PIN publishing: add ORGANIZER_PIN_HASH_* secrets, test PIN:1234 with JSON event",
       "documentation": "docs/TELEGRAM_INTEGRATION.md"
     },
     {
