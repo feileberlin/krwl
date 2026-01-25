@@ -228,16 +228,16 @@ Before committing, run:
 python3 docs/build_docs.py --validate
 
 # Feature verification
-python3 verify_features.py --verbose
+python3 src/modules/feature_verifier.py --verbose
 
 # Core tests
-python3 test_scraper.py --verbose
-python3 test_smart_scraper.py --verbose
+python3 tests/test_scraper.py --verbose
+python3 tests/test_smart_scraper.py --verbose
 python3 src/event_manager.py test filters --verbose
-python3 test_event_schema.py --verbose
+python3 tests/test_event_schema.py --verbose
 
 # KISS compliance
-python3 check_kiss.py --verbose
+python3 src/modules/kiss_checker.py --verbose
 ```
 
 ### Code Guidelines

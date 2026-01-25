@@ -208,7 +208,7 @@ Run tests before committing:
 
 ```bash
 # Feature verification
-python3 scripts/verify_features.py --verbose
+python3 src/modules/feature_verifier.py --verbose
 
 # Event schema validation
 python3 tests/test_event_schema.py --verbose

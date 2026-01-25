@@ -492,10 +492,10 @@ python3 -m http.server 8000
 #### Quick Development Tests
 ```bash
 # Feature verification (validates features.json registry)
-python3 verify_features.py --verbose
+python3 src/modules/feature_verifier.py --verbose
 
 # Scraper tests
-python3 test_scraper.py --verbose
+python3 tests/test_scraper.py --verbose
 
 # Filter tests (integrated module)
 python3 src/modules/filter_tester.py --verbose
@@ -503,13 +503,13 @@ python3 src/modules/filter_tester.py --verbose
 python3 src/event_manager.py test filters --verbose
 
 # Event schema validation
-python3 test_event_schema.py --verbose
+python3 tests/test_event_schema.py --verbose
 
 # KISS principle compliance
-python3 check_kiss.py --verbose
+python3 src/modules/kiss_checker.py --verbose
 
 # Scheduler tests
-python3 test_scheduler.py --verbose
+python3 tests/test_scheduler.py --verbose
 
 # Config validation (prevents demo events on production)
 python3 scripts/validate_config.py
@@ -1318,12 +1318,12 @@ All features must be documented in `features.json` with:
 - Config keys (if applicable)
 - Test method
 
-**Validation**: Run `python3 verify_features.py` to ensure registry matches codebase.
+**Validation**: Run `python3 src/modules/feature_verifier.py` to ensure registry matches codebase.
 
 When adding features:
 1. Implement the feature
 2. Add entry to `features.json`
-3. Run `python3 verify_features.py --verbose` to validate
+3. Run `python3 src/modules/feature_verifier.py --verbose` to validate
 
 ## Testing Requirements
 
@@ -1392,7 +1392,7 @@ GitHub Pages serves the `public/` directory directly.
 ### Event Scraping
 1. Configure source in `config.json` under `scraping.sources[]`
 2. Implement scraper logic in `src/modules/scraper.py` if needed
-3. Test with: `python3 test_scraper.py --verbose`
+3. Test with: `python3 tests/test_scraper.py --verbose`
 4. Scraped events go to `data/pending_events.json` for editorial review
 
 ### Editorial Workflow
@@ -1588,7 +1588,7 @@ The project includes automated WCAG 2.1 Level AA compliance checking during the 
 2. **Don't edit auto-generated files** - Edit source CSS/JS files instead
 3. **Follow KISS principles** - Keep it simple
 4. **Document features** - Update `features.json`
-5. **Validate schemas** - Run `python3 test_event_schema.py`
+5. **Validate schemas** - Run `python3 tests/test_event_schema.py`
 6. **Check accessibility** - Test keyboard navigation and screen readers
 
 ## CLI Commands Reference
