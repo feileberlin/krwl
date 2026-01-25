@@ -290,6 +290,7 @@ COMMANDS:
     (no command)              Launch interactive TUI (default)
     setup                     Show detailed setup instructions for your own site
     scrape                    Scrape events from configured sources
+    diagnose-scraping         Debug scraping issues - check network, DNS, and sources
     scrape-weather            Scrape weather for map center location (config: weather.enabled)
     scrape-weather --force    Force refresh weather data (bypass cache)
     review                    Review pending events interactively
@@ -848,6 +849,278 @@ def cli_scrape(base_path, config):
     scraper = EventScraper(config, base_path)
     new_events = scraper.scrape_all_sources()
     print(f"✓ Scraped {len(new_events)} new events")
+    
+    # Count enabled sources
+    enabled_sources = sum(1 for s in config.get('scraping', {}).get('sources', []) if s.get('enabled'))
+    
+    # Provide helpful hint if zero events scraped from enabled sources
+    if len(new_events) == 0 and enabled_sources > 0:
+        print()
+        print("💡 TIP: 0 events scraped from configured sources.")
+        print("   Run diagnostics to identify the issue:")
+        print("   python3 src/event_manager.py diagnose-scraping")
+    
+    return 0
+
+
+def cli_diagnose_scraping(base_path, config):
+    """
+    CLI: Diagnose scraping issues with detailed network and configuration checks.
+    
+    This command performs comprehensive diagnostics to identify why scraping might
+    fail or return few/no events. It checks:
+    
+    1. Network connectivity to configured sources
+    2. DNS resolution for source domains
+    3. HTTP accessibility of source URLs
+    4. Configuration completeness
+    5. Source-specific issues (Facebook, HTML, RSS, etc.)
+    
+    Usage:
+        python3 src/event_manager.py diagnose-scraping
+    """
+    import socket
+    from urllib.parse import urlparse
+    
+    print("=" * 70)
+    print("🔍 SCRAPING DIAGNOSTICS")
+    print("=" * 70)
+    print()
+    
+    # 1. Check scraping libraries
+    print("📦 LIBRARY CHECK")
+    print("-" * 40)
+    try:
+        import requests
+        print("  ✓ requests library: installed")
+    except ImportError:
+        print("  ✗ requests library: NOT INSTALLED")
+        print("    Run: pip install requests")
+    
+    try:
+        from bs4 import BeautifulSoup
+        print("  ✓ beautifulsoup4 library: installed")
+    except ImportError:
+        print("  ✗ beautifulsoup4 library: NOT INSTALLED")
+        print("    Run: pip install beautifulsoup4")
+    
+    try:
+        import feedparser
+        print("  ✓ feedparser library: installed")
+    except ImportError:
+        print("  ✗ feedparser library: NOT INSTALLED")
+        print("    Run: pip install feedparser")
+    
+    try:
+        import lxml
+        print("  ✓ lxml library: installed")
+    except ImportError:
+        print("  ✗ lxml library: NOT INSTALLED (optional but recommended)")
+        print("    Run: pip install lxml")
+    
+    print()
+    
+    # 2. Check network connectivity
+    print("🌐 NETWORK CONNECTIVITY")
+    print("-" * 40)
+    
+    # Test basic internet connectivity
+    test_domains = [
+        ('google.com', 'General internet'),
+        ('github.com', 'GitHub access'),
+    ]
+    
+    internet_ok = False
+    for domain, desc in test_domains:
+        try:
+            socket.create_connection((domain, 443), timeout=5)
+            print(f"  ✓ {desc}: {domain} - reachable")
+            internet_ok = True
+            break
+        except (socket.timeout, socket.error, OSError):
+            print(f"  ✗ {desc}: {domain} - unreachable")
+    
+    if not internet_ok:
+        print()
+        print("  ⚠️  NO INTERNET ACCESS DETECTED")
+        print("  This is common in CI/sandbox environments.")
+        print("  Scraping requires network access to external sources.")
+        print()
+    
+    print()
+    
+    # 3. Check configured sources
+    print("📋 CONFIGURED SOURCES")
+    print("-" * 40)
+    
+    sources = config.get('scraping', {}).get('sources', [])
+    if not sources:
+        print("  ✗ No sources configured in config.json")
+        print("  Add sources to scraping.sources array")
+        return 1
+    
+    enabled_count = 0
+    disabled_count = 0
+    source_types = {}
+    
+    for source in sources:
+        enabled = source.get('enabled', False)
+        source_type = source.get('type', 'html')
+        name = source.get('name', 'Unknown')
+        
+        if enabled:
+            enabled_count += 1
+            source_types[source_type] = source_types.get(source_type, 0) + 1
+        else:
+            disabled_count += 1
+    
+    print(f"  Total sources: {len(sources)}")
+    print(f"  ✓ Enabled: {enabled_count}")
+    print(f"  ⊘ Disabled: {disabled_count}")
+    print()
+    print("  Source types breakdown:")
+    for stype, count in sorted(source_types.items()):
+        print(f"    • {stype}: {count}")
+    
+    print()
+    
+    # 4. DNS resolution test for each source
+    print("🔌 SOURCE CONNECTIVITY TEST")
+    print("-" * 40)
+    
+    dns_ok = 0
+    dns_failed = 0
+    http_ok = 0
+    http_failed = 0
+    
+    for source in sources:
+        if not source.get('enabled', False):
+            continue
+        
+        name = source.get('name', 'Unknown')
+        url = source.get('url', '')
+        source_type = source.get('type', 'html')
+        
+        print(f"  📡 {name}")
+        print(f"     Type: {source_type}")
+        print(f"     URL: {url[:60]}{'...' if len(url) > 60 else ''}")
+        
+        # Parse URL
+        try:
+            parsed = urlparse(url)
+            hostname = parsed.hostname
+            port = parsed.port or (443 if parsed.scheme == 'https' else 80)
+        except Exception as e:
+            print(f"     ✗ URL Parse Error: {e}")
+            continue
+        
+        # DNS check
+        try:
+            socket.gethostbyname(hostname)
+            print(f"     ✓ DNS: {hostname} resolved")
+            dns_ok += 1
+            
+            # Try HTTP request (only if DNS works)
+            try:
+                import requests
+                response = requests.get(url, timeout=10, headers={
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                })
+                print(f"     ✓ HTTP: Status {response.status_code}")
+                http_ok += 1
+            except requests.exceptions.Timeout:
+                print(f"     ✗ HTTP: Timeout (>10s)")
+                http_failed += 1
+            except requests.exceptions.ConnectionError:
+                print(f"     ✗ HTTP: Connection failed")
+                http_failed += 1
+            except Exception as e:
+                print(f"     ✗ HTTP: {type(e).__name__}: {e}")
+                http_failed += 1
+                
+        except socket.gaierror:
+            print(f"     ✗ DNS: Failed to resolve {hostname}")
+            dns_failed += 1
+        except Exception as e:
+            print(f"     ✗ DNS: {type(e).__name__}: {e}")
+            dns_failed += 1
+        
+        print()
+    
+    # 5. Summary and recommendations
+    print("=" * 70)
+    print("📊 SUMMARY")
+    print("=" * 70)
+    print()
+    
+    if dns_failed == enabled_count and enabled_count > 0:
+        print("❌ ALL sources failed DNS resolution")
+        print()
+        print("DIAGNOSIS: No network access to external websites")
+        print()
+        print("POSSIBLE CAUSES:")
+        print("  1. Running in CI/sandbox environment with blocked internet")
+        print("  2. Firewall blocking outbound connections")
+        print("  3. DNS server unavailable or misconfigured")
+        print("  4. Network isolation (e.g., Docker without network)")
+        print()
+        print("RECOMMENDATIONS:")
+        print("  • In CI: Use scheduled scraping workflow that runs on GitHub runners")
+        print("  • In sandbox: Configure network access or use mocked tests")
+        print("  • Local dev: Check firewall and DNS settings")
+        print()
+        return 1
+    
+    if dns_ok > 0 and http_failed > 0:
+        print(f"⚠️  {http_failed} source(s) are unreachable via HTTP")
+        print()
+        print("DIAGNOSIS: DNS works but websites are blocking or unavailable")
+        print()
+        print("POSSIBLE CAUSES:")
+        print("  1. Website is temporarily down")
+        print("  2. Website is blocking scraper requests")
+        print("  3. SSL/TLS certificate issues")
+        print("  4. Rate limiting or IP blocking")
+        print()
+        print("RECOMMENDATIONS:")
+        print("  • Check if websites work in a browser")
+        print("  • Add delays between requests (already configured)")
+        print("  • Use more realistic User-Agent headers")
+        print()
+    
+    # Facebook-specific warnings
+    fb_sources = [s for s in sources if s.get('type') == 'facebook' and s.get('enabled')]
+    if fb_sources:
+        print("📘 FACEBOOK SOURCES NOTE")
+        print("-" * 40)
+        print(f"  You have {len(fb_sources)} Facebook source(s) configured.")
+        print()
+        print("  ⚠️  Facebook scraping has limitations:")
+        print("  • Facebook actively blocks scrapers")
+        print("  • Events require login to view in many cases")
+        print("  • Rate limiting is aggressive")
+        print("  • Web search fallback is used when direct access fails")
+        print()
+        print("  The scraper attempts:")
+        print("  1. Direct mobile page access (m.facebook.com)")
+        print("  2. Web search fallback (when direct fails)")
+        print("  3. OCR on posted flyer images (if enabled)")
+        print()
+    
+    if dns_ok == enabled_count and http_ok == enabled_count:
+        print("✅ ALL sources are accessible!")
+        print()
+        print("If scraping still returns 0 events:")
+        print("  • Website structure may have changed")
+        print("  • No events currently published on source")
+        print("  • Events are being filtered as duplicates")
+        print("  • Events are in rejected list")
+        print()
+    
+    print(f"DNS resolution: {dns_ok}/{enabled_count} successful")
+    print(f"HTTP access: {http_ok}/{enabled_count} successful")
+    print()
+    
     return 0
 
 
@@ -2119,6 +2392,9 @@ def _execute_command(args, base_path, config):
     
     if command == 'scrape':
         return cli_scrape(base_path, config)
+    
+    if command == 'diagnose-scraping':
+        return cli_diagnose_scraping(base_path, config)
     
     if command == 'scrape-weather':
         return cli_scrape_weather(base_path, config, force_refresh='--force' in (args.args or []))
