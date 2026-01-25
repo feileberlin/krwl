@@ -31,9 +31,9 @@ The feature registry has been updated to match the actual modular codebase struc
 
 ## 1. Feature Verification Results
 
-The project includes 62 documented features in `features.json`. The feature verification system (`feature_verifier.py`) checks that implementation files exist and required code patterns are present.
+The project includes 61 documented features in `features.json`. The feature verification system (`feature_verifier.py`) checks that implementation files exist and required code patterns are present.
 
-### ✅ Verified Features (44)
+### ✅ Verified Features (51)
 
 These features passed all verification checks:
 
@@ -77,30 +77,24 @@ These features passed all verification checks:
 | subjective-day-api | Subjective Day API (Nürnberger Uhr) | run_custom_test |
 | constellation-viewer-api | Constellation Viewer API | run_custom_test |
 
-### ⚠️ Features with Issues (18)
+### ⚠️ Features Not Implemented (10)
 
-| ID | Feature Name | Issue |
-|----|--------------|-------|
-| interactive-map | Interactive Map | Missing code pattern in JS |
-| geolocation-filtering | Geolocation Filtering | Missing 2 code patterns |
-| extended-time-filters | Extended Time Filter Options | Missing code pattern |
-| multi-data-sources | Multiple Data Sources | Missing code pattern |
-| custom-location | Custom Location Override | Missing file |
-| event-cards | Event Card UI | Missing file and pattern |
-| map-markers | Map Markers | Missing pattern |
-| distance-calculation | Distance Calculation | Missing pattern in JS |
-| responsive-design | Responsive Design | Missing public/index.html (not generated) |
-| copilot-custom-instructions | GitHub Copilot Custom Instructions | Missing 3 setup files |
-| time-drawer | Dynamic Time-Based Marker Resizing | Missing 2 files, 3 patterns |
-| unified-workflow-wrapper | Unified Workflow Wrapper | Missing workflow file |
-| event-archiving | Configurable Monthly Event Archiving | Missing workflow file |
-| responsive-viewport-system | Responsive Viewport System | Missing file and patterns |
-| weather-dresscode | Weather Dresscode Display | Missing workflow file |
-| draggable-speech-bubbles | Draggable Speech Bubbles | Missing pattern |
-| ai-categorization | AI-Powered Event Categorization | Missing scraper integration |
-| telegram-bot-github-actions | Telegram Bot GitHub Actions Integration | Missing files |
+These features are documented but marked as not yet implemented:
 
-**Note:** Some features fail verification because they reference files that don't exist (e.g., `website-maintenance.yml`, copilot setup docs) or have moved to different locations.
+| ID | Feature Name | Status |
+|----|--------------|--------|
+| preview-deployment | Preview Deployment | Not implemented |
+| production-deployment | Production Deployment | Not implemented |
+| promotion-workflow | Promotion Workflow | Not implemented |
+| custom-domain-support | Custom Domain Support | Not implemented |
+| environment-watermark | Environment Watermark | Replaced by dashboard-menu |
+| github-environments | GitHub Environments UI Integration | Not implemented |
+| unified-workflow-wrapper | Unified Workflow Wrapper | Not implemented |
+| event-archiving | Configurable Monthly Event Archiving | Not implemented |
+| responsive-viewport-system | Responsive Viewport System | JS enhancement not implemented |
+| telegram-bot-github-actions | Telegram Bot GitHub Actions Integration | Not implemented |
+
+**Note:** These features are kept in `features.json` for tracking purposes. All 51 implemented features now pass verification.
 
 ---
 

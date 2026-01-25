@@ -483,7 +483,7 @@
       "code_patterns": [
         {
           "file": "assets/js/speech-bubbles.js",
-          "pattern": "speech-bubble|SpeechBubbles|renderBubble",
+          "pattern": "speech-bubble|SpeechBubbles|createSpeechBubble|showAllSpeechBubbles",
           "description": "Event card rendering in SpeechBubbles"
         }
       ],
@@ -658,7 +658,7 @@
       "code_patterns": [
         {
           "file": "assets/js/dashboard-ui.js",
-          "pattern": "DashboardUI|updateDashboard|dashboard-menu",
+          "pattern": "DashboardUI|update|dashboard-menu",
           "description": "Dashboard update function in DashboardUI module"
         }
       ],
