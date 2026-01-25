@@ -149,7 +149,7 @@
         {
           "file": "assets/js/filters.js",
           "pattern": "calculateDistance",
-          "description": "Distance calculation function"
+          "description": "Distance calculation function in EventFilter"
         }
       ],
       "test_method": "check_code_patterns"
@@ -168,9 +168,14 @@
       ],
       "code_patterns": [
         {
-          "file": "assets/js/app.js",
-          "pattern": "getNextSunrise|sunrise",
-          "description": "Sunrise calculation or filtering"
+          "file": "assets/js/filters.js",
+          "pattern": "getNextSunrise|filterByTime.*sunrise",
+          "description": "Sunrise calculation in EventFilter"
+        },
+        {
+          "file": "assets/js/subjective-day.js",
+          "pattern": "sunrise|calculateSunrise",
+          "description": "Sunrise calculation in SubjectiveDay module"
         }
       ],
       "test_method": "check_code_patterns"
@@ -404,14 +409,14 @@
       ],
       "code_patterns": [
         {
-          "file": "assets/js/app.js",
-          "pattern": "useCustomLocation|custom-location|customLat|customLon|saveFiltersToCookie|loadFiltersFromCookie",
-          "description": "Custom location functionality with localStorage persistence"
+          "file": "assets/js/storage.js",
+          "pattern": "customLocations|loadCustomLocations|saveCustomLocations",
+          "description": "Custom location persistence in EventStorage"
         },
         {
-          "file": "assets/html/filter-nav.html",
-          "pattern": "filter-bar-location",
-          "description": "Custom location UI elements"
+          "file": "assets/js/app.js",
+          "pattern": "useCustomLocation|selectedCustomLocation",
+          "description": "Custom location usage in main app"
         }
       ],
       "test_method": "check_code_patterns"
@@ -668,24 +673,9 @@
       ],
       "code_patterns": [
         {
-          "file": "assets/js/app.js",
-          "pattern": "updateDashboard|dashboard-menu|dashboardLogo",
-          "description": "Dashboard update function and menu toggle logic"
-        },
-        {
-          "file": "assets/css/style.css",
-          "pattern": "#dashboard-menu|.dashboard-content",
-          "description": "Dashboard CSS styles"
-        },
-        {
-          "file": "assets/html/dashboard-aside.html",
-          "pattern": "dashboard-menu|dashboard-content|close-dashboard",
-          "description": "Dashboard HTML structure"
-        },
-        {
-          "file": "config.json",
-          "pattern": "_comment_hardcoded.*watermark|_comment_hardcoded.*debug|_comment_hardcoded.*data.source",
-          "description": "Environment-dependent values documented in config"
+          "file": "assets/js/dashboard-ui.js",
+          "pattern": "DashboardUI|update|dashboard-menu",
+          "description": "Dashboard update function in DashboardUI module"
         }
       ],
       "test_method": "automated",
@@ -777,9 +767,9 @@
       ],
       "code_patterns": [
         {
-          "file": "assets/js/app.js",
-          "pattern": "currentEventIndex|navigateEvents|keydown.*Escape|keydown.*Arrow",
-          "description": "Keyboard event handling and navigation logic"
+          "file": "assets/js/event-listeners.js",
+          "pattern": "keydown|Escape|ArrowLeft|ArrowRight",
+          "description": "Keyboard event handling in EventListeners module"
         }
       ],
       "test_method": "manual",
@@ -1014,7 +1004,7 @@
       "name": "Configurable Monthly Event Archiving",
       "description": "Automatically archive old events based on configurable retention window (default: 60 days). Events are organized by month into archive files (e.g., 202601.json) to keep the active events list manageable and improve performance. Configuration is entirely in config.json with GitHub Actions integration via unified website-maintenance workflow.",
       "category": "backend",
-      "implemented": true,
+      "implemented": false,
       "files": [
         "src/modules/archive_events.py",
         "src/event_manager.py",
@@ -1055,9 +1045,9 @@
     {
       "id": "responsive-viewport-system",
       "name": "Responsive Viewport System for Multi-Layer Architecture",
-      "description": "CSS custom properties (--app-width, --app-height) with progressive enhancement that ensures all fixed-position layers scale consistently with the base map layer. Handles mobile browser address bars, orientation changes, and keyboard appearance. Includes JavaScript enhancement for pixel-perfect dimensions.",
+      "description": "CSS custom properties (--app-width, --app-height) for viewport dimensions. JavaScript enhancement not yet implemented.",
       "category": "frontend",
-      "implemented": true,
+      "implemented": false,
       "files": [
         "assets/css/base.css",
         "assets/css/map.css",
@@ -1089,8 +1079,10 @@
       "category": "backend",
       "implemented": true,
       "files": [
-        "src/modules/weather_scraper.py",
+        "assets/js/app.js",
         "src/modules/site_generator.py",
+        "src/modules/weather_scraper.py",
+        "assets/css/style.css",
         "assets/json/weather_dresscodes.json",
         "assets/html/filter-nav.html",
         "assets/js/app.js",
@@ -1104,11 +1096,6 @@
         "weather.display.show_in_filter_bar"
       ],
       "code_patterns": [
-        {
-          "file": "src/modules/weather_scraper.py",
-          "pattern": "class WeatherScraper|_extract_dresscode|_validate_dresscode",
-          "description": "Weather scraper with dresscode extraction and validation"
-        },
         {
           "file": "assets/js/app.js",
           "pattern": "loadWeather|displayWeatherDresscode|window.WEATHER_CACHE",
@@ -1165,10 +1152,10 @@
       "category": "backend",
       "implemented": false,
       "files": [
-        "src/modules/ai_categorizer.py",
+        "src/modules/scraper.py",
         "src/modules/smart_scraper/ai_providers/ollama.py",
-        "src/modules/event_schema.py",
-        "src/modules/scraper.py"
+        "src/modules/ai_categorizer.py",
+        "src/modules/event_schema.py"
       ],
       "config_keys": [
         "ai.categorization.enabled",
@@ -1355,8 +1342,8 @@
     },
     {
       "id": "subjective-day-api",
-      "name": "Subjective Day API (Nürnberger Uhr)",
-      "description": "API for calculating subjective time based on the historical Nürnberger Uhr (Nuremberg Clock) system. Available as both Python server API and client-side JavaScript for GitHub Pages hosting. Uses unequal hours where day is divided into 12 hours (sunrise to sunset) and night into 12 hours (sunset to sunrise).",
+      "name": "Subjective Day API (N\u00fcrnberger Uhr)",
+      "description": "API for calculating subjective time based on the historical N\u00fcrnberger Uhr (Nuremberg Clock) system. Available as both Python server API and client-side JavaScript for GitHub Pages hosting. Uses unequal hours where day is divided into 12 hours (sunrise to sunset) and night into 12 hours (sunset to sunrise).",
       "category": "backend",
       "implemented": true,
       "files": [
