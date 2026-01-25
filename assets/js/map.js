@@ -214,8 +214,13 @@ class MapManager {
         const userIconAnchor = userMarkerConfig.anchor || [userIconSize[0] / 2, userIconSize[1]];
         const userPopupAnchor = userMarkerConfig.popup_anchor || [0, -userIconSize[1]];
         
-        const userIcon = L.icon({
-            iconUrl: userIconUrl,
+        // Create descriptive alt text for accessibility
+        const locationAltText = popupText || 'Location marker';
+        
+        // Use divIcon to allow HTML content with alt text (matches event markers pattern)
+        const userIcon = L.divIcon({
+            className: 'custom-location-marker-icon',
+            html: `<img src="${userIconUrl}" alt="${locationAltText}" style="width: ${userIconSize[0]}px; height: ${userIconSize[1]}px; display: block;" />`,
             iconSize: userIconSize,
             iconAnchor: userIconAnchor,
             popupAnchor: userPopupAnchor
