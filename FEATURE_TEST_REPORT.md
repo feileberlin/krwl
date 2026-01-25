@@ -298,12 +298,12 @@ Warnings: 255
 
 ### Top Violations
 
-| File | Issue | Details |
-|------|-------|---------|
-| src/event_manager.py | FILE_TOO_LARGE | 3031 lines (max 500) |
-| src/event_manager.py | TOO_MANY_IMPORTS | 60 imports (max 15) |
-| src/event_manager.py | NESTING_TOO_DEEP | Max depth 7 (max 4) |
-| Multiple files | FUNCTION_TOO_LONG | Several functions >50 lines |
+| File | Issue | Actual | Limit | Severity |
+|------|-------|--------|-------|----------|
+| src/event_manager.py | FILE_TOO_LARGE | 3031 lines | 500 lines | 6x over limit |
+| src/event_manager.py | TOO_MANY_IMPORTS | 60 imports | 15 imports | 4x over limit |
+| src/event_manager.py | NESTING_TOO_DEEP | 7 levels | 4 levels | 1.75x over limit |
+| Multiple files | FUNCTION_TOO_LONG | >50 lines | 50 lines | Various |
 
 ### Recommendations
 1. Break `event_manager.py` into smaller modules
@@ -405,9 +405,10 @@ The main issues are:
 1. Missing utility scripts (`lint_markdown.py`)
 2. Feature registry referencing non-existent files
 3. Some code patterns not matching expected patterns
-4. Large file sizes violating KISS principles
+4. Large file sizes violating KISS principles (architectural debt)
 
-**Overall Status: FUNCTIONAL with minor issues** ✅
+**Overall Status: FUNCTIONAL** ✅  
+**Code Quality: NEEDS REFACTORING** ⚠️ (KISS violations present)
 
 ---
 
