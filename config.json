@@ -1219,6 +1219,10 @@
     "_comment_cache": "Cache weather data for this many hours (default: 12 hours = twice daily)",
     "timeout": 10,
     "_comment_timeout": "Request timeout in seconds",
+    "max_retries": 3,
+    "_comment_max_retries": "Maximum number of retry attempts for weather API requests",
+    "retry_delay_base": 1.0,
+    "_comment_retry_delay_base": "Base delay in seconds for exponential backoff between retries",
     "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
     "_comment_user_agent": "User-Agent string for HTTP requests (update periodically to match current browsers)",
     "locations": [
