@@ -357,10 +357,10 @@ class EventListeners {
     
     setupDistanceFilter(distanceTextEl) {
         const distances = [
-            { label: 'within 30 min walk (2 km)', value: '2' },
-            { label: 'within 30 min bicycle ride (3.75 km)', value: '3.75' },
-            { label: 'within 30 min public transport (12.5 km)', value: '12.5' },
-            { label: 'within 60 min car sharing (60 km)', value: '60' }
+            { label: 'just 30 min walk (2 km)', value: '2' },
+            { label: 'just 30 min bicycle ride (3.75 km)', value: '3.75' },
+            { label: 'just 30 min public transport (12.5 km)', value: '12.5' },
+            { label: 'just 60 min car sharing (60 km)', value: '60' }
         ];
         
         new CustomDropdown(
