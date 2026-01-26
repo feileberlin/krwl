@@ -1075,7 +1075,7 @@
     {
       "id": "weather-dresscode",
       "name": "Weather Dresscode Display",
-      "description": "Smart weather dresscode calculator using Open-Meteo free API. Generates 3-word dresscode based on feels-like temperature and rain. Updated twice daily (12-hour cache). Fallback: 'remind the weather' when API unavailable. Completes filter bar sentence: '4 events | til sunrise | within 60 min | from Hof | but warm jacket needed'. Includes retry logic and graceful CI failure handling.",
+      "description": "Smart weather dresscode calculator using Open-Meteo free API. Generates 3-word dresscode based on feels-like temperature and rain. Updated twice daily (12-hour cache). Fallback: 'remind the weather' when API unavailable. Hot weather (>25°C): 'sunscreen and shade' for sun protection. Completes filter bar sentence: '4 events | til sunrise | within 60 min | from Hof | but warm jacket needed'. Includes retry logic and graceful CI failure handling.",
       "category": "backend",
       "implemented": true,
       "files": [

@@ -125,8 +125,11 @@ class WeatherCalculator:
             return "light jacket recommended"
         elif feels_like < 20:
             return "sweater or cardigan"
-        else:
+        elif feels_like < 25:
             return "light summer clothes"
+        else:
+            # Hot weather - sun protection
+            return "sunscreen and shade"
     
     def _get_from_cache(self, location_name, lat, lon):
         """Get weather from cache if valid."""
