@@ -88,6 +88,98 @@ class VHSSource(BaseSource):
         
         return events
     
+    def _extract_location_from_text(self, text: str) -> Optional[str]:
+        """
+        Extract location from text that starts with 'Ort:' (case-insensitive).
+        
+        Handles variations like 'ORT:', 'ort:', 'Ort :', etc.
+        
+        Args:
+            text: Text that may contain 'Ort:' prefix
+            
+        Returns:
+            Location name or None if not found or empty
+        """
+        # Normalize: strip whitespace and check case-insensitively
+        normalized = text.strip()
+        lower_text = normalized.lower()
+        
+        # Check for "ort" followed by optional spaces and then colon
+        if lower_text.startswith('ort'):
+            # Get remainder after "ort", strip any spaces, check for colon
+            rest = normalized[3:].lstrip()
+            if rest.startswith(':'):
+                location_text = rest[1:].strip()
+                if location_text:
+                    return location_text
+        return None
+    
+    def _is_ort_label(self, text: str) -> bool:
+        """
+        Check if text is specifically the 'Ort:' label (case-insensitive).
+        
+        Only matches 'ort', 'Ort', 'ORT' followed by optional spaces and colon.
+        Does NOT match 'ortschaft:', 'ortsangabe:', etc.
+        
+        Args:
+            text: Text to check
+            
+        Returns:
+            True if text is specifically 'Ort:' (with optional spacing)
+        """
+        normalized = text.strip().lower()
+        # Must be exactly "ort" followed by optional spaces and colon
+        if normalized.startswith('ort'):
+            rest = normalized[3:].lstrip()
+            return rest.startswith(':') or rest == ''
+        return False
+    
+    def _extract_location(self, container) -> Optional[str]:
+        """
+        Extract location name from VHS course HTML container.
+        
+        Strategies are ordered from most specific to least specific:
+        1. <strong>Ort:</strong> pattern (most precise)
+        2. Elements with class 'course-places-list' (VHS standard format)
+        3. Fallback: any li/div/span/td/p with 'Ort:' prefix (limited search)
+        
+        Args:
+            container: BeautifulSoup element containing course data
+            
+        Returns:
+            Location name string or None if not found
+        """
+        # Strategy 1: Check for <strong>Ort:</strong> pattern (most specific)
+        strong_elems = container.find_all('strong')
+        for strong in strong_elems:
+            strong_text = strong.get_text(strip=True)
+            # Check if this strong element is specifically the "Ort:" label
+            if self._is_ort_label(strong_text):
+                # Get text from parent element
+                parent = strong.parent
+                if parent:
+                    full_text = parent.get_text(strip=True)
+                    location = self._extract_location_from_text(full_text)
+                    if location:
+                        return location
+        
+        # Strategy 2: VHS standard format - 'course-places-list' element
+        places_elem = container.find(class_='course-places-list')
+        if places_elem:
+            text = places_elem.get_text(strip=True)
+            location = self._extract_location_from_text(text)
+            if location:
+                return location
+        
+        # Strategy 3: Fallback - broad search with limit for performance
+        for elem in container.find_all(['li', 'div', 'span', 'td', 'p'], limit=30):
+            text = elem.get_text(strip=True)
+            location = self._extract_location_from_text(text)
+            if location:
+                return location
+        
+        return None
+    
     def _parse_course(self, container) -> Optional[Dict[str, Any]]:
         """Parse course from HTML container."""
         # Extract title
@@ -115,12 +207,23 @@ class VHSSource(BaseSource):
         date_text = container.get_text()
         start_time = extract_date_from_text(date_text, default_hour=18)
         
-        # Use default location
-        location = self.options.default_location or {
+        # Extract location from HTML, fall back to default if not found
+        default_location = self.options.default_location or {
             'name': 'VHS Hofer Land',
             'lat': 50.3167,
             'lon': 11.9167
         }
+        
+        extracted_location_name = self._extract_location(container)
+        if extracted_location_name:
+            # Use extracted location name with default coordinates
+            location = {
+                'name': extracted_location_name,
+                'lat': default_location.get('lat', 50.3167),
+                'lon': default_location.get('lon', 11.9167)
+            }
+        else:
+            location = default_location
         
         return {
             'id': generate_stable_event_id('vhs', title, start_time),

@@ -161,6 +161,306 @@ class TestCustomScraperParsing(unittest.TestCase):
             self.assertNotIn('2026-13-15', result)
 
 
+class TestVHSLocationExtraction(unittest.TestCase):
+    """Test VHS scraper location extraction from HTML."""
+    
+    def setUp(self):
+        """Set up VHS scraper for testing."""
+        try:
+            from modules.smart_scraper.sources.custom import VHSSource
+            from bs4 import BeautifulSoup
+            self.VHSSource = VHSSource
+            self.BeautifulSoup = BeautifulSoup
+            self.available = True
+        except ImportError:
+            self.available = False
+    
+    def _create_scraper(self):
+        """Create a VHS scraper instance for testing."""
+        source_config = {
+            'name': 'Test VHS',
+            'url': 'https://example.com',
+            'type': 'html'
+        }
+        options = SourceOptions()
+        return self.VHSSource(source_config, options)
+    
+    def test_extract_location_from_course_places_list(self):
+        """Test extraction from course-places-list element."""
+        if not self.available:
+            self.skipTest("BeautifulSoup not available")
+        
+        html = '''
+        <div class="course-item">
+            <h3>Test Course</h3>
+            <li class="list-group-item course-places-list">
+                <div class="row">
+                    <div class="col">
+                        <strong>Ort:</strong>
+                        VHS Bildungszentrum Hof
+                    </div>
+                </div>
+            </li>
+        </div>
+        '''
+        soup = self.BeautifulSoup(html, 'html.parser')
+        container = soup.find('div', class_='course-item')
+        
+        scraper = self._create_scraper()
+        location = scraper._extract_location(container)
+        
+        self.assertIsNotNone(location)
+        self.assertIn('VHS Bildungszentrum Hof', location)
+    
+    def test_extract_location_from_li_element(self):
+        """Test extraction from generic li element with Ort: label."""
+        if not self.available:
+            self.skipTest("BeautifulSoup not available")
+        
+        html = '''
+        <div class="course-item">
+            <h3>Test Course</h3>
+            <li>Ort: Stadtbibliothek Hof</li>
+        </div>
+        '''
+        soup = self.BeautifulSoup(html, 'html.parser')
+        container = soup.find('div', class_='course-item')
+        
+        scraper = self._create_scraper()
+        location = scraper._extract_location(container)
+        
+        self.assertIsNotNone(location)
+        self.assertEqual(location, 'Stadtbibliothek Hof')
+    
+    def test_extract_location_from_strong_element(self):
+        """Test extraction from <strong>Ort:</strong> pattern."""
+        if not self.available:
+            self.skipTest("BeautifulSoup not available")
+        
+        html = '''
+        <div class="course-item">
+            <h3>Test Course</h3>
+            <div><strong>Ort:</strong> Kulturzentrum Hof</div>
+        </div>
+        '''
+        soup = self.BeautifulSoup(html, 'html.parser')
+        container = soup.find('div', class_='course-item')
+        
+        scraper = self._create_scraper()
+        location = scraper._extract_location(container)
+        
+        self.assertIsNotNone(location)
+        self.assertEqual(location, 'Kulturzentrum Hof')
+    
+    def test_extract_location_returns_none_when_missing(self):
+        """Test that None is returned when no location is found."""
+        if not self.available:
+            self.skipTest("BeautifulSoup not available")
+        
+        html = '''
+        <div class="course-item">
+            <h3>Test Course</h3>
+            <p>Some description without location</p>
+        </div>
+        '''
+        soup = self.BeautifulSoup(html, 'html.parser')
+        container = soup.find('div', class_='course-item')
+        
+        scraper = self._create_scraper()
+        location = scraper._extract_location(container)
+        
+        self.assertIsNone(location)
+    
+    def test_parse_course_uses_extracted_location(self):
+        """Test that _parse_course uses extracted location name."""
+        if not self.available:
+            self.skipTest("BeautifulSoup not available")
+        
+        html = '''
+        <div class="course-item">
+            <h3>Python Programmierung 15.02.2026</h3>
+            <p>Learn Python basics</p>
+            <li class="course-places-list">Ort: Mehrgenerationenhaus Hof</li>
+        </div>
+        '''
+        soup = self.BeautifulSoup(html, 'html.parser')
+        container = soup.find('div', class_='course-item')
+        
+        scraper = self._create_scraper()
+        event = scraper._parse_course(container)
+        
+        self.assertIsNotNone(event)
+        self.assertEqual(event['location']['name'], 'Mehrgenerationenhaus Hof')
+        # Should still have default coordinates
+        self.assertEqual(event['location']['lat'], 50.3167)
+        self.assertEqual(event['location']['lon'], 11.9167)
+    
+    def test_parse_course_fallback_to_default_location(self):
+        """Test that _parse_course uses default location when none found."""
+        if not self.available:
+            self.skipTest("BeautifulSoup not available")
+        
+        html = '''
+        <div class="course-item">
+            <h3>Excel Kurs 20.03.2026</h3>
+            <p>Learn Excel basics</p>
+        </div>
+        '''
+        soup = self.BeautifulSoup(html, 'html.parser')
+        container = soup.find('div', class_='course-item')
+        
+        scraper = self._create_scraper()
+        event = scraper._parse_course(container)
+        
+        self.assertIsNotNone(event)
+        self.assertEqual(event['location']['name'], 'VHS Hofer Land')
+    
+    def test_extract_location_case_insensitive_uppercase(self):
+        """Test extraction handles uppercase 'ORT:' label."""
+        if not self.available:
+            self.skipTest("BeautifulSoup not available")
+        
+        html = '''
+        <div class="course-item">
+            <h3>Test Course</h3>
+            <li>ORT: Rathaus Hof</li>
+        </div>
+        '''
+        soup = self.BeautifulSoup(html, 'html.parser')
+        container = soup.find('div', class_='course-item')
+        
+        scraper = self._create_scraper()
+        location = scraper._extract_location(container)
+        
+        self.assertIsNotNone(location)
+        self.assertEqual(location, 'Rathaus Hof')
+    
+    def test_extract_location_case_insensitive_lowercase(self):
+        """Test extraction handles lowercase 'ort:' label."""
+        if not self.available:
+            self.skipTest("BeautifulSoup not available")
+        
+        html = '''
+        <div class="course-item">
+            <h3>Test Course</h3>
+            <li>ort: Museum Hof</li>
+        </div>
+        '''
+        soup = self.BeautifulSoup(html, 'html.parser')
+        container = soup.find('div', class_='course-item')
+        
+        scraper = self._create_scraper()
+        location = scraper._extract_location(container)
+        
+        self.assertIsNotNone(location)
+        self.assertEqual(location, 'Museum Hof')
+    
+    def test_extract_location_with_space_before_colon(self):
+        """Test extraction handles 'Ort :' with space before colon."""
+        if not self.available:
+            self.skipTest("BeautifulSoup not available")
+        
+        html = '''
+        <div class="course-item">
+            <h3>Test Course</h3>
+            <li>Ort : Sporthalle Hof</li>
+        </div>
+        '''
+        soup = self.BeautifulSoup(html, 'html.parser')
+        container = soup.find('div', class_='course-item')
+        
+        scraper = self._create_scraper()
+        location = scraper._extract_location(container)
+        
+        self.assertIsNotNone(location)
+        self.assertEqual(location, 'Sporthalle Hof')
+    
+    def test_extract_location_empty_after_prefix(self):
+        """Test that empty location after 'Ort:' returns None."""
+        if not self.available:
+            self.skipTest("BeautifulSoup not available")
+        
+        html = '''
+        <div class="course-item">
+            <h3>Test Course</h3>
+            <li>Ort:    </li>
+        </div>
+        '''
+        soup = self.BeautifulSoup(html, 'html.parser')
+        container = soup.find('div', class_='course-item')
+        
+        scraper = self._create_scraper()
+        location = scraper._extract_location(container)
+        
+        self.assertIsNone(location)
+    
+    def test_extract_location_returns_first_match(self):
+        """Test that extraction returns the first location found."""
+        if not self.available:
+            self.skipTest("BeautifulSoup not available")
+        
+        html = '''
+        <div class="course-item">
+            <h3>Test Course</h3>
+            <div><strong>Ort:</strong> First Location</div>
+            <li>Ort: Second Location</li>
+        </div>
+        '''
+        soup = self.BeautifulSoup(html, 'html.parser')
+        container = soup.find('div', class_='course-item')
+        
+        scraper = self._create_scraper()
+        location = scraper._extract_location(container)
+        
+        self.assertIsNotNone(location)
+        # Should return first match (from strong element, which is checked first)
+        self.assertEqual(location, 'First Location')
+    
+    def test_extract_location_strong_pattern_priority(self):
+        """Test that <strong>Ort:</strong> pattern has higher priority than broad search."""
+        if not self.available:
+            self.skipTest("BeautifulSoup not available")
+        
+        html = '''
+        <div class="course-item">
+            <h3>Test Course</h3>
+            <p>Some text with Ort: Incorrect Location in description</p>
+            <div><strong>Ort:</strong> Correct Location</div>
+        </div>
+        '''
+        soup = self.BeautifulSoup(html, 'html.parser')
+        container = soup.find('div', class_='course-item')
+        
+        scraper = self._create_scraper()
+        location = scraper._extract_location(container)
+        
+        self.assertIsNotNone(location)
+        # Strong pattern is checked first, should return correct location
+        self.assertEqual(location, 'Correct Location')
+    
+    def test_extract_location_ignores_similar_words(self):
+        """Test that words like 'ortschaft:' are not matched as 'Ort:'."""
+        if not self.available:
+            self.skipTest("BeautifulSoup not available")
+        
+        html = '''
+        <div class="course-item">
+            <h3>Test Course</h3>
+            <div><strong>Ortschaft:</strong> Should Not Match</div>
+            <li>Ort: Actual Location</li>
+        </div>
+        '''
+        soup = self.BeautifulSoup(html, 'html.parser')
+        container = soup.find('div', class_='course-item')
+        
+        scraper = self._create_scraper()
+        location = scraper._extract_location(container)
+        
+        self.assertIsNotNone(location)
+        # "Ortschaft:" should not match, only "Ort:" should
+        self.assertEqual(location, 'Actual Location')
+
+
 def main():
     """Run tests."""
     # Run with verbose output
