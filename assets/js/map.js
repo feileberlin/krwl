@@ -314,6 +314,17 @@ class MapManager {
         // Click opens detail panel only
         if (onClick) {
             flyer.on('click', () => onClick(event, flyer));
+            
+            // Add keyboard accessibility for Enter/Space key (WCAG 2.1.1)
+            const flyerElement = flyer._icon?.querySelector('.event-flyer');
+            if (flyerElement) {
+                flyerElement.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        onClick(event, flyer);
+                    }
+                });
+            }
         }
         
         this.flyers.push(flyer);
@@ -328,7 +339,16 @@ class MapManager {
      * @returns {string} HTML content for flyer
      */
     createFlyerHtml(event) {
+        // Defensive check: ensure we have a valid start_time before formatting
+        if (!event || !event.start_time) {
+            return `<div class="event-flyer event-flyer-error" role="alert">Invalid event</div>`;
+        }
+
         const startTime = new Date(event.start_time);
+        if (isNaN(startTime.getTime())) {
+            return `<div class="event-flyer event-flyer-error" role="alert">Invalid date</div>`;
+        }
+
         const hours = startTime.getHours().toString().padStart(2, '0');
         const minutes = startTime.getMinutes().toString().padStart(2, '0');
         const timeStr = `${hours}:${minutes}`;
@@ -367,7 +387,7 @@ class MapManager {
                 <div class="event-flyer" data-category="${this.escapeHtml(category)}" tabindex="0" role="button" aria-label="${this.escapeHtml(title)}">
                     <div class="event-flyer-date">
                         <span class="flyer-day">${this.escapeHtml(dayStr)}</span>
-                        <span class="flyer-date-num">${dateNum}</span>
+                        <span class="flyer-date-num">${this.escapeHtml(String(dateNum))}</span>
                     </div>
                     <div class="event-flyer-content">
                         <div class="flyer-title">${this.escapeHtml(shortTitle)}</div>

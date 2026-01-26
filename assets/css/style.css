@@ -158,12 +158,41 @@ strong, b {
     box-shadow: 
         0 4px 16px rgba(0, 0, 0, 0.5),
         0 0 20px rgba(214, 137, 184, 0.4);
-    z-index: 1000 !important;
+    z-index: var(--z-layer-2-event-popups, 1000);
 }
 
 .event-flyer:focus {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
+}
+
+/* Responsive adjustments for very small viewports */
+@media (max-width: 360px) {
+    .event-flyer {
+        min-width: 100px;
+        max-width: 140px;
+    }
+
+    .flyer-date-num {
+        font-size: 14px;
+    }
+
+    .flyer-title {
+        font-size: 10px;
+    }
+}
+
+/* Error state for invalid event data */
+.event-flyer-error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-error, #954476);
+    color: var(--color-tint-100, #fff);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 10px;
+    min-width: 80px;
 }
 
 /* Date section (left side) */
