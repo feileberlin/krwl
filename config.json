@@ -1215,8 +1215,8 @@
   "_comment_weather_usage": "Scrapes MSN Weather hourly for dresscode recommendations",
   "weather": {
     "enabled": true,
-    "cache_hours": 1,
-    "_comment_cache": "Cache weather data for this many hours (default: 1 hour)",
+    "cache_hours": 12,
+    "_comment_cache": "Cache weather data for this many hours (default: 12 hours = twice daily)",
     "timeout": 10,
     "_comment_timeout": "Request timeout in seconds",
     "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",

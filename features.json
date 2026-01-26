@@ -1075,16 +1075,15 @@
     {
       "id": "weather-dresscode",
       "name": "Weather Dresscode Display",
-      "description": "Scrape current weather conditions from MSN Weather and display dresscode recommendations in filter bar with format 'with [dresscode].' (e.g., 'with warm pullover.'). Weather data is embedded in APP_CONFIG.weather.data. Validates dresscodes against accepted list. Hourly caching prevents excessive requests. Includes retry logic with exponential backoff and graceful CI failure handling. Weather scraping runs via scheduled-scraping.yml workflow.",
+      "description": "Smart weather dresscode calculator using Open-Meteo free API. Generates 3-word dresscode based on feels-like temperature and rain. Updated twice daily (12-hour cache). Fallback: 'remind the weather' when API unavailable. Completes filter bar sentence: '4 events | til sunrise | within 60 min | from Hof | but warm jacket needed'. Includes retry logic and graceful CI failure handling.",
       "category": "backend",
       "implemented": true,
       "files": [
         "assets/js/app.js",
         "src/modules/site_generator.py",
-        "src/modules/weather_scraper.py",
+        "src/modules/weather_calculator.py",
         "src/event_manager.py",
         "assets/css/style.css",
-        "assets/json/weather_dresscodes.json",
         "assets/html/filter-nav.html",
         ".github/workflows/scheduled-scraping.yml",
         "tests/test_weather_scraper_resilience.py"
@@ -1114,23 +1113,23 @@
           "description": "Weather cache inlined in HTML"
         },
         {
-          "file": "src/modules/weather_scraper.py",
-          "pattern": "max_retries|retry_delay_base|requests.exceptions",
-          "description": "Retry logic with exponential backoff for network failures"
+          "file": "src/modules/weather_calculator.py",
+          "pattern": "WeatherCalculator|Open-Meteo|simple_dresscode",
+          "description": "KISS weather calculator using free API with fallback dresscode"
         },
         {
           "file": "src/event_manager.py",
-          "pattern": "cli_scrape_weather|--strict|cache fallback",
+          "pattern": "cli_scrape_weather|WeatherCalculator|--strict",
           "description": "CLI command with graceful failure handling and strict mode"
         },
         {
           "file": ".github/workflows/scheduled-scraping.yml",
           "pattern": "Scrape Weather|scrape-weather",
-          "description": "GitHub Actions workflow for weather scraping"
+          "description": "GitHub Actions workflow for weather calculation"
         }
       ],
       "test_method": "check_code_patterns",
-      "test_instructions": "1. Run weather scraper: python3 src/event_manager.py scrape-weather\n2. Verify cache created: assets/json/weather_cache.json\n3. Check dresscode is validated against accepted list\n4. Test retry logic: python3 tests/test_weather_scraper_resilience.py --verbose\n5. Test cache fallback: python3 src/event_manager.py scrape-weather --force (fails gracefully with exit code 0 in CI)\n6. Test strict mode: python3 src/event_manager.py scrape-weather --strict (fails with exit code 1)\n7. Generate site: python3 src/event_manager.py generate\n8. Verify APP_CONFIG.weather.data is embedded in public/index.html\n9. Open site and verify weather chip appears at end of filter bar\n10. Verify dresscode text is displayed in format 'with [dresscode].' (e.g., 'with warm pullover.')\n11. Hover over chip to see temperature tooltip (e.g., '8°C • with warm pullover.')\n12. Test hourly caching: run scrape-weather again within 1 hour, should use cache\n13. Test GitHub Actions: Trigger \"🤖 Scheduled Event & Weather Scraping\" workflow (scheduled-scraping.yml)"
+      "test_instructions": "1. Run weather calculator: python3 src/event_manager.py scrape-weather\n2. Verify cache created: assets/json/weather_cache.json with 12-hour cache\n3. Check dresscode is 3 words max (e.g., 'warm jacket needed', 'light rain jacket')\n4. Test fallback: When API fails, displays 'remind the weather'\n5. Test retry logic: python3 tests/test_weather_scraper_resilience.py --verbose\n6. Test cache fallback: python3 src/event_manager.py scrape-weather (uses cache within 12 hours)\n7. Test strict mode: python3 src/event_manager.py scrape-weather --strict\n8. Generate site: python3 src/event_manager.py generate\n9. Verify APP_CONFIG.weather.data is embedded in public/index.html\n10. Open site and verify dresscode appears in filter bar sentence\n11. Test GitHub Actions: Trigger scheduled-scraping.yml workflow"
     },
     {
       "id": "draggable-speech-bubbles",

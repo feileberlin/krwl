@@ -1127,20 +1127,23 @@ def cli_diagnose_scraping(base_path, config):
 
 def cli_scrape_weather(base_path, config, force_refresh=False, strict=False):
     """
-    CLI: Scrape current weather for the configured map center location
+    CLI: Calculate weather dresscode for the configured map center location
+    
+    Uses Open-Meteo free API to generate 3-word dresscode from feels-like temperature.
+    Updates twice daily (12-hour cache).
     
     Args:
         base_path: Base path to the repository
         config: Configuration dictionary
         force_refresh: Force refresh even if cache is valid
-        strict: If True, exit with code 1 on scraping failures (for local testing)
-                If False (default), use cache as fallback and only fail if no cache exists
+        strict: If True, exit with code 1 on failures (for local testing)
+                If False (default), use cache as fallback
     
     Exit Codes:
         0: Success (fresh data OR valid cache exists)
         1: Failure (only in strict mode OR when no cache exists)
     """
-    from modules.weather_scraper import WeatherScraper
+    from modules.weather_calculator import WeatherCalculator
     
     # Check if weather is enabled
     if not config.get('weather', {}).get('enabled', False):
@@ -1152,20 +1155,20 @@ def cli_scrape_weather(base_path, config, force_refresh=False, strict=False):
     map_center = config.get('map', {}).get('default_center', {})
     location_name = config.get('weather', {}).get('locations', [{}])[0].get('name', 'Map Center')
     
-    print(f"Scraping weather data for {location_name}...")
+    print(f"🌤️ Calculating weather dresscode for {location_name}...")
     print(f"  Location: {map_center.get('lat', 'N/A')}, {map_center.get('lon', 'N/A')}")
     
-    scraper = WeatherScraper(base_path, config)
+    calculator = WeatherCalculator(base_path, config)
     
-    # Check cache first (before attempting fresh scrape)
-    cached_weather = scraper._get_from_cache(
+    # Check cache first (before attempting fresh calculation)
+    cached_weather = calculator._get_from_cache(
         location_name=location_name,
         lat=map_center.get('lat'),
         lon=map_center.get('lon')
     )
     
-    # Attempt fresh scrape
-    weather_data = scraper.get_weather(
+    # Calculate fresh dresscode
+    weather_data = calculator.get_weather(
         location_name=location_name,
         lat=map_center.get('lat'),
         lon=map_center.get('lon'),
@@ -1180,9 +1183,9 @@ def cli_scrape_weather(base_path, config, force_refresh=False, strict=False):
         print(f"  Cached until: ~{weather_data.get('timestamp', 'N/A')}")
         return 0
     
-    # Fresh scraping failed - check if we have a fallback
+    # Fresh calculation failed - check if we have a fallback
     if cached_weather and cached_weather.get('dresscode'):
-        print("⚠ Fresh weather scraping failed, but using cached data")
+        print("⚠ Fresh weather calculation failed, but using cached data")
         print(f"  Dresscode: {cached_weather['dresscode']} (from cache)")
         if cached_weather.get('temperature'):
             print(f"  Temperature: {cached_weather['temperature']}")
@@ -1197,7 +1200,7 @@ def cli_scrape_weather(base_path, config, force_refresh=False, strict=False):
             return 1
     
     # No fresh data and no cache - this is a problem
-    print("✗ Failed to fetch weather or no valid dresscode found")
+    print("✗ Failed to calculate weather or no valid dresscode found")
     print("  Weather scraping requires internet access")
     
     if not strict:
