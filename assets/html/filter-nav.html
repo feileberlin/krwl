@@ -13,16 +13,16 @@
   <button id="filter-bar-weather" class="filter-chip weather-chip" role="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Current weather - click for full forecast" style="display: none;"></button>
 </nav>
 
-<!-- Weather popup with wttr.in iframe (lazy-loaded after page load) -->
+<!-- Weather popup with wttr.in iframe (preloaded after page load for instant display) -->
 <div id="weather-popup" class="weather-popup hidden" role="dialog" aria-modal="true" aria-label="Full weather forecast">
   <div class="weather-popup-backdrop"></div>
   <div class="weather-popup-content">
     <button id="weather-popup-close" class="weather-popup-close" aria-label="Close weather forecast">&times;</button>
     <div class="weather-popup-iframe-container">
-      <!-- iframe src set by JavaScript when popup is first opened for privacy -->
+      <!-- iframe src set by JavaScript after page load (preloaded for instant display) -->
       <iframe id="weather-iframe" 
               title="Weather forecast from wttr.in"
-              sandbox="allow-scripts"
+              sandbox="allow-scripts allow-same-origin"
               loading="lazy"
               referrerpolicy="no-referrer"></iframe>
     </div>
