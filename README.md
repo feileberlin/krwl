@@ -396,7 +396,7 @@ Run tests before committing:
 
 ```bash
 # Feature verification
-python3 scripts/verify_features.py --verbose
+python3 src/modules/feature_verifier.py --verbose
 
 # Event schema validation
 python3 tests/test_event_schema.py --verbose
@@ -411,7 +411,7 @@ python3 src/event_manager.py test filters --verbose
 python3 tests/test_translations.py --verbose
 
 # KISS principle compliance
-python3 scripts/check_kiss.py --verbose
+python3 src/modules/kiss_checker.py --verbose
 ```
 
 ## 📝 Project Structure
