@@ -1211,8 +1211,8 @@
     }
   },
   "_comment_weather_section": "────────────────────────────────────────────────────────────────────────────────",
-  "_comment_weather_help": "WEATHER SCRAPING - Current weather conditions and dresscode",
-  "_comment_weather_usage": "Scrapes MSN Weather hourly for dresscode recommendations",
+  "_comment_weather_help": "WEATHER DRESSCODE - Current weather conditions and dresscode",
+  "_comment_weather_usage": "Calculates weather dresscode using Open-Meteo free API",
   "weather": {
     "enabled": true,
     "cache_hours": 12,

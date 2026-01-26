@@ -113,7 +113,7 @@ class WeatherCalculator:
         """Generate 3-word dresscode from feels-like temp, rain, and extreme conditions."""
         # Extreme weather warnings (highest priority)
         # Weather codes: 95-99=thunderstorm, 85-86=heavy snow, 75-77=heavy snow
-        severe_weather_codes = [75, 77, 85, 86, 95, 96, 99]
+        severe_weather_codes = [75, 77, 85, 86, 95, 96, 97, 98, 99]
         
         if weather_code in severe_weather_codes:
             return "better watch TV"  # Severe weather warning

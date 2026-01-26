@@ -1086,7 +1086,7 @@
         "assets/css/style.css",
         "assets/html/filter-nav.html",
         ".github/workflows/scheduled-scraping.yml",
-        "tests/test_weather_scraper_resilience.py"
+        "tests/test_weather_calculator_resilience.py"
       ],
       "config_keys": [
         "weather.enabled",

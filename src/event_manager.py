@@ -291,9 +291,9 @@ COMMANDS:
     setup                     Show detailed setup instructions for your own site
     scrape                    Scrape events from configured sources
     diagnose-scraping         Debug scraping issues - check network, DNS, and sources
-    scrape-weather            Scrape weather for map center location (config: weather.enabled)
+    scrape-weather            Calculate weather dresscode for map center location (config: weather.enabled)
     scrape-weather --force    Force refresh weather data (bypass cache)
-    scrape-weather --strict   Fail on scraping errors (default: use cache as fallback)
+    scrape-weather --strict   Fail on calculation errors (default: use cache as fallback)
     review                    Review pending events interactively
     publish EVENT_ID          Publish a specific pending event
     reject EVENT_ID           Reject a specific pending event
