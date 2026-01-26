@@ -1,0 +1,26 @@
+{
+  "backed_up_at": "2026-01-26T17:47:31.597269",
+  "event": {
+    "id": "vhs_c7f44824806d",
+    "title": "VHS Stammtisch KIKI im Alltag: Was nutzen wir schon und was kommt als N\u00e4chstes?Mi. 28.01.2026 15:45Ludwigstra\u00dfe 7, 95028 Hof",
+    "teaser": "VHS Stammtisch KIKI im Alltag: Was nutzen wir schon und was kommt als N\u00e4chstes?Mi. 28.01.2026 15:45Ludwigstra\u00dfe 7, 95028 Hof am 28.01.",
+    "description": "VHS Stammtisch KIKI im Alltag: Was nutzen wir schon und was kommt als N\u00e4chstes?Mi. 28.01.2026 15:45Ludwigstra\u00dfe 7, 95028 Hof am 28.01.2026 18:00",
+    "location": {
+      "name": "VHS Hofer Land",
+      "address": null,
+      "lat": 50.3167,
+      "lon": 11.9167,
+      "address_hidden": true,
+      "needs_review": false,
+      "resolution_method": null
+    },
+    "start_time": "2026-01-28T18:00:00",
+    "end_time": null,
+    "category": "education",
+    "status": "published",
+    "source": "https://www.vhshoferland.de/p/last-minute-kurse/vhs-stammtisch-ki/ki-im-alltag-was-nutzen-wir-schon-und-was-kommt-als-naechstes-646-C-29AA904234",
+    "url": "https://www.vhshoferland.de/p/last-minute-kurse/vhs-stammtisch-ki/ki-im-alltag-was-nutzen-wir-schon-und-was-kommt-als-naechstes-646-C-29AA904234",
+    "tags": [],
+    "published_at": "2026-01-26T17:47:31.597240"
+  }
+}

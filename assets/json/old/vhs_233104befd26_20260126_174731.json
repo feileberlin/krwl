@@ -1,0 +1,26 @@
+{
+  "backed_up_at": "2026-01-26T17:47:31.608548",
+  "event": {
+    "id": "vhs_233104befd26",
+    "title": "Tschechisch - Niveaustufe B1VI. SemesterDi. 03.02.2026 18:15Ludwigstra\u00dfe 7, 95028 Hof",
+    "teaser": "Dieser Kurs konzentriert sich auf das Erlernen grundlegender Kenntnisse der tschechischen Sprache anhand alltagsnaher Situationen.",
+    "description": "Dieser Kurs konzentriert sich auf das Erlernen grundlegender Kenntnisse der tschechischen Sprache anhand alltagsnaher Situationen. Sie trainieren Ihre Aussprache, bauen Ihren Wortschatz weiter aus und machen sich mit neuen grammatischen Strukturen vertraut, um einfache Gespr\u00e4che f\u00fchren zu k\u00f6nnen.",
+    "location": {
+      "name": "VHS Hofer Land",
+      "address": null,
+      "lat": 50.3167,
+      "lon": 11.9167,
+      "address_hidden": true,
+      "needs_review": false,
+      "resolution_method": null
+    },
+    "start_time": "2026-02-03T18:00:00",
+    "end_time": null,
+    "category": "education",
+    "status": "published",
+    "source": "https://www.vhshoferland.de/p/last-minute-kurse/tschechisch-niveaustufe-b1/vi-semester-646-C-30AH402336",
+    "url": "https://www.vhshoferland.de/p/last-minute-kurse/tschechisch-niveaustufe-b1/vi-semester-646-C-30AH402336",
+    "tags": [],
+    "published_at": "2026-01-26T17:47:31.608522"
+  }
+}

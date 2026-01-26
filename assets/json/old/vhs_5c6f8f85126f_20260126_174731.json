@@ -1,0 +1,26 @@
+{
+  "backed_up_at": "2026-01-26T17:47:31.608239",
+  "event": {
+    "id": "vhs_5c6f8f85126f",
+    "title": "Spanisch - Niveaustufe A1V. SemesterMo. 02.02.2026 19:15Ludwigstra\u00dfe 7, 95028 Hof",
+    "teaser": "F\u00fcr Teilnehmer mit Vorkenntnissen. Es werden grundlegende Kenntnisse in Vokabular, Aussprache und Grammatik vermittelt.",
+    "description": "F\u00fcr Teilnehmer mit Vorkenntnissen. Es werden grundlegende Kenntnisse in Vokabular, Aussprache und Grammatik vermittelt.\nLehrwerk: Perspectivas \u00a1Ya! (Cornelsen-Verlag), ab Lektion 6",
+    "location": {
+      "name": "VHS Hofer Land",
+      "address": null,
+      "lat": 50.3167,
+      "lon": 11.9167,
+      "address_hidden": true,
+      "needs_review": false,
+      "resolution_method": null
+    },
+    "start_time": "2026-02-02T18:00:00",
+    "end_time": null,
+    "category": "education",
+    "status": "published",
+    "source": "https://www.vhshoferland.de/p/last-minute-kurse/spanisch-niveaustufe-a1/v-semester-646-C-30AH402215",
+    "url": "https://www.vhshoferland.de/p/last-minute-kurse/spanisch-niveaustufe-a1/v-semester-646-C-30AH402215",
+    "tags": [],
+    "published_at": "2026-01-26T17:47:31.608214"
+  }
+}

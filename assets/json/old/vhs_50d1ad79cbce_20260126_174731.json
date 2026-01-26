@@ -1,0 +1,26 @@
+{
+  "backed_up_at": "2026-01-26T17:47:31.599268",
+  "event": {
+    "id": "vhs_50d1ad79cbce",
+    "title": "Online-Seminar: Gelassen durch den AlltagStressbew\u00e4ltigung und Resilienz st\u00e4rkenDo. 29.01.2026 18:30Online",
+    "teaser": "M\u00f6chten Sie lernen, wie Sie Stress effektiv bew\u00e4ltigen und mehr Gelassenheit in Ihren Alltag bringen k\u00f6nnen? Unser Online-Seminar bietet Ihnen fundierte und praktisch erprobte Techniken, die Ihnen hel...",
+    "description": "M\u00f6chten Sie lernen, wie Sie Stress effektiv bew\u00e4ltigen und mehr Gelassenheit in Ihren Alltag bringen k\u00f6nnen? Unser Online-Seminar bietet Ihnen fundierte und praktisch erprobte Techniken, die Ihnen helfen, besser mit Stress umzugehen. In diesem interaktiven Seminar stellen wir Ihnen bew\u00e4hrte Methoden zur Stressreduktion, inklusive Atem\u00fcbungen, Zeitmanagement und Achtsamkeitstechniken vor. Sie erhalten wertvolle Einblicke, wie Sie Stressoren in Ihrem Leben erkennen und diese effektiv minimieren k\u00f6",
+    "location": {
+      "name": "VHS Hofer Land",
+      "address": null,
+      "lat": 50.3167,
+      "lon": 11.9167,
+      "address_hidden": true,
+      "needs_review": false,
+      "resolution_method": null
+    },
+    "start_time": "2026-01-29T18:00:00",
+    "end_time": null,
+    "category": "education",
+    "status": "published",
+    "source": "https://www.vhshoferland.de/p/last-minute-kurse/online-seminar-gelassen-durch-den-alltag/stressbewaeltigung-und-resilienz-staerken-646-C-29AH270372",
+    "url": "https://www.vhshoferland.de/p/last-minute-kurse/online-seminar-gelassen-durch-den-alltag/stressbewaeltigung-und-resilienz-staerken-646-C-29AH270372",
+    "tags": [],
+    "published_at": "2026-01-26T17:47:31.599241"
+  }
+}

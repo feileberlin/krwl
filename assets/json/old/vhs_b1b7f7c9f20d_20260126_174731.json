@@ -1,0 +1,26 @@
+{
+  "backed_up_at": "2026-01-26T17:47:31.608738",
+  "event": {
+    "id": "vhs_b1b7f7c9f20d",
+    "title": "KI-Prompting: K\u00fcnstliche Intelligenz effektiv steuernDi. 03.02.2026 18:00Online",
+    "teaser": "K\u00fcnstliche Intelligenz kann beeindruckende Texte Bilder und L\u00f6sungen generieren doch nur mit den richtigen Prompts liefert sie wirklich pr\u00e4zise und hochwertige Ergebnisse.",
+    "description": "K\u00fcnstliche Intelligenz kann beeindruckende Texte Bilder und L\u00f6sungen generieren doch nur mit den richtigen Prompts liefert sie wirklich pr\u00e4zise und hochwertige Ergebnisse. In diesem Kurs wird gezeigt wie man KI effektiv steuert indem man gezielt formulierte Eingaben verwendet.",
+    "location": {
+      "name": "VHS Hofer Land",
+      "address": null,
+      "lat": 50.3167,
+      "lon": 11.9167,
+      "address_hidden": true,
+      "needs_review": false,
+      "resolution_method": null
+    },
+    "start_time": "2026-02-03T18:00:00",
+    "end_time": null,
+    "category": "education",
+    "status": "published",
+    "source": "https://www.vhshoferland.de/p/last-minute-kurse/ki-prompting-kuenstliche-intelligenz-effektiv-steuern-646-C-29AH311096",
+    "url": "https://www.vhshoferland.de/p/last-minute-kurse/ki-prompting-kuenstliche-intelligenz-effektiv-steuern-646-C-29AH311096",
+    "tags": [],
+    "published_at": "2026-01-26T17:47:31.608713"
+  }
+}
