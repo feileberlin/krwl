@@ -137,7 +137,17 @@ class EventsApp {
             console.warn('Map initialization failed:', error.message);
         }
         
+        // Load events FIRST (before geolocation) to avoid race condition
+        // This ensures this.events is populated before displayEvents() is called
+        try {
+            await this.loadEvents();
+        } catch (error) {
+            console.error('Failed to load events:', error);
+            this.showMainContent();
+        }
+        
         // Get user location via MapManager (still works without map for filtering)
+        // Events are now loaded, so displayEvents() will have data to work with
         this.mapManager.getUserLocation(
             (location) => {
                 this.displayEvents();
@@ -146,14 +156,6 @@ class EventsApp {
                 this.displayEvents();
             }
         );
-        
-        // Load events
-        try {
-            await this.loadEvents();
-        } catch (error) {
-            console.error('Failed to load events:', error);
-            this.showMainContent();
-        }
         
         // Load weather
         await this.loadWeather();
