@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🗯️ Comic Style Speech Bubbles Demo - KRWL HOF</title>
+    <title>🗯️ Comic Style Speech Bubbles - 8 Directions Demo</title>
     <style>
         /* ═══════════════════════════════════════════════════════════════
            DESIGN TOKENS - EcoBarbie Color Palette
@@ -12,17 +12,13 @@
             --color-primary: #D689B8;
             --color-shade-50: #6b445c;
             --color-tint-50: #eac0da;
-            --color-bookmark: #ffb3b3;
-            --color-bookmark-light: #ffcccc;
-            --color-bookmark-lighter: #ffe6e6;
             --color-bg-primary: #0d1117;
             --color-bg-secondary: #161b22;
             --color-text-primary: #c9d1d9;
+            --bubble-bg: #ffffff;
+            --bubble-border: #333;
         }
 
-        /* ═══════════════════════════════════════════════════════════════
-           PAGE LAYOUT
-           ═══════════════════════════════════════════════════════════════ */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -51,261 +47,310 @@
         }
 
         /* ═══════════════════════════════════════════════════════════════
-           DEMO CONTAINER - Simulates Map Area
+           GRID LAYOUT - 3x3 for 8 Directions + Center Label
            ═══════════════════════════════════════════════════════════════ */
         .demo-container {
-            position: relative;
-            width: 100%;
             max-width: 900px;
-            height: 500px;
-            margin: 0 auto 30px;
+            margin: 0 auto 40px;
             background: linear-gradient(180deg, #1a1f2e 0%, #0d1117 100%);
             border: 2px solid var(--color-primary);
             border-radius: 16px;
-            overflow: hidden;
+            padding: 30px;
         }
 
-        /* Simulated map markers */
-        .marker {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            background: var(--color-primary);
-            border-radius: 50%;
-            border: 3px solid white;
+        .direction-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, auto);
+            gap: 30px;
+        }
+
+        .grid-cell {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-            cursor: pointer;
-            transition: transform 0.2s ease;
-            z-index: 100;
+            min-height: 160px;
+            position: relative;
         }
 
-        .marker:hover {
-            transform: scale(1.1);
+        .grid-cell.center {
+            background: rgba(214, 137, 184, 0.1);
+            border-radius: 12px;
+            border: 2px dashed var(--color-primary);
+            padding: 20px;
+        }
+
+        .center-text {
+            color: var(--color-primary);
+            font-weight: bold;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .center-subtext {
+            color: var(--color-shade-50);
+            font-size: 0.9rem;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        .direction-label {
+            color: var(--color-primary);
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 10px;
+            opacity: 0.8;
         }
 
         /* ═══════════════════════════════════════════════════════════════
-           SPEECH BUBBLES - Comic Book Style (from bubbles.css)
+           COMIC SPEECH BUBBLE - Base Style
+           Authentic comic book look with thick border
            ═══════════════════════════════════════════════════════════════ */
         .speech-bubble {
-            position: absolute;
-            /* Comic book style: white background, no border - tail and bubble merge seamlessly */
-            background: #ffffff;
-            border: none;
-            border-radius: 20px; /* Very rounded for authentic comic look */
-            padding: 14px 16px;
-            width: 200px;
-            z-index: 1000;
-            /* Unified drop shadow - applies to bubble AND tail as one grouped object */
-            filter: drop-shadow(4px 4px 8px rgba(107, 68, 92, 0.25)) 
-                    drop-shadow(0 2px 12px rgba(0, 0, 0, 0.1));
-            cursor: grab;
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
-                        opacity 0.4s ease,
-                        filter 0.3s ease;
-            opacity: 1; /* Visible from start */
+            position: relative;
+            background: var(--bubble-bg);
+            border: 3px solid var(--bubble-border);
+            border-radius: 20px;
+            padding: 12px 16px;
+            min-width: 120px;
+            max-width: 160px;
+            text-align: center;
             font-size: 0.85rem;
-            font-weight: 500;
-            color: #6b445c;
-            overflow: visible;
-            user-select: none;
+            font-weight: 600;
+            color: var(--color-shade-50);
+            /* Unified shadow on bubble + tail */
+            filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.3));
         }
 
-        /* CSS-based tail (triangular pointer) */
-        .speech-bubble::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 16px 11px 0 11px;
-            border-color: #ffffff transparent transparent transparent;
-            left: var(--tail-x, 50%);
-            top: var(--tail-y, 100%);
-            transform: translate(-50%, 0) rotate(var(--tail-angle, 0deg));
-            transform-origin: top center;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        /* Visible state with animation */
-        .speech-bubble.visible {
-            opacity: 1;
-            animation: bubbleAppear 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-
-        @keyframes bubbleAppear {
-            0% {
-                opacity: 0;
-                transform: scale(0.8) translateY(10px);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-
-        /* Hover effect with slight rotation */
-        .speech-bubble:hover {
-            transform: scale(1.05) rotate(0.5deg);
-            filter: drop-shadow(4px 4px 12px rgba(107, 68, 92, 0.35)) 
-                    drop-shadow(0 4px 20px rgba(0, 0, 0, 0.15))
-                    brightness(1.05);
-        }
-
-        /* Bookmarked bubble variant */
-        .speech-bubble.bubble-is-bookmarked {
-            background: #eac0da;
-            filter: drop-shadow(4px 4px 8px rgba(214, 137, 184, 0.3)) 
-                    drop-shadow(0 2px 12px rgba(0, 0, 0, 0.1));
-        }
-
-        .speech-bubble.bubble-is-bookmarked::after {
-            border-color: #eac0da transparent transparent transparent;
-        }
-
-        /* Bubble content styling */
-        .bubble-time-headline {
-            color: #D689B8;
-            font-size: 1.1rem;
+        .speech-bubble .event-time {
+            color: var(--color-primary);
+            font-size: 1rem;
             font-weight: 700;
             margin-bottom: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
-        .bubble-date {
-            color: #6b445c;
-            font-size: 0.75rem;
-            margin-bottom: 8px;
-        }
-
-        .bubble-title {
-            color: #6b445c;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 6px;
+        .speech-bubble .event-title {
+            font-size: 0.8rem;
             line-height: 1.3;
         }
 
-        .bubble-location {
-            color: #6b445c;
-            font-size: 0.8rem;
-            margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
+        /* ═══════════════════════════════════════════════════════════════
+           COMIC TAIL DIRECTIONS - 8 Fixed Positions
+           Using CSS border triangles for authentic comic look
+           
+           Direction Map:
+           ╔═════╦═════╦═════╗
+           ║ TL  ║  T  ║ TR  ║
+           ╠═════╬═════╬═════╣
+           ║  L  ║     ║  R  ║
+           ╠═════╬═════╬═════╣
+           ║ BL  ║  B  ║ BR  ║
+           ╚═════╩═════╩═════╝
+           ═══════════════════════════════════════════════════════════════ */
 
-        .bubble-distance {
-            color: #6b445c;
-            font-size: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .bubble-bookmark {
+        /* TAIL POINTING DOWN (bubble is above target) */
+        .speech-bubble.tail-bottom::after,
+        .speech-bubble.tail-bottom::before {
+            content: '';
             position: absolute;
-            bottom: 8px;
-            right: 8px;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 4px;
-            font-size: 18px;
-            transition: transform 0.2s ease;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .speech-bubble.tail-bottom::after {
+            bottom: -20px;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 22px solid var(--bubble-bg);
+        }
+        .speech-bubble.tail-bottom::before {
+            bottom: -25px;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+            border-top: 26px solid var(--bubble-border);
+            z-index: -1;
         }
 
-        .bubble-bookmark:hover {
-            transform: scale(1.2);
-        }
-
-        .bubble-bookmark.bookmarked {
-            animation: heartbeat 0.3s ease;
-        }
-
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-        }
-
-        /* ═══════════════════════════════════════════════════════════════
-           SVG CONNECTORS - Bezier Curve Tails
-           ═══════════════════════════════════════════════════════════════ */
-        .bubble-connectors {
+        /* TAIL POINTING UP (bubble is below target) */
+        .speech-bubble.tail-top::after,
+        .speech-bubble.tail-top::before {
+            content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 50;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .speech-bubble.tail-top::after {
+            top: -20px;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 22px solid var(--bubble-bg);
+        }
+        .speech-bubble.tail-top::before {
+            top: -25px;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+            border-bottom: 26px solid var(--bubble-border);
+            z-index: -1;
         }
 
-        .bubble-connector-fill {
-            fill: #ffffff;
-            stroke: none;
-            opacity: 1;
+        /* TAIL POINTING LEFT (bubble is right of target) */
+        .speech-bubble.tail-left::after,
+        .speech-bubble.tail-left::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .speech-bubble.tail-left::after {
+            left: -20px;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            border-right: 22px solid var(--bubble-bg);
+        }
+        .speech-bubble.tail-left::before {
+            left: -25px;
+            border-top: 18px solid transparent;
+            border-bottom: 18px solid transparent;
+            border-right: 26px solid var(--bubble-border);
+            z-index: -1;
         }
 
-        .bubble-connector-fill.bookmarked {
-            fill: #eac0da;
+        /* TAIL POINTING RIGHT (bubble is left of target) */
+        .speech-bubble.tail-right::after,
+        .speech-bubble.tail-right::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .speech-bubble.tail-right::after {
+            right: -20px;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            border-left: 22px solid var(--bubble-bg);
+        }
+        .speech-bubble.tail-right::before {
+            right: -25px;
+            border-top: 18px solid transparent;
+            border-bottom: 18px solid transparent;
+            border-left: 26px solid var(--bubble-border);
+            z-index: -1;
         }
 
-        .bubble-connector-circle {
-            fill: none;
-            stroke: var(--color-primary);
-            stroke-width: 1.5;
-            stroke-opacity: 0.4;
-            stroke-dasharray: 3, 3;
+        /* TAIL POINTING BOTTOM-LEFT (bubble is top-right of target) */
+        .speech-bubble.tail-bottom-left::after,
+        .speech-bubble.tail-bottom-left::before {
+            content: '';
+            position: absolute;
+        }
+        .speech-bubble.tail-bottom-left::after {
+            bottom: -18px;
+            left: 20px;
+            border-left: 12px solid transparent;
+            border-right: 18px solid transparent;
+            border-top: 22px solid var(--bubble-bg);
+            transform: rotate(-30deg);
+        }
+        .speech-bubble.tail-bottom-left::before {
+            bottom: -23px;
+            left: 17px;
+            border-left: 15px solid transparent;
+            border-right: 21px solid transparent;
+            border-top: 26px solid var(--bubble-border);
+            transform: rotate(-30deg);
+            z-index: -1;
+        }
+
+        /* TAIL POINTING BOTTOM-RIGHT (bubble is top-left of target) */
+        .speech-bubble.tail-bottom-right::after,
+        .speech-bubble.tail-bottom-right::before {
+            content: '';
+            position: absolute;
+        }
+        .speech-bubble.tail-bottom-right::after {
+            bottom: -18px;
+            right: 20px;
+            border-left: 18px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 22px solid var(--bubble-bg);
+            transform: rotate(30deg);
+        }
+        .speech-bubble.tail-bottom-right::before {
+            bottom: -23px;
+            right: 17px;
+            border-left: 21px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 26px solid var(--bubble-border);
+            transform: rotate(30deg);
+            z-index: -1;
+        }
+
+        /* TAIL POINTING TOP-LEFT (bubble is bottom-right of target) */
+        .speech-bubble.tail-top-left::after,
+        .speech-bubble.tail-top-left::before {
+            content: '';
+            position: absolute;
+        }
+        .speech-bubble.tail-top-left::after {
+            top: -18px;
+            left: 20px;
+            border-left: 12px solid transparent;
+            border-right: 18px solid transparent;
+            border-bottom: 22px solid var(--bubble-bg);
+            transform: rotate(30deg);
+        }
+        .speech-bubble.tail-top-left::before {
+            top: -23px;
+            left: 17px;
+            border-left: 15px solid transparent;
+            border-right: 21px solid transparent;
+            border-bottom: 26px solid var(--bubble-border);
+            transform: rotate(30deg);
+            z-index: -1;
+        }
+
+        /* TAIL POINTING TOP-RIGHT (bubble is bottom-left of target) */
+        .speech-bubble.tail-top-right::after,
+        .speech-bubble.tail-top-right::before {
+            content: '';
+            position: absolute;
+        }
+        .speech-bubble.tail-top-right::after {
+            top: -18px;
+            right: 20px;
+            border-left: 18px solid transparent;
+            border-right: 12px solid transparent;
+            border-bottom: 22px solid var(--bubble-bg);
+            transform: rotate(-30deg);
+        }
+        .speech-bubble.tail-top-right::before {
+            top: -23px;
+            right: 17px;
+            border-left: 21px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 26px solid var(--bubble-border);
+            transform: rotate(-30deg);
+            z-index: -1;
         }
 
         /* ═══════════════════════════════════════════════════════════════
-           CONTROLS
+           HOVER EFFECTS
            ═══════════════════════════════════════════════════════════════ */
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        button {
-            background: var(--color-primary);
-            color: #0d1117;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
-        }
-
-        button:hover {
-            background: #E8A5C8;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(214, 137, 184, 0.4);
-        }
-
-        button:active {
-            transform: translateY(0);
+        .speech-bubble:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(4px 4px 10px rgba(0, 0, 0, 0.4));
         }
 
         /* ═══════════════════════════════════════════════════════════════
-           INFO PANELS
+           INFO SECTION
            ═══════════════════════════════════════════════════════════════ */
-        .info-grid {
+        .info-section {
+            max-width: 900px;
+            margin: 0 auto;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
-            max-width: 900px;
-            margin: 0 auto;
         }
 
         .info-card {
@@ -317,17 +362,16 @@
 
         .info-card h3 {
             color: var(--color-primary);
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             font-size: 1rem;
         }
 
         .info-card ul {
             list-style: none;
-            padding: 0;
         }
 
         .info-card li {
-            padding: 5px 0;
+            padding: 6px 0;
             font-size: 0.9rem;
             display: flex;
             align-items: center;
@@ -350,292 +394,131 @@
 
         .status-bar {
             max-width: 900px;
-            margin: 20px auto;
+            margin: 30px auto;
             background: #21262d;
             padding: 12px 20px;
             border-radius: 8px;
             font-family: monospace;
             text-align: center;
+            color: var(--color-primary);
         }
     </style>
 </head>
 <body>
     <h1>🗯️ Comic Style Speech Bubbles</h1>
-    <p class="subtitle">Interactive demonstration of the KRWL HOF speech bubble implementation</p>
+    <p class="subtitle">8 authentic comic tail directions with CSS border triangles</p>
 
-    <div class="controls">
-        <button onclick="showBubbles()">✨ Show Bubbles</button>
-        <button onclick="hideBubbles()">🙈 Hide Bubbles</button>
-        <button onclick="toggleBookmark(1)">❤️ Toggle Bookmark</button>
-        <button onclick="animateBubbles()">🎬 Replay Animation</button>
+    <div class="demo-container">
+        <div class="direction-grid">
+            <!-- Row 1: Top-Left, Top, Top-Right -->
+            <div class="grid-cell">
+                <div class="speech-bubble tail-bottom-right">
+                    <div class="event-time">↖ TL</div>
+                    <div class="event-title">Top-Left Tail</div>
+                </div>
+                <span class="direction-label">tail-bottom-right</span>
+            </div>
+            <div class="grid-cell">
+                <div class="speech-bubble tail-bottom">
+                    <div class="event-time">↑ TOP</div>
+                    <div class="event-title">Points Down</div>
+                </div>
+                <span class="direction-label">tail-bottom</span>
+            </div>
+            <div class="grid-cell">
+                <div class="speech-bubble tail-bottom-left">
+                    <div class="event-time">↗ TR</div>
+                    <div class="event-title">Top-Right Tail</div>
+                </div>
+                <span class="direction-label">tail-bottom-left</span>
+            </div>
+
+            <!-- Row 2: Left, Center (label), Right -->
+            <div class="grid-cell">
+                <div class="speech-bubble tail-right">
+                    <div class="event-time">← LEFT</div>
+                    <div class="event-title">Points Right</div>
+                </div>
+                <span class="direction-label">tail-right</span>
+            </div>
+            <div class="grid-cell center">
+                <div class="center-text">8 DIRECTIONS</div>
+                <div class="center-subtext">
+                    \  |  /<br>
+                    —    —<br>
+                    /  |  \
+                </div>
+            </div>
+            <div class="grid-cell">
+                <div class="speech-bubble tail-left">
+                    <div class="event-time">→ RIGHT</div>
+                    <div class="event-title">Points Left</div>
+                </div>
+                <span class="direction-label">tail-left</span>
+            </div>
+
+            <!-- Row 3: Bottom-Left, Bottom, Bottom-Right -->
+            <div class="grid-cell">
+                <div class="speech-bubble tail-top-right">
+                    <div class="event-time">↙ BL</div>
+                    <div class="event-title">Bottom-Left</div>
+                </div>
+                <span class="direction-label">tail-top-right</span>
+            </div>
+            <div class="grid-cell">
+                <div class="speech-bubble tail-top">
+                    <div class="event-time">↓ BOTTOM</div>
+                    <div class="event-title">Points Up</div>
+                </div>
+                <span class="direction-label">tail-top</span>
+            </div>
+            <div class="grid-cell">
+                <div class="speech-bubble tail-top-left">
+                    <div class="event-time">↘ BR</div>
+                    <div class="event-title">Bottom-Right</div>
+                </div>
+                <span class="direction-label">tail-top-left</span>
+            </div>
+        </div>
     </div>
 
-    <div class="demo-container" id="demo">
-        <!-- SVG layer for bezier curve connectors -->
-        <svg class="bubble-connectors" id="connectors" viewBox="0 0 900 500"></svg>
-        
-        <!-- Simulated map markers -->
-        <div class="marker" id="marker1" style="left: 150px; top: 300px;">🎵</div>
-        <div class="marker" id="marker2" style="left: 450px; top: 200px;">🎨</div>
-        <div class="marker" id="marker3" style="left: 700px; top: 350px;">🍽️</div>
-
-        <!-- Speech Bubbles -->
-        <div class="speech-bubble" id="bubble1" style="left: 80px; top: 120px; --tail-x: 70px; --tail-y: 100%; --tail-angle: 20deg;">
-            <div class="bubble-time-headline">8:00 PM</div>
-            <div class="bubble-date">Sat, Jan 26</div>
-            <div class="bubble-title">Jazz Night @ Bar</div>
-            <div class="bubble-location">📍 Downtown Hof</div>
-            <div class="bubble-distance">👣 0.5 km</div>
-            <button class="bubble-bookmark" onclick="toggleBookmark(1); event.stopPropagation();">🤍</button>
-        </div>
-
-        <div class="speech-bubble" id="bubble2" style="left: 380px; top: 40px; --tail-x: 70px; --tail-y: 100%; --tail-angle: 15deg;">
-            <div class="bubble-time-headline">3:30 PM</div>
-            <div class="bubble-date">Sun, Jan 27</div>
-            <div class="bubble-title">Art Exhibition Opening</div>
-            <div class="bubble-location">📍 Kunstmuseum</div>
-            <div class="bubble-distance">👣 1.2 km</div>
-            <button class="bubble-bookmark" onclick="toggleBookmark(2); event.stopPropagation();">🤍</button>
-        </div>
-
-        <div class="speech-bubble" id="bubble3" style="left: 620px; top: 180px; --tail-x: 80px; --tail-y: 100%; --tail-angle: 25deg;">
-            <div class="bubble-time-headline">7:00 PM</div>
-            <div class="bubble-date">Fri, Jan 31</div>
-            <div class="bubble-title">Food Festival</div>
-            <div class="bubble-location">📍 Altstadt</div>
-            <div class="bubble-distance">👣 2.0 km</div>
-            <button class="bubble-bookmark" onclick="toggleBookmark(3); event.stopPropagation();">🤍</button>
-        </div>
+    <div class="status-bar">
+        ✨ Authentic comic-style speech bubbles with 8 pre-defined tail directions
     </div>
 
-    <div class="status-bar" id="status">
-        Status: Click "Show Bubbles" to see the comic-style speech bubbles appear with animation
-    </div>
-
-    <div class="info-grid">
+    <div class="info-section">
         <div class="info-card">
-            <h3>🎨 Visual Features</h3>
+            <h3>🎨 Authentic Comic Style</h3>
             <ul>
-                <li>White background, no border</li>
-                <li>20px border-radius (comic look)</li>
+                <li>Thick black border (3px)</li>
+                <li>White background with border</li>
+                <li>Sharp pointed triangle tails</li>
+                <li>8 fixed directions like classic comics</li>
                 <li>Unified drop-shadow on bubble + tail</li>
-                <li>EcoBarbie pink accent colors</li>
-                <li>Smooth fade-in animation</li>
             </ul>
         </div>
 
         <div class="info-card">
-            <h3>⚙️ Technical Implementation</h3>
+            <h3>⚙️ CSS Implementation</h3>
             <ul>
-                <li><code>filter: drop-shadow()</code> for unified shadow</li>
-                <li>CSS <code>::after</code> pseudo-element for tail</li>
-                <li>SVG bezier curves for connectors</li>
-                <li>CSS custom properties for tail angle</li>
-                <li>Force-directed collision avoidance</li>
+                <li><code>::before</code> for border outline</li>
+                <li><code>::after</code> for filled triangle</li>
+                <li>Border triangle technique</li>
+                <li>No JavaScript required</li>
+                <li>Pure CSS solution</li>
             </ul>
         </div>
 
         <div class="info-card">
-            <h3>🔧 Interactive Features</h3>
+            <h3>📐 Tail Classes</h3>
             <ul>
-                <li>Draggable bubble positioning</li>
-                <li>Bookmark toggle with heart animation</li>
-                <li>Hover effects with scale + rotation</li>
-                <li>Touch support for mobile devices</li>
-                <li>Click to open event details</li>
+                <li><code>.tail-top</code> - points up ↑</li>
+                <li><code>.tail-bottom</code> - points down ↓</li>
+                <li><code>.tail-left</code> - points left ←</li>
+                <li><code>.tail-right</code> - points right →</li>
+                <li>+ 4 diagonal variants</li>
             </ul>
         </div>
     </div>
-
-    <script>
-        // Bookmarked state
-        const bookmarkedBubbles = new Set();
-
-        // Show bubbles with staggered animation
-        function showBubbles() {
-            const bubbles = document.querySelectorAll('.speech-bubble');
-            bubbles.forEach((bubble, index) => {
-                bubble.style.opacity = '0';
-                bubble.classList.remove('visible');
-                setTimeout(() => {
-                    bubble.style.opacity = '';
-                    bubble.classList.add('visible');
-                }, index * 150);
-            });
-            drawConnectors();
-            updateStatus('Bubbles appeared with comic-style animation! Hover to see effects.');
-        }
-
-        // Hide bubbles
-        function hideBubbles() {
-            const bubbles = document.querySelectorAll('.speech-bubble');
-            bubbles.forEach(bubble => {
-                bubble.style.opacity = '0';
-                bubble.classList.remove('visible');
-            });
-            clearConnectors();
-            updateStatus('Bubbles hidden. Click "Show Bubbles" to see them again.');
-        }
-
-        // Toggle bookmark state
-        function toggleBookmark(bubbleNum) {
-            const bubble = document.getElementById(`bubble${bubbleNum}`);
-            const bookmark = bubble.querySelector('.bubble-bookmark');
-            
-            if (bookmarkedBubbles.has(bubbleNum)) {
-                bookmarkedBubbles.delete(bubbleNum);
-                bubble.classList.remove('bubble-is-bookmarked');
-                bookmark.textContent = '🤍';
-                bookmark.classList.remove('bookmarked');
-            } else {
-                bookmarkedBubbles.add(bubbleNum);
-                bubble.classList.add('bubble-is-bookmarked');
-                bookmark.textContent = '❤️';
-                bookmark.classList.add('bookmarked');
-            }
-            
-            drawConnectors();
-            updateStatus(`Bubble ${bubbleNum} ${bookmarkedBubbles.has(bubbleNum) ? 'bookmarked (pink background)' : 'unbookmarked (white background)'}`);
-        }
-
-        // Replay animation
-        function animateBubbles() {
-            hideBubbles();
-            setTimeout(showBubbles, 100);
-        }
-
-        // Draw SVG bezier curve connectors
-        function drawConnectors() {
-            const svg = document.getElementById('connectors');
-            svg.innerHTML = '';
-            
-            const connections = [
-                { bubble: 'bubble1', marker: 'marker1' },
-                { bubble: 'bubble2', marker: 'marker2' },
-                { bubble: 'bubble3', marker: 'marker3' }
-            ];
-
-            connections.forEach(conn => {
-                const bubble = document.getElementById(conn.bubble);
-                const marker = document.getElementById(conn.marker);
-                
-                // Skip if bubble is hidden
-                if (bubble.style.opacity === '0') return;
-                
-                const bubbleRect = bubble.getBoundingClientRect();
-                const markerRect = marker.getBoundingClientRect();
-                const containerRect = document.getElementById('demo').getBoundingClientRect();
-                
-                // Calculate positions relative to container
-                const bubbleBottom = bubbleRect.bottom - containerRect.top;
-                const bubbleCenterX = bubbleRect.left - containerRect.left + bubbleRect.width / 2;
-                
-                const markerCenterX = markerRect.left - containerRect.left + markerRect.width / 2;
-                const markerCenterY = markerRect.top - containerRect.top + markerRect.height / 2;
-                
-                // Fork points at bubble bottom
-                const forkSpacing = 12;
-                const startX1 = bubbleCenterX - forkSpacing;
-                const startX2 = bubbleCenterX + forkSpacing;
-                const startY = bubbleBottom;
-                
-                // Tip point near marker
-                const tipX = markerCenterX;
-                const tipY = markerCenterY - 40;
-                
-                // Control points for bezier curves
-                const controlY1 = startY + (tipY - startY) * 0.3;
-                const controlY2 = tipY - (tipY - startY) * 0.3;
-                
-                // Create filled path (the visible tail shape)
-                const fillPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                fillPath.setAttribute('d', `
-                    M ${startX1},${startY}
-                    C ${startX1},${controlY1} ${tipX - 10},${controlY2} ${tipX},${tipY}
-                    L ${tipX},${tipY}
-                    C ${tipX + 10},${controlY2} ${startX2},${controlY1} ${startX2},${startY}
-                    Z
-                `);
-                fillPath.classList.add('bubble-connector-fill');
-                if (bubble.classList.contains('bubble-is-bookmarked')) {
-                    fillPath.classList.add('bookmarked');
-                }
-                svg.appendChild(fillPath);
-                
-                // Create dashed circle around marker
-                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                circle.setAttribute('cx', markerCenterX);
-                circle.setAttribute('cy', markerCenterY);
-                circle.setAttribute('r', 35);
-                circle.classList.add('bubble-connector-circle');
-                svg.appendChild(circle);
-            });
-        }
-
-        function clearConnectors() {
-            document.getElementById('connectors').innerHTML = '';
-        }
-
-        function updateStatus(message) {
-            document.getElementById('status').textContent = `Status: ${message}`;
-        }
-
-        // Initialize - draw connectors immediately on load
-        window.addEventListener('load', () => {
-            // Bubbles are already visible via CSS, just draw connectors
-            drawConnectors();
-            updateStatus('Comic-style speech bubbles loaded! Drag bubbles to reposition. Click ❤️ to bookmark.');
-        });
-
-        // Redraw connectors on window resize
-        window.addEventListener('resize', drawConnectors);
-
-        // Make bubbles draggable
-        let isDragging = false;
-        let currentBubble = null;
-        let offsetX, offsetY;
-
-        document.querySelectorAll('.speech-bubble').forEach(bubble => {
-            bubble.addEventListener('mousedown', (e) => {
-                if (e.target.classList.contains('bubble-bookmark')) return;
-                isDragging = true;
-                currentBubble = bubble;
-                const rect = bubble.getBoundingClientRect();
-                offsetX = e.clientX - rect.left;
-                offsetY = e.clientY - rect.top;
-                bubble.style.cursor = 'grabbing';
-                bubble.style.zIndex = '1100';
-                bubble.style.transform = 'scale(1.08)';
-            });
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (!isDragging || !currentBubble) return;
-            const container = document.getElementById('demo');
-            const containerRect = container.getBoundingClientRect();
-            
-            let newX = e.clientX - containerRect.left - offsetX;
-            let newY = e.clientY - containerRect.top - offsetY;
-            
-            // Clamp to container bounds
-            newX = Math.max(0, Math.min(newX, containerRect.width - currentBubble.offsetWidth));
-            newY = Math.max(0, Math.min(newY, containerRect.height - currentBubble.offsetHeight));
-            
-            currentBubble.style.left = newX + 'px';
-            currentBubble.style.top = newY + 'px';
-            
-            drawConnectors();
-        });
-
-        document.addEventListener('mouseup', () => {
-            if (currentBubble) {
-                currentBubble.style.cursor = 'grab';
-                currentBubble.style.zIndex = '1000';
-                currentBubble.style.transform = '';
-            }
-            isDragging = false;
-            currentBubble = null;
-        });
-    </script>
 </body>
 </html>
