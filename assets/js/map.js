@@ -308,7 +308,14 @@ class MapManager {
         // Store event data on marker (for backward compatibility)
         marker.eventData = event;
         
-        // Add click handler
+        // Bind Leaflet default popup with event details
+        const popupContent = this.createEventPopupContent(event);
+        marker.bindPopup(popupContent, {
+            maxWidth: 300,
+            className: 'event-popup'
+        });
+        
+        // Add click handler (still call onClick for detail panel, popup opens automatically)
         if (onClick) {
             marker.on('click', () => onClick(event, marker));
         }
@@ -317,6 +324,51 @@ class MapManager {
         this.log('Marker added for event', event.title);
         
         return marker;
+    }
+    
+    /**
+     * Create HTML content for Leaflet default popup
+     * @param {Object} event - Event data
+     * @returns {string} HTML content for popup
+     */
+    createEventPopupContent(event) {
+        const startTime = new Date(event.start_time);
+        const timeStr = startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const dateStr = startTime.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
+        
+        const distanceStr = event.distance !== undefined 
+            ? `${event.distance.toFixed(1)} km` 
+            : '';
+        
+        const locationName = event.location?.name || 'Unknown location';
+        const title = event.title || 'Untitled event';
+        
+        // Simple, clean popup content using Leaflet defaults
+        let html = `<div class="event-popup-content">`;
+        html += `<strong>${this.escapeHtml(title)}</strong><br>`;
+        html += `<small>${dateStr} · ${timeStr}</small><br>`;
+        html += `📍 ${this.escapeHtml(locationName)}`;
+        if (distanceStr) {
+            html += ` · ${distanceStr}`;
+        }
+        if (event.url) {
+            html += `<br><a href="${this.escapeHtml(event.url)}" target="_blank" rel="noopener">More info →</a>`;
+        }
+        html += `</div>`;
+        
+        return html;
+    }
+    
+    /**
+     * Escape HTML special characters to prevent XSS
+     * @param {string} text - Text to escape
+     * @returns {string} Escaped text
+     */
+    escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
     
     /**

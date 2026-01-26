@@ -31,7 +31,8 @@ class EventsApp {
         this.storage = new EventStorage(this.config);
         this.eventFilter = new EventFilter(this.config, this.storage);
         this.mapManager = new MapManager(this.config, this.storage);
-        this.speechBubbles = new SpeechBubbles(this.config, this.storage, (event) => this.showEventDetail(event));
+        // Speech bubbles disabled - using Leaflet default popups instead
+        // this.speechBubbles = new SpeechBubbles(this.config, this.storage, (event) => this.showEventDetail(event));
         this.utils = new EventUtils(this.config);
         this.dashboardUI = new DashboardUI(this.config, this.utils);
         this.filterDescriptionUI = new FilterDescriptionUI(this.config);
@@ -516,7 +517,7 @@ class EventsApp {
         
         // Use MapManager to clear and add markers
         this.mapManager.clearMarkers();
-        this.speechBubbles.clearSpeechBubbles();
+        // Speech bubbles disabled - using Leaflet default popups
         
         if (filteredEvents.length === 0) return;
         
@@ -534,30 +535,8 @@ class EventsApp {
         // Fit map
         this.mapManager.fitMapToMarkers();
         
-        // Show speech bubbles via SpeechBubbles module
-        setTimeout(() => {
-            this.speechBubbles.showAllSpeechBubbles(filteredEvents, markers, this.mapManager.map);
-            
-            // Add bookmark handlers to bubbles
-            const bubbles = document.querySelectorAll('.bubble-bookmark');
-            bubbles.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const eventId = btn.getAttribute('data-event-id');
-                    const isBookmarked = this.storage.toggleBookmark(eventId);
-                    btn.classList.toggle('bookmarked', isBookmarked);
-                    
-                    // Also toggle class on parent speech bubble for border styling
-                    const speechBubble = btn.closest('.speech-bubble');
-                    if (speechBubble) {
-                        speechBubble.classList.toggle('bubble-is-bookmarked', isBookmarked);
-                    }
-                    
-                    this.mapManager.updateMarkerBookmarkState(eventId, isBookmarked);
-                    this.utils.showBookmarkFeedback(isBookmarked);
-                });
-            });
-        }, 500);
+        // Speech bubbles disabled - using Leaflet default popups instead
+        // Popups are automatically bound to markers in mapManager.addEventMarker()
     }
     
     getReferenceLocation() {

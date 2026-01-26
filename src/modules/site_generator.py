@@ -604,7 +604,6 @@ class SiteGenerator:
             ('assets/css/filters.css', 'Filter bar styles'),
             ('assets/css/dashboard.css', 'Dashboard styles'),
             ('assets/css/scrollbar.css', 'Scrollbar styles'),
-            ('assets/css/bubbles.css', 'Speech bubble styles'),
             ('assets/css/mobile.css', 'Mobile overrides')
         ]
         module_css_parts = []
@@ -773,7 +772,6 @@ class SiteGenerator:
             'storage.js',              # No dependencies
             'filters.js',              # Depends on: storage
             'map.js',                  # Depends on: storage
-            'speech-bubbles.js',       # Depends on: storage (simplified grid layout)
             'utils.js',                # Depends on: template-engine (simplified)
             'template-engine.js',      # Template processing (extracted from utils)
             'dropdown.js',             # UI component (no dependencies)
