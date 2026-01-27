@@ -119,11 +119,15 @@ jobs:
             fi
             
             # Validate required fields
-            python3 << EOF
+            export CONFIG_FILE_PATH="$CONFIG_FILE"
+            python3 << 'PYEOF'
           import json
           import sys
+          import os
 
-          with open('$CONFIG_FILE') as f:
+          config_file = os.environ.get('CONFIG_FILE_PATH', '')
+
+          with open(config_file) as f:
               config = json.load(f)
 
           errors = []
@@ -154,7 +158,7 @@ jobs:
               sys.exit(1)
           else:
               print("✅ Configuration valid!")
-          EOF
+          PYEOF
             
             echo "✅ Valid: \`$CONFIG_FILE\`" >> $GITHUB_STEP_SUMMARY
           done
@@ -163,7 +167,7 @@ jobs:
     name: 🧪 Test Scraper
     runs-on: ubuntu-latest
     needs: validate-config
-    if: needs.validate-config.outputs.has_new_configs == 'true'
+    if: needs.validate-config.outputs.has_new == 'true'
     
     steps:
       - name: Checkout repository
@@ -181,16 +185,21 @@ jobs:
             echo "Testing scraper from: $CONFIG_FILE"
             
             # Run the scraper setup API to test the configuration
-            python3 << EOF
+            export CONFIG_FILE_PATH="$CONFIG_FILE"
+            python3 << 'PYEOF'
           import json
           import sys
+          import os
           sys.path.insert(0, 'src')
 
           from modules.scraper_setup_api import ScraperSetupAPI
           from pathlib import Path
 
+          # Get config file from environment
+          config_file = os.environ.get('CONFIG_FILE_PATH', '')
+
           # Load the configuration
-          with open('$CONFIG_FILE') as f:
+          with open(config_file) as f:
               config = json.load(f)
 
           source_name = config['source']['name']
@@ -220,7 +229,7 @@ jobs:
           else:
               print(f"❌ Analysis failed: {analysis.get('error', 'Unknown error')}")
               sys.exit(1)
-          EOF
+          PYEOF
             
             if [ $? -eq 0 ]; then
               echo "✅ **$CONFIG_FILE** - Test passed" >> $GITHUB_STEP_SUMMARY
@@ -234,7 +243,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [validate-config, test-scraper]
     if: |
-      needs.validate-config.outputs.has_new_configs == 'true' &&
+      needs.validate-config.outputs.has_new == 'true' &&
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main' &&
       github.event.inputs.test_only != 'true'
@@ -249,12 +258,18 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           
           for CONFIG_FILE in ${{ needs.validate-config.outputs.config_files }}; do
-            python3 << EOF
+            # Store in environment variable so Python can access it
+            export CONFIG_FILE_PATH="$CONFIG_FILE"
+            python3 << 'PYEOF'
           import json
+          import os
           from pathlib import Path
 
+          # Get config file from environment
+          config_file = os.environ.get('CONFIG_FILE_PATH', '')
+
           # Load scraper config
-          with open('$CONFIG_FILE') as f:
+          with open(config_file) as f:
               scraper_config = json.load(f)
 
           source_name = scraper_config['source']['name']
@@ -276,7 +291,7 @@ jobs:
                   'name': source_name,
                   'url': source_url,
                   'type': 'html',
-                  'mapping_file': '$CONFIG_FILE',
+                  'mapping_file': config_file,
                   'enabled': True,
                   'notes': 'Added via Scraper Setup Tool'
               }
@@ -293,7 +308,7 @@ jobs:
                   json.dump(main_config, f, indent=2)
               
               print(f"✅ Added source '{source_name}' to config.json")
-          EOF
+          PYEOF
             
             echo "- Added \`$(basename $CONFIG_FILE .json)\` to config.json" >> $GITHUB_STEP_SUMMARY
           done

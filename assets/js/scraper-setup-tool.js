@@ -684,15 +684,27 @@ class ScraperSetupTool {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'copy';
         e.currentTarget.classList.add('drag-over');
+        
+        // Add fallback class for older browsers that don't support :has()
+        const fieldItem = e.currentTarget.closest('.scraper-field-item');
+        if (fieldItem) fieldItem.classList.add('drag-active');
     }
     
     handleDragLeave(e) {
         e.currentTarget.classList.remove('drag-over');
+        
+        // Remove fallback class
+        const fieldItem = e.currentTarget.closest('.scraper-field-item');
+        if (fieldItem) fieldItem.classList.remove('drag-active');
     }
     
     handleDrop(e) {
         e.preventDefault();
         e.currentTarget.classList.remove('drag-over');
+        
+        // Remove fallback class
+        const fieldItem = e.currentTarget.closest('.scraper-field-item');
+        if (fieldItem) fieldItem.classList.remove('drag-active');
         
         const fieldName = e.currentTarget.dataset.field;
         const selector = e.dataTransfer.getData('text/plain');
@@ -725,13 +737,23 @@ class ScraperSetupTool {
         
         if (selector) {
             try {
-                // Test if selector is valid CSS
-                document.querySelector(selector);
+                // Test if selector is valid CSS syntax
+                // Use a test element to avoid false positives on complex selectors
+                const testDiv = document.createElement('div');
+                testDiv.innerHTML = '<div class="test"></div>';
+                testDiv.querySelector(selector);
                 e.target.classList.remove('invalid');
-            } catch (_) {
-                // Invalid selector - just warn, don't block
-                e.target.classList.add('invalid');
+            } catch (err) {
+                // Check if it's a SyntaxError (invalid selector) vs other errors
+                if (err instanceof DOMException || err instanceof SyntaxError) {
+                    e.target.classList.add('invalid');
+                } else {
+                    // Other errors - assume selector is valid but couldn't be tested
+                    e.target.classList.remove('invalid');
+                }
             }
+        } else {
+            e.target.classList.remove('invalid');
         }
     }
     

@@ -156,7 +156,11 @@ class ScraperSetupAPI:
         try:
             response = self.session.get(url, timeout=15)
             response.raise_for_status()
-            soup = BeautifulSoup(response.content, 'lxml')
+            # Use html.parser as fallback if lxml is not available
+            try:
+                soup = BeautifulSoup(response.content, 'lxml')
+            except Exception:
+                soup = BeautifulSoup(response.content, 'html.parser')
             
             # Analyze page structure
             analysis = {

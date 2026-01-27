@@ -521,7 +521,9 @@
     transition: border-color var(--transition-fast, 0.1s);
 }
 
-.scraper-field-item:has(.field-drop-zone.drag-over) {
+/* Use :has() for modern browsers, fallback .drag-active class for older browsers */
+.scraper-field-item:has(.field-drop-zone.drag-over),
+.scraper-field-item.drag-active {
     border-color: var(--color-primary, #D689B8);
 }
 
