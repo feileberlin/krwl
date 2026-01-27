@@ -2135,6 +2135,10 @@ window.DEBUG_INFO = {debug_info_json};'''
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write(html_de)
         
+        # Generate 404.html for SPA routing (GitHub Pages)
+        # This redirects /hof, /nbg, /bth etc. to index.html with path preserved
+        self.generate_404_html()
+        
         print(f"\n✅ Static site generated successfully!")
         print(f"   Output: {output_file} ({len(html_de) / 1024:.1f} KB)")
         print(f"   Total events: {len(events)}")
@@ -2142,6 +2146,51 @@ window.DEBUG_INFO = {debug_info_json};'''
         print(f"   Language: English")
         print("\n" + "=" * 60)
         return True
+    
+    def generate_404_html(self) -> None:
+        """
+        Generate 404.html for SPA routing on GitHub Pages.
+        
+        When users access /hof, /nbg, /bth, etc., GitHub Pages serves 404.html.
+        This file redirects to index.html with the path preserved in sessionStorage,
+        allowing the JavaScript to detect the region and apply settings.
+        """
+        html_404 = '''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+    <script>
+        // SPA Redirect for GitHub Pages
+        // Preserves the path (e.g., /hof, /nbg) for client-side routing
+        // Handles both root deployments (krwl.in) and subdirectory (username.github.io/repo)
+        (function() {
+            var path = window.location.pathname;
+            // Store the full path for the main app to read
+            sessionStorage.setItem('spa_redirect_path', path);
+            // Detect base path for subdirectory deployments
+            // For krwl.in/hof -> redirect to /
+            // For user.github.io/repo/hof -> redirect to /repo/
+            var segments = path.split('/').filter(Boolean);
+            var basePath = '/';
+            // If more than one segment, keep all but the last (the region)
+            if (segments.length > 1) {
+                basePath = '/' + segments.slice(0, -1).join('/') + '/';
+            }
+            window.location.replace(basePath);
+        })();
+    </script>
+</head>
+<body>
+    <p>Redirecting...</p>
+</body>
+</html>
+'''
+        output_file = self.static_path / '404.html'
+        with open(output_file, 'w', encoding='utf-8') as f:
+            f.write(html_404)
+        print(f"✅ Generated 404.html for SPA routing")
     
     # ==================== Content Updates ====================
     

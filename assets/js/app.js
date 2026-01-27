@@ -27,6 +27,9 @@ class EventsApp {
         // Get default config (will be replaced by utils module)
         this.config = window.APP_CONFIG || this.getDefaultConfig();
         
+        // Detect and apply region from URL path (e.g., /hof, /nbg, /bth)
+        this.applyRegionFromUrl();
+        
         // Initialize modules
         this.storage = new EventStorage(this.config);
         this.eventFilter = new EventFilter(this.config, this.storage);
@@ -89,6 +92,57 @@ class EventsApp {
         if (this.config && this.config.debug) {
             console.log('[KRWL]', message, ...args);
         }
+    }
+    
+    /**
+     * Detect region from URL path and apply region-specific settings.
+     * Supports paths like /hof, /nbg, /bth, /selb, /rehau
+     * Also checks sessionStorage for redirected paths from 404.html
+     * Handles both root (krwl.in/hof) and subdirectory (user.github.io/repo/hof) deployments
+     */
+    applyRegionFromUrl() {
+        // Check for redirected path from 404.html
+        let path = sessionStorage.getItem('spa_redirect_path');
+        if (path) {
+            sessionStorage.removeItem('spa_redirect_path');
+        } else {
+            path = window.location.pathname;
+        }
+        
+        // Extract region ID from the last segment of the path
+        // This handles both /hof and /repo/hof correctly
+        const segments = path.split('/').filter(Boolean);
+        const regionId = segments.length > 0 ? segments[segments.length - 1].toLowerCase() : '';
+        
+        if (!regionId || regionId === 'index.html') {
+            return; // No region specified, use defaults
+        }
+        
+        // Check if this region exists in config
+        const regions = this.config.regions || {};
+        const region = regions[regionId];
+        
+        if (!region) {
+            // Not a known region, might be a different path - silently ignore
+            return;
+        }
+        
+        console.log(`[KRWL] Applying region: ${regionId} (${region.displayName || region.name})`);
+        
+        // Apply region settings to config
+        if (region.center) {
+            this.config.map.default_center = {
+                lat: region.center.lat,
+                lon: region.center.lng || region.center.lon
+            };
+        }
+        if (region.zoom) {
+            this.config.map.default_zoom = region.zoom;
+        }
+        
+        // Store active region for reference
+        this.activeRegion = regionId;
+        this.activeRegionConfig = region;
     }
     
     getDefaultConfig() {
