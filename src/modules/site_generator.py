@@ -15,6 +15,7 @@ Naming: Functions describe WHAT they do, not implementation history.
 
 import json
 import logging
+import shutil
 import urllib.request
 import urllib.error
 from pathlib import Path
@@ -2190,7 +2191,9 @@ window.DEBUG_INFO = {debug_info_json};'''
             if primary_config.get('debug', False):
                 import traceback
                 traceback.print_exc()
-
+        
+        # Copy RSS feeds to public directory for serving
+        self._copy_feeds_to_public()
         
         print(f"\n✅ Static site generated successfully!")
         print(f"   Output: {output_file} ({len(html_de) / 1024:.1f} KB)")
@@ -2244,6 +2247,38 @@ window.DEBUG_INFO = {debug_info_json};'''
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write(html_404)
         print(f"✅ Generated 404.html for SPA routing")
+    
+    def _copy_feeds_to_public(self) -> None:
+        """
+        Copy RSS feeds from assets/feeds/ to public/assets/feeds/.
+        
+        This ensures RSS feed files are accessible at the expected URLs
+        (e.g., https://krwl.in/assets/feeds/hof-til-sunrise.xml).
+        """
+        source_dir = self.base_path / 'assets' / 'feeds'
+        dest_dir = self.static_path / 'assets' / 'feeds'
+        
+        if not source_dir.exists():
+            logger.warning("No feeds directory found in assets/")
+            return
+        
+        # Find all XML feed files
+        feed_files = list(source_dir.glob('*.xml'))
+        if not feed_files:
+            logger.warning("No feed files found in assets/feeds/")
+            return
+        
+        # Create destination directory
+        dest_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Copy each feed file
+        copied_count = 0
+        for feed_file in feed_files:
+            dest_file = dest_dir / feed_file.name
+            shutil.copy2(feed_file, dest_file)
+            copied_count += 1
+        
+        print(f"✅ Copied {copied_count} RSS feed(s) to public/assets/feeds/")
     
     # ==================== Content Updates ====================
     
