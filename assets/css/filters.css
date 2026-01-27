@@ -28,20 +28,11 @@
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Dashboard opening animation - filter bar expands */
+/* Dashboard opening animation - filter bar stays stationary */
+/* The dashboard slides down like a "rolling door" overlay - the map and filter bar
+   should remain in place, not move as if painted on the sliding door */
 #event-filter-bar.dashboard-opening {
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    width: auto;
-    max-width: none;
-}
-
-/* Filter items fade out during dashboard opening */
-#event-filter-bar.dashboard-opening .filter-bar-item {
-    opacity: 0;
-    transition: opacity 0.2s ease-out;
+    /* No position changes - filter bar stays where it is */
 }
 
 /* Filter chips - bracketed button design with ecoBarbie colorspace */
