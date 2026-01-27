@@ -461,6 +461,217 @@ class TestVHSLocationExtraction(unittest.TestCase):
         self.assertEqual(location, 'Actual Location')
 
 
+class TestVHSConcatenatedTitleParsing(unittest.TestCase):
+    """Test VHS scraper concatenated title parsing."""
+    
+    def setUp(self):
+        """Set up VHS scraper for testing."""
+        try:
+            from modules.smart_scraper.sources.custom import VHSSource
+            from bs4 import BeautifulSoup
+            self.VHSSource = VHSSource
+            self.BeautifulSoup = BeautifulSoup
+            self.available = True
+        except ImportError:
+            self.available = False
+    
+    def _create_scraper(self):
+        """Create a VHS scraper instance for testing."""
+        source_config = {
+            'name': 'Test VHS',
+            'url': 'https://example.com',
+            'type': 'html'
+        }
+        options = SourceOptions()
+        return self.VHSSource(source_config, options)
+    
+    def test_parse_concatenated_title_with_location(self):
+        """Test parsing concatenated title with embedded location."""
+        if not self.available:
+            self.skipTest("VHSSource not available")
+        
+        scraper = self._create_scraper()
+        
+        # Test case from the issue: title with date and location concatenated
+        raw_title = "Interkultureller ChorChorprobenDo. 08.01.2026 19:00Ludwigstraße 7, 95028 Hof"
+        
+        clean_title, date_string, location = scraper._parse_concatenated_title(raw_title)
+        
+        self.assertEqual(clean_title, "Interkultureller ChorChorproben")
+        self.assertEqual(date_string, "08.01.2026")
+        self.assertEqual(location, "Ludwigstraße 7, 95028 Hof")
+    
+    def test_parse_concatenated_title_schwarzenbach(self):
+        """Test parsing with Schwarzenbach location."""
+        if not self.available:
+            self.skipTest("VHSSource not available")
+        
+        scraper = self._create_scraper()
+        
+        raw_title = "Training für den Körper 1Fr. 16.01.2026 16:30Philipp-Wolfrum-Haus, Marktplatz 17, 95131 Schwarzenbach a.Wald"
+        
+        clean_title, date_string, location = scraper._parse_concatenated_title(raw_title)
+        
+        self.assertEqual(clean_title, "Training für den Körper 1")
+        self.assertEqual(date_string, "16.01.2026")
+        self.assertEqual(location, "Philipp-Wolfrum-Haus, Marktplatz 17, 95131 Schwarzenbach a.Wald")
+    
+    def test_parse_concatenated_title_online_location(self):
+        """Test parsing with Online as location."""
+        if not self.available:
+            self.skipTest("VHSSource not available")
+        
+        scraper = self._create_scraper()
+        
+        raw_title = "KI-Selfies: Künstliche Intelligenz als FotografMi. 04.02.2026 17:00Online"
+        
+        clean_title, date_string, location = scraper._parse_concatenated_title(raw_title)
+        
+        self.assertEqual(clean_title, "KI-Selfies: Künstliche Intelligenz als Fotograf")
+        self.assertEqual(date_string, "04.02.2026")
+        self.assertEqual(location, "Online")
+    
+    def test_parse_concatenated_title_vhs_naila(self):
+        """Test parsing with VHS Naila location."""
+        if not self.available:
+            self.skipTest("VHSSource not available")
+        
+        scraper = self._create_scraper()
+        
+        raw_title = "Kommunikationstraining für ZuwanderinnenWorkshopMo. 19.01.2026 10:00VHS Naila"
+        
+        clean_title, date_string, location = scraper._parse_concatenated_title(raw_title)
+        
+        self.assertEqual(clean_title, "Kommunikationstraining für ZuwanderinnenWorkshop")
+        self.assertEqual(date_string, "19.01.2026")
+        self.assertEqual(location, "VHS Naila")
+    
+    def test_parse_concatenated_title_no_time(self):
+        """Test parsing with date but no time."""
+        if not self.available:
+            self.skipTest("VHSSource not available")
+        
+        scraper = self._create_scraper()
+        
+        raw_title = "Test KursDi. 15.02.2026Test Location"
+        
+        clean_title, date_string, location = scraper._parse_concatenated_title(raw_title)
+        
+        self.assertEqual(clean_title, "Test Kurs")
+        self.assertEqual(date_string, "15.02.2026")
+        self.assertEqual(location, "Test Location")
+    
+    def test_parse_concatenated_title_no_date_pattern(self):
+        """Test parsing with no date pattern returns original title."""
+        if not self.available:
+            self.skipTest("VHSSource not available")
+        
+        scraper = self._create_scraper()
+        
+        raw_title = "Simple Course Title Without Date"
+        
+        clean_title, date_string, location = scraper._parse_concatenated_title(raw_title)
+        
+        self.assertEqual(clean_title, "Simple Course Title Without Date")
+        self.assertIsNone(date_string)
+        self.assertIsNone(location)
+    
+    def test_parse_concatenated_title_short_year(self):
+        """Test parsing with short year format (YY)."""
+        if not self.available:
+            self.skipTest("VHSSource not available")
+        
+        scraper = self._create_scraper()
+        
+        raw_title = "Excel KursMi. 20.03.26 14:00Büro Zentrum"
+        
+        clean_title, date_string, location = scraper._parse_concatenated_title(raw_title)
+        
+        self.assertEqual(clean_title, "Excel Kurs")
+        self.assertEqual(date_string, "20.03.26")
+        self.assertEqual(location, "Büro Zentrum")
+    
+    def test_parse_concatenated_title_all_weekdays(self):
+        """Test parsing works for all German weekday abbreviations."""
+        if not self.available:
+            self.skipTest("VHSSource not available")
+        
+        scraper = self._create_scraper()
+        
+        weekdays = ['Mo.', 'Di.', 'Mi.', 'Do.', 'Fr.', 'Sa.', 'So.']
+        for weekday in weekdays:
+            raw_title = f"Test Kurs{weekday} 15.02.2026 10:00Test Location"
+            
+            clean_title, date_string, location = scraper._parse_concatenated_title(raw_title)
+            
+            self.assertEqual(clean_title, "Test Kurs", f"Failed for weekday {weekday}")
+            self.assertEqual(date_string, "15.02.2026", f"Failed for weekday {weekday}")
+            self.assertEqual(location, "Test Location", f"Failed for weekday {weekday}")
+    
+    def test_parse_course_uses_title_location_fallback(self):
+        """Test that _parse_course uses location from title when not found in HTML."""
+        if not self.available:
+            self.skipTest("BeautifulSoup not available")
+        
+        html = '''
+        <div class="course-item">
+            <h3>Python KursFr. 15.02.2026 18:00Schulungszentrum Hof</h3>
+            <p>Learn Python basics</p>
+        </div>
+        '''
+        soup = self.BeautifulSoup(html, 'html.parser')
+        container = soup.find('div', class_='course-item')
+        
+        scraper = self._create_scraper()
+        event = scraper._parse_course(container)
+        
+        self.assertIsNotNone(event)
+        # Title should be cleaned
+        self.assertEqual(event['title'], 'Python Kurs')
+        # Location should be extracted from concatenated title
+        self.assertEqual(event['location']['name'], 'Schulungszentrum Hof')
+    
+    def test_ort_raum_header_extraction(self):
+        """Test extraction from 'Ort / Raum:' tabular header format."""
+        if not self.available:
+            self.skipTest("BeautifulSoup not available")
+        
+        html = '''
+        <div class="course-item">
+            <h3>Test Course 15.02.2026</h3>
+            <li>Ort / Raum: Raum 201, VHS Hof</li>
+        </div>
+        '''
+        soup = self.BeautifulSoup(html, 'html.parser')
+        container = soup.find('div', class_='course-item')
+        
+        scraper = self._create_scraper()
+        location = scraper._extract_location(container)
+        
+        self.assertIsNotNone(location)
+        self.assertEqual(location, 'Raum 201, VHS Hof')
+    
+    def test_ort_raum_header_variations(self):
+        """Test variations of 'Ort / Raum' header."""
+        if not self.available:
+            self.skipTest("BeautifulSoup not available")
+        
+        scraper = self._create_scraper()
+        
+        # Test various patterns
+        test_cases = [
+            ('Ort / Raum: Raum 101', 'Raum 101'),
+            ('Ort / Raum:Hauptgebäude', 'Hauptgebäude'),
+            ('ort / raum: Keller', 'Keller'),
+            ('ORT / RAUM: Seminarraum', 'Seminarraum'),
+            ('Ort/Raum: Saal A', 'Saal A'),
+        ]
+        
+        for text, expected in test_cases:
+            result = scraper._extract_location_from_text(text)
+            self.assertEqual(result, expected, f"Failed for input: {text}")
+
+
 def main():
     """Run tests."""
     # Run with verbose output
