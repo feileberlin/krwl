@@ -308,6 +308,10 @@ COMMANDS:
                               - Builds HTML from templates with inlined assets
                               - Lints and validates content
                               - Outputs: public/index.html (self-contained)
+    generate-feeds            Generate RSS feeds for all regions
+                              - Creates per-region RSS 2.0 feeds
+                              - Shows events until next sunrise for each region
+                              - Outputs: assets/feeds/{region_id}-til-sunrise.xml
     generate-icons            Generate Lucide icons map from codebase usage
                               - Scans JavaScript and HTML files for icon references
                               - Creates src/modules/lucide_markers.py with 3 icon maps
@@ -1682,6 +1686,28 @@ def cli_generate(base_path, config):
     return 1
 
 
+def cli_generate_feeds(base_path):
+    """
+    CLI: Generate RSS feeds for all regions.
+    
+    Generates per-region RSS 2.0 feeds showing events until next sunrise.
+    Mirrors the frontend's "sunrise filtering" behavior.
+    
+    Output: assets/feeds/{region_id}-til-sunrise.xml for each region
+    """
+    from modules.rss_generator import generate_sunrise_feeds
+    
+    try:
+        generate_sunrise_feeds(base_path)
+        print("\n✓ RSS feeds generated successfully!")
+        return 0
+    except Exception as e:
+        print(f"\n❌ RSS feed generation failed: {e}")
+        import traceback
+        traceback.print_exc()
+        return 1
+
+
 def cli_load_examples(base_path):
     """CLI: Load example data"""
     import shutil
@@ -2485,6 +2511,9 @@ def _execute_command(args, base_path, config):
     
     if command == 'generate':
         return cli_generate(base_path, config)
+    
+    if command == 'generate-feeds':
+        return cli_generate_feeds(base_path)
     
     if command == 'update':
         generator = SiteGenerator(base_path)

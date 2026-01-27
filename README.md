@@ -21,6 +21,7 @@ A **grassroots, mobile-first** Progressive Web App (PWA) for discovering communi
 - 🏙️ **Multi-Region Support**: View events from different Franconian cities (Hof, Nürnberg, Bayreuth, Selb, Rehau)
 - 📍 **Geolocation Filtering**: Shows events within 5.0km radius
 - 🌅 **Time-based Filtering**: Shows events until next_sunrise
+- 📡 **RSS Feeds**: Per-region "Until Sunrise" RSS feeds for stay updated
 - 🤖 **Telegram Bot**: Community event submissions via Telegram messenger
 - 🌐 **Bilingual**: English and German (i18n support)
 - ♿ **Accessible**: WCAG 2.1 Level AA compliant
@@ -71,6 +72,32 @@ The app works like a native mobile app:
 - **Works offline**: Core functionality works without internet (using cached data)
 - **Fast loading**: Optimized for mobile networks
 - **Responsive design**: Works on phones, tablets, and desktops
+
+#### 📡 RSS Feeds - "Until Sunrise"
+
+Stay updated with per-region RSS feeds showing upcoming events until next sunrise:
+- **Per-Region Feeds**: Each region (Hof, Nürnberg, Bayreuth, Selb, Rehau) has its own RSS feed
+- **Sunrise Filtering**: Feeds show only events happening between now and next sunrise - perfect for evening planning
+- **RSS 2.0 Standard**: Compatible with all RSS readers (Feedly, NewsBlur, etc.)
+- **Auto-Discovery**: Browsers and RSS readers automatically detect feeds via `<link>` tags
+
+**Feed URLs:**
+- Hof: `https://krwl.in/assets/feeds/hof-til-sunrise.xml`
+- Nürnberg: `https://krwl.in/assets/feeds/nbg-til-sunrise.xml`
+- Bayreuth: `https://krwl.in/assets/feeds/bth-til-sunrise.xml`
+- Selb: `https://krwl.in/assets/feeds/selb-til-sunrise.xml`
+- Rehau: `https://krwl.in/assets/feeds/rehau-til-sunrise.xml`
+
+**How to Subscribe:**
+1. Copy your region's feed URL
+2. Open your RSS reader (e.g., Feedly, NewsBlur, NetNewsWire)
+3. Add the feed URL
+4. Get notified when new events are added!
+
+**For Developers:**
+- Feeds regenerate automatically during site builds (`python3 src/event_manager.py generate`)
+- Generate feeds manually: `python3 src/event_manager.py generate-feeds`
+- Sunrise calculation adapts to each region's coordinates
 
 #### 🌐 Language Support (i18n)
 

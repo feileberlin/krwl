@@ -1373,6 +1373,33 @@
       "test_file": null,
       "test_instructions": "1. Run demo: python3 src/modules/constellations.py\n2. Start API server: python3 src/modules/constellations.py --serve --port 8081\n3. Test endpoints: curl http://127.0.0.1:8081/orion | curl http://127.0.0.1:8081/:list",
       "documentation": "See constellations.py module docstring for usage and historical context"
+    },
+    {
+      "id": "rss-feeds-til-sunrise",
+      "name": "RSS Feeds - Until Sunrise",
+      "description": "Per-region RSS 2.0 feeds showing events until next sunrise. Each region (Hof, Nürnberg, Bayreuth, Selb, Rehau) gets its own feed with events filtered by time (now to next sunrise) using the region's geographic coordinates. Feeds include RSS auto-discovery links in HTML head.",
+      "category": "backend",
+      "implemented": true,
+      "files": [
+        "src/modules/rss_generator.py",
+        "src/modules/site_generator.py",
+        "src/event_manager.py",
+        "assets/html/html-head.html"
+      ],
+      "config_keys": [
+        "regions",
+        "defaultRegion"
+      ],
+      "dependencies": {
+        "python": [
+          "xml.etree.ElementTree (built-in)",
+          "xml.dom.minidom (built-in)"
+        ]
+      },
+      "test_method": "run_custom_test",
+      "test_file": null,
+      "test_instructions": "1. Generate feeds: python3 src/event_manager.py generate-feeds\n2. Check output: ls -lh assets/feeds/\n3. Validate XML: python3 -c 'import xml.etree.ElementTree as ET; ET.parse(\"assets/feeds/hof-til-sunrise.xml\")'\n4. Test in RSS reader: Add https://krwl.in/assets/feeds/hof-til-sunrise.xml to Feedly/NewsBlur\n5. Check HTML discovery: grep 'rss+xml' public/index.html",
+      "documentation": "README.md section: 📡 RSS Feeds - Until Sunrise"
     }
   ]
 }

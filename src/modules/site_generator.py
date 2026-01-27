@@ -1289,6 +1289,35 @@ window.DASHBOARD_ICONS = {json.dumps(all_ui_icons, ensure_ascii=False)};'''
         
         return ''.join(html_parts)
     
+    def generate_rss_feed_links(self, base_url: str, default_region: str = 'hof') -> str:
+        """
+        Generate RSS feed discovery link tags for the HTML head.
+        
+        Generates links for the default region (typically 'hof').
+        Frontend JavaScript can dynamically add region-specific feeds based on URL path.
+        
+        Args:
+            base_url: Base URL for the application (e.g., 'https://krwl.in')
+            default_region: Default region ID to generate feed link for
+            
+        Returns:
+            HTML link tags as string
+        """
+        from .region_utils import get_all_regions, get_region_config
+        
+        # Generate feed link for default region
+        region_config = get_region_config(default_region, self.base_path)
+        
+        if not region_config:
+            # No region config found, return empty string
+            return ''
+        
+        region_display_name = region_config.get('displayName', default_region)
+        feed_url = f"{base_url}/assets/feeds/{default_region}-til-sunrise.xml"
+        feed_title = f"Events Until Sunrise - {region_display_name}"
+        
+        return f'<link rel="alternate" type="application/rss+xml" title="{feed_title}" href="{feed_url}">'
+    
     def load_component(self, component_path: str) -> str:
         """
         Load a component template from assets/html/ directory.
@@ -1895,6 +1924,11 @@ window.DEBUG_INFO = {debug_info_json};'''
         dashboard_aside = self.load_component('dashboard-aside.html')
         filter_nav = self.load_component('filter-nav.html')
         
+        # Generate RSS feed discovery links
+        base_url = primary_config.get('app', {}).get('url', 'https://krwl.in')
+        default_region = primary_config.get('defaultRegion', 'hof')
+        rss_feed_links = self.generate_rss_feed_links(base_url, default_region)
+        
         # Assemble HTML from components with debug comments showing source files
         html_parts = [
             generated_comment,
@@ -1904,6 +1938,7 @@ window.DEBUG_INFO = {debug_info_json};'''
             html_head.format(
                 app_name=app_name,
                 favicon=favicon,
+                rss_feed_links=rss_feed_links,
                 roboto_fonts=stylesheets['roboto_fonts'],
                 design_tokens_css=design_tokens_css,
                 leaflet_css=stylesheets['leaflet_css'],
@@ -2138,6 +2173,24 @@ window.DEBUG_INFO = {debug_info_json};'''
         # Generate 404.html for SPA routing (GitHub Pages)
         # This redirects /hof, /nbg, /bth etc. to index.html with path preserved
         self.generate_404_html()
+        
+        # Generate RSS feeds for each region
+        try:
+            from .rss_generator import generate_sunrise_feeds
+            generate_sunrise_feeds(self.base_path)
+        except ImportError as e:
+            # Import errors are often configuration issues (missing module, etc.)
+            logger.error(f"RSS feed generation skipped: unable to import rss_generator: {e}")
+            print(f"\n⚠️  RSS feed generation skipped: unable to import rss_generator: {e}")
+        except Exception as e:
+            # Runtime errors while generating feeds should not break builds
+            logger.error(f"RSS feed generation failed: {e}")
+            print(f"\n⚠️  RSS feed generation failed: {e}")
+            # In debug mode, show more details
+            if primary_config.get('debug', False):
+                import traceback
+                traceback.print_exc()
+
         
         print(f"\n✅ Static site generated successfully!")
         print(f"   Output: {output_file} ({len(html_de) / 1024:.1f} KB)")
