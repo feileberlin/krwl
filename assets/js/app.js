@@ -639,9 +639,18 @@ class EventsApp {
         this.mapManager.clearMarkers();
         // Speech bubbles disabled - using Leaflet default popups
         
-        if (filteredEvents.length === 0) return;
-        
+        // Sort by distance
         filteredEvents.sort((a, b) => (a.distance || 0) - (b.distance || 0));
+        
+        // Check if map is available or if we're in fallback mode
+        if (this.mapManager.isFallbackMode) {
+            // Render events to fallback list when map is unavailable
+            // Cards have direct "More info" links, no click handler needed
+            this.mapManager.renderFallbackEventList(filteredEvents);
+            return;
+        }
+        
+        if (filteredEvents.length === 0) return;
         
         // Add markers via MapManager
         const markers = [];
@@ -876,7 +885,8 @@ class EventsApp {
         }
         
         // Get filtered events sorted by start time
-        const filteredEvents = this.filterEvents();
+        const location = this.getReferenceLocation();
+        const filteredEvents = this.eventFilter.filterEvents(this.events, this.filters, location);
         filteredEvents.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
         
         if (filteredEvents.length === 0) return;
@@ -888,15 +898,16 @@ class EventsApp {
         this.showEventDetail(nextEvent);
         
         // Center map on the event
-        if (this.map && nextEvent.location) {
-            this.map.setView([nextEvent.location.lat, nextEvent.location.lon], 15);
+        if (this.mapManager.map && nextEvent.location) {
+            this.mapManager.map.setView([nextEvent.location.lat, nextEvent.location.lon], 15);
         }
     }
     
 
     showEventDetail(event) {
         // Track current event index for keyboard navigation
-        const filteredEvents = this.filterEvents();
+        const location = this.getReferenceLocation();
+        const filteredEvents = this.eventFilter.filterEvents(this.events, this.filters, location);
         filteredEvents.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
         this.currentEventIndex = filteredEvents.findIndex(e => 
             (e.id && e.id === event.id) || 

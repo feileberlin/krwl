@@ -29,6 +29,7 @@ class MapManager {
         this.userLocation = null;
         this.locationCounts = {};   // Track flyers at same location for offset
         this.referenceMarker = null; // Track the reference location marker (user/predefined/custom)
+        this.isFallbackMode = false; // Track if we're showing fallback event list
     }
     
     /**
@@ -89,25 +90,98 @@ class MapManager {
         const container = document.getElementById(containerId);
         if (!container) return;
         
-        // Create fallback message
+        // Create fallback with event list container
         const fallback = document.createElement('div');
         fallback.className = 'map-fallback';
         fallback.innerHTML = `
             <div class="map-fallback-content">
                 <div class="map-fallback-icon"><i data-lucide="map" style="width: 48px; height: 48px;"></i></div>
-                <h2>Map Loading...</h2>
-                <p>The interactive map is loading. If this message persists, the map library may be blocked by your browser or network.</p>
-                <p class="map-fallback-note">Events are still available in the filter bar above.</p>
+                <h2>Map Unavailable</h2>
+                <p>The map library could not be loaded. Events are shown below:</p>
             </div>
+            <div id="fallback-event-list" class="fallback-event-list" role="list" aria-label="Event list"></div>
         `;
         container.appendChild(fallback);
+        
+        // Mark that we're in fallback mode
+        this.isFallbackMode = true;
         
         // Initialize Lucide icon
         if (window.lucide && typeof window.lucide.createIcons === 'function') {
             window.lucide.createIcons();
         }
         
-        this.log('Map fallback displayed');
+        this.log('Map fallback displayed with event list container');
+    }
+    
+    /**
+     * Render events to fallback list when map is unavailable
+     * @param {Array} events - Filtered events to display
+     * @param {Function} onClick - Click handler for event cards
+     */
+    renderFallbackEventList(events, onClick) {
+        const listContainer = document.getElementById('fallback-event-list');
+        if (!listContainer) return;
+        
+        // Clear existing content
+        listContainer.innerHTML = '';
+        
+        if (events.length === 0) {
+            listContainer.innerHTML = '<p class="fallback-no-events">No events match your current filters.</p>';
+            return;
+        }
+        
+        // Render each event as a card
+        events.forEach(event => {
+            const card = this.createFallbackEventCard(event, onClick);
+            listContainer.appendChild(card);
+        });
+        
+        this.log(`Rendered ${events.length} events to fallback list`);
+    }
+    
+    /**
+     * Create a fallback event card element
+     * @param {Object} event - Event data
+     * @param {Function} onClick - Click handler
+     * @returns {HTMLElement} Event card element
+     */
+    createFallbackEventCard(event, onClick) {
+        const card = document.createElement('article');
+        card.className = 'fallback-event-card';
+        card.setAttribute('role', 'listitem');
+        card.setAttribute('tabindex', '0');
+        
+        // Format date/time
+        const startTime = new Date(event.start_time);
+        const timeStr = startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const dateStr = startTime.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
+        
+        // Distance info
+        const distanceStr = event.distance !== undefined ? `${event.distance.toFixed(1)} km` : '';
+        
+        // Event URL link
+        const urlHtml = event.url ? 
+            `<a href="${this.escapeHtml(event.url)}" class="fallback-card-link" target="_blank" rel="noopener">More info →</a>` : '';
+        
+        // Build card HTML (escape content for XSS prevention)
+        card.innerHTML = `
+            <div class="fallback-card-time">${this.escapeHtml(timeStr)}</div>
+            <div class="fallback-card-date">${this.escapeHtml(dateStr)}</div>
+            <h3 class="fallback-card-title">${this.escapeHtml(event.title || 'Event')}</h3>
+            <div class="fallback-card-location">${this.escapeHtml(event.location?.name || 'Unknown location')}</div>
+            ${distanceStr ? `<div class="fallback-card-distance">${this.escapeHtml(distanceStr)}</div>` : ''}
+            ${urlHtml}
+        `;
+        
+        // Add click handler for cards without links (or prevent event bubbling on link click)
+        const linkEl = card.querySelector('.fallback-card-link');
+        if (linkEl) {
+            // Prevent card click when link is clicked
+            linkEl.addEventListener('click', (e) => e.stopPropagation());
+        }
+        
+        return card;
     }
     
     /**

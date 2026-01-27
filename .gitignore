@@ -106,3 +106,12 @@ assets/json/weather_cache.json
 # Log files
 logs/
 *.log
+
+# Legacy/backup JavaScript files (cleanup pending)
+assets/js/*.backup
+assets/js/app-old.js
+assets/js/app-original.js
+assets/js/app-before-filter-ui.js
+assets/js/event-listeners-old.js
+assets/js/event-listeners-refactored.js
+assets/js/utils-before-template.js
