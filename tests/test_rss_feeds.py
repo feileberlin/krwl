@@ -190,6 +190,36 @@ class TestRSSFeedGeneration(unittest.TestCase):
             root = ET.fromstring(content)
             self.assertEqual(root.tag, 'rss')
             self.assertEqual(root.get('version'), '2.0')
+    
+    def test_public_feeds_directory_exists_after_generation(self):
+        """Test that feeds are copied to public/assets/feeds/ after site generation"""
+        base_path = Path(__file__).parent.parent
+        public_feeds_dir = base_path / 'public' / 'assets' / 'feeds'
+        source_feeds_dir = base_path / 'assets' / 'feeds'
+        
+        # If public feeds directory doesn't exist, skip this test
+        # (only valid after running 'python3 src/event_manager.py generate')
+        if not public_feeds_dir.exists():
+            self.skipTest("public/assets/feeds/ not yet created (run 'generate' command first)")
+        
+        # Directory should exist and contain feeds
+        self.assertTrue(public_feeds_dir.is_dir())
+        
+        # Get source and public feed files
+        source_feeds = set(f.name for f in source_feeds_dir.glob('*.xml'))
+        public_feeds = set(f.name for f in public_feeds_dir.glob('*.xml'))
+        
+        # All source feeds should be in public
+        for feed_name in source_feeds:
+            self.assertIn(feed_name, public_feeds, 
+                f"Feed {feed_name} not copied to public/assets/feeds/")
+        
+        # Each public feed should be valid XML
+        for feed_file in public_feeds_dir.glob('*.xml'):
+            with open(feed_file, 'r') as f:
+                content = f.read()
+            root = ET.fromstring(content)
+            self.assertEqual(root.tag, 'rss')
 
 
 if __name__ == '__main__':
