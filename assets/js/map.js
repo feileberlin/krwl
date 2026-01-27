@@ -164,7 +164,8 @@ class MapManager {
                 (error) => {
                     console.error('Location error:', error);
                     
-                    // Use default location as fallback
+                    // Use default location as fallback for distance calculations
+                    // But do NOT show a location card - user should select from predefined/custom locations
                     const defaultCenter = this.config.map.default_center;
                     this.userLocation = {
                         lat: defaultCenter.lat,
@@ -173,25 +174,22 @@ class MapManager {
                     
                     if (this.map) {
                         this.map.setView([this.userLocation.lat, this.userLocation.lon], 13);
-                        // Show location card even with fallback location
-                        this.addUserMarker();
                     }
                     
                     if (onError) onError(error);
                 }
             );
         } else {
-            // Use default location as fallback
+            // Use default location as fallback for distance calculations
+            // But do NOT show a location card - user should select from predefined/custom locations
             const defaultCenter = this.config.map.default_center;
             this.userLocation = {
                 lat: defaultCenter.lat,
                 lon: defaultCenter.lon
             };
             
-            // Show location card even when geolocation not supported
             if (this.map) {
                 this.map.setView([this.userLocation.lat, this.userLocation.lon], 13);
-                this.addUserMarker();
             }
             
             if (onError) onError(new Error('Geolocation not supported'));
