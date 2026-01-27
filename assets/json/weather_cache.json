@@ -7,5 +7,14 @@
       "location": "Hof",
       "timestamp": "2026-01-27T15:07:52.418297"
     }
+  },
+  "location_South Pole": {
+    "timestamp": "2026-01-27T16:20:46.026173",
+    "data": {
+      "dresscode": "heavy winter coat",
+      "temperature": "-1°C",
+      "location": "South Pole",
+      "timestamp": "2026-01-27T16:20:46.025903"
+    }
   }
 }
