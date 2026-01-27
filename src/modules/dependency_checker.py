@@ -8,14 +8,17 @@ Ensures dependency tracking in features.json is accurate and up-to-date.
 Usage:
     python3 src/modules/dependency_checker.py
     python3 src/modules/dependency_checker.py --check-feature FEATURE_ID
-    python3 src/modules/dependency_checker.py --show-impact MODULE_NAME
+    python3 src/modules/dependency_checker.py --show-tree
+    python3 src/modules/dependency_checker.py --validate
+    python3 src/modules/dependency_checker.py --analyze-js
+    python3 src/modules/dependency_checker.py --analyze-py
 """
 
 import json
 import os
 import re
 from pathlib import Path
-from typing import Dict, List, Set, Tuple
+from typing import Any, Dict, List, Set, Tuple
 
 
 class DependencyChecker:
@@ -86,7 +89,14 @@ class DependencyChecker:
         return dependencies
     
     def analyze_python_dependencies(self) -> Dict[str, Dict]:
-        """Analyze Python module dependencies"""
+        """
+        Analyze Python module dependencies.
+        
+        Detects imports from peer modules using common patterns:
+        - Relative imports: from .module_name import
+        - From modules: from modules.module_name import
+        - Absolute imports: from src.modules.module_name import
+        """
         modules_dir = self.base_path / 'src' / 'modules'
         dependencies = {}
         
@@ -97,12 +107,21 @@ class DependencyChecker:
             with open(py_file, 'r', encoding='utf-8') as f:
                 content = f.read()
             
-            # Find imports from src.modules
-            imports = re.findall(r'from src\.modules\.(\w+) import', content)
-            imports += re.findall(r'import src\.modules\.(\w+)', content)
+            # Find imports from peer modules (multiple patterns)
+            imports = set()
+            
+            # Pattern 1: Relative imports (from .module_name import)
+            imports.update(re.findall(r'from \.(\w+) import', content))
+            
+            # Pattern 2: From modules directory (from modules.module_name import)
+            imports.update(re.findall(r'from modules\.(\w+) import', content))
+            
+            # Pattern 3: Absolute imports (from src.modules.module_name import)
+            imports.update(re.findall(r'from src\.modules\.(\w+) import', content))
+            imports.update(re.findall(r'import src\.modules\.(\w+)', content))
             
             dependencies[py_file.name] = {
-                'imports': list(set(imports))
+                'imports': list(imports)
             }
         
         return dependencies
@@ -117,7 +136,7 @@ class DependencyChecker:
         
         return dependents
     
-    def calculate_impact(self, feature_id: str) -> Dict[str, any]:
+    def calculate_impact(self, feature_id: str) -> Dict[str, Any]:
         """Calculate the impact of changing a feature"""
         direct_dependents = self.find_dependents(feature_id)
         all_dependents = set(direct_dependents)
