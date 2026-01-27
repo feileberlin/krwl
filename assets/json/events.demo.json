@@ -2,16 +2,16 @@
   "events": [
     {
       "id": "demo_happening_now",
-      "title": "[DEMO] Kunst in Bayreuth - Werke der 1940er bis 1960er Jahre - aus den Sammlungen und Stiftungen im Kunstmuseum — Live now",
-      "description": "Live now — drop in for the current highlights. Donnerstag,01.01.2026,",
+      "title": "[DEMO] \ud83d\udc27 Emperor Penguin Parade \u2014 Live now",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Live now",
       "location": {
-        "name": "Kunstmuseum Bayreuth, Maximilianstraße 33, 95444 Bayreuth",
-        "lat": 49.944,
-        "lon": 11.5747
+        "name": "\ud83d\udc27 Penguin HQ Main Tent",
+        "lat": -89.999,
+        "lon": 45.0
       },
       "start_time": "2026-01-16T04:05:41",
       "end_time": "2026-01-16T06:05:41",
-      "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
+      "url": "https://github.com/feileberlin/krwl-hof",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -23,16 +23,16 @@
     },
     {
       "id": "demo_started_5min_ago",
-      "title": "[DEMO] Ausstellung zum Fotowettbewerb: Zeig mir deine Lebenswerte Stadt (bis 7. Januar 2026) — Just started",
-      "description": "Just started — doors opened a few minutes ago. Donnerstag,01.01.2026,",
+      "title": "[DEMO] \ud83c\udf0c Aurora Australis Viewing \u2014 Just started",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Just started",
       "location": {
-        "name": "RW21 Volkshochschule Bayreuth, Richard-Wagner-Str. 21, 95444 Bayreuth",
-        "lat": 49.9454,
-        "lon": 11.5771
+        "name": "\ud83d\udc27 Baby Penguin Nursery",
+        "lat": -89.9992,
+        "lon": 45.01
       },
       "start_time": "2026-01-16T04:30:41",
       "end_time": "2026-01-16T06:30:41",
-      "url": "https://event.frankenpost.de/detail.php?event_id=3202184",
+      "url": "https://github.com/feileberlin/krwl-hof",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -44,16 +44,16 @@
     },
     {
       "id": "demo_starting_5min",
-      "title": "[DEMO] Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline — Starts in 5 min",
-      "description": "Starts in 5 minutes — grab your spot. 01.Januar",
+      "title": "[DEMO] \ud83e\uddca Antarctic Ice Sculpture Contest \u2014 Starts in 5 min",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Starts in 5 min",
       "location": {
-        "name": "Schloss Carolinenruhe, Colmdorf 8, 95448 Bayreuth",
-        "lat": 49.93047,
-        "lon": 11.5674
+        "name": "\ud83d\udc27 Penguin Feeding Station",
+        "lat": -89.9988,
+        "lon": 44.99
       },
       "start_time": "2026-01-16T04:40:41",
       "end_time": "2026-01-16T06:40:41",
-      "url": "https://event.frankenpost.de/detail.php?event_id=3185852",
+      "url": "https://github.com/feileberlin/krwl-hof",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -65,16 +65,16 @@
     },
     {
       "id": "demo_starting_15min",
-      "title": "[DEMO] Community Meetup at Test Venue — Starts in 15 min",
-      "description": "Starts in 15 minutes — meet at the entrance. Friendly community meetup with introductions, snacks, and local tips.",
+      "title": "[DEMO] \ud83c\udfca Polar Plunge Challenge \u2014 Starts in 15 min",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Starts in 15 min",
       "location": {
-        "name": "Test Venue Berlin",
-        "lat": 52.52,
-        "lon": 13.405
+        "name": "\ud83e\uddca Ice Cube Bar Entrance",
+        "lat": -89.998,
+        "lon": -90.0
       },
       "start_time": "2026-01-16T04:50:41",
       "end_time": "2026-01-16T06:50:41",
-      "url": "https://example.com/test-event",
+      "url": "https://github.com/feileberlin/krwl-hof",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -86,16 +86,16 @@
     },
     {
       "id": "demo_starting_30min",
-      "title": "[DEMO] Kunst in Bayreuth - Werke der 1940er bis 1960er Jahre - aus den Sammlungen und Stiftungen im Kunstmuseum — Starts in 30 min",
-      "description": "Starts in 30 minutes — settle in with a quick coffee. Donnerstag,01.01.2026,",
+      "title": "[DEMO] \ud83d\udd2c Climate Science Lecture \u2014 Starts in 30 min",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Starts in 30 min",
       "location": {
-        "name": "Kunstmuseum Bayreuth, Maximilianstraße 33, 95444 Bayreuth",
-        "lat": 49.944,
-        "lon": 11.5747
+        "name": "\ud83e\uddca Frozen Cocktail Lounge",
+        "lat": -89.9982,
+        "lon": -89.99
       },
       "start_time": "2026-01-16T05:05:41",
       "end_time": "2026-01-16T07:05:41",
-      "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
+      "url": "https://github.com/feileberlin/krwl-hof",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -107,16 +107,16 @@
     },
     {
       "id": "demo_in_1hour",
-      "title": "[DEMO] Ausstellung zum Fotowettbewerb: Zeig mir deine Lebenswerte Stadt (bis 7. Januar 2026) — Starts in 1 hour",
-      "description": "Starts in 1 hour — plan your evening ahead. Donnerstag,01.01.2026,",
+      "title": "[DEMO] \ud83e\uddd8 Midnight Sun Yoga \u2014 Starts in 1 hour",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Starts in 1 hour",
       "location": {
-        "name": "RW21 Volkshochschule Bayreuth, Richard-Wagner-Str. 21, 95444 Bayreuth",
-        "lat": 49.9454,
-        "lon": 11.5771
+        "name": "\u2744\ufe0f Frosty's Igloo Caf\u00e9",
+        "lat": -89.995,
+        "lon": 0.0
       },
       "start_time": "2026-01-16T05:35:41",
       "end_time": "2026-01-16T07:35:41",
-      "url": "https://event.frankenpost.de/detail.php?event_id=3202184",
+      "url": "https://github.com/feileberlin/krwl-hof",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -128,16 +128,16 @@
     },
     {
       "id": "demo_in_2hours",
-      "title": "[DEMO] Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline — Starts in 2 hours",
-      "description": "Starts in 2 hours — add it to your calendar. 01.Januar",
+      "title": "[DEMO] \ud83c\udf0d Colony Builders Meetup \u2014 Starts in 2 hours",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Starts in 2 hours",
       "location": {
-        "name": "Schloss Carolinenruhe, Colmdorf 8, 95448 Bayreuth",
-        "lat": 49.93047,
-        "lon": 11.5674
+        "name": "\ud83c\udf21\ufe0f Minus 60 Lounge",
+        "lat": -89.993,
+        "lon": 0.0
       },
       "start_time": "2026-01-16T06:35:41",
       "end_time": "2026-01-16T08:35:41",
-      "url": "https://event.frankenpost.de/detail.php?event_id=3185852",
+      "url": "https://github.com/feileberlin/krwl-hof",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -149,16 +149,16 @@
     },
     {
       "id": "demo_this_evening",
-      "title": "[DEMO] Community Meetup at Test Venue — This evening",
-      "description": "This evening — unwind with a relaxed session. Friendly community meetup with introductions, snacks, and local tips.",
+      "title": "[DEMO] \ud83d\udc15 Husky Sledding Adventure \u2014 This evening",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: This evening",
       "location": {
-        "name": "Test Venue Berlin",
-        "lat": 52.52,
-        "lon": 13.405
+        "name": "\ud83d\udc15 Husky Hangout",
+        "lat": -89.991,
+        "lon": 0.0
       },
       "start_time": "2026-01-16T08:35:41",
       "end_time": "2026-01-16T10:35:41",
-      "url": "https://example.com/test-event",
+      "url": "https://github.com/feileberlin/krwl-hof",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -170,16 +170,16 @@
     },
     {
       "id": "demo_just_ended",
-      "title": "[DEMO] Kunst in Bayreuth - Werke der 1940er bis 1960er Jahre - aus den Sammlungen und Stiftungen im Kunstmuseum — Just ended",
-      "description": "Just ended — highlights and recap available. Donnerstag,01.01.2026,",
+      "title": "[DEMO] \ud83c\udfe0 Igloo Building Workshop \u2014 Just ended",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Just ended",
       "location": {
-        "name": "Kunstmuseum Bayreuth, Maximilianstraße 33, 95444 Bayreuth",
-        "lat": 49.944,
-        "lon": 11.5747
+        "name": "\ufffd\ufffd Polar Ski Lodge",
+        "lat": -89.95,
+        "lon": 0.0
       },
       "start_time": "2026-01-16T02:25:41",
       "end_time": "2026-01-16T04:25:41",
-      "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
+      "url": "https://github.com/feileberlin/krwl-hof",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -192,16 +192,16 @@
     },
     {
       "id": "demo_very_soon",
-      "title": "[DEMO] Ausstellung zum Fotowettbewerb: Zeig mir deine Lebenswerte Stadt (bis 7. Januar 2026) — Very soon",
-      "description": "Very soon — warm-up and introductions are underway. Donnerstag,01.01.2026,",
+      "title": "[DEMO] \u2615 Hot Cocoa Social \u2014 Very soon",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Very soon",
       "location": {
-        "name": "RW21 Volkshochschule Bayreuth, Richard-Wagner-Str. 21, 95444 Bayreuth",
-        "lat": 49.9454,
-        "lon": 11.5771
+        "name": "\ud83c\udfd4\ufe0f Snowmobile Station",
+        "lat": -89.9,
+        "lon": 0.0
       },
       "start_time": "2026-01-16T05:20:41",
       "end_time": "2026-01-16T07:20:41",
-      "url": "https://event.frankenpost.de/detail.php?event_id=3202184",
+      "url": "https://github.com/feileberlin/krwl-hof",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -213,16 +213,16 @@
     },
     {
       "id": "demo_utc_plus1",
-      "title": "[DEMO] Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline — UTC+1 local time (TZ: +1.0)",
-      "description": "Timezone demo in UTC+1 — shows local start time. 01.Januar",
+      "title": "[DEMO] \ud83c\udfbf Antarctic Skiing (UTC+1) \u2014 UTC+1 local time (TZ: +1.0)",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: UTC+1 local time (TZ: +1.0)",
       "location": {
-        "name": "Schloss Carolinenruhe, Colmdorf 8, 95448 Bayreuth",
-        "lat": 49.93047,
-        "lon": 11.5674
+        "name": "\ud83d\udd2c Science Shack",
+        "lat": -89.8,
+        "lon": 0.0
       },
       "start_time": "2026-01-16T05:35:41+01:00",
       "end_time": "2026-01-16T07:35:41+01:00",
-      "url": "https://event.frankenpost.de/detail.php?event_id=3185852",
+      "url": "https://github.com/feileberlin/krwl-hof",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -235,16 +235,16 @@
     },
     {
       "id": "demo_utc_plus2",
-      "title": "[DEMO] Community Meetup at Test Venue — UTC+2 local time (TZ: +2.0)",
-      "description": "Timezone demo in UTC+2 — local time check. Friendly community meetup with introductions, snacks, and local tips.",
+      "title": "[DEMO] \ud83c\udfa3 Ice Fishing Expedition (UTC+2) \u2014 UTC+2 local time (TZ: +2.0)",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: UTC+2 local time (TZ: +2.0)",
       "location": {
-        "name": "Test Venue Berlin",
-        "lat": 52.52,
-        "lon": 13.405
+        "name": "\u2615 Hot Cocoa Corner",
+        "lat": -89.7,
+        "lon": 0.0
       },
       "start_time": "2026-01-16T05:35:41+02:00",
       "end_time": "2026-01-16T07:35:41+02:00",
-      "url": "https://example.com/test-event",
+      "url": "https://github.com/feileberlin/krwl-hof",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -257,16 +257,16 @@
     },
     {
       "id": "demo_utc_minus5",
-      "title": "[DEMO] Kunst in Bayreuth - Werke der 1940er bis 1960er Jahre - aus den Sammlungen und Stiftungen im Kunstmuseum — UTC-5 local time (TZ: -5.0)",
-      "description": "Timezone demo in UTC-5 (EST) — local time check. Donnerstag,01.01.2026,",
+      "title": "[DEMO] \ud83d\udcfb Polar Radio Broadcast (UTC-5) \u2014 UTC-5 local time (TZ: -5.0)",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: UTC-5 local time (TZ: -5.0)",
       "location": {
-        "name": "Kunstmuseum Bayreuth, Maximilianstraße 33, 95444 Bayreuth",
-        "lat": 49.944,
-        "lon": 11.5747
+        "name": "\ud83c\udf0c Aurora Observatory",
+        "lat": -89.55,
+        "lon": 0.0
       },
       "start_time": "2026-01-16T05:35:41-05:00",
       "end_time": "2026-01-16T07:35:41-05:00",
-      "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
+      "url": "https://github.com/feileberlin/krwl-hof",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -279,16 +279,16 @@
     },
     {
       "id": "demo_utc_plus9",
-      "title": "[DEMO] Ausstellung zum Fotowettbewerb: Zeig mir deine Lebenswerte Stadt (bis 7. Januar 2026) — UTC+9 local time (TZ: +9.0)",
-      "description": "Timezone demo in UTC+9 (JST) — local time check. Donnerstag,01.01.2026,",
+      "title": "[DEMO] \ud83c\udf05 Polar Sunrise Watch (UTC+9) \u2014 UTC+9 local time (TZ: +9.0)",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: UTC+9 local time (TZ: +9.0)",
       "location": {
-        "name": "RW21 Volkshochschule Bayreuth, Richard-Wagner-Str. 21, 95444 Bayreuth",
-        "lat": 49.9454,
-        "lon": 11.5771
+        "name": "\ud83c\udfe0 Cozy Base Camp",
+        "lat": -89.0,
+        "lon": 0.0
       },
       "start_time": "2026-01-16T05:35:41+09:00",
       "end_time": "2026-01-16T07:35:41+09:00",
-      "url": "https://event.frankenpost.de/detail.php?event_id=3202184",
+      "url": "https://github.com/feileberlin/krwl-hof",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -301,16 +301,16 @@
     },
     {
       "id": "demo_utc_plus530",
-      "title": "[DEMO] Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline — UTC+5:30 local time (TZ: +5.5)",
-      "description": "Timezone demo in UTC+5:30 (IST) — local time check. 01.Januar",
+      "title": "[DEMO] \ud83e\udded Expedition Planning (UTC+5:30) \u2014 UTC+5:30 local time (TZ: +5.5)",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: UTC+5:30 local time (TZ: +5.5)",
       "location": {
-        "name": "Schloss Carolinenruhe, Colmdorf 8, 95448 Bayreuth",
-        "lat": 49.93047,
-        "lon": 11.5674
+        "name": "\ud83c\udfaa Polar Party Tent",
+        "lat": -88.0,
+        "lon": 0.0
       },
       "start_time": "2026-01-16T05:05:41+05:30",
       "end_time": "2026-01-16T07:05:41+05:30",
-      "url": "https://event.frankenpost.de/detail.php?event_id=3185852",
+      "url": "https://github.com/feileberlin/krwl-hof",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -323,16 +323,16 @@
     },
     {
       "id": "demo_before_sunrise_5min",
-      "title": "[DEMO] Community Meetup at Test Venue — Ends before sunrise",
-      "description": "Ends 5 minutes before sunrise — late-night session. Friendly community meetup with introductions, snacks, and local tips.",
+      "title": "[DEMO] \ud83c\udf19 Night Sky Observation \u2014 Ends before sunrise",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Ends before sunrise",
       "location": {
-        "name": "Test Venue Berlin",
-        "lat": 52.52,
-        "lon": 13.405
+        "name": "\ud83c\udfa3 Ice Fishing Hole",
+        "lat": -86.0,
+        "lon": 0.0
       },
       "start_time": "2026-01-16T04:00:00",
       "end_time": "2026-01-16T05:55:00",
-      "url": "https://example.com/test-event",
+      "url": "https://github.com/feileberlin/krwl-hof",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -344,16 +344,16 @@
     },
     {
       "id": "demo_at_sunrise",
-      "title": "[DEMO] Kunst in Bayreuth - Werke der 1940er bis 1960er Jahre - aus den Sammlungen und Stiftungen im Kunstmuseum — Ends at sunrise",
-      "description": "Ends at sunrise — early-bird finale. Donnerstag,01.01.2026,",
+      "title": "[DEMO] \u2600\ufe0f Sunrise Ceremony \u2014 Ends at sunrise",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Ends at sunrise",
       "location": {
-        "name": "Kunstmuseum Bayreuth, Maximilianstraße 33, 95444 Bayreuth",
-        "lat": 49.944,
-        "lon": 11.5747
+        "name": "\ud83d\udcf8 Photo Point",
+        "lat": -84.0,
+        "lon": 0.0
       },
       "start_time": "2026-01-16T04:30:00",
       "end_time": "2026-01-16T06:00:00",
-      "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
+      "url": "https://github.com/feileberlin/krwl-hof",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -365,16 +365,16 @@
     },
     {
       "id": "demo_after_sunrise_5min",
-      "title": "[DEMO] Ausstellung zum Fotowettbewerb: Zeig mir deine Lebenswerte Stadt (bis 7. Januar 2026) — Ends after sunrise",
-      "description": "Ends 5 minutes after sunrise — should be filtered. Donnerstag,01.01.2026,",
+      "title": "[DEMO] \ud83c\udf73 Polar Breakfast Club \u2014 Ends after sunrise",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Ends after sunrise",
       "location": {
-        "name": "RW21 Volkshochschule Bayreuth, Richard-Wagner-Str. 21, 95444 Bayreuth",
-        "lat": 49.9454,
-        "lon": 11.5771
+        "name": "\ud83e\udded Compass Confusion Corner",
+        "lat": -82.0,
+        "lon": 0.0
       },
       "start_time": "2026-01-16T05:00:00",
       "end_time": "2026-01-16T06:05:00",
-      "url": "https://event.frankenpost.de/detail.php?event_id=3202184",
+      "url": "https://github.com/feileberlin/krwl-hof",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -386,16 +386,16 @@
     },
     {
       "id": "demo_crossing_sunrise",
-      "title": "[DEMO] Führung durch die Wohnräume der Sommerresidenz der Markgräfin Caroline — Crosses sunrise",
-      "description": "Crosses sunrise — spans pre-dawn into morning. 01.Januar",
+      "title": "[DEMO] \u26fa Overnight Camping \u2014 Crosses sunrise",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Crosses sunrise",
       "location": {
-        "name": "Schloss Carolinenruhe, Colmdorf 8, 95448 Bayreuth",
-        "lat": 49.93047,
-        "lon": 11.5674
+        "name": "\ud83c\udfad Penguin Theater",
+        "lat": -80.0,
+        "lon": 0.0
       },
       "start_time": "2026-01-16T04:00:00",
       "end_time": "2026-01-16T07:00:00",
-      "url": "https://event.frankenpost.de/detail.php?event_id=3185852",
+      "url": "https://github.com/feileberlin/krwl-hof",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -407,16 +407,16 @@
     },
     {
       "id": "demo_starting_before_sunrise",
-      "title": "[DEMO] Community Meetup at Test Venue — Starts before sunrise",
-      "description": "Starts 30 minutes before sunrise — early meetup. Friendly community meetup with introductions, snacks, and local tips.",
+      "title": "[DEMO] \ud83c\udfc3 Dawn Patrol \u2014 Starts before sunrise",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Starts before sunrise",
       "location": {
-        "name": "Test Venue Berlin",
-        "lat": 52.52,
-        "lon": 13.405
+        "name": "\ud83d\udef7 Sledding Hill",
+        "lat": -78.0,
+        "lon": 0.0
       },
       "start_time": "2026-01-16T05:30:00",
       "end_time": "2026-01-16T06:30:00",
-      "url": "https://example.com/test-event",
+      "url": "https://github.com/feileberlin/krwl-hof",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -428,16 +428,16 @@
     },
     {
       "id": "demo_starting_after_sunrise",
-      "title": "[DEMO] Kunst in Bayreuth - Werke der 1940er bis 1960er Jahre - aus den Sammlungen und Stiftungen im Kunstmuseum — Starts after sunrise",
-      "description": "Starts 30 minutes after sunrise — morning session. Donnerstag,01.01.2026,",
+      "title": "[DEMO] \ud83d\udcf7 Wildlife Photography \u2014 Starts after sunrise",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Starts after sunrise",
       "location": {
-        "name": "Kunstmuseum Bayreuth, Maximilianstraße 33, 95444 Bayreuth",
-        "lat": 49.944,
-        "lon": 11.5747
+        "name": "\ud83c\udfd5\ufe0f Expedition Tent",
+        "lat": -72.0,
+        "lon": 0.0
       },
       "start_time": "2026-01-16T06:30:00",
       "end_time": "2026-01-16T08:00:00",
-      "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
+      "url": "https://github.com/feileberlin/krwl-hof",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -449,16 +449,16 @@
     },
     {
       "id": "demo_all_night",
-      "title": "[DEMO] Ausstellung zum Fotowettbewerb: Zeig mir deine Lebenswerte Stadt (bis 7. Januar 2026) — All night",
-      "description": "All-night event until sunrise — overnight hangout. Donnerstag,01.01.2026,",
+      "title": "[DEMO] \ud83c\udf89 24-Hour Polar Party \u2014 All night",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: All night",
       "location": {
-        "name": "RW21 Volkshochschule Bayreuth, Richard-Wagner-Str. 21, 95444 Bayreuth",
-        "lat": 49.9454,
-        "lon": 11.5771
+        "name": "\ud83c\udf05 Midnight Sun Deck",
+        "lat": -70.0,
+        "lon": 0.0
       },
       "start_time": "2026-01-15T22:00:00",
       "end_time": "2026-01-16T00:00:00",
-      "url": "https://event.frankenpost.de/detail.php?event_id=3202184",
+      "url": "https://github.com/feileberlin/krwl-hof",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -470,16 +470,16 @@
     },
     {
       "id": "demo_far_away",
-      "title": "[DEMO] Kunst in Bayreuth - Werke der 1940er bis 1960er Jahre - aus den Sammlungen und Stiftungen im Kunstmuseum — 250 km away",
-      "description": "Distance test: 250 km away in Berlin for long-range filtering. Donnerstag,01.01.2026,",
+      "title": "[DEMO] \ud83d\ude81 McMurdo Station Tour \u2014 250 km away",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: 250 km away",
       "location": {
-        "name": "Berlin Alexanderplatz (Demo - Far)",
-        "lat": 52.52,
-        "lon": 13.405
+        "name": "\ud83c\udf00 McMurdo Station (Far)",
+        "lat": -77.85,
+        "lon": 166.67
       },
       "start_time": "2026-01-16T06:35:41",
       "end_time": "2026-01-16T08:35:41",
-      "url": "https://event.frankenpost.de/detail.php?event_id=3119599",
+      "url": "https://github.com/feileberlin/krwl-hof",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
