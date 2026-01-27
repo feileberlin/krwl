@@ -99,6 +99,7 @@ class EventsApp {
      * Supports paths like /hof, /nbg, /bth, /selb, /rehau
      * Also checks sessionStorage for redirected paths from 404.html
      * Handles both root (krwl.in/hof) and subdirectory (user.github.io/repo/hof) deployments
+     * Unknown regions redirect to South Pole with setup instructions
      */
     applyRegionFromUrl() {
         // Check for redirected path from 404.html
@@ -123,7 +124,9 @@ class EventsApp {
         const region = regions[regionId];
         
         if (!region) {
-            // Not a known region, might be a different path - silently ignore
+            // Unknown region - redirect to South Pole with colony setup instructions
+            console.log(`[KRWL] Unknown region: ${regionId} - showing colony setup at South Pole`);
+            this.applyUnknownRegion(regionId);
             return;
         }
         
@@ -143,6 +146,48 @@ class EventsApp {
         // Store active region for reference
         this.activeRegion = regionId;
         this.activeRegionConfig = region;
+    }
+    
+    /**
+     * Handle unknown/unconfigured regions by showing South Pole with setup instructions
+     * @param {string} regionId - The unknown region ID from the URL
+     */
+    applyUnknownRegion(regionId) {
+        // South Pole coordinates for unknown regions
+        const SOUTH_POLE = { lat: -90, lon: 0 };
+        const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
+        
+        // Set map center to South Pole
+        this.config.map.default_center = SOUTH_POLE;
+        this.config.map.default_zoom = 3;
+        
+        // Store unknown region info - used by injectColonySetupEvent()
+        this.activeRegion = regionId;
+        this.isUnknownRegion = true;
+        
+        // Add a special "colony setup" event that will be injected into the events list
+        // This replaces all normal events to focus attention on the setup instructions
+        this.colonySetupEvent = {
+            id: 'colony_setup_' + regionId,
+            title: `🏴 Start a new colony: "${regionId}"`,
+            description: `This region "${regionId}" is not yet configured. Want to bring KRWL to your area?\n\n` +
+                `🚀 Option 1: Clone the repository\n` +
+                `Fork https://github.com/feileberlin/krwl-hof and add your region to config.json\n\n` +
+                `📧 Option 2: Contact the editors\n` +
+                `Reach out to request "${regionId}" be added as a new region.\n\n` +
+                `🌍 Join the community and help map events in your area!`,
+            location: {
+                name: 'South Pole - Unclaimed Territory',
+                lat: SOUTH_POLE.lat,
+                lon: SOUTH_POLE.lon
+            },
+            start_time: new Date(Date.now() + ONE_YEAR_MS).toISOString(),
+            end_time: null,
+            url: 'https://github.com/feileberlin/krwl-hof',
+            source: 'system',
+            status: 'published',
+            category: 'community'
+        };
     }
     
     getDefaultConfig() {
@@ -296,6 +341,9 @@ class EventsApp {
                 window.__EVENTS_DATA__ = data;
                 this.log(`Loaded ${this.events.length} events from inline data`);
                 this.events = this.utils.processTemplateEvents(this.events, this.eventFilter);
+                
+                // Inject colony setup event for unknown regions
+                this.injectColonySetupEvent();
                 return;
             }
             
@@ -331,10 +379,26 @@ class EventsApp {
             }
             
             this.events = this.utils.processTemplateEvents(allEvents, this.eventFilter);
+            
+            // Inject colony setup event for unknown regions
+            this.injectColonySetupEvent();
+            
             this.updateDashboard();
         } catch (error) {
             console.error('Error loading events:', error);
             this.events = [];
+        }
+    }
+    
+    /**
+     * Inject colony setup event for unknown regions
+     * Clears normal events and shows only the setup instruction
+     */
+    injectColonySetupEvent() {
+        if (this.isUnknownRegion && this.colonySetupEvent) {
+            // For unknown regions, replace all events with just the colony setup event
+            this.events = [this.colonySetupEvent];
+            console.log(`[KRWL] Showing colony setup event for unknown region: ${this.activeRegion}`);
         }
     }
     
