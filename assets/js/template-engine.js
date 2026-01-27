@@ -8,6 +8,12 @@
  */
 
 class TemplateEngine {
+    // Time conversion constants (class-level for reusability)
+    static MINUTE_MS = 60000;
+    static HOUR_MS = 3600000;
+    // Default fallback when sunrise cannot be calculated (6 hours from now)
+    static DEFAULT_SUNRISE_OFFSET_MS = 6 * 3600000;
+    
     constructor(config) {
         this.config = config;
     }
@@ -45,20 +51,15 @@ class TemplateEngine {
     
     /**
      * Process relative_time field to compute dynamic start/end times
+     * Note: Creates a deep clone to prevent mutations to nested objects.
      * @param {Object} event - Event with relative_time specification
      * @param {Object} filterModule - EventFilter instance for sunrise calculations
      * @returns {Object} Event with updated start_time and end_time
      */
     processRelativeTime(event, filterModule) {
-        const processed = { ...event };
+        const processed = JSON.parse(JSON.stringify(event));
         const rt = event.relative_time;
         const now = new Date();
-        
-        // Time conversion constants
-        const MINUTE_MS = 60000;
-        const HOUR_MS = 3600000;
-        // Default fallback when sunrise cannot be calculated (6 hours from now)
-        const DEFAULT_SUNRISE_OFFSET_MS = 6 * HOUR_MS;
         
         if (rt.type === 'offset') {
             // Offset-based: relative to current time
@@ -68,37 +69,48 @@ class TemplateEngine {
             if (rt.minutes) offsetMinutes += rt.minutes;
             
             // Apply timezone offset if specified
+            // now.getTimezoneOffset() returns local offset from UTC (inverted sign)
+            // Correct conversion: tzOffsetMinutes - localOffset
             if (rt.timezone_offset) {
                 const tzOffsetMinutes = rt.timezone_offset * 60;
                 const localOffset = now.getTimezoneOffset();
-                offsetMinutes += tzOffsetMinutes + localOffset;
+                offsetMinutes += tzOffsetMinutes - localOffset;
             }
             
-            const startTime = new Date(now.getTime() + offsetMinutes * MINUTE_MS);
+            const startTime = new Date(now.getTime() + offsetMinutes * TemplateEngine.MINUTE_MS);
             processed.start_time = startTime.toISOString();
             
             // Calculate end time from duration (supports fractional hours)
             if (rt.duration_hours) {
-                const endTime = new Date(startTime.getTime() + rt.duration_hours * HOUR_MS);
+                const endTime = new Date(startTime.getTime() + rt.duration_hours * TemplateEngine.HOUR_MS);
                 processed.end_time = endTime.toISOString();
             }
             
         } else if (rt.type === 'sunrise_relative') {
             // Sunrise-relative: offset from next sunrise
-            const sunrise = filterModule ? filterModule.getNextSunrise() : new Date(now.getTime() + DEFAULT_SUNRISE_OFFSET_MS);
+            let sunrise;
+            if (filterModule && typeof filterModule.getNextSunrise === 'function') {
+                sunrise = filterModule.getNextSunrise();
+            } else {
+                this.log(
+                    `Warning: sunrise_relative event ${event.id} processed without valid filterModule; ` +
+                    `falling back to default sunrise offset (${TemplateEngine.DEFAULT_SUNRISE_OFFSET_MS / TemplateEngine.HOUR_MS} hours from now).`
+                );
+                sunrise = new Date(now.getTime() + TemplateEngine.DEFAULT_SUNRISE_OFFSET_MS);
+            }
             
             // Calculate start time (supports fractional hours)
             let startOffsetMinutes = 0;
             if (rt.start_offset_hours) startOffsetMinutes += rt.start_offset_hours * 60;
             if (rt.start_offset_minutes) startOffsetMinutes += rt.start_offset_minutes;
-            const startTime = new Date(sunrise.getTime() + startOffsetMinutes * MINUTE_MS);
+            const startTime = new Date(sunrise.getTime() + startOffsetMinutes * TemplateEngine.MINUTE_MS);
             processed.start_time = startTime.toISOString();
             
             // Calculate end time (supports fractional hours)
             let endOffsetMinutes = 0;
             if (rt.end_offset_hours) endOffsetMinutes += rt.end_offset_hours * 60;
             if (rt.end_offset_minutes) endOffsetMinutes += rt.end_offset_minutes;
-            const endTime = new Date(sunrise.getTime() + endOffsetMinutes * MINUTE_MS);
+            const endTime = new Date(sunrise.getTime() + endOffsetMinutes * TemplateEngine.MINUTE_MS);
             processed.end_time = endTime.toISOString();
         } else {
             // Unknown relative_time type - log warning and return unmodified
