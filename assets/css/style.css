@@ -1064,27 +1064,33 @@ strong, b {
     transform: translateY(-1px);
 }
 
+/* Two-column grid for custom locations */
+#custom-locations-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+
 .custom-location-item {
     background: var(--bg-tertiary);
-    padding: 0.8rem;
-    margin-bottom: 0.5rem;
+    padding: 0.6rem;
     border-radius: var(--radius-medium);
     border: 1px solid var(--border-secondary);
 }
 
 .custom-location-header {
-    display: flex;
-    align-items: center;
     margin-bottom: 0.3rem;
-    gap: 0.5rem;
 }
 
 .custom-location-name {
     font-weight: bold;
     color: var(--color-primary);
-    font-size: 0.95rem;
-    flex: 1;
-    min-width: 0; /* Allow text truncation if needed */
+    font-size: 0.85rem;
+}
+
+/* Hide action buttons - we use inline editing */
+.custom-location-actions {
+    display: none;
 }
 
 .custom-location-coords {
@@ -1173,123 +1179,40 @@ strong, b {
     color: var(--color-primary);
 }
 
-/* Edit button - primary action (default styling) */
-.custom-location-btn--edit {
-    /* Uses default button styles */
-}
-
-/* Reset button - warning action (resets to config.json) */
+/* Reset button - warning action */
 .custom-location-btn--reset {
     color: var(--color-warning);
-    border-color: var(--border-primary);
 }
 
 .custom-location-btn--reset:hover {
     border-color: var(--color-warning);
     background: rgba(235, 125, 192, 0.1);
-    color: var(--color-warning);
 }
 
-/* Delete button - danger action (removes from localStorage) */
+/* Delete button - danger action */
 .custom-location-btn--delete {
     color: var(--color-error);
-    border-color: var(--border-primary);
 }
 
 .custom-location-btn--delete:hover {
     border-color: var(--color-error);
     background: rgba(149, 68, 118, 0.1);
-    color: var(--color-error);
-}
-
-/* Legacy class for backwards compatibility */
-.custom-location-btn.delete {
-    color: var(--color-error);
-}
-
-.custom-location-btn.delete:hover {
-    border-color: var(--color-error);
-    background: rgba(248, 81, 73, 0.1);
 }
 
 .custom-locations-empty {
     text-align: center;
     padding: 1.5rem;
     color: var(--text-secondary);
-    font-size: 0.9rem;
 }
 
-/* Custom Location Edit Mode Styles */
-
-/* Edit state container */
-.custom-location-edit {
-    animation: fadeIn 0.2s ease-in;
-}
-
-.custom-location-view {
-    animation: fadeIn 0.2s ease-in;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-5px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Edit header */
-.custom-location-edit-header {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--color-primary);
-    font-weight: 500;
-    font-size: 0.9rem;
-    margin-bottom: 0.8rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border-secondary);
-}
-
-/* Form layout */
-.custom-location-form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr auto;
-    gap: 0.6rem;
-    align-items: end; /* Align button to bottom with inputs */
-}
-
-.form-group label {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    font-weight: 500;
-}
-
-/* Input styling with EcoBarbie theme */
+/* Input styling */
 .custom-location-input {
-    background: var(--tint-50); /* Light background */
+    background: var(--tint-50);
     border: 1px solid var(--border-secondary);
-    color: var(--shade-100); /* Darkest possible */
+    color: var(--shade-100);
     padding: 0.5rem 0.7rem;
     border-radius: var(--radius-small);
-    font-size: 0.85rem;
-    font-family: inherit;
-    transition: all 0.2s;
+    font: inherit;
 }
 
 /* Hide number input spinner buttons */
