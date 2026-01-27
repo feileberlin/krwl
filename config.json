@@ -137,8 +137,54 @@
   "_comment_regions_usage": "URL path (e.g., /hof, /nbg, /bayreuth) centers map on different cities",
   "_comment_regions_data": "All regions share the same events.json - no data splitting!",
   "_comment_regions_purpose": "Each region defines: map center, zoom, custom filter presets for that area",
+  "_comment_regions_fork": "🐧 Want to add YOUR community? Fork this repo! See: https://github.com/feileberlin/krwl-hof",
   "_comment_regions_separator": "═══════════════════════════════════════════════════════════════════════════════",
   "regions": {
+    "antarctica": {
+      "name": "antarctica",
+      "displayName": "South Pole, Antarctica",
+      "_comment": "🐧 Default demo region - Fork this repo to add your own community!",
+      "center": {
+        "lat": -90.0,
+        "lng": 0.0
+      },
+      "zoom": 3,
+      "boundingBox": {
+        "north": -60.0,
+        "south": -90.0,
+        "east": 180.0,
+        "west": -180.0
+      },
+      "dataSource": "events.json",
+      "defaultLanguage": "en",
+      "distancePresets": [
+        {
+          "id": "nearby",
+          "name": {
+            "de": "In der Nähe",
+            "en": "Nearby"
+          },
+          "distance_km": 50.0
+        },
+        {
+          "id": "station",
+          "name": {
+            "de": "Forschungsstation",
+            "en": "Research Station"
+          },
+          "distance_km": 200.0
+        },
+        {
+          "id": "continent",
+          "name": {
+            "de": "Kontinent",
+            "en": "Continent"
+          },
+          "distance_km": 2000.0
+        }
+      ],
+      "customFilters": []
+    },
     "hof": {
       "name": "hof",
       "displayName": "Hof (Saale)",
@@ -877,25 +923,32 @@
   "_comment_map_identical": "MAP CONFIGURATION - Same in all environments",
   "map": {
     "default_center": {
-      "lat": 50.3167,
-      "lon": 11.9167
+      "lat": -90.0,
+      "lon": 0.0
     },
-    "default_zoom": 13,
+    "_comment_default_center": "Geographic South Pole, Antarctica - Fork the repo to add your local community!",
+    "default_zoom": 3,
     "tile_provider": "https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png",
     "tile_provider_comment": "CartoDB Dark No Labels - Converted to monochromatic Barbie Red via CSS filters",
     "attribution": "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
     "predefined_locations": [
       {
         "name": "location.no1",
-        "lat": 50.308053,
-        "lon": 11.9233,
-        "display_name": "Hauptbahnhof Hof"
+        "lat": -90.0,
+        "lon": 0.0,
+        "display_name": "Geographic South Pole"
       },
       {
         "name": "location.no2",
-        "lat": 50.3164799,
-        "lon": 11.9146205,
-        "display_name": "Sonnenplatz Hof"
+        "lat": -77.8463,
+        "lon": 166.6684,
+        "display_name": "McMurdo Station"
+      },
+      {
+        "name": "location.no3",
+        "lat": -75.1,
+        "lon": -123.35,
+        "display_name": "Amundsen-Scott Station"
       }
     ]
   },
@@ -1227,13 +1280,13 @@
     "_comment_user_agent": "User-Agent string for HTTP requests (update periodically to match current browsers)",
     "locations": [
       {
-        "name": "Hof",
-        "lat": 50.3167,
-        "lon": 11.9167,
-        "display_name": "Hof"
+        "name": "South Pole",
+        "lat": -90.0,
+        "lon": 0.0,
+        "display_name": "South Pole, Antarctica"
       }
     ],
-    "_comment_locations": "Locations to fetch weather for (default: Hof area)",
+    "_comment_locations": "Locations to fetch weather for (default: South Pole, Antarctica - Fork the repo to add your local community!)",
     "display": {
       "show_in_filter_bar": true,
       "_comment_display": "Show weather dresscode in filter bar"
