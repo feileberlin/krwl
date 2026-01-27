@@ -107,11 +107,15 @@ assets/json/weather_cache.json
 logs/
 *.log
 
-# Legacy/backup JavaScript files (cleanup pending)
-assets/js/*.backup
-assets/js/app-old.js
-assets/js/app-original.js
-assets/js/app-before-filter-ui.js
-assets/js/event-listeners-old.js
-assets/js/event-listeners-refactored.js
-assets/js/utils-before-template.js
+# Legacy/backup files - archived in /archive/ directory
+# Prevent new backup files from being created
+*.backup
+*-old.*
+*-original.*
+*-before-*
+*-refactored.*
+*_OLD.*
+*_BACKUP.*
+
+# Keep archive directory but ignore any future additions
+archive/**/new_backups/
