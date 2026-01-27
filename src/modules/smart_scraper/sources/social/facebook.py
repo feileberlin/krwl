@@ -290,7 +290,13 @@ class FacebookSource(BaseSource):
         Returns:
             Mobile Facebook URL
         """
-        return url.replace('www.facebook.com', 'm.facebook.com').replace('facebook.com', 'm.facebook.com')
+        # Already mobile URL - return as is
+        if 'm.facebook.com' in url:
+            return url
+        # Replace www.facebook.com or facebook.com with m.facebook.com
+        if 'www.facebook.com' in url:
+            return url.replace('www.facebook.com', 'm.facebook.com')
+        return url.replace('facebook.com', 'm.facebook.com')
     
     def _get_page_url(self, url: str) -> str:
         """Convert event URLs to base page URLs for post scraping."""

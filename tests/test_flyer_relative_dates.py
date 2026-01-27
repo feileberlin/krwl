@@ -152,3 +152,24 @@ def test_post_cache_skips_processed_posts(tmp_path):
     source.force_scan = True
     third_run = source._process_posts(posts)
     assert len(third_run) == 1
+
+
+def test_mobile_url_conversion():
+    """Ensure Facebook URLs are correctly converted to mobile versions without double 'm.' prefixes."""
+    source = build_source()
+    
+    # Test various URL formats
+    test_cases = [
+        # (input, expected)
+        ("https://www.facebook.com/TestPage", "https://m.facebook.com/TestPage"),
+        ("https://facebook.com/TestPage", "https://m.facebook.com/TestPage"),
+        ("https://m.facebook.com/TestPage", "https://m.facebook.com/TestPage"),  # Already mobile
+        ("https://www.facebook.com/people/Punk-in-Hof/100090512583516/", "https://m.facebook.com/people/Punk-in-Hof/100090512583516/"),
+        ("https://www.facebook.com/GaleriehausHof/events", "https://m.facebook.com/GaleriehausHof/events"),
+    ]
+    
+    for input_url, expected in test_cases:
+        result = source._get_mobile_url(input_url)
+        assert result == expected, f"Expected {expected}, got {result} for input {input_url}"
+        # Ensure no double 'm.' prefix
+        assert "m.m." not in result, f"Double 'm.' prefix found in {result}"
