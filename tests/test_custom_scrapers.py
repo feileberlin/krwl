@@ -611,7 +611,7 @@ class TestVHSConcatenatedTitleParsing(unittest.TestCase):
     def test_parse_course_uses_title_location_fallback(self):
         """Test that _parse_course uses location from title when not found in HTML."""
         if not self.available:
-            self.skipTest("BeautifulSoup not available")
+            self.skipTest("VHSSource not available")
         
         html = '''
         <div class="course-item">
@@ -634,7 +634,7 @@ class TestVHSConcatenatedTitleParsing(unittest.TestCase):
     def test_ort_raum_header_extraction(self):
         """Test extraction from 'Ort / Raum:' tabular header format."""
         if not self.available:
-            self.skipTest("BeautifulSoup not available")
+            self.skipTest("VHSSource not available")
         
         html = '''
         <div class="course-item">
@@ -654,7 +654,7 @@ class TestVHSConcatenatedTitleParsing(unittest.TestCase):
     def test_ort_raum_header_variations(self):
         """Test variations of 'Ort / Raum' header."""
         if not self.available:
-            self.skipTest("BeautifulSoup not available")
+            self.skipTest("VHSSource not available")
         
         scraper = self._create_scraper()
         
@@ -670,6 +670,51 @@ class TestVHSConcatenatedTitleParsing(unittest.TestCase):
         for text, expected in test_cases:
             result = scraper._extract_location_from_text(text)
             self.assertEqual(result, expected, f"Failed for input: {text}")
+    
+    def test_location_priority_html_over_title(self):
+        """Test that HTML location has priority over title location."""
+        if not self.available:
+            self.skipTest("VHSSource not available")
+        
+        html = '''
+        <div class="course-item">
+            <h3>Python KursFr. 15.02.2026 18:00Title Location</h3>
+            <p>Learn Python basics</p>
+            <li>Ort: HTML Location</li>
+        </div>
+        '''
+        soup = self.BeautifulSoup(html, 'html.parser')
+        container = soup.find('div', class_='course-item')
+        
+        scraper = self._create_scraper()
+        event = scraper._parse_course(container)
+        
+        self.assertIsNotNone(event)
+        # HTML location should take priority over title location
+        self.assertEqual(event['location']['name'], 'HTML Location')
+    
+    def test_location_priority_default_fallback(self):
+        """Test that default location is used when no location is found."""
+        if not self.available:
+            self.skipTest("VHSSource not available")
+        
+        html = '''
+        <div class="course-item">
+            <h3>Simple Course Without Location</h3>
+            <p>Learn something</p>
+        </div>
+        '''
+        soup = self.BeautifulSoup(html, 'html.parser')
+        container = soup.find('div', class_='course-item')
+        
+        scraper = self._create_scraper()
+        event = scraper._parse_course(container)
+        
+        self.assertIsNotNone(event)
+        # Default location should be used
+        self.assertEqual(event['location']['name'], 'VHS Hofer Land')
+        self.assertEqual(event['location']['lat'], 50.3167)
+        self.assertEqual(event['location']['lon'], 11.9167)
 
 
 def main():

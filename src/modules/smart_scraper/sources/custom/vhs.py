@@ -23,6 +23,12 @@ WEEKDAY_DATE_TIME_PATTERN = re.compile(
     r'(\d{1,2}:\d{2})?'                          # Optional time: HH:MM
 )
 
+# Pattern for "Ort / Raum:" tabular header format
+ORT_RAUM_PATTERN = re.compile(r'^ort\s*/\s*raum\s*:?\s*', re.IGNORECASE)
+
+# Pattern to check if text is exactly "Ort / Raum:" label
+ORT_RAUM_LABEL_PATTERN = re.compile(r'^ort\s*/\s*raum\s*:?$', re.IGNORECASE)
+
 
 class VHSSource(BaseSource):
     """
@@ -117,9 +123,9 @@ class VHSSource(BaseSource):
         lower_text = normalized.lower()
         
         # Check for "ort / raum" pattern first (tabular header format)
-        ort_raum_pattern = re.match(r'^ort\s*/\s*raum\s*:?\s*', lower_text)
-        if ort_raum_pattern:
-            location_text = normalized[ort_raum_pattern.end():].strip()
+        ort_raum_match = ORT_RAUM_PATTERN.match(lower_text)
+        if ort_raum_match:
+            location_text = normalized[ort_raum_match.end():].strip()
             if location_text:
                 return location_text
         
@@ -149,15 +155,16 @@ class VHSSource(BaseSource):
         Returns:
             True if text is a location label
         """
-        normalized = text.strip().lower()
+        normalized = text.strip()
         
-        # Check for "ort / raum" pattern
-        if re.match(r'^ort\s*/\s*raum\s*:?$', normalized):
+        # Check for "ort / raum" pattern using pre-compiled regex
+        if ORT_RAUM_LABEL_PATTERN.match(normalized):
             return True
         
         # Must be exactly "ort" followed by optional spaces and colon
-        if normalized.startswith('ort'):
-            rest = normalized[3:].lstrip()
+        lower = normalized.lower()
+        if lower.startswith('ort'):
+            rest = lower[3:].lstrip()
             return rest.startswith(':') or rest == ''
         return False
     
@@ -269,8 +276,8 @@ class VHSSource(BaseSource):
         # Parse concatenated title to extract clean title, date, and location
         clean_title, parsed_date, title_location = self._parse_concatenated_title(raw_title)
         
-        # Use clean title or fallback to raw title if parsing failed
-        title = clean_title if clean_title else raw_title
+        # Use clean title (always non-empty since _parse_concatenated_title returns raw_title.strip() at minimum)
+        title = clean_title
         
         # Extract description
         desc_elem = container.find(['p', '.description', 'td'])
