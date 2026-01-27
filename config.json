@@ -941,14 +941,14 @@
       },
       {
         "name": "location.no2",
-        "lat": -77.8463,
-        "lon": 166.6684,
-        "display_name": "McMurdo Station"
+        "lat": -89.999,
+        "lon": 45.0,
+        "display_name": "Ceremonial South Pole Marker"
       },
       {
         "name": "location.no3",
-        "lat": -75.1,
-        "lon": -123.35,
+        "lat": -89.998,
+        "lon": -90.0,
         "display_name": "Amundsen-Scott Station"
       }
     ]
