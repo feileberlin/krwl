@@ -460,6 +460,43 @@ class TestRouting:
         
         return all_found
     
+    def test_url_restoration_after_redirect(self) -> bool:
+        """Test that app.js restores URL path after 404.html redirect"""
+        print("\n  Testing: URL restoration after SPA redirect...")
+        
+        app_js_path = self.base_path / "assets" / "js" / "app.js"
+        
+        if not app_js_path.exists():
+            return self.assert_test(False, "app.js exists", f"File not found: {app_js_path}")
+        
+        try:
+            with open(app_js_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            return self.assert_test(False, "Read app.js", str(e))
+        
+        # Check for history.replaceState to restore URL
+        # This ensures krwl.in/hof stays as krwl.in/hof (not krwl.in)
+        required_patterns = {
+            'history.replaceState': "URL restoration via replaceState",
+            'wasRedirected': "Redirect detection flag",
+            "Restored URL path": "URL restoration log message"
+        }
+        
+        all_found = True
+        for pattern, description in required_patterns.items():
+            if pattern not in content:
+                self.errors.append(f"app.js missing: {description} ({pattern})")
+                all_found = False
+        
+        if all_found:
+            print(f"    ✓ app.js includes URL restoration after 404 redirect")
+            self.passed += 1
+        else:
+            self.failed += 1
+        
+        return all_found
+    
     # =========================================================================
     # Test Runner
     # =========================================================================
@@ -505,6 +542,7 @@ class TestRouting:
             ("JavaScript Routing Logic", [
                 self.test_app_js_region_detection,
                 self.test_unknown_region_shows_colony_setup,
+                self.test_url_restoration_after_redirect,
             ]),
         ]
         

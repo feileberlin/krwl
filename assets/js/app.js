@@ -104,8 +104,10 @@ class EventsApp {
     applyRegionFromUrl() {
         // Check for redirected path from 404.html
         let path = sessionStorage.getItem('spa_redirect_path');
+        let wasRedirected = false;
         if (path) {
             sessionStorage.removeItem('spa_redirect_path');
+            wasRedirected = true;
         } else {
             path = window.location.pathname;
         }
@@ -117,6 +119,13 @@ class EventsApp {
         
         if (!regionId || regionId === 'index.html') {
             return; // No region specified, use defaults
+        }
+        
+        // Restore the original URL in the address bar if we were redirected via 404.html
+        // This ensures krwl.in/hof stays as krwl.in/hof (not krwl.in)
+        if (wasRedirected && path !== window.location.pathname) {
+            history.replaceState(null, '', path);
+            console.log(`[KRWL] Restored URL path: ${path}`);
         }
         
         // Check if this region exists in config
