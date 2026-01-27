@@ -117,9 +117,8 @@ class MapManager {
     /**
      * Render events to fallback list when map is unavailable
      * @param {Array} events - Filtered events to display
-     * @param {Function} onClick - Click handler for event cards
      */
-    renderFallbackEventList(events, onClick) {
+    renderFallbackEventList(events) {
         const listContainer = document.getElementById('fallback-event-list');
         if (!listContainer) return;
         
@@ -133,7 +132,7 @@ class MapManager {
         
         // Render each event as a card
         events.forEach(event => {
-            const card = this.createFallbackEventCard(event, onClick);
+            const card = this.createFallbackEventCard(event);
             listContainer.appendChild(card);
         });
         
@@ -143,14 +142,12 @@ class MapManager {
     /**
      * Create a fallback event card element
      * @param {Object} event - Event data
-     * @param {Function} onClick - Click handler
      * @returns {HTMLElement} Event card element
      */
-    createFallbackEventCard(event, onClick) {
+    createFallbackEventCard(event) {
         const card = document.createElement('article');
         card.className = 'fallback-event-card';
         card.setAttribute('role', 'listitem');
-        card.setAttribute('tabindex', '0');
         
         // Format date/time
         const startTime = new Date(event.start_time);
@@ -160,7 +157,7 @@ class MapManager {
         // Distance info
         const distanceStr = event.distance !== undefined ? `${event.distance.toFixed(1)} km` : '';
         
-        // Event URL link
+        // Event URL link - the primary way users interact with fallback cards
         const urlHtml = event.url ? 
             `<a href="${this.escapeHtml(event.url)}" class="fallback-card-link" target="_blank" rel="noopener">More info →</a>` : '';
         
@@ -173,13 +170,6 @@ class MapManager {
             ${distanceStr ? `<div class="fallback-card-distance">${this.escapeHtml(distanceStr)}</div>` : ''}
             ${urlHtml}
         `;
-        
-        // Add click handler for cards without links (or prevent event bubbling on link click)
-        const linkEl = card.querySelector('.fallback-card-link');
-        if (linkEl) {
-            // Prevent card click when link is clicked
-            linkEl.addEventListener('click', (e) => e.stopPropagation());
-        }
         
         return card;
     }
