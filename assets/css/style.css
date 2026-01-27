@@ -1078,7 +1078,7 @@ strong, b {
 
 .dashboard-section--two-col p {
     font-size: 0.85rem;
-    color: var(--text-secondary);
+    color: var(--color-text-secondary);
     margin: 0;
 }
 
@@ -1109,7 +1109,9 @@ strong, b {
 }
 
 /* Full-width elements in form grid */
+/* NOTE: Uses :has(), which requires modern browsers (Safari 15.4+, Chrome 105+, Firefox 121+) */
 .dashboard-form .form-group:has(textarea),
+.dashboard-form .form-group.form-group--full-width,
 .dashboard-form .form-actions,
 .dashboard-form .form-status {
     grid-column: 1 / -1;
@@ -1118,10 +1120,10 @@ strong, b {
 /* Grid item card style - used by locations and form groups */
 .custom-location-item,
 .dashboard-form .form-group {
-    background: var(--bg-tertiary);
+    background: var(--color-bg-tertiary);
     padding: 0.6rem;
-    border-radius: var(--radius-medium);
-    border: 1px solid var(--border-secondary);
+    border-radius: var(--border-radius-medium);
+    border: 1px solid var(--color-border-secondary);
 }
 
 .custom-location-header {
@@ -1141,7 +1143,7 @@ strong, b {
 
 .custom-location-coords {
     font-size: 0.8rem;
-    color: var(--text-secondary);
+    color: var(--color-text-secondary);
     font-family: var(--font-family-mono);
 }
 
@@ -1149,14 +1151,14 @@ strong, b {
 .custom-location-coords--clickable {
     cursor: pointer;
     padding: 0.4rem 0.6rem;
-    border-radius: var(--radius-small);
+    border-radius: var(--border-radius-small);
     transition: all 0.2s;
-    background: var(--bg-secondary);
+    background: var(--color-bg-secondary);
     border: 1px solid transparent;
 }
 
 .custom-location-coords--clickable:hover {
-    background: var(--bg-tertiary);
+    background: var(--color-bg-tertiary);
     border-color: var(--color-primary);
     color: var(--color-primary);
 }
@@ -1170,14 +1172,14 @@ strong, b {
 /* Edit mode - reuse clickable coords styling, just add border */
 .custom-location-coords-edit {
     font-size: 0.8rem;
-    color: var(--text-secondary);
+    color: var(--color-text-secondary);
     font-family: var(--font-family-mono);
     display: inline-flex;
     align-items: center;
     gap: 0.15rem;
     padding: 0.4rem 0.6rem;
-    background: var(--bg-secondary);
-    border-radius: var(--radius-small);
+    background: var(--color-bg-secondary);
+    border-radius: var(--border-radius-small);
     border: 1px solid var(--color-primary);
 }
 
@@ -1251,16 +1253,16 @@ strong, b {
 .custom-locations-empty {
     text-align: center;
     padding: 1.5rem;
-    color: var(--text-secondary);
+    color: var(--color-text-secondary);
 }
 
 /* Input styling */
 .custom-location-input {
-    background: var(--tint-50);
-    border: 1px solid var(--border-secondary);
-    color: var(--shade-100);
+    background: var(--color-tint-50);
+    border: 1px solid var(--color-border-secondary);
+    color: var(--color-shade-100);
     padding: 0.5rem 0.7rem;
-    border-radius: var(--radius-small);
+    border-radius: var(--border-radius-small);
     font: inherit;
 }
 
@@ -1279,12 +1281,12 @@ strong, b {
 .custom-location-input:focus {
     outline: none;
     border-color: var(--color-primary);
-    background: var(--tint-50); /* Keep light background on focus */
+    background: var(--color-tint-50); /* Keep light background on focus */
     box-shadow: 0 0 0 2px rgba(214, 137, 184, 0.15);
 }
 
 .custom-location-input:hover:not(:focus) {
-    border-color: var(--border-primary);
+    border-color: var(--color-border-primary);
 }
 
 /* Input error state */
