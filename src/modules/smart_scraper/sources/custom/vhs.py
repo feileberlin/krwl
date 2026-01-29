@@ -277,11 +277,16 @@ class VHSSource(BaseSource):
         if raw_title.lower() in ['kurse', 'veranstaltungen', 'termine']:
             return None
         
-        # Parse concatenated title to extract clean title, date, time, and location
-        clean_title, parsed_date, parsed_time, title_location = self._parse_concatenated_title(raw_title)
-        
-        # Use clean title (always non-empty since _parse_concatenated_title returns raw_title.strip() at minimum)
-        title = clean_title
+        # Only parse concatenated title if it contains the weekday+date pattern
+        if WEEKDAY_DATE_TIME_PATTERN.search(raw_title):
+            clean_title, parsed_date, parsed_time, title_location = self._parse_concatenated_title(raw_title)
+            title = clean_title
+        else:
+            # Not a concatenated title, use as-is
+            title = raw_title.strip()
+            parsed_date = None
+            parsed_time = None
+            title_location = None
         
         # Extract description
         desc_elem = container.find(['p', '.description', 'td'])
