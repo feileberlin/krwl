@@ -71,17 +71,6 @@
     outline-offset: 2px;
 }
 
-/* Legacy support for .filter-bar-item class (deprecated) */
-#event-filter-bar .filter-bar-item {
-    cursor: pointer;
-    text-decoration: underline;
-    text-decoration-style: dotted;
-    text-underline-offset: 3px;
-    transition: var(--transition-normal);
-    position: relative;
-    display: inline-block;
-}
-
 #event-filter-bar .filter-bar-item:hover {
     color: var(--color-text-primary);
     text-decoration-style: solid;

@@ -1719,7 +1719,6 @@ strong, b {
     color: var(--color-ecobarbie-light-tone);
 }
 
-/* Details/Summary for Size Breakdown (deprecated - now using table) */
 .debug-details {
     margin-top: 0.75rem;
     border-top: 1px solid color-mix(in srgb, var(--color-ecobarbie-dark-tone) 20%, transparent);

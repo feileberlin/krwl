@@ -254,7 +254,7 @@ python3 src/event_manager.py
 
 ## Migration from Old Bot
 
-The old conversation-based bot (`src/modules/telegram_bot.py`) is **deprecated** as of January 2025. The new approach in `scripts/telegram_bot.py` is simpler, more maintainable, and follows proven patterns.
+The old conversation-based bot (`src/modules/telegram_bot.py`) is **deprecated** as of January 2025. The current implementation in `src/modules/telegram_bot_simple.py` is simpler, more maintainable, and follows proven patterns.
 
 ### Key Differences
 

@@ -1829,7 +1829,6 @@ window.DASHBOARD_ICONS = {json.dumps(all_ui_icons, ensure_ascii=False)};'''
         
         # Prepare embedded data for frontend with debug comments
         # All data is embedded by backend - frontend does NOT fetch config.json or events
-        # Note: WEATHER_CACHE is now deprecated, weather data is in APP_CONFIG.weather.data
         
         # Build embedded data strings with individual wrapping
         all_ui_icons = {**MAP_ICONS_MAP, **DASHBOARD_ICONS_MAP}
@@ -1890,7 +1889,7 @@ window.MARKER_ICONS = {marker_icons_json};
 window.DASHBOARD_ICONS = {dashboard_icons_json};
 window.DEBUG_INFO = {debug_info_json};'''
         
-        # Config loader and fetch interceptor (legacy placeholders - not currently used)
+        # Empty placeholders for template compatibility (not currently used)
         config_loader = ''
         fetch_interceptor = ''
         
