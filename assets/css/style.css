@@ -601,15 +601,9 @@ strong, b {
     text-shadow: 0 0 15px rgba(214, 137, 184, 0.8);
 }
 
-/* Weather chip - clickable button for weather forecast popup */
+/* Weather chip - inherits all styles from .filter-chip, only adds opacity */
 #event-filter-bar .weather-chip {
-    cursor: pointer;
     opacity: 0.8;
-    font-size: 0.85rem;
-    color: var(--color-text-secondary);
-    text-shadow: none;
-    font-style: italic;  /* Italic to differentiate from filter buttons */
-    transition: opacity 0.2s ease, color 0.2s ease, text-shadow 0.2s ease;
 }
 
 #event-filter-bar .weather-chip:hover {
