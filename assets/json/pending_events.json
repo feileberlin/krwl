@@ -1803,7 +1803,29 @@
       "source": "https://www.vhshoferland.de/p/last-minute-kurse/webinar-geld-verdienen-im-internet-durch-verkaufen-646-C-29AH314014",
       "url": "https://www.vhshoferland.de/p/last-minute-kurse/webinar-geld-verdienen-im-internet-durch-verkaufen-646-C-29AH314014",
       "tags": []
+    },
+    {
+      "id": "vhs_e866364cad01",
+      "title": "Kreativ-Abend-Werkstatt: Gestalten \u2013 Pr\u00e4sentieren \u2013 InspirierenOffenes Praxisformat rund um Canva, Apple & Co.",
+      "teaser": "Sie m\u00f6chten kreativ arbeiten, Neues ausprobieren oder eigene Projekte gestalten \u2013 und das in lockerer Atmosph\u00e4re mit fachlicher Begleitung? In dieser Kreativ-Abend-Werkstatt stehen Ihnen digitale Tool...",
+      "description": "Sie m\u00f6chten kreativ arbeiten, Neues ausprobieren oder eigene Projekte gestalten \u2013 und das in lockerer Atmosph\u00e4re mit fachlicher Begleitung? In dieser Kreativ-Abend-Werkstatt stehen Ihnen digitale Tools wie Canva, Apple Pages, Keynote oder Adobe Firefly zur Verf\u00fcgung. Ob Einladung, Flyer, Social-Media-Post oder Pr\u00e4sentation: Bringen Sie Ihre Ideen mit \u2013 wir helfen Ihnen bei der Umsetzung!",
+      "location": {
+        "name": "Ludwigstra\u00dfe 7",
+        "address": "95028 Hof",
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": false,
+        "needs_review": false,
+        "resolution_method": null
+      },
+      "start_time": "2026-02-05T18:00:00",
+      "end_time": null,
+      "category": "education",
+      "status": "pending",
+      "source": "https://www.vhshoferland.de/p/last-minute-kurse/kreativ-abend-werkstatt-gestalten-praesentieren-inspirieren/offenes-praxisformat-rund-um-canva-apple-co-646-C-29AH316139",
+      "url": "https://www.vhshoferland.de/p/last-minute-kurse/kreativ-abend-werkstatt-gestalten-praesentieren-inspirieren/offenes-praxisformat-rund-um-canva-apple-co-646-C-29AH316139",
+      "tags": []
     }
   ],
-  "last_scraped": "2026-01-30T03:45:41.505122"
+  "last_scraped": "2026-01-30T15:09:14.765209"
 }
