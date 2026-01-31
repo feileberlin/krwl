@@ -1655,7 +1655,7 @@ strong, b {
 
 .debug-value {
     color: var(--color-ecobarbie-light-tone);
-    text-align: right;
+    text-align: left;
     word-break: break-word;
     padding: 0.4rem 0;
     border-bottom: 1px solid color-mix(in srgb, var(--color-ecobarbie-dark-tone) 10%, transparent);
