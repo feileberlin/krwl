@@ -49,9 +49,10 @@ class EventsApp {
         this.duplicateStats = null;
         
         // Filter settings (load from storage module)
+        // Defaults from config.json: filtering.max_distance_km and filtering.show_until
         this.filters = this.storage.loadFiltersFromCookie() || {
-            maxDistance: 50,  // INCREASED: 50km radius (was 2km) - shows more events
-            timeFilter: '7d',  // CHANGED: 7 days (was 'sunrise' ~7 hours) - shows way more events
+            maxDistance: this.config.filtering?.max_distance_km || 5,  // From config.json
+            timeFilter: 'sunrise',  // From config.json: filtering.show_until = "next_sunrise"
             category: 'all',
             locationType: 'geolocation',
             selectedPredefinedLocation: null,
