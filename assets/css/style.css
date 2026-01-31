@@ -2133,12 +2133,15 @@ strong, b {
     /* Styling now handled by .debug-warnings and .debug-warning-item */
 }
 
-/* Legacy value highlights - now handled by .debug-value.highlight */
+/* Data & Performance section values - explicit left alignment for consistency */
 #debug-event-counts-published,
 #debug-event-counts-pending,
 #debug-event-counts-archived,
-#debug-event-counts-total {
-    /* Styling handled by parent .debug-value */
+#debug-event-counts-total,
+#debug-file-size,
+#debug-caching,
+#debug-dom-cache {
+    text-align: left;
 }
 
 #debug-caching.cache-enabled {
