@@ -50,8 +50,8 @@ class EventsApp {
         
         // Filter settings (load from storage module)
         this.filters = this.storage.loadFiltersFromCookie() || {
-            maxDistance: 2,
-            timeFilter: 'sunrise',
+            maxDistance: 50,  // INCREASED: 50km radius (was 2km) - shows more events
+            timeFilter: '7d',  // CHANGED: 7 days (was 'sunrise' ~7 hours) - shows way more events
             category: 'all',
             locationType: 'geolocation',
             selectedPredefinedLocation: null,
