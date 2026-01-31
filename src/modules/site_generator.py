@@ -733,7 +733,7 @@ class SiteGenerator:
         leaflet_js = self.read_text_file(leaflet_js_path, fallback='')
         
         if not leaflet_js:
-            # Provide a CDN loader fallback
+            # Provide a CDN loader fallback with retry map initialization
             leaflet_js = '''/* Leaflet JS: Load from CDN at runtime */
 (function() {
     if (typeof L === 'undefined') {
@@ -742,6 +742,27 @@ class SiteGenerator:
         script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
         script.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=';
         script.crossOrigin = '';
+        
+        // Retry map initialization after Leaflet loads
+        script.onload = function() {
+            console.log('Leaflet loaded from CDN - retrying map initialization');
+            // Retry map initialization if app is already loaded
+            if (window.eventsApp && window.eventsApp.mapManager) {
+                const mapManager = window.eventsApp.mapManager;
+                // Only retry if map failed to initialize
+                if (mapManager.isFallbackMode && typeof L !== 'undefined') {
+                    console.log('Retrying map initialization...');
+                    const mapInitialized = mapManager.initMap('map');
+                    if (mapInitialized) {
+                        mapManager.setupLeafletEventPrevention();
+                        // Re-display events on the map
+                        window.eventsApp.displayEvents();
+                        console.log('Map successfully initialized after CDN load');
+                    }
+                }
+            }
+        };
+        
         document.head.appendChild(script);
         
         const link = document.createElement('link');

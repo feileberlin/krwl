@@ -60,6 +60,14 @@ class MapManager {
             return false;
         }
         
+        // If retrying after fallback was shown, clear fallback content
+        const container = document.getElementById(containerId);
+        if (container && this.isFallbackMode) {
+            container.innerHTML = ''; // Clear fallback HTML
+            this.isFallbackMode = false; // Reset fallback flag
+            this.log('Cleared fallback content, retrying map initialization');
+        }
+        
         const center = this.config.map.default_center;
         
         try {
@@ -90,26 +98,16 @@ class MapManager {
         const container = document.getElementById(containerId);
         if (!container) return;
         
-        // Create fallback with event list container
+        // Create fallback with event list container (no prominent "unavailable" message)
         const fallback = document.createElement('div');
         fallback.className = 'map-fallback';
         fallback.innerHTML = `
-            <div class="map-fallback-content">
-                <div class="map-fallback-icon"><i data-lucide="map" style="width: 48px; height: 48px;"></i></div>
-                <h2>Map Unavailable</h2>
-                <p>The map library could not be loaded. Events are shown below:</p>
-            </div>
             <div id="fallback-event-list" class="fallback-event-list" role="list" aria-label="Event list"></div>
         `;
         container.appendChild(fallback);
         
         // Mark that we're in fallback mode
         this.isFallbackMode = true;
-        
-        // Initialize Lucide icon
-        if (window.lucide && typeof window.lucide.createIcons === 'function') {
-            window.lucide.createIcons();
-        }
         
         this.log('Map fallback displayed with event list container');
     }
