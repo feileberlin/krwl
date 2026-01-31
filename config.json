@@ -605,7 +605,7 @@
       ]
     }
   },
-  "defaultRegion": "antarctica",
+  "defaultRegion": "hof",
   "_comment_defaultRegion": "Which region to use when no URL path specified (e.g., visiting root /)",
   "supportedLanguages": [
     "de",
