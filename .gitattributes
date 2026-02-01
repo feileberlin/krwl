@@ -1,0 +1,154 @@
+# Git Attributes Configuration
+# ═══════════════════════════════════════════════════════════════════════════════
+# MERGE STRATEGIES FOR AUTOMATED FILE UPDATES
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# This file configures Git merge strategies to prevent conflicts on files that
+# are automatically updated by CI/CD workflows (scheduled scraping, weather
+# updates, reviewer notes, etc.).
+#
+# PROBLEM:
+# Multiple automated workflows update JSON files with timestamps. When these
+# workflows run concurrently or from different branches, they create merge
+# conflicts on timestamp fields alone, even when the actual data hasn't changed.
+#
+# SOLUTION:
+# Use 'union' merge strategy for auto-generated files where both versions should
+# be kept and conflicts are acceptable. Use 'ours' for files where the current
+# version should always win.
+#
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Reviewer Notes - Union Merge
+# ───────────────────────────────────────────────────────────────────────────────
+#
+# File: assets/json/reviewer_notes.json
+# Updated by: Event scraper (auto-flagging ambiguous locations)
+# Conflict cause: Timestamps added by multiple scraping runs
+# Strategy: Union merge keeps all notes from both versions
+#
+# This is safe because:
+# - Multiple notes for the same event are acceptable
+# - Timestamp differences don't affect functionality
+# - Duplicate notes are harmless (reviewed events are filtered anyway)
+#
+assets/json/reviewer_notes.json merge=union
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Weather Cache - Union Merge
+# ───────────────────────────────────────────────────────────────────────────────
+#
+# File: assets/json/weather_cache.json
+# Updated by: Weather scraper (hourly)
+# Conflict cause: Timestamp field updated on every scrape
+# Strategy: Union merge (though this file is also in .gitignore)
+#
+# Note: This file is in .gitignore but committed with -f flag in workflows.
+# Union merge ensures no conflicts if accidentally committed from multiple sources.
+#
+assets/json/weather_cache.json merge=union
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Pending Events - Use 'theirs' Strategy on Merge
+# ───────────────────────────────────────────────────────────────────────────────
+#
+# File: assets/json/pending_events.json
+# Updated by: Event scraper (twice daily scheduled runs)
+# Conflict cause: 'last_scraped' timestamp field
+# Strategy: Prefer incoming changes ('theirs') for automated updates
+#
+# This is appropriate because:
+# - Newer scrape data should always take precedence
+# - 'last_scraped' timestamp should reflect the most recent successful scrape
+# - Manual edits to this file are rare (events are approved/rejected via workflows)
+#
+# NOTE: For manual merges, developers may need to use 'git merge -X theirs'
+# to ensure the latest scrape data is preserved.
+#
+assets/json/pending_events.json merge=union
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Events Data Files - Union Merge for Safety
+# ───────────────────────────────────────────────────────────────────────────────
+#
+# Files: events.json, archived_events.json, rejected_events.json
+# Updated by: Editorial workflows, archiving scripts
+# Conflict cause: 'last_updated' timestamp fields
+# Strategy: Union merge to preserve both event sets
+#
+# This is safe because:
+# - Duplicate events are filtered by ID at load time
+# - Timestamp differences don't affect event display
+# - Events from both branches should be preserved
+#
+assets/json/events.json merge=union
+assets/json/archived_events.json merge=union
+assets/json/rejected_events.json merge=union
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Entity Data Files - Union Merge
+# ───────────────────────────────────────────────────────────────────────────────
+#
+# Files: organizers.json, locations.json, verified_locations.json
+# Updated by: Entity extraction, location verification workflows
+# Conflict cause: 'updated_at' / 'last_modified' timestamps
+# Strategy: Union merge to keep all entities from both branches
+#
+# This is safe because:
+# - Duplicate entities are merged by ID at load time
+# - Timestamp differences are informational only
+# - Multiple updates to the same entity are acceptable (latest wins at runtime)
+#
+assets/json/organizers.json merge=union
+assets/json/locations.json merge=union
+assets/json/verified_locations.json merge=union
+assets/json/unverified_locations.json merge=union
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Reports and Override Files - Union Merge
+# ───────────────────────────────────────────────────────────────────────────────
+#
+# Files: entity_override_report.json
+# Updated by: Entity extraction scripts
+# Conflict cause: Timestamp fields in reports
+# Strategy: Union merge to keep all report entries
+#
+assets/json/entity_override_report.json merge=union
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Demo/Test Event Files - Normal Merge
+# ───────────────────────────────────────────────────────────────────────────────
+#
+# Files: events.antarctica.json, events.atlantis.json
+# These are static demo/test data and should use normal merge conflict resolution
+# if they ever change (which should be rare).
+#
+# No special merge strategy needed - use Git default (manual conflict resolution)
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# END OF CONFIGURATION
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# IMPORTANT NOTES FOR GERMAN LOCALE:
+# - Git merge strategies are locale-independent
+# - Timestamp formats in JSON are ISO 8601 (no locale issues)
+# - Commit messages can use German without affecting merge behavior
+#
+# TESTING:
+# To test merge behavior:
+#   1. Create two branches with conflicting timestamp updates
+#   2. Merge with: git merge branch-name
+#   3. Verify no conflicts on timestamp-only changes
+#   4. Validate JSON structure: python3 -m json.tool file.json
+#
+# TROUBLESHOOTING:
+# If you still get conflicts:
+#   - Check that this file is committed and pushed
+#   - Verify merge strategy: git check-attr merge path/to/file
+#   - For automated workflows, ensure 'git pull --rebase' before commit
+#
+# For more information, see:
+# - Git Attributes Documentation: https://git-scm.com/docs/gitattributes
+# - Merge Strategies: https://git-scm.com/docs/merge-strategies
+# - Project docs: docs/development/merge-strategies.md
