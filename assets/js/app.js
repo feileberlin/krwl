@@ -27,18 +27,24 @@ class EventsApp {
         // Get default config (will be replaced by utils module)
         this.config = window.APP_CONFIG || this.getDefaultConfig();
         
+        // Initialize i18n FIRST (before other modules)
+        // Note: Async init happens in init() method
+        this.i18n = new I18n(this.config);
+        
         // Detect and apply region from URL path (e.g., /hof, /nbg, /bth)
+        // Also handles language detection from URL
         this.applyRegionFromUrl();
         
         // Initialize modules (pass activeRegionConfig for region-specific custom locations)
+        // Pass i18n to modules that need translations
         this.storage = new EventStorage(this.config, this.activeRegionConfig);
         this.eventFilter = new EventFilter(this.config, this.storage);
         this.mapManager = new MapManager(this.config, this.storage);
         // Speech bubbles disabled - using Leaflet default popups instead
         // this.speechBubbles = new SpeechBubbles(this.config, this.storage, (event) => this.showEventDetail(event));
         this.utils = new EventUtils(this.config);
-        this.dashboardUI = new DashboardUI(this.config, this.utils);
-        this.filterDescriptionUI = new FilterDescriptionUI(this.config);
+        this.dashboardUI = new DashboardUI(this.config, this.utils, this.i18n);
+        this.filterDescriptionUI = new FilterDescriptionUI(this.config, this.i18n);
         this.eventListeners = new EventListeners(this);
         this.formsManager = new FormsManager(this.config);
         
@@ -97,7 +103,12 @@ class EventsApp {
     
     /**
      * Detect region from URL path and apply region-specific settings.
-     * Supports paths like /hof, /nbg, /bth, /selb, /rehau
+     * Supports paths like:
+     * - /hof (region only, use default/stored language)
+     * - /en (language only, use default region)  
+     * - /de/hof (language + region)
+     * - /en/nbg (language + region)
+     * 
      * Also checks sessionStorage for redirected paths from 404.html
      * Handles both root (krwl.in/hof) and subdirectory (user.github.io/repo/hof) deployments
      * Unknown regions redirect to South Pole with setup instructions
@@ -113,10 +124,50 @@ class EventsApp {
             path = window.location.pathname;
         }
         
-        // Extract region ID from the last segment of the path
-        // This handles both /hof and /repo/hof correctly
+        // Parse URL segments (filter out empty strings)
         const segments = path.split('/').filter(Boolean);
-        const regionId = segments.length > 0 ? segments[segments.length - 1].toLowerCase() : '';
+        
+        // Get supported languages from config
+        const supportedLangs = this.config?.supportedLanguages || ['de', 'en', 'cs'];
+        
+        // Determine language and region from URL
+        let langSegment = null;
+        let regionSegment = null;
+        
+        if (segments.length === 0) {
+            // Root path: / (no language, no region)
+            // Will use default language and antarctica region
+            regionSegment = null;
+        } else if (segments.length === 1) {
+            // Single segment: could be language OR region
+            const segment = segments[0].toLowerCase();
+            
+            if (supportedLangs.includes(segment)) {
+                // It's a language: /en
+                langSegment = segment;
+                regionSegment = null;  // Use default region
+            } else {
+                // It's a region: /hof
+                langSegment = null;  // Use default/stored language
+                regionSegment = segment;
+            }
+        } else {
+            // Multiple segments: assume first is language, last is region
+            // /en/hof, /de/nbg, etc.
+            const firstSegment = segments[0].toLowerCase();
+            const lastSegment = segments[segments.length - 1].toLowerCase();
+            
+            if (supportedLangs.includes(firstSegment)) {
+                langSegment = firstSegment;
+                regionSegment = lastSegment !== firstSegment ? lastSegment : null;
+            } else {
+                // First segment not a language, treat last as region
+                regionSegment = lastSegment;
+            }
+        }
+        
+        // Extract region ID for config lookup
+        const regionId = regionSegment || '';
         
         if (!regionId || regionId === 'index.html') {
             // Root path should show Antarctica showcase
@@ -239,6 +290,14 @@ class EventsApp {
     async init() {
         this.config = window.APP_CONFIG || this.getDefaultConfig();
         this.log('App initialized', 'Config:', this.config);
+        
+        // Initialize i18n system (load translations)
+        try {
+            await this.i18n.init();
+            this.log('I18n initialized', 'Language:', this.i18n.getCurrentLanguage());
+        } catch (error) {
+            console.error('Failed to initialize i18n:', error);
+        }
         
         // Make app instance globally available for dashboard
         window.app = this;
