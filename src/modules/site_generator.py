@@ -907,7 +907,7 @@ class SiteGenerator:
         return header + '\n\n'.join(font_faces) + '\n'
 
     
-    def load_script_resources(self) -> Dict[str, str]:
+    def load_script_resources(self, config: Dict = None) -> Dict[str, str]:
         """
         Load all JavaScript resources including Lucide with debug comments.
         
@@ -916,6 +916,10 @@ class SiteGenerator:
         - Concatenates them into single inline script for app_js placeholder
         - Removes export statements (not needed in inline context)
         - Wraps each resource with debug metadata comments
+        - Replaces repository placeholders with values from config.json
+        
+        Args:
+            config: Configuration dictionary (optional, for placeholder replacement)
         """
         # Try to load Leaflet JS, fallback to CDN loader if missing
         leaflet_js_path = self.dependencies_dir / 'leaflet' / 'leaflet.js'
@@ -1017,6 +1021,11 @@ class SiteGenerator:
         
         # Combine all modules into single app_js and wrap with debug comments
         combined_app_js = '\n'.join(js_modules)
+        
+        # Replace repository placeholders in JavaScript if config provided
+        if config:
+            combined_app_js = self.replace_repository_placeholders(combined_app_js, config)
+        
         scripts['app_js'] = self.wrap_with_debug_comment(
             combined_app_js,
             'js',
@@ -1558,6 +1567,41 @@ window.DASHBOARD_ICONS = {json.dumps(all_ui_icons, ensure_ascii=False)};'''
                 f"  - filter-nav.html"
             )
         return full_path.read_text(encoding='utf-8')
+    
+    def replace_repository_placeholders(self, content: str, config: Dict) -> str:
+        """
+        Replace repository URL placeholders with actual values from config.json.
+        
+        Placeholders supported:
+        - {{REPO_URL}} -> Full repository URL (e.g., https://github.com/owner/repo)
+        - {{REPO_OWNER}} -> Repository owner (e.g., feileberlin)
+        - {{REPO_NAME}} -> Repository name (e.g., krwl.in)
+        - {{REPO_OWNER_SLASH_NAME}} -> owner/name format (e.g., feileberlin/krwl.in)
+        
+        Args:
+            content: Content with placeholders
+            config: Configuration dictionary with repository information
+        
+        Returns:
+            Content with placeholders replaced by actual repository values
+        """
+        repo_info = config.get('app', {}).get('repository', {})
+        repo_owner = repo_info.get('owner', 'feileberlin')
+        repo_name = repo_info.get('name', 'krwl.in')
+        repo_url = repo_info.get('url', f'https://github.com/{repo_owner}/{repo_name}')
+        
+        # Replace all placeholders
+        replacements = {
+            '{{REPO_URL}}': repo_url,
+            '{{REPO_OWNER}}': repo_owner,
+            '{{REPO_NAME}}': repo_name,
+            '{{REPO_OWNER_SLASH_NAME}}': f'{repo_owner}/{repo_name}'
+        }
+        
+        for placeholder, value in replacements.items():
+            content = content.replace(placeholder, value)
+        
+        return content
     
     def load_design_tokens(self) -> Dict:
         """
@@ -2134,6 +2178,9 @@ window.DEBUG_INFO = {debug_info_json};'''
         dashboard_aside = self.load_component('dashboard-aside.html')
         filter_nav = self.load_component('filter-nav.html')
         
+        # Replace repository placeholders in all components
+        dashboard_aside = self.replace_repository_placeholders(dashboard_aside, primary_config)
+        
         # Generate RSS feed discovery links
         base_url = primary_config.get('app', {}).get('url', 'https://krwl.in')
         default_region = primary_config.get('defaultRegion', 'hof')
@@ -2232,7 +2279,7 @@ window.DEBUG_INFO = {debug_info_json};'''
         stylesheets = self.load_stylesheet_resources()
         
         print("Loading scripts...")
-        scripts = self.load_script_resources()
+        scripts = self.load_script_resources(primary_config)
         
         print("Loading content data...")
         events = self.load_all_events(primary_config)

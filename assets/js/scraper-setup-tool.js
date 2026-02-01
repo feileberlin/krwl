@@ -944,13 +944,13 @@ class ScraperSetupTool {
                 </div>
                 
                 <div class="instruction-links">
-                    <a href="https://github.com/feileberlin/krwl.in/actions/workflows/manual-scrape.yml" 
+                    <a href="{{REPO_URL}}/actions/workflows/manual-scrape.yml" 
                        target="_blank" 
                        rel="noopener noreferrer"
                        class="instruction-link">
                         <i data-lucide="play"></i> Trigger Manual Scrape
                     </a>
-                    <a href="https://github.com/feileberlin/krwl.in/blob/main/config.json" 
+                    <a href="{{REPO_URL}}/blob/main/config.json" 
                        target="_blank" 
                        rel="noopener noreferrer"
                        class="instruction-link">

@@ -851,8 +851,8 @@ class EventsApp {
             if (pendingCount > 0 || unverifiedCount > 0) {
                 let messages = [];
                 
-                // Get repository URL from config (fallback to hardcoded for backward compatibility)
-                const repoUrl = this.config?.app?.repository?.url || 'https://github.com/feileberlin/krwl.in';
+                // Get repository URL from config (fallback to placeholder for backward compatibility)
+                const repoUrl = this.config?.app?.repository?.url || '{{REPO_URL}}';
                 
                 // Pending events warning
                 if (pendingCount > 0) {
