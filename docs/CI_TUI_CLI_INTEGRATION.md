@@ -4,7 +4,7 @@
 
 This document explains how to leverage **TUI (Text User Interface) and CLI (Command Line Interface) functionality within GitHub Actions CI/CD workflows**.
 
-The good news: **YES, it's absolutely possible!** The KRWL HOF project already has extensive CI integration. This guide shows you how to extend it further.
+The good news: **YES, it's absolutely possible!** The KRWL> project already has extensive CI integration. This guide shows you how to extend it further.
 
 ## Current CI Capabilities
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-KRWL HOF now supports **multiple regions** (cities) viewing the same event data from different map perspectives. The URL path determines which city's map view to show:
+KRWL> now supports **multiple regions** (cities) viewing the same event data from different map perspectives. The URL path determines which city's map view to show:
 
 - `/hof` - Hof (Saale) view
 - `/nbg` - Nürnberg view  

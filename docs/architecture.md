@@ -1,6 +1,6 @@
 # Architecture Overview
 
-This document provides a high-level overview of the KRWL HOF architecture, including module dependencies, data flow, and system design.
+This document provides a high-level overview of the KRWL> architecture, including module dependencies, data flow, and system design.
 
 ## Table of Contents
 
@@ -11,7 +11,7 @@ This document provides a high-level overview of the KRWL HOF architecture, inclu
 
 ## System Overview
 
-KRWL HOF is a **mobile-first Progressive Web App (PWA)** for discovering community events with interactive map visualization.
+KRWL> is a **mobile-first Progressive Web App (PWA)** for discovering community events with interactive map visualization.
 
 **Technology Stack:**
 - **Backend**: Python 3.x with modular design

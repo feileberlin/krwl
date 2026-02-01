@@ -7,7 +7,7 @@
 
 ## Context
 
-When starting the KRWL HOF project, we needed to choose a frontend technology stack. The modern JavaScript ecosystem offers many frameworks:
+When starting the KRWL> project, we needed to choose a frontend technology stack. The modern JavaScript ecosystem offers many frameworks:
 
 - **React**: Component-based, large ecosystem, JSX syntax
 - **Vue**: Progressive framework, gentle learning curve

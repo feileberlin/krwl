@@ -1,6 +1,6 @@
 # Mobile-First & Progressive Enhancement Best Practices
 
-> Comprehensive guide for maintaining and improving mobile-first approach in KRWL HOF
+> Comprehensive guide for maintaining and improving mobile-first approach in KRWL>
 
 ## 🎯 Core Principles
 
@@ -438,5 +438,5 @@ body {
 ---
 
 **Last Updated**: January 2025  
-**Maintained by**: KRWL HOF Community  
+**Maintained by**: KRWL> Community  
 **Version**: 1.0

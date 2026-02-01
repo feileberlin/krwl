@@ -1,6 +1,6 @@
 # Repository URL Placeholders
 
-This document explains the placeholder system for repository URLs in the KRWL HOF Community Events project.
+This document explains the placeholder system for repository URLs in the KRWL> Community Events project.
 
 ## Overview
 

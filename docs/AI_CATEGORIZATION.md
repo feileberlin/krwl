@@ -2,7 +2,7 @@
 
 ## Overview
 
-The KRWL HOF event management system now includes AI-powered event categorization using a local Large Language Model (LLM). This feature intelligently categorizes scraped events into the appropriate schema categories, improving accuracy over simple keyword matching.
+The KRWL> event management system now includes AI-powered event categorization using a local Large Language Model (LLM). This feature intelligently categorizes scraped events into the appropriate schema categories, improving accuracy over simple keyword matching.
 
 ## Key Features
 
@@ -358,7 +358,7 @@ test_events = [
 
 ## License
 
-This feature is part of the KRWL HOF project and follows the same license.
+This feature is part of the KRWL> project and follows the same license.
 
 ## Support
 
@@ -370,4 +370,4 @@ This feature is part of the KRWL HOF project and follows the same license.
 
 - **Ollama**: Local LLM runtime (https://ollama.ai/)
 - **Llama**: Meta's open source LLM family
-- **KRWL HOF Team**: Integration and implementation
+- **KRWL> Team**: Integration and implementation

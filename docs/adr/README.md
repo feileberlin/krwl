@@ -2,7 +2,7 @@
 
 ## What Are ADRs?
 
-Architectural Decision Records (ADRs) document significant architectural and design decisions made during the development of KRWL HOF. They capture the **context**, **decision**, and **consequences** of each choice to help future contributors understand why things are the way they are.
+Architectural Decision Records (ADRs) document significant architectural and design decisions made during the development of KRWL>. They capture the **context**, **decision**, and **consequences** of each choice to help future contributors understand why things are the way they are.
 
 ## Why ADRs?
 

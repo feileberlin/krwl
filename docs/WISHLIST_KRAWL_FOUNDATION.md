@@ -1,4 +1,4 @@
-# KRWL HOF Feature Wishlist - Inspired by krawl.foundation
+# KRWL> Feature Wishlist - Inspired by krawl.foundation
 
 > **Purpose**: This document outlines a prioritized wishlist of features to port from the krawl.foundation project into krwl.in. Each feature includes effort estimates, implementation notes, test criteria, risks, and acceptance criteria to enable incremental development and review.
 
@@ -873,7 +873,7 @@ Based on dependencies and value:
 ## References
 
 - **krawl.foundation**: Original project inspiration (link to be added if public)
-- **KRWL HOF Documentation**: [.github/copilot-instructions.md](.github/copilot-instructions.md)
+- **KRWL> Documentation**: [.github/copilot-instructions.md](.github/copilot-instructions.md)
 - **Feature Registry**: [features.json](../features.json)
 - **Configuration Guide**: [config.json](../config.json)
 

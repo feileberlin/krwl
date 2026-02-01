@@ -1,10 +1,10 @@
 # Progressive Enhancement Implementation
 
-> How KRWL HOF provides a functional experience with and without JavaScript
+> How KRWL> provides a functional experience with and without JavaScript
 
 ## 🎯 Overview
 
-KRWL HOF implements **progressive enhancement** to ensure the app works for all users:
+KRWL> implements **progressive enhancement** to ensure the app works for all users:
 
 - **Baseline**: Event listings accessible without JavaScript
 - **Enhanced**: Interactive map and filters when JavaScript is available

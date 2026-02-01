@@ -1,4 +1,4 @@
-# KRWL HOF Feature Roadmap - Implementation Proposal
+# KRWL> Feature Roadmap - Implementation Proposal
 
 > **Purpose**: Machine-readable roadmap with milestones, timelines, and ownership assignments for implementing features from the krawl.foundation wishlist.
 

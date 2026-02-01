@@ -213,4 +213,4 @@ To test which methods GitHub renders correctly:
 ---
 
 **Last Updated:** 2026-01-19  
-**Maintainer:** KRWL HOF Project
+**Maintainer:** KRWL> Project

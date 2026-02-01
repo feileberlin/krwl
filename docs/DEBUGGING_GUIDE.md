@@ -2,7 +2,7 @@
 
 ## Overview
 
-The KRWL HOF event manager automatically adds debug comments to generated HTML files to help developers understand where embedded resources come from. This feature is **automatically controlled by the environment** with **optional force override** for troubleshooting!
+The KRWL> event manager automatically adds debug comments to generated HTML files to help developers understand where embedded resources come from. This feature is **automatically controlled by the environment** with **optional force override** for troubleshooting!
 
 ## How It Works
 

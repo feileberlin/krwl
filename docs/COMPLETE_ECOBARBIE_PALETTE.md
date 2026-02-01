@@ -1,6 +1,6 @@
 # Complete ecoBarbie Color Palette - All Shades, Tones & Tints
 
-**Complete visual reference for all KRWL HOF colors with square emoji badges**
+**Complete visual reference for all KRWL> colors with square emoji badges**
 
 ## Complete Color Palette - Single Table
 

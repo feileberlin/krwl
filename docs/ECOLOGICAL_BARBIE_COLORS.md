@@ -67,7 +67,7 @@ The **Ecological Barbie** color palette is a natural, organic interpretation of 
 - **No external colors**: Stay within the Barbie colorspace
 - **No neon**: Avoid bright, saturated colors outside the palette
 
-## Application in KRWL HOF
+## Application in KRWL>
 
 ### Debug Info Dashboard
 

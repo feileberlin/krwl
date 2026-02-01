@@ -7,7 +7,7 @@
 
 ## Context
 
-The KRWL HOF application relies on Leaflet.js for interactive map visualization of community events. However, map loading can fail due to several reasons:
+The KRWL> application relies on Leaflet.js for interactive map visualization of community events. However, map loading can fail due to several reasons:
 
 - **Network Issues**: CDN unavailable, slow/blocked connections
 - **Script Blocking**: Ad blockers, privacy extensions, corporate firewalls

@@ -2,7 +2,7 @@
 
 ## What Is This?
 
-The KRWL HOF event map now supports **multiple Franconian cities** viewing the same event data from different perspectives. Think of it like Google Maps - same data, different starting locations.
+The KRWL> event map now supports **multiple Franconian cities** viewing the same event data from different perspectives. Think of it like Google Maps - same data, different starting locations.
 
 **What it does:** URL path segment reads corresponding config variables (map center, zoom) to position the map.
 

@@ -19,7 +19,7 @@ This creates confusion:
 - Inconsistent argument parsing
 - Multiple import paths
 
-The KRWL HOF project needs:
+The KRWL> project needs:
 - Interactive TUI for manual event management
 - CLI commands for automation and CI/CD
 - Single, obvious way to run the application

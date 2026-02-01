@@ -1,6 +1,6 @@
 # Complete ecoBarbie Color Palette - Single Table Reference
 
-**Quick visual reference for all KRWL HOF colors**
+**Quick visual reference for all KRWL> colors**
 
 ## Complete Color Palette Table
 
