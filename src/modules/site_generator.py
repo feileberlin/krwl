@@ -442,22 +442,20 @@ class SiteGenerator:
             
             if not quiet:
                 print(f"\n📦 {name}")
-                if update_info['has_update']:
-                    has_any_updates = True
-                    if update_info['current_version']:
+                if update_info.get('tracked', False):
+                    # Asset is tracked locally
+                    if update_info['has_update']:
+                        has_any_updates = True
                         print(f"  🔄 Update available: {update_info['current_version']} → {update_info['latest_version']}")
+                        if update_info['files_changed']:
+                            print(f"  📝 Files changed: {len(update_info['files_changed'])}")
+                            for file_dest in update_info['files_changed']:
+                                print(f"     - {file_dest}")
                     else:
-                        print(f"  🔄 Update available: (not tracked) → {update_info['latest_version']}")
-                    
-                    if update_info['files_changed']:
-                        print(f"  📝 Files changed: {len(update_info['files_changed'])}")
-                        for file_dest in update_info['files_changed']:
-                            print(f"     - {file_dest}")
-                else:
-                    if update_info['current_version']:
                         print(f"  ✓ Up to date: {update_info['current_version']}")
-                    else:
-                        print(f"  ℹ️  Not yet tracked (fetch to track version)")
+                else:
+                    # Asset is not yet tracked locally (fresh clone / no fetch run)
+                    print('  ℹ️  Not yet tracked (run "python3 src/event_manager.py dependencies fetch" to download and track)')
         
         if not quiet:
             print("\n" + "=" * 60)
@@ -472,10 +470,16 @@ class SiteGenerator:
     
     def update_dependencies(self, force=False) -> bool:
         """
-        Update dependencies that have new versions available.
+        Re-fetch dependencies whose local state differs from pinned metadata.
+        
+        This method compares the locally recorded dependency versions/checksums
+        against the versions pinned in the in-repo DEPENDENCIES mapping. It
+        re-downloads only those packages that are out of sync with the pinned
+        metadata. It does not check for or install newer upstream releases.
         
         Args:
-            force: If True, re-fetch all dependencies regardless of version
+            force: If True, re-fetch all pinned dependencies regardless of
+                whether the local copies already match the pinned metadata.
         
         Returns:
             True if all updates succeeded, False otherwise

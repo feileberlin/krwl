@@ -1,16 +1,15 @@
 """
 Asset Manager Module - CDN Asset Version Tracking
 
-Handles version tracking, checksum verification, and automatic updates
-for third-party CDN assets (Leaflet.js, fonts, etc.).
+Handles local version tracking and checksum verification for third-party
+assets that are downloaded from CDNs (Leaflet.js, fonts, etc.).
 
 Features:
 - Track asset versions and checksums locally
-- Check for upstream version updates
+- Compare local asset metadata with versions pinned in DEPENDENCIES
 - Verify asset integrity with checksums
-- Maintain version history
 
-Integrates with existing site_generator.py DEPENDENCIES structure.
+Integrates with the existing site_generator.py DEPENDENCIES structure.
 """
 
 import json
@@ -206,7 +205,9 @@ class AssetManager:
         """
         Check if a package has updates available upstream.
         
-        Compares configured version in DEPENDENCIES with stored local version.
+        Compares the configured version in DEPENDENCIES with the stored local
+        version and, for tracked assets, verifies whether remote file content
+        has changed based on checksums.
         
         Args:
             package_name: Package name (e.g., 'leaflet')
@@ -215,28 +216,46 @@ class AssetManager:
         Returns:
             Dictionary with update information:
             {
-                'has_update': bool,
-                'current_version': str,
+                'has_update': bool,        # True only for actual version/content divergence
+                'current_version': str,    # None if not yet tracked
                 'latest_version': str,
-                'files_changed': List[str]
+                'files_changed': List[str],
+                'tracked': bool,           # False if no local version is tracked yet
+                'needs_fetch': bool        # True if the asset needs initial fetch
             }
         """
         result = {
             'has_update': False,
             'current_version': None,
             'latest_version': config.get('version'),
-            'files_changed': []
+            'files_changed': [],
+            'tracked': False,
+            'needs_fetch': False,
         }
         
-        # Get current version
+        # Get current version (if tracked locally)
         if package_name in self.versions_data["assets"]:
-            result['current_version'] = self.versions_data["assets"][package_name].get('version')
+            stored_version = self.versions_data["assets"][package_name].get('version')
+            result['current_version'] = stored_version
+            if stored_version is not None:
+                result['tracked'] = True
         
-        # Check if version changed
+        # If the asset is not tracked yet, mark as needing initial fetch but
+        # do not report this as an "update".
+        if not result['tracked']:
+            result['needs_fetch'] = True
+            logger.info(
+                f"Asset {package_name} is not tracked yet; initial fetch required."
+            )
+            return result
+        
+        # Check if version changed for tracked assets
         if result['current_version'] != result['latest_version']:
             result['has_update'] = True
-            logger.info(f"Version update available for {package_name}: "
-                       f"{result['current_version']} → {result['latest_version']}")
+            logger.info(
+                f"Version update available for {package_name}: "
+                f"{result['current_version']} → {result['latest_version']}"
+            )
             return result
         
         # Check if any files have different checksums (file content changed)

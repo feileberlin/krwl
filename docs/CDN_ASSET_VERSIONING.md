@@ -23,13 +23,13 @@ python3 src/event_manager.py dependencies check
 # Show version information for tracked assets
 python3 src/event_manager.py dependencies info
 
-# Check for upstream updates
+# Check for changes/updates for currently pinned dependencies
 python3 src/event_manager.py dependencies update-check
 
-# Update dependencies to latest versions
+# Re-fetch pinned dependency versions and refresh checksums (detect content changes)
 python3 src/event_manager.py dependencies update
 
-# Force re-fetch all dependencies
+# Force re-fetch and re-verify all pinned dependencies, even if checksums match
 python3 src/event_manager.py dependencies update --force
 ```
 

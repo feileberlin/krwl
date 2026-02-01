@@ -325,7 +325,7 @@ COMMANDS:
     dependencies fetch        Fetch third-party dependencies from CDN
     dependencies check        Check if dependencies are present locally
     dependencies update-check Check if dependency updates are available
-    dependencies update       Update dependencies to latest versions
+    dependencies update       Re-fetch dependencies with changed versions/content
                               - Use --force or -f to force re-fetch all
     dependencies info         Show version information for tracked assets
     
@@ -463,19 +463,19 @@ EXAMPLES:
     python3 event_manager.py update
     
     # Fetch dependencies
-    python3 event_manager.py dependencies fetch
+    python3 src/event_manager.py dependencies fetch
     
     # Check dependencies
-    python3 event_manager.py dependencies check
+    python3 src/event_manager.py dependencies check
     
     # Check for dependency updates
-    python3 event_manager.py dependencies update-check
+    python3 src/event_manager.py dependencies update-check
     
     # Update dependencies
-    python3 event_manager.py dependencies update
+    python3 src/event_manager.py dependencies update
     
     # Show asset version info
-    python3 event_manager.py dependencies info
+    python3 src/event_manager.py dependencies info
     
     # Scrape events from sources
     python3 event_manager.py scrape
@@ -3032,7 +3032,7 @@ def _execute_dependencies_command(args, base_path):
     """
     if not args.args:
         print("Error: Missing dependencies subcommand")
-        print("Usage: python3 event_manager.py dependencies [fetch|check|update-check|update|info]")
+        print("Usage: python3 src/event_manager.py dependencies [fetch|check|update-check|update|info]")
         return 1
     
     generator = SiteGenerator(base_path)
@@ -3059,7 +3059,7 @@ def _execute_dependencies_command(args, base_path):
         return 0
     
     print(f"Error: Unknown dependencies subcommand '{subcommand}'")
-    print("Usage: python3 event_manager.py dependencies [fetch|check|update-check|update|info]")
+    print("Usage: python3 src/event_manager.py dependencies [fetch|check|update-check|update|info]")
     return 1
 
 
