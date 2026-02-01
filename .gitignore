@@ -104,6 +104,9 @@ data/*.json
 # Weather cache - regenerated hourly
 assets/json/weather_cache.json
 
+# Reviewer notes - contains timestamps that cause merge conflicts
+assets/json/reviewer_notes.json
+
 # Log files
 logs/
 *.log
