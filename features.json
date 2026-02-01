@@ -1924,6 +1924,41 @@
         "Potential security vulnerabilities from outdated libs"
       ],
       "test_command": "python3 src/event_manager.py dependencies check && python3 src/event_manager.py dependencies info"
+    },
+    {
+      "id": "multilanguage-support",
+      "name": "Multilanguage Support (i18n)",
+      "description": "Full internationalization support with URL-based language switching and dashboard language switcher. Supports German (de), English (en), and Czech (cs) with automatic environment detection.",
+      "category": "frontend",
+      "implemented": true,
+      "files": [
+        "assets/js/i18n.js",
+        "assets/json/translations/en.json",
+        "assets/json/translations/de.json",
+        "assets/json/translations/cs.json",
+        "assets/js/app.js",
+        "assets/js/filter-description-ui.js",
+        "assets/js/dashboard-ui.js",
+        "assets/html/dashboard-aside.html",
+        "assets/css/dashboard.css",
+        "src/modules/site_generator.py"
+      ],
+      "config_keys": [
+        "supportedLanguages",
+        "defaultLanguage"
+      ],
+      "test_method": "Manual testing: Visit /, /en, /de, /cs, /de/hof URLs and test language switcher in dashboard",
+      "depends_on": [
+        "static-site-generation",
+        "interactive-map"
+      ],
+      "used_by": [],
+      "breaks_if_missing": [
+        "UI always in English",
+        "No language switcher in dashboard",
+        "URL-based language routing breaks"
+      ],
+      "test_command": "python3 src/event_manager.py generate && grep -q 'window.TRANSLATIONS' public/index.html"
     }
   ]
 }
