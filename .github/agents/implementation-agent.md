@@ -92,7 +92,7 @@ When you complete a phase, add an entry to the notes file with this structure:
 - Completed by: Jane Developer
 
 ### Major files added, updated, removed
-- **Added**: `.github/copilot-agents/planning-agent.md` - Complete planning agent instructions with guidelines for creating structured plans
+- **Added**: `.github/agents/planning-agent.md` - Complete planning agent instructions with guidelines for creating structured plans
 
 ### Major features added, updated, removed
 - **Added**: Planning agent custom instructions with:

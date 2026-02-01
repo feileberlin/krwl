@@ -49,7 +49,7 @@ Every plan should include:
 Create a modular custom agent structure for GitHub Copilot that allows different instruction sets to coexist side-by-side.
 
 ## Phase 1: Directory Setup
-- [ ] Task 1.1: Create `.github/copilot-agents/` directory
+- [ ] Task 1.1: Create `.github/agents/` directory
 - [ ] Task 1.2: Create `docs/plans/` directory
 - [ ] Task 1.3: Create `docs/notes/` directory
 

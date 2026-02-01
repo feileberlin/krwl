@@ -100,6 +100,10 @@ krwl-hof/
 │
 ├── .github/
 │   ├── workflows/           # CI/CD automation
+│   ├── agents/              # Custom Copilot agents
+│   │   ├── docs_agent.md        # Documentation expert agent
+│   │   ├── planning-agent.md    # Planning agent for structured plans
+│   │   └── implementation-agent.md  # Implementation agent
 │   └── copilot-instructions.md  # This file
 │
 ├── src/

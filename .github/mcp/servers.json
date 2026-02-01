@@ -44,6 +44,9 @@
   "settings": {
     "contextFiles": [
       ".github/copilot-instructions.md",
+      ".github/agents/docs_agent.md",
+      ".github/agents/planning-agent.md",
+      ".github/agents/implementation-agent.md",
       ".github/COPILOT_SETUP.md",
       ".github/CODEOWNERS",
       ".github/pull_request_template.md",

@@ -19,7 +19,7 @@ The default agent provides comprehensive project-specific context including:
 
 **When to use**: This is always active and provides general context for working with the codebase.
 
-### Planning Agent (`../.github/copilot-agents/planning-agent.md`)
+### Planning Agent (`../.github/agents/planning-agent.md`)
 
 The planning agent specializes in creating structured, actionable plans for development work.
 
@@ -38,7 +38,7 @@ The planning agent specializes in creating structured, actionable plans for deve
 
 **Output location**: Plans are saved to `docs/plans/` with naming convention `YYYYMMDD-<description>.md`
 
-### Implementation Agent (`../.github/copilot-agents/implementation-agent.md`)
+### Implementation Agent (`../.github/agents/implementation-agent.md`)
 
 The implementation agent specializes in executing plans and implementing code systematically.
 
@@ -129,9 +129,10 @@ Copilot: I'll follow the plan systematically. @implementation-agent
 ```
 .github/
 ├── copilot-instructions.md          # Default agent (always active)
-└── copilot-agents/
+└── agents/
     ├── planning-agent.md             # Planning-focused agent
-    └── implementation-agent.md       # Implementation-focused agent
+    ├── implementation-agent.md       # Implementation-focused agent
+    └── docs_agent.md                 # Documentation-focused agent
 
 docs/
 ├── plans/                            # Structured plans
@@ -236,8 +237,8 @@ A: No, they're optional. The default agent provides general guidance. Use custom
 
 ## Additional Resources
 
-- [Planning Agent Details](../.github/copilot-agents/planning-agent.md)
-- [Implementation Agent Details](../.github/copilot-agents/implementation-agent.md)
+- [Planning Agent Details](../.github/agents/planning-agent.md)
+- [Implementation Agent Details](../.github/agents/implementation-agent.md)
 - [Default Agent Instructions](../.github/copilot-instructions.md)
 
 ---
