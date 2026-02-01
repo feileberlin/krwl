@@ -512,37 +512,41 @@ class SiteGenerator:
     
     def load_all_events(self, config: Dict = None) -> List[Dict]:
         """
-        Load event data from data directory based on config.data.source setting.
+        Load all events from all sources for embedding in the static site.
         
-        Args:
-            config: Configuration dict with data.source setting ('real', 'demo', or 'both')
+        Three-tier event system:
+        1. Real events (events.json) - Live scraped events from configured regions
+        2. Antarctica showcase events (events.antarctica.json) - Project setup guide at /
+        3. Atlantis 404 events (events.atlantis.json) - Humorous 404 page for unknown regions
+        
+        The backend always loads ALL three sources and embeds them in the HTML.
+        The frontend filters events by URL path and user location/distance settings.
         
         Returns:
-            List of events based on data.source setting
+            List of all events from all three sources
         """
         events = []
         data_path = self.base_path / 'assets' / 'json'
         
-        # Determine which events to load based on config
-        data_source = 'both'  # default
-        if config and 'data' in config and 'source' in config['data']:
-            data_source = config['data']['source']
+        # Always load real events
+        events_file = data_path / 'events.json'
+        if events_file.exists():
+            with open(events_file, 'r') as f:
+                events.extend(json.load(f).get('events', []))
         
-        # Real events (load if source is 'real' or 'both')
-        if data_source in ['real', 'both']:
-            events_file = data_path / 'events.json'
-            if events_file.exists():
-                with open(events_file, 'r') as f:
-                    events.extend(json.load(f).get('events', []))
+        # Always load Antarctica showcase events
+        antarctica_file = data_path / 'events.antarctica.json'
+        if antarctica_file.exists():
+            with open(antarctica_file, 'r') as f:
+                events.extend(json.load(f).get('events', []))
         
-        # Demo events (load ONLY if source is 'demo' or 'both')
-        if data_source in ['demo', 'both']:
-            demo_file = data_path / 'events.demo.json'
-            if demo_file.exists():
-                with open(demo_file, 'r') as f:
-                    events.extend(json.load(f).get('events', []))
+        # Always load Atlantis 404 events
+        atlantis_file = data_path / 'events.atlantis.json'
+        if atlantis_file.exists():
+            with open(atlantis_file, 'r') as f:
+                events.extend(json.load(f).get('events', []))
         
-        logger.debug(f"Loaded {len(events)} events (data.source={data_source})")
+        logger.debug(f"Loaded {len(events)} events (real + antarctica + atlantis)")
         return events
     
     def load_all_configs(self) -> List[Dict]:
