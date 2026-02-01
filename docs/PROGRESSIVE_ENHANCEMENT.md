@@ -190,7 +190,7 @@ The `build_noscript_html()` method generates:
 **Generated Structure:**
 ```html
 <div style="max-width:1200px;margin:0 auto;padding:2rem;...">
-  <h1>KRWL HOF Community Events</h1>
+  <h1>KRWL> Events from here til sunrise</h1>
   
   <div style="background:#401B2D;...">
     ⚠️ JavaScript is disabled.

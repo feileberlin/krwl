@@ -1,6 +1,6 @@
 # Examples
 
-This directory contains example scripts demonstrating various features of the KRWL HOF Community Events system.
+This directory contains example scripts demonstrating various features of the KRWL> Events from here til sunrise system.
 
 ## Available Examples
 

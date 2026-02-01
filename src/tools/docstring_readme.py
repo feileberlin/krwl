@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Docstring-Based README Generator for KRWL HOF Community Events
+Docstring-Based README Generator for KRWL> Events from here til sunrise
 
 Generates README.md by extracting documentation from Python docstrings.
 This ensures a single source of truth: docstrings serve as code documentation,
@@ -68,7 +68,7 @@ def generate_readme():
     config = load_config()
     
     # Extract app info from config
-    app_name = config.get('app', {}).get('name', 'KRWL HOF Community Events')
+    app_name = config.get('app', {}).get('name', 'KRWL> Events from here til sunrise')
     app_description = config.get('app', {}).get('description', 'Community events viewer')
     
     # Get CLI help from main scripts

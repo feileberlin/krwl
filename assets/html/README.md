@@ -2,7 +2,7 @@
 
 ## Overview
 
-This directory contains the modular component-based templating system for KRWL HOF Community Events. The system enables instant rebranding through centralized design tokens while maintaining semantic HTML, accessibility, and SEO best practices.
+This directory contains the modular component-based templating system for KRWL> Events from here til sunrise. The system enables instant rebranding through centralized design tokens while maintaining semantic HTML, accessibility, and SEO best practices.
 
 ## Architecture
 
@@ -574,5 +574,5 @@ When adding new components:
 
 ## License
 
-Part of KRWL HOF Community Events project.
+Part of KRWL> Events from here til sunrise project.
 See main repository LICENSE for details.

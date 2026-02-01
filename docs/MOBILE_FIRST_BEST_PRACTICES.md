@@ -155,7 +155,7 @@ body {
 <noscript>
     <!-- Complete fallback experience -->
     <div class="noscript-container">
-        <h1>KRWL HOF Community Events</h1>
+        <h1>KRWL> Events from here til sunrise</h1>
         <div class="warning">
             ⚠️ JavaScript is disabled. Enable for interactive map.
         </div>

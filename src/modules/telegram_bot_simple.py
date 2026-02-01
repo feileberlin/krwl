@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Simple Telegram Bot for KRWL HOF Community Events
+Simple Telegram Bot for KRWL> Events from here til sunrise
 
 A straightforward bot that handles:
 1. Photo/document uploads (flyers) - cached and dispatched for OCR processing

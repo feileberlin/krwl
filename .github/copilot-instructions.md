@@ -1,6 +1,6 @@
-# Copilot Instructions for KRWL HOF Community Events
+# Copilot Instructions for KRWL> Events from here til sunrise
 
-> **For GitHub Copilot Coding Agents**: This file provides comprehensive guidance for understanding and working with the KRWL HOF Community Events project. These instructions help you make context-aware suggestions, follow project conventions, and avoid common pitfalls.
+> **For GitHub Copilot Coding Agents**: This file provides comprehensive guidance for understanding and working with the KRWL> Events from here til sunrise project. These instructions help you make context-aware suggestions, follow project conventions, and avoid common pitfalls.
 
 ## Project Overview
 

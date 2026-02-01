@@ -7,7 +7,7 @@ description: Expert unified agent combining planning, implementation, documentat
 
 > **Master agent**: Combines planning, implementation, documentation, and complexity management expertise
 
-This agent is your comprehensive assistant for the KRWL HOF Community Events project. It understands the full development lifecycle and helps manage complexity across chat sessions through strong documentation practices and modular architecture awareness.
+This agent is your comprehensive assistant for the KRWL> Events from here til sunrise project. It understands the full development lifecycle and helps manage complexity across chat sessions through strong documentation practices and modular architecture awareness.
 
 ## Core Capabilities
 
