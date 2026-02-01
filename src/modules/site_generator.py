@@ -55,6 +55,12 @@ except ImportError:
     # Fallback if utils is not available
     load_config = None
 
+try:
+    from .asset_manager import AssetManager
+except ImportError:
+    # Fallback if asset_manager is not available
+    AssetManager = None
+
 
 # Third-party dependencies to fetch (stored under lib/)
 # Note: Lucide icons are NOT part of these dependencies anymore – they are provided
@@ -116,6 +122,12 @@ class SiteGenerator:
         self.dependencies_dir = self.base_path / 'lib'  # Third-party libraries
         self.assets_dir = self.base_path / 'assets'  # Source assets
         self.dependencies_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Initialize AssetManager for version tracking
+        if AssetManager:
+            self.asset_manager = AssetManager(self.base_path, self.dependencies_dir)
+        else:
+            self.asset_manager = None
         
         # Debug comments detection with force override support
         # Priority: 1) Environment variable, 2) Config file, 3) Auto-detection
@@ -185,12 +197,15 @@ class SiteGenerator:
     
     # ==================== Dependency Management ====================
     
-    def fetch_file_from_url(self, url: str, destination: Path) -> bool:
-        """Fetch a single file from URL and save to destination
+    def fetch_file_from_url(self, url: str, destination: Path, package_name: str = None, 
+                            version: str = None) -> bool:
+        """Fetch a single file from URL and save to destination with version tracking
         
         Args:
             url: URL to fetch from
             destination: Path to save file to
+            package_name: Optional package name for version tracking
+            version: Optional version string for tracking
             
         Returns:
             True if file was successfully fetched, False otherwise
@@ -216,6 +231,25 @@ class SiteGenerator:
                 'size_bytes': len(content),
                 'size_kb': len(content) / 1024
             })
+            
+            # Record version information if AssetManager is available
+            if self.asset_manager and package_name and version:
+                # Calculate relative path from dependencies_dir
+                try:
+                    file_dest = str(destination.relative_to(self.dependencies_dir))
+                    
+                    # Calculate checksum
+                    import hashlib
+                    checksum = hashlib.sha256(content).hexdigest()
+                    
+                    # Record asset version
+                    self.asset_manager.record_asset_version(
+                        package_name, file_dest, version, checksum, len(content)
+                    )
+                    logger.debug(f"Recorded version info for {file_dest}")
+                except Exception as e:
+                    logger.warning(f"Failed to record version info: {e}")
+            
             return True
         except Exception as e:
             print(f"✗ {e}")
@@ -274,7 +308,7 @@ class SiteGenerator:
             else:
                 url = base_url
             dest = self.dependencies_dir / file_info['dest']
-            if not self.fetch_file_from_url(url, dest):
+            if not self.fetch_file_from_url(url, dest, package_name=name, version=config['version']):
                 fetch_success = False
         
         # Determine final status
@@ -375,6 +409,153 @@ class SiteGenerator:
             print("=" * 60)
         
         return all_present
+    
+    def check_for_updates(self, quiet=False) -> Dict:
+        """
+        Check if any dependencies have updates available upstream.
+        
+        Compares configured versions in DEPENDENCIES with stored local versions
+        and checksums to detect both version changes and file content changes.
+        
+        Args:
+            quiet: If True, suppress output (default: False)
+        
+        Returns:
+            Dictionary with update information per package
+        """
+        if not self.asset_manager:
+            if not quiet:
+                print("⚠️  AssetManager not available - cannot check for updates")
+            return {}
+        
+        if not quiet:
+            print("=" * 60)
+            print("🔍 Checking for Updates")
+            print("=" * 60)
+        
+        updates = {}
+        has_any_updates = False
+        
+        for name, config in DEPENDENCIES.items():
+            update_info = self.asset_manager.check_for_updates(name, config)
+            updates[name] = update_info
+            
+            if not quiet:
+                print(f"\n📦 {name}")
+                if update_info['has_update']:
+                    has_any_updates = True
+                    if update_info['current_version']:
+                        print(f"  🔄 Update available: {update_info['current_version']} → {update_info['latest_version']}")
+                    else:
+                        print(f"  🔄 Update available: (not tracked) → {update_info['latest_version']}")
+                    
+                    if update_info['files_changed']:
+                        print(f"  📝 Files changed: {len(update_info['files_changed'])}")
+                        for file_dest in update_info['files_changed']:
+                            print(f"     - {file_dest}")
+                else:
+                    if update_info['current_version']:
+                        print(f"  ✓ Up to date: {update_info['current_version']}")
+                    else:
+                        print(f"  ℹ️  Not yet tracked (fetch to track version)")
+        
+        if not quiet:
+            print("\n" + "=" * 60)
+            if has_any_updates:
+                print("🔄 Updates available")
+                print("   Run: python3 src/event_manager.py dependencies update")
+            else:
+                print("✅ All dependencies up to date")
+            print("=" * 60)
+        
+        return updates
+    
+    def update_dependencies(self, force=False) -> bool:
+        """
+        Update dependencies that have new versions available.
+        
+        Args:
+            force: If True, re-fetch all dependencies regardless of version
+        
+        Returns:
+            True if all updates succeeded, False otherwise
+        """
+        if not self.asset_manager:
+            print("⚠️  AssetManager not available - cannot update dependencies")
+            return False
+        
+        print("=" * 60)
+        print("🔄 Updating Dependencies")
+        print("=" * 60)
+        
+        # Check which packages need updates
+        if not force:
+            updates = self.check_for_updates(quiet=True)
+            packages_to_update = [name for name, info in updates.items() if info['has_update']]
+            
+            if not packages_to_update:
+                print("\n✅ All dependencies already up to date")
+                return True
+            
+            print(f"\nPackages to update: {', '.join(packages_to_update)}")
+        else:
+            packages_to_update = list(DEPENDENCIES.keys())
+            print("\n🔄 Force updating all packages...")
+        
+        # Fetch updated packages
+        success = True
+        for name in packages_to_update:
+            config = DEPENDENCIES[name]
+            print(f"\n📦 Updating {name} v{config['version']}")
+            
+            # Delete existing files to force re-fetch
+            for file_info in config['files']:
+                dest = self.dependencies_dir / file_info['dest']
+                if dest.exists():
+                    dest.unlink()
+            
+            # Fetch files
+            result, _ = self.fetch_dependency_files(name, config)
+            if not result:
+                success = False
+        
+        print("\n" + "=" * 60)
+        if success:
+            print("✅ All dependencies updated successfully")
+        else:
+            print("❌ Some dependencies failed to update")
+        print("=" * 60)
+        
+        return success
+    
+    def show_asset_info(self) -> None:
+        """Display version information for all tracked assets"""
+        if not self.asset_manager:
+            print("⚠️  AssetManager not available - no version tracking")
+            return
+        
+        assets = self.asset_manager.list_all_assets()
+        
+        print("=" * 60)
+        print("📊 Asset Version Information")
+        print("=" * 60)
+        
+        if not assets:
+            print("\nNo assets tracked yet. Run 'dependencies fetch' to track versions.")
+            return
+        
+        for asset in assets:
+            print(f"\n📦 {asset['package']} v{asset['version']}")
+            print(f"  Files: {asset['file_count']}")
+            for file_path in asset['files']:
+                dest = self.dependencies_dir / file_path
+                if dest.exists():
+                    size_kb = dest.stat().st_size / 1024
+                    print(f"    ✓ {file_path} ({size_kb:.1f} KB)")
+                else:
+                    print(f"    ✗ {file_path} (missing)")
+        
+        print("\n" + "=" * 60)
     
     # ==================== Site Generation ====================
     
