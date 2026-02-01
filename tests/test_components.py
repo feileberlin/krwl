@@ -380,6 +380,128 @@ def test_logo_svg_replacement():
     return True
 
 
+def test_repository_placeholders():
+    """Test repository URL placeholder replacement"""
+    print("\n" + "=" * 60)
+    print("Testing Repository Placeholder Replacement")
+    print("=" * 60)
+    
+    base_path = Path(__file__).parent.parent
+    generator = SiteGenerator(base_path)
+    
+    # Test 1: All four placeholder types are correctly replaced
+    print("\n1. Testing all placeholder types...")
+    config = {
+        'app': {
+            'repository': {
+                'owner': 'testowner',
+                'name': 'testrepo',
+                'url': 'https://github.com/testowner/testrepo'
+            }
+        }
+    }
+    
+    test_content = """
+    <a href="{{REPO_URL}}">Repository</a>
+    <p>Owner: {{REPO_OWNER}}</p>
+    <p>Name: {{REPO_NAME}}</p>
+    <p>Full: {{REPO_OWNER_SLASH_NAME}}</p>
+    """
+    
+    result = generator.replace_repository_placeholders(test_content, config)
+    
+    assert 'https://github.com/testowner/testrepo' in result, "{{REPO_URL}} not replaced"
+    assert 'Owner: testowner' in result, "{{REPO_OWNER}} not replaced"
+    assert 'Name: testrepo' in result, "{{REPO_NAME}} not replaced"
+    assert 'Full: testowner/testrepo' in result, "{{REPO_OWNER_SLASH_NAME}} not replaced"
+    assert '{{REPO' not in result, "Unreplaced placeholders found"
+    print("✓ All four placeholder types replaced correctly")
+    
+    # Test 2: Placeholders work in both HTML and JavaScript contexts
+    print("\n2. Testing placeholders in HTML context...")
+    html_content = '<a href="{{REPO_URL}}/issues">Report Issue</a>'
+    html_result = generator.replace_repository_placeholders(html_content, config)
+    assert 'https://github.com/testowner/testrepo/issues' in html_result
+    print("✓ HTML context works")
+    
+    print("3. Testing placeholders in JavaScript context...")
+    js_content = "const repoUrl = '{{REPO_URL}}'; const owner = '{{REPO_OWNER}}';"
+    js_result = generator.replace_repository_placeholders(js_content, config)
+    assert "const repoUrl = 'https://github.com/testowner/testrepo'" in js_result
+    assert "const owner = 'testowner'" in js_result
+    print("✓ JavaScript context works")
+    
+    # Test 3: Fallback values are used when repository config is missing
+    print("\n4. Testing fallback values with missing config...")
+    empty_config = {}
+    fallback_content = "{{REPO_URL}} {{REPO_OWNER}} {{REPO_NAME}}"
+    fallback_result = generator.replace_repository_placeholders(fallback_content, empty_config)
+    assert 'https://github.com/feileberlin/krwl.in' in fallback_result, "Default URL not used"
+    assert 'feileberlin' in fallback_result, "Default owner not used"
+    assert 'krwl.in' in fallback_result, "Default name not used"
+    print("✓ Fallback values applied correctly")
+    
+    # Test 4: Multiple occurrences of the same placeholder are all replaced
+    print("\n5. Testing multiple occurrences...")
+    multi_content = """
+    {{REPO_URL}}
+    <a href="{{REPO_URL}}/issues">Issues</a>
+    <a href="{{REPO_URL}}/pulls">PRs</a>
+    Owner: {{REPO_OWNER}}, {{REPO_OWNER}}, {{REPO_OWNER}}
+    """
+    multi_result = generator.replace_repository_placeholders(multi_content, config)
+    assert multi_result.count('https://github.com/testowner/testrepo') == 3, "Not all {{REPO_URL}} replaced"
+    # Note: testowner appears in URLs (3x) AND standalone (3x) = 6 total
+    assert multi_result.count('testowner') >= 3, "Not all {{REPO_OWNER}} replaced"
+    assert '{{REPO' not in multi_result, "Some placeholders not replaced"
+    print("✓ Multiple occurrences replaced correctly")
+    
+    # Test 5: Edge case - partial config
+    print("\n6. Testing partial repository config...")
+    partial_config = {
+        'app': {
+            'repository': {
+                'owner': 'partialowner'
+                # Missing 'name' and 'url'
+            }
+        }
+    }
+    partial_content = "{{REPO_URL}} {{REPO_OWNER}} {{REPO_NAME}}"
+    partial_result = generator.replace_repository_placeholders(partial_content, partial_config)
+    assert 'partialowner' in partial_result, "Partial owner not used"
+    assert 'krwl.in' in partial_result, "Default name not used when missing"
+    print("✓ Partial config handled correctly")
+    
+    # Test 6: Real-world scenario - dashboard HTML
+    print("\n7. Testing real-world dashboard scenario...")
+    dashboard_html = """
+    <a href="{{REPO_URL}}/actions/workflows/scrape-events.yml">Review Events</a>
+    <a href="{{REPO_URL}}/blob/main/README.md">README</a>
+    <a href="{{REPO_URL}}">GitHub</a>
+    """
+    dashboard_result = generator.replace_repository_placeholders(dashboard_html, config)
+    assert dashboard_result.count('https://github.com/testowner/testrepo') == 3
+    assert '/actions/workflows/scrape-events.yml' in dashboard_result
+    assert '/blob/main/README.md' in dashboard_result
+    print("✓ Real-world dashboard scenario works")
+    
+    # Test 7: Empty content
+    print("\n8. Testing empty content...")
+    empty_result = generator.replace_repository_placeholders("", config)
+    assert empty_result == "", "Empty content should remain empty"
+    print("✓ Empty content handled correctly")
+    
+    # Test 8: Content with no placeholders
+    print("\n9. Testing content without placeholders...")
+    no_placeholder_content = "<p>Just regular HTML content</p>"
+    no_placeholder_result = generator.replace_repository_placeholders(no_placeholder_content, config)
+    assert no_placeholder_result == no_placeholder_content, "Content without placeholders should be unchanged"
+    print("✓ Content without placeholders unchanged")
+    
+    print("\n✅ All placeholder replacement tests passed")
+    return True
+
+
 def run_all_tests():
     """Run all component tests"""
     print("=" * 60)
@@ -394,7 +516,8 @@ def run_all_tests():
         ("Component-Based Generation", test_component_based_generation),
         ("Semantic Structure", test_semantic_structure),
         ("Z-Index Layering", test_z_index_layering),
-        ("Logo SVG Replacement", test_logo_svg_replacement)
+        ("Logo SVG Replacement", test_logo_svg_replacement),
+        ("Repository Placeholders", test_repository_placeholders)
     ]
     
     passed = 0
