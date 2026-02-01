@@ -264,29 +264,29 @@
       ],
       "customFilters": [
         {
-          "id": "innenstadt",
+          "id": "untreusee",
           "name": {
-            "de": "Innenstadt",
-            "en": "City Center"
+            "de": "Untreusee",
+            "en": "Untreusee Lake"
           },
           "center": {
-            "lat": 50.3197,
-            "lng": 11.9177
+            "lat": 50.3486,
+            "lng": 11.8847
           },
-          "radius": 1.5,
+          "radius": 1.0,
           "zoom": 14
         },
         {
-          "id": "altstadt",
+          "id": "sonnenplatz",
           "name": {
-            "de": "Altstadt",
-            "en": "Old Town"
+            "de": "Sonnenplatz",
+            "en": "Sonnenplatz"
           },
           "center": {
-            "lat": 50.3220,
-            "lng": 11.9150
+            "lat": 50.3214,
+            "lng": 11.9203
           },
-          "radius": 1.0,
+          "radius": 0.8,
           "zoom": 15
         },
         {

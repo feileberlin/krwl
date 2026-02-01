@@ -203,8 +203,9 @@ class MapManager {
      * Get user's geolocation
      * @param {Function} onSuccess - Callback with location {lat, lon}
      * @param {Function} onError - Callback with error
+     * @param {boolean} centerMap - Whether to center map on user location (default: false)
      */
-    getUserLocation(onSuccess, onError) {
+    getUserLocation(onSuccess, onError, centerMap = false) {
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
@@ -215,8 +216,8 @@ class MapManager {
                     
                     this.log('User location obtained', this.userLocation);
                     
-                    // Center map on user location
-                    if (this.map) {
+                    // Only center map if explicitly requested (e.g., user selected geolocation filter)
+                    if (this.map && centerMap) {
                         this.map.setView([this.userLocation.lat, this.userLocation.lon], 13);
                         this.addUserMarker();
                     }
@@ -234,9 +235,7 @@ class MapManager {
                         lon: defaultCenter.lon
                     };
                     
-                    if (this.map) {
-                        this.map.setView([this.userLocation.lat, this.userLocation.lon], 13);
-                    }
+                    // Never center map on error fallback - keep region center
                     
                     if (onError) onError(error);
                 }
@@ -250,9 +249,7 @@ class MapManager {
                 lon: defaultCenter.lon
             };
             
-            if (this.map) {
-                this.map.setView([this.userLocation.lat, this.userLocation.lon], 13);
-            }
+            // Never center map when geolocation not supported - keep region center
             
             if (onError) onError(new Error('Geolocation not supported'));
         }

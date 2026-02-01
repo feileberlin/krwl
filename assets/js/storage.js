@@ -10,8 +10,9 @@
  */
 
 class EventStorage {
-    constructor(config) {
+    constructor(config, activeRegionConfig = null) {
         this.config = config;
+        this.activeRegionConfig = activeRegionConfig;  // Region-specific config
         this.MAX_BOOKMARKS = 15;
         this.MAX_CUSTOM_LOCATIONS = 10;
         this.bookmarks = this.loadBookmarks();  // Load bookmarks BEFORE custom locations
@@ -23,7 +24,7 @@ class EventStorage {
     }
     
     /**
-     * Initialize custom locations with predefined locations from config
+     * Initialize custom locations with region-specific customFilters or predefined locations from config
      * Only runs once when localStorage is empty
      */
     initializeDefaultCustomLocations() {
@@ -32,25 +33,41 @@ class EventStorage {
             return;
         }
         
-        // Get predefined locations from config
-        const predefinedLocs = this.config?.map?.predefined_locations || [];
+        // Priority 1: Get region-specific customFilters if we have an active region
+        let locationsSource = [];
+        if (this.activeRegionConfig && this.activeRegionConfig.customFilters) {
+            locationsSource = this.activeRegionConfig.customFilters;
+            this.log('Loading custom locations from region customFilters:', locationsSource);
+        } else {
+            // Priority 2: Fallback to global predefined locations (for backwards compatibility)
+            locationsSource = this.config?.map?.predefined_locations || [];
+            this.log('Loading custom locations from global predefined_locations:', locationsSource);
+        }
         
-        // Copy predefined locations to custom locations
-        predefinedLocs.forEach((loc) => {
-            this.customLocations.push({
-                id: `custom_${loc.name}_${Date.now()}`,
-                name: loc.display_name,
-                lat: loc.lat,
-                lon: loc.lon,
-                created: new Date().toISOString(),
-                fromPredefined: true
-            });
+        // Convert to custom location format
+        locationsSource.forEach((loc) => {
+            // Handle both customFilters format (center.lat/lng) and predefined_locations format (lat/lon)
+            const lat = loc.center?.lat || loc.lat;
+            const lon = loc.center?.lng || loc.center?.lon || loc.lon;
+            const displayName = loc.name?.de || loc.display_name || loc.name;
+            
+            if (lat !== undefined && lon !== undefined && displayName) {
+                this.customLocations.push({
+                    id: `custom_${loc.id || loc.name}_${Date.now()}`,
+                    name: displayName,
+                    lat: lat,
+                    lon: lon,
+                    created: new Date().toISOString(),
+                    fromRegion: !!this.activeRegionConfig,  // Flag to indicate region-specific
+                    fromPredefined: !this.activeRegionConfig  // Backwards compatibility flag
+                });
+            }
         });
         
         // Save if we added any
         if (this.customLocations.length > 0) {
             this.saveCustomLocations();
-            this.log('Initialized custom locations from predefined locations', this.customLocations);
+            this.log('Initialized custom locations:', this.customLocations);
         }
     }
     

@@ -30,8 +30,8 @@ class EventsApp {
         // Detect and apply region from URL path (e.g., /hof, /nbg, /bth)
         this.applyRegionFromUrl();
         
-        // Initialize modules
-        this.storage = new EventStorage(this.config);
+        // Initialize modules (pass activeRegionConfig for region-specific custom locations)
+        this.storage = new EventStorage(this.config, this.activeRegionConfig);
         this.eventFilter = new EventFilter(this.config, this.storage);
         this.mapManager = new MapManager(this.config, this.storage);
         // Speech bubbles disabled - using Leaflet default popups instead
