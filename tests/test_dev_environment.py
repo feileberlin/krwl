@@ -96,7 +96,7 @@ def main():
     
     # Test workspace file
     print("\n5. VS Code Workspace File:")
-    workspace_file = 'krwl-hof.code-workspace'
+    workspace_file = 'krwl.in.code-workspace'
     if not (test_file_exists(workspace_file) and test_json_valid(workspace_file)):
         all_passed = False
     

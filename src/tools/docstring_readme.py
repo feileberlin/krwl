@@ -115,7 +115,7 @@ Want to run it locally or contribute?
 
 ```bash
 # Clone the repository
-git clone https://github.com/feileberlin/krwl-hof.git
+git clone https://github.com/feileberlin/krwl.in.git
 cd krwl-hof
 
 # Install Python dependencies
@@ -531,8 +531,8 @@ Built with love for the Hof community. Special thanks to all the local venues an
 ## 🔗 Links
 
 - **Live App**: [krwl.in](https://krwl.in)
-- **GitHub Repository**: [github.com/feileberlin/krwl-hof](https://github.com/feileberlin/krwl-hof)
-- **Report Issues**: [GitHub Issues](https://github.com/feileberlin/krwl-hof/issues)
+- **GitHub Repository**: [github.com/feileberlin/krwl.in](https://github.com/feileberlin/krwl.in)
+- **Report Issues**: [GitHub Issues](https://github.com/feileberlin/krwl.in/issues)
 
 ---
 

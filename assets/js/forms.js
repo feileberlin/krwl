@@ -72,7 +72,7 @@ class FormsManager {
             const altContactMessage = 
                 '✅ Thank you for your interest!\n\n' +
                 'Direct form submission is coming soon. For now, please reach out via:\n' +
-                '• GitHub: https://github.com/feileberlin/krwl-hof/issues\n' +
+                '• GitHub: https://github.com/feileberlin/krwl.in/issues\n' +
                 '• Email: See repository README';
             
             this.showStatus(statusEl, 'success', altContactMessage);
@@ -151,7 +151,7 @@ class FormsManager {
                 '1. Create a GitHub issue\n' +
                 '2. Attach your flyer image\n' +
                 '3. We\'ll review and add it to the map\n\n' +
-                '→ https://github.com/feileberlin/krwl-hof/issues/new';
+                '→ https://github.com/feileberlin/krwl.in/issues/new';
             
             this.showStatus(statusEl, 'success', altUploadMessage);
             

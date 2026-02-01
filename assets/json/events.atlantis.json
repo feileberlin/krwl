@@ -3,7 +3,7 @@
     {
       "id": "atlantis_404",
       "title": "🌊 Oops! This region has sunk beneath the waves",
-      "description": "The page you're looking for went down with Atlantis around 9600 BC. According to Plato, it was a really nice place... before the whole sinking thing.\n\n🏗️ Want to start a NEW civilization? Visit / to claim the South Pole and set up your own event platform!\n\n🗺️ Or fork https://github.com/feileberlin/krwl-hof to create events for YOUR region.",
+      "description": "The page you're looking for went down with Atlantis around 9600 BC. According to Plato, it was a really nice place... before the whole sinking thing.\n\n🏗️ Want to start a NEW civilization? Visit / to claim the South Pole and set up your own event platform!\n\n🗺️ Or fork https://github.com/feileberlin/krwl.in to create events for YOUR region.",
       "location": {
         "name": "Mid-Atlantic Ridge (Atlantis, probably)",
         "lat": 31.0,
@@ -11,7 +11,7 @@
       },
       "start_time": "1970-01-01T00:00:00",
       "end_time": null,
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "atlantis",
       "status": "published",
       "category": "community"
@@ -27,7 +27,7 @@
       },
       "start_time": "1970-01-01T00:00:00",
       "end_time": null,
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "atlantis",
       "status": "published",
       "category": "culture"
@@ -43,7 +43,7 @@
       },
       "start_time": "1970-01-01T00:00:00",
       "end_time": null,
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "atlantis",
       "status": "published",
       "category": "community"
@@ -51,7 +51,7 @@
     {
       "id": "atlantis_archaeology",
       "title": "🗿 Underwater Archaeology Workshop",
-      "description": "Learn to excavate ancient ruins! Scuba gear required.\n\n🚀 Rather build something NEW instead of digging up the past? Visit / to start your own event platform, or fork https://github.com/feileberlin/krwl-hof",
+      "description": "Learn to excavate ancient ruins! Scuba gear required.\n\n🚀 Rather build something NEW instead of digging up the past? Visit / to start your own event platform, or fork https://github.com/feileberlin/krwl.in",
       "location": {
         "name": "Atlantis Archaeological Site",
         "lat": 31.05,
@@ -59,7 +59,7 @@
       },
       "start_time": "1970-01-01T00:00:00",
       "end_time": null,
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "atlantis",
       "status": "published",
       "category": "education"

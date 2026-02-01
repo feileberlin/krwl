@@ -429,7 +429,7 @@ python3 -m pytest tests/test_specific.py      # Run specific test
 ### File Organization
 
 ```
-krwl-hof/
+krwl.in/
 ├── src/
 │   ├── event_manager.py          # ⭐ Entry point (NOT main.py)
 │   └── modules/                   # Backend modules

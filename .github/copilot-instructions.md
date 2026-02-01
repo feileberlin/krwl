@@ -96,7 +96,7 @@ python3 src/event_manager.py --help
 ### Complete Directory Tree
 
 ```
-krwl-hof/
+krwl.in/
 │
 ├── .github/
 │   ├── workflows/           # CI/CD automation
@@ -318,13 +318,13 @@ python3 src/event_manager.py generate
 
 ### ❌ DON'T: Create top-level Python files
 ```
-krwl-hof/
+krwl.in/
 ├── my_new_script.py  # ❌ BAD: Top-level script
 ```
 
 ### ✅ DO: Add to appropriate module
 ```
-krwl-hof/
+krwl.in/
 ├── src/
 │   └── modules/
 │       └── my_new_module.py  # ✅ GOOD: In modules/

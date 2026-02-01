@@ -362,7 +362,7 @@ This feature is part of the KRWL HOF project and follows the same license.
 
 ## Support
 
-- **Issues**: https://github.com/feileberlin/krwl-hof/issues
+- **Issues**: https://github.com/feileberlin/krwl.in/issues
 - **Ollama Docs**: https://ollama.ai/
 - **Model List**: https://ollama.ai/library
 

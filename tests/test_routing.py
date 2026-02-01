@@ -443,7 +443,7 @@ class TestRouting:
             'colonySetupEvent': "Colony setup event object",
             'Start a new colony': "Colony invitation message",
             'Fork': "Fork repository instruction",
-            'github.com/feileberlin/krwl-hof': "Repository URL"
+            'github.com/feileberlin/krwl.in': "Repository URL"
         }
         
         all_found = True

@@ -3,7 +3,7 @@
     {
       "id": "demo_happening_now",
       "title": "[DEMO] \ud83d\udc27 Emperor Penguin Parade \u2014 Live now",
-      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Live now",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Live now",
       "location": {
         "name": "\ud83d\udc27 Penguin HQ Main Tent",
         "lat": -89.999,
@@ -11,7 +11,7 @@
       },
       "start_time": "2026-01-16T04:05:41",
       "end_time": "2026-01-16T06:05:41",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -24,7 +24,7 @@
     {
       "id": "demo_started_5min_ago",
       "title": "[DEMO] \ud83c\udf0c Aurora Australis Viewing \u2014 Just started",
-      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Just started",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Just started",
       "location": {
         "name": "\ud83d\udc27 Baby Penguin Nursery",
         "lat": -89.9992,
@@ -32,7 +32,7 @@
       },
       "start_time": "2026-01-16T04:30:41",
       "end_time": "2026-01-16T06:30:41",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -45,7 +45,7 @@
     {
       "id": "demo_starting_5min",
       "title": "[DEMO] \ud83e\uddca Antarctic Ice Sculpture Contest \u2014 Starts in 5 min",
-      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Starts in 5 min",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Starts in 5 min",
       "location": {
         "name": "\ud83d\udc27 Penguin Feeding Station",
         "lat": -89.9988,
@@ -53,7 +53,7 @@
       },
       "start_time": "2026-01-16T04:40:41",
       "end_time": "2026-01-16T06:40:41",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -66,7 +66,7 @@
     {
       "id": "demo_starting_15min",
       "title": "[DEMO] \ud83c\udfca Polar Plunge Challenge \u2014 Starts in 15 min",
-      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Starts in 15 min",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Starts in 15 min",
       "location": {
         "name": "\ud83e\uddca Ice Cube Bar Entrance",
         "lat": -89.998,
@@ -74,7 +74,7 @@
       },
       "start_time": "2026-01-16T04:50:41",
       "end_time": "2026-01-16T06:50:41",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -87,7 +87,7 @@
     {
       "id": "demo_starting_30min",
       "title": "[DEMO] \ud83d\udd2c Climate Science Lecture \u2014 Starts in 30 min",
-      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Starts in 30 min",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Starts in 30 min",
       "location": {
         "name": "\ud83e\uddca Frozen Cocktail Lounge",
         "lat": -89.9982,
@@ -95,7 +95,7 @@
       },
       "start_time": "2026-01-16T05:05:41",
       "end_time": "2026-01-16T07:05:41",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -108,7 +108,7 @@
     {
       "id": "demo_in_1hour",
       "title": "[DEMO] \ud83e\uddd8 Midnight Sun Yoga \u2014 Starts in 1 hour",
-      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Starts in 1 hour",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Starts in 1 hour",
       "location": {
         "name": "\u2744\ufe0f Frosty's Igloo Caf\u00e9",
         "lat": -89.995,
@@ -116,7 +116,7 @@
       },
       "start_time": "2026-01-16T05:35:41",
       "end_time": "2026-01-16T07:35:41",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -129,7 +129,7 @@
     {
       "id": "demo_in_2hours",
       "title": "[DEMO] \ud83c\udf0d Colony Builders Meetup \u2014 Starts in 2 hours",
-      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Starts in 2 hours",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Starts in 2 hours",
       "location": {
         "name": "\ud83c\udf21\ufe0f Minus 60 Lounge",
         "lat": -89.993,
@@ -137,7 +137,7 @@
       },
       "start_time": "2026-01-16T06:35:41",
       "end_time": "2026-01-16T08:35:41",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -150,7 +150,7 @@
     {
       "id": "demo_this_evening",
       "title": "[DEMO] \ud83d\udc15 Husky Sledding Adventure \u2014 This evening",
-      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: This evening",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: This evening",
       "location": {
         "name": "\ud83d\udc15 Husky Hangout",
         "lat": -89.991,
@@ -158,7 +158,7 @@
       },
       "start_time": "2026-01-16T08:35:41",
       "end_time": "2026-01-16T10:35:41",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -171,7 +171,7 @@
     {
       "id": "demo_just_ended",
       "title": "[DEMO] \ud83c\udfe0 Igloo Building Workshop \u2014 Just ended",
-      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Just ended",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Just ended",
       "location": {
         "name": "\ufffd\ufffd Polar Ski Lodge",
         "lat": -89.95,
@@ -179,7 +179,7 @@
       },
       "start_time": "2026-01-16T02:25:41",
       "end_time": "2026-01-16T04:25:41",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -193,7 +193,7 @@
     {
       "id": "demo_very_soon",
       "title": "[DEMO] \u2615 Hot Cocoa Social \u2014 Very soon",
-      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Very soon",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Very soon",
       "location": {
         "name": "\ud83c\udfd4\ufe0f Snowmobile Station",
         "lat": -89.9,
@@ -201,7 +201,7 @@
       },
       "start_time": "2026-01-16T05:20:41",
       "end_time": "2026-01-16T07:20:41",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -214,7 +214,7 @@
     {
       "id": "demo_utc_plus1",
       "title": "[DEMO] \ud83c\udfbf Antarctic Skiing (UTC+1) \u2014 UTC+1 local time (TZ: +1.0)",
-      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: UTC+1 local time (TZ: +1.0)",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: UTC+1 local time (TZ: +1.0)",
       "location": {
         "name": "\ud83d\udd2c Science Shack",
         "lat": -89.8,
@@ -222,7 +222,7 @@
       },
       "start_time": "2026-01-16T05:35:41+01:00",
       "end_time": "2026-01-16T07:35:41+01:00",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -236,7 +236,7 @@
     {
       "id": "demo_utc_plus2",
       "title": "[DEMO] \ud83c\udfa3 Ice Fishing Expedition (UTC+2) \u2014 UTC+2 local time (TZ: +2.0)",
-      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: UTC+2 local time (TZ: +2.0)",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: UTC+2 local time (TZ: +2.0)",
       "location": {
         "name": "\u2615 Hot Cocoa Corner",
         "lat": -89.7,
@@ -244,7 +244,7 @@
       },
       "start_time": "2026-01-16T05:35:41+02:00",
       "end_time": "2026-01-16T07:35:41+02:00",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -258,7 +258,7 @@
     {
       "id": "demo_utc_minus5",
       "title": "[DEMO] \ud83d\udcfb Polar Radio Broadcast (UTC-5) \u2014 UTC-5 local time (TZ: -5.0)",
-      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: UTC-5 local time (TZ: -5.0)",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: UTC-5 local time (TZ: -5.0)",
       "location": {
         "name": "\ud83c\udf0c Aurora Observatory",
         "lat": -89.55,
@@ -266,7 +266,7 @@
       },
       "start_time": "2026-01-16T05:35:41-05:00",
       "end_time": "2026-01-16T07:35:41-05:00",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -280,7 +280,7 @@
     {
       "id": "demo_utc_plus9",
       "title": "[DEMO] \ud83c\udf05 Polar Sunrise Watch (UTC+9) \u2014 UTC+9 local time (TZ: +9.0)",
-      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: UTC+9 local time (TZ: +9.0)",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: UTC+9 local time (TZ: +9.0)",
       "location": {
         "name": "\ud83c\udfe0 Cozy Base Camp",
         "lat": -89.0,
@@ -288,7 +288,7 @@
       },
       "start_time": "2026-01-16T05:35:41+09:00",
       "end_time": "2026-01-16T07:35:41+09:00",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -302,7 +302,7 @@
     {
       "id": "demo_utc_plus530",
       "title": "[DEMO] \ud83e\udded Expedition Planning (UTC+5:30) \u2014 UTC+5:30 local time (TZ: +5.5)",
-      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: UTC+5:30 local time (TZ: +5.5)",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: UTC+5:30 local time (TZ: +5.5)",
       "location": {
         "name": "\ud83c\udfaa Polar Party Tent",
         "lat": -88.0,
@@ -310,7 +310,7 @@
       },
       "start_time": "2026-01-16T05:05:41+05:30",
       "end_time": "2026-01-16T07:05:41+05:30",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -324,7 +324,7 @@
     {
       "id": "demo_before_sunrise_5min",
       "title": "[DEMO] \ud83c\udf19 Night Sky Observation \u2014 Ends before sunrise",
-      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Ends before sunrise",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Ends before sunrise",
       "location": {
         "name": "\ud83c\udfa3 Ice Fishing Hole",
         "lat": -86.0,
@@ -332,7 +332,7 @@
       },
       "start_time": "2026-01-16T04:00:00",
       "end_time": "2026-01-16T05:55:00",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -345,7 +345,7 @@
     {
       "id": "demo_at_sunrise",
       "title": "[DEMO] \u2600\ufe0f Sunrise Ceremony \u2014 Ends at sunrise",
-      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Ends at sunrise",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Ends at sunrise",
       "location": {
         "name": "\ud83d\udcf8 Photo Point",
         "lat": -84.0,
@@ -353,7 +353,7 @@
       },
       "start_time": "2026-01-16T04:30:00",
       "end_time": "2026-01-16T06:00:00",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -366,7 +366,7 @@
     {
       "id": "demo_after_sunrise_5min",
       "title": "[DEMO] \ud83c\udf73 Polar Breakfast Club \u2014 Ends after sunrise",
-      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Ends after sunrise",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Ends after sunrise",
       "location": {
         "name": "\ud83e\udded Compass Confusion Corner",
         "lat": -82.0,
@@ -374,7 +374,7 @@
       },
       "start_time": "2026-01-16T05:00:00",
       "end_time": "2026-01-16T06:05:00",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -387,7 +387,7 @@
     {
       "id": "demo_crossing_sunrise",
       "title": "[DEMO] \u26fa Overnight Camping \u2014 Crosses sunrise",
-      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Crosses sunrise",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Crosses sunrise",
       "location": {
         "name": "\ud83c\udfad Penguin Theater",
         "lat": -80.0,
@@ -395,7 +395,7 @@
       },
       "start_time": "2026-01-16T04:00:00",
       "end_time": "2026-01-16T07:00:00",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -408,7 +408,7 @@
     {
       "id": "demo_starting_before_sunrise",
       "title": "[DEMO] \ud83c\udfc3 Dawn Patrol \u2014 Starts before sunrise",
-      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Starts before sunrise",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Starts before sunrise",
       "location": {
         "name": "\ud83d\udef7 Sledding Hill",
         "lat": -78.0,
@@ -416,7 +416,7 @@
       },
       "start_time": "2026-01-16T05:30:00",
       "end_time": "2026-01-16T06:30:00",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -429,7 +429,7 @@
     {
       "id": "demo_starting_after_sunrise",
       "title": "[DEMO] \ud83d\udcf7 Wildlife Photography \u2014 Starts after sunrise",
-      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: Starts after sunrise",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Starts after sunrise",
       "location": {
         "name": "\ud83c\udfd5\ufe0f Expedition Tent",
         "lat": -72.0,
@@ -437,7 +437,7 @@
       },
       "start_time": "2026-01-16T06:30:00",
       "end_time": "2026-01-16T08:00:00",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -450,7 +450,7 @@
     {
       "id": "demo_all_night",
       "title": "[DEMO] \ud83c\udf89 24-Hour Polar Party \u2014 All night",
-      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: All night",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: All night",
       "location": {
         "name": "\ud83c\udf05 Midnight Sun Deck",
         "lat": -70.0,
@@ -458,7 +458,7 @@
       },
       "start_time": "2026-01-15T22:00:00",
       "end_time": "2026-01-16T00:00:00",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",
@@ -471,7 +471,7 @@
     {
       "id": "demo_far_away",
       "title": "[DEMO] \ud83d\ude81 McMurdo Station Tour \u2014 250 km away",
-      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl-hof to create your own community events platform! Original timing: 250 km away",
+      "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: 250 km away",
       "location": {
         "name": "\ud83c\udf00 McMurdo Station (Far)",
         "lat": -77.85,
@@ -479,7 +479,7 @@
       },
       "start_time": "2026-01-16T06:35:41",
       "end_time": "2026-01-16T08:35:41",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "url": "https://github.com/feileberlin/krwl.in",
       "source": "demo",
       "status": "published",
       "published_at": "2026-01-16T04:35:41",

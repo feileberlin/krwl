@@ -852,7 +852,7 @@ class EventsApp {
                 let messages = [];
                 
                 // Get repository URL from config (fallback to hardcoded for backward compatibility)
-                const repoUrl = this.config?.app?.repository?.url || 'https://github.com/feileberlin/krwl-hof';
+                const repoUrl = this.config?.app?.repository?.url || 'https://github.com/feileberlin/krwl.in';
                 
                 // Pending events warning
                 if (pendingCount > 0) {

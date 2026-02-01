@@ -137,7 +137,7 @@
   "_comment_regions_usage": "URL path (e.g., /hof, /nbg, /bayreuth) centers map on different cities",
   "_comment_regions_data": "All regions share the same events.json - no data splitting!",
   "_comment_regions_purpose": "Each region defines: map center, zoom, custom filter presets for that area",
-  "_comment_regions_fork": "🐧 Want to add YOUR community? Fork this repo! See: https://github.com/feileberlin/krwl-hof",
+  "_comment_regions_fork": "🐧 Want to add YOUR community? Fork this repo! See: https://github.com/feileberlin/krwl.in",
   "_comment_regions_separator": "═══════════════════════════════════════════════════════════════════════════════",
   "regions": {
     "antarctica": {
@@ -656,8 +656,8 @@
     "_comment_environment": "This field is overridden at runtime based on actual environment detection",
     "repository": {
       "owner": "feileberlin",
-      "name": "krwl-hof",
-      "url": "https://github.com/feileberlin/krwl-hof",
+      "name": "krwl.in",
+      "url": "https://github.com/feileberlin/krwl.in",
       "_comment": "Repository information used for GitHub Actions links and unverified locations file links"
     }
   },

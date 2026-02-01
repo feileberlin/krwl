@@ -13,7 +13,7 @@
 
 set -e
 
-REPO_URL="https://github.com/feileberlin/krwl-hof.wiki.git"
+REPO_URL="https://github.com/feileberlin/krwl.in.wiki.git"
 WIKI_DIR="${1:-/tmp/krwl-hof.wiki}"
 
 echo "🔄 Syncing KRWL HOF docs to GitHub Wiki..."

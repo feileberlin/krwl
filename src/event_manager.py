@@ -259,7 +259,7 @@ class EventManagerTUI:
                 print("Documentation")
                 print("-" * 60)
                 print("\nFor full documentation, see README.md")
-                print("Or visit: https://github.com/feileberlin/krwl-hof")
+                print("Or visit: https://github.com/feileberlin/krwl.in")
                 input("\nPress Enter to continue...")
             elif choice == '7':
                 self.show_setup_guide()
@@ -559,7 +559,7 @@ DOCUMENTATION:
     (Main Menu → View Documentation)
 
 For more information, visit:
-    https://github.com/feileberlin/krwl-hof
+    https://github.com/feileberlin/krwl.in
 """
     print(help_text)
 
@@ -609,7 +609,7 @@ Step 1: Clone or Fork the Repository
      $ cd krwl-xyz
 
   # Option B: Clone and re-initialize
-     $ git clone https://github.com/feileberlin/krwl-hof.git krwl-xyz
+     $ git clone https://github.com/feileberlin/krwl.in.git krwl-xyz
      $ cd krwl-xyz
      $ rm -rf .git
      $ git init
@@ -850,7 +850,7 @@ Automated Updates
      - Inline code comments for technical details
 
   3. Join the community:
-     - GitHub: https://github.com/feileberlin/krwl-hof
+     - GitHub: https://github.com/feileberlin/krwl.in
      - Issues: Report bugs or request features
 
 ═══════════════════════════════════════════════════════════════════════════════

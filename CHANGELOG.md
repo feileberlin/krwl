@@ -268,9 +268,9 @@ This project is open source and available under the terms specified in the repos
 ## Contact
 
 For questions, issues, or contributions:
-- **Repository**: https://github.com/feileberlin/krwl-hof
-- **Issues**: https://github.com/feileberlin/krwl-hof/issues
-- **Discussions**: https://github.com/feileberlin/krwl-hof/discussions
+- **Repository**: https://github.com/feileberlin/krwl.in
+- **Issues**: https://github.com/feileberlin/krwl.in/issues
+- **Discussions**: https://github.com/feileberlin/krwl.in/discussions
 
 ---
 
