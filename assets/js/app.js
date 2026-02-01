@@ -331,8 +331,7 @@ class EventsApp {
                 this.log(`Loaded ${this.events.length} events from inline data`);
                 this.events = this.utils.processTemplateEvents(this.events, this.eventFilter);
                 
-                // Filter events based on region
-                this.filterEventsByRegion();
+                // Note: Region filtering now happens in displayEvents() to avoid mutating the events array
                 return;
             }
             
@@ -369,8 +368,7 @@ class EventsApp {
             
             this.events = this.utils.processTemplateEvents(allEvents, this.eventFilter);
             
-            // Filter events based on region
-            this.filterEventsByRegion();
+            // Note: Region filtering now happens in displayEvents() to avoid mutating the events array
             
             this.updateDashboard();
         } catch (error) {
@@ -380,12 +378,13 @@ class EventsApp {
     }
     
     /**
-     * Filter events based on the current region
+     * Filter events based on the current region (non-mutating)
+     * Returns filtered array without modifying this.events
      * Shows appropriate events for Antarctica, Atlantis, or real regions
      */
-    filterEventsByRegion() {
-        if (!this.events || this.events.length === 0) {
-            return;
+    filterEventsByRegion(events) {
+        if (!events || events.length === 0) {
+            return [];
         }
         
         // Get the active region (antarctica, atlantis, or a real region like 'hof')
@@ -393,28 +392,29 @@ class EventsApp {
         
         // For Antarctica (/) - show events with source="demo" or source="antarctica"
         if (activeRegion === 'antarctica' || activeRegion === '/') {
-            this.events = this.events.filter(e => 
+            const filtered = events.filter(e => 
                 e.source === 'demo' || e.source === 'antarctica'
             );
-            console.log(`[KRWL] Showing ${this.events.length} Antarctica showcase events`);
-            return;
+            console.log(`[KRWL] Filtering to ${filtered.length} Antarctica showcase events (from ${events.length} total)`);
+            return filtered;
         }
         
         // For Atlantis (unknown regions) - show events with source="atlantis"
         if (activeRegion === 'atlantis' || this.isUnknownRegion) {
-            this.events = this.events.filter(e => e.source === 'atlantis');
-            console.log(`[KRWL] Showing ${this.events.length} Atlantis 404 events`);
-            return;
+            const filtered = events.filter(e => e.source === 'atlantis');
+            console.log(`[KRWL] Filtering to ${filtered.length} Atlantis 404 events (from ${events.length} total)`);
+            return filtered;
         }
         
         // For real regions - filter out demo/antarctica/atlantis events
         // Show only real scraped events
-        this.events = this.events.filter(e => 
+        const filtered = events.filter(e => 
             e.source !== 'demo' && 
             e.source !== 'antarctica' && 
             e.source !== 'atlantis'
         );
-        console.log(`[KRWL] Showing ${this.events.length} real events for region: ${activeRegion}`);
+        console.log(`[KRWL] Filtering to ${filtered.length} real events for region: ${activeRegion} (from ${events.length} total)`);
+        return filtered;
     }
     
     async loadWeather() {
@@ -642,9 +642,12 @@ class EventsApp {
     }
     
     displayEvents() {
-        // Use EventFilter module for filtering
+        // First filter by region (non-mutating)
+        const regionFilteredEvents = this.filterEventsByRegion(this.events);
+        
+        // Then apply other filters (distance, time, category)
         const location = this.getReferenceLocation();
-        const filteredEvents = this.eventFilter.filterEvents(this.events, this.filters, location);
+        const filteredEvents = this.eventFilter.filterEvents(regionFilteredEvents, this.filters, location);
         
         this.updateFilterDescription(filteredEvents.length);
         this.updateDashboard();
@@ -901,7 +904,8 @@ class EventsApp {
         
         // Get filtered events sorted by start time
         const location = this.getReferenceLocation();
-        const filteredEvents = this.eventFilter.filterEvents(this.events, this.filters, location);
+        const regionFilteredEvents = this.filterEventsByRegion(this.events);
+        const filteredEvents = this.eventFilter.filterEvents(regionFilteredEvents, this.filters, location);
         filteredEvents.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
         
         if (filteredEvents.length === 0) return;
@@ -922,7 +926,8 @@ class EventsApp {
     showEventDetail(event) {
         // Track current event index for keyboard navigation
         const location = this.getReferenceLocation();
-        const filteredEvents = this.eventFilter.filterEvents(this.events, this.filters, location);
+        const regionFilteredEvents = this.filterEventsByRegion(this.events);
+        const filteredEvents = this.eventFilter.filterEvents(regionFilteredEvents, this.filters, location);
         filteredEvents.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
         this.currentEventIndex = filteredEvents.findIndex(e => 
             (e.id && e.id === event.id) || 
