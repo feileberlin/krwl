@@ -48,11 +48,11 @@ class EventsApp {
         this.currentEdgeDetail = null;
         this.duplicateStats = null;
         
-        // Filter settings (load from storage module)
-        // Defaults from config.json: filtering.max_distance_km and filtering.show_until
+        // Filter settings (load from storage or use defaults with config-based fallbacks)
+        // These are default values used only if no saved filters exist in cookies
         this.filters = this.storage.loadFiltersFromCookie() || {
-            maxDistance: this.config.filtering?.max_distance_km || 5,  // From config.json
-            timeFilter: 'sunrise',  // From config.json: filtering.show_until = "next_sunrise"
+            maxDistance: this.config.filtering?.max_distance_km || 5,  // From config or fallback to 5km
+            timeFilter: 'sunrise',  // Hardcoded - TODO: Should read from config.filtering.show_until
             category: 'all',
             locationType: 'geolocation',
             selectedPredefinedLocation: null,
