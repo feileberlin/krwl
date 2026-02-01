@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Events Until Sunrise - Atlantis (Lost City)</title>
+    <link>https://krwl.in/atlantis</link>
+    <description>Community events in Atlantis (Lost City) happening until the next sunrise</description>
+    <language>de</language>
+    <lastBuildDate>Sun, 01 Feb 2026 19:39:45 +0000</lastBuildDate>
+    <atom:link href="https://krwl.in/assets/feeds/atlantis-til-sunrise.xml" rel="self" type="application/rss+xml"/>
+  </channel>
+</rss>

@@ -159,6 +159,14 @@
       "defaultLanguage": "en",
       "distancePresets": [
         {
+          "id": "penguin_waddle",
+          "name": {
+            "de": "🐧 Pinguin-Watschel-Distanz",
+            "en": "🐧 Penguin Waddle Distance"
+          },
+          "distance_km": 0.5
+        },
+        {
           "id": "nearby",
           "name": {
             "de": "Beim Südpol",
@@ -167,18 +175,34 @@
           "distance_km": 1.0
         },
         {
+          "id": "snowmobile",
+          "name": {
+            "de": "🛷 Schneemobil-Reichweite",
+            "en": "🛷 Snowmobile Range"
+          },
+          "distance_km": 10.0
+        },
+        {
           "id": "station",
           "name": {
-            "de": "Forschungsstation",
-            "en": "Research Station"
+            "de": "🔬 Forschungsstation",
+            "en": "🔬 Research Station"
           },
           "distance_km": 50.0
         },
         {
+          "id": "helicopter",
+          "name": {
+            "de": "🚁 Hubschrauber-Flug",
+            "en": "🚁 Helicopter Flight"
+          },
+          "distance_km": 200.0
+        },
+        {
           "id": "continent",
           "name": {
-            "de": "Kontinent",
-            "en": "Continent"
+            "de": "🌍 Kontinent",
+            "en": "🌍 Continent"
           },
           "distance_km": 2000.0
         }
@@ -718,6 +742,120 @@
           },
           "radius": 0.8,
           "zoom": 15
+        }
+      ]
+    },
+    "atlantis": {
+      "name": "atlantis",
+      "displayName": "Atlantis (Lost City)",
+      "_comment": "🌊 Humorous 404 region for unknown URLs - Dynamic error handler",
+      "center": {
+        "lat": 31.0,
+        "lng": -24.0
+      },
+      "zoom": 8,
+      "boundingBox": {
+        "north": 32.0,
+        "south": 30.0,
+        "east": -23.0,
+        "west": -25.0
+      },
+      "dataSource": "events.json",
+      "defaultLanguage": "en",
+      "distancePresets": [
+        {
+          "id": "bubble_swim",
+          "name": {
+            "de": "🫧 Blasen-Schwimm-Distanz",
+            "en": "🫧 Bubble Swimming Distance"
+          },
+          "distance_km": 0.2
+        },
+        {
+          "id": "nearby",
+          "name": {
+            "de": "🐠 Nahbereich",
+            "en": "🐠 Nearby"
+          },
+          "distance_km": 1.0
+        },
+        {
+          "id": "dolphin_ride",
+          "name": {
+            "de": "🐬 Delfin-Ritt",
+            "en": "🐬 Dolphin Ride"
+          },
+          "distance_km": 5.0
+        },
+        {
+          "id": "submarine",
+          "name": {
+            "de": "🚢 U-Boot-Reichweite",
+            "en": "🚢 Submarine Range"
+          },
+          "distance_km": 20.0
+        },
+        {
+          "id": "sunken_city",
+          "name": {
+            "de": "🏛️ Versunkene Stadt",
+            "en": "🏛️ Sunken City"
+          },
+          "distance_km": 50.0
+        }
+      ],
+      "customFilters": [
+        {
+          "id": "poseidon_palace",
+          "name": {
+            "de": "🔱 Poseidon-Palast",
+            "en": "🔱 Poseidon's Palace"
+          },
+          "center": {
+            "lat": 31.0,
+            "lng": -24.0
+          },
+          "radius": 2.0,
+          "zoom": 12
+        },
+        {
+          "id": "platos_academy",
+          "name": {
+            "de": "📚 Platons Akademie",
+            "en": "📚 Plato's Academy"
+          },
+          "center": {
+            "lat": 31.05,
+            "lng": -24.05
+          },
+          "radius": 1.0,
+          "zoom": 13
+        },
+        {
+          "id": "coral_gardens",
+          "name": {
+            "de": "🪸 Korallen-Gärten",
+            "en": "🪸 Coral Gardens"
+          },
+          "center": {
+            "lat": 31.02,
+            "lng": -23.98
+          },
+          "radius": 1.5,
+          "zoom": 13
+        },
+        {
+          "id": "sunken_marketplace",
+          "name": {
+            "de": "🏺 Versunkener Marktplatz",
+            "en": "🏺 Sunken Marketplace"
+          },
+          "center": {
+            "lat": 30.98,
+            "lng": -24.02
+          },
+          "radius": 1.0,
+          "zoom": 14
         }
       ]
     }
