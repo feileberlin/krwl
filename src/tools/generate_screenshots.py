@@ -185,7 +185,7 @@ Note: The app must be running and accessible at the specified URL.
     args = parser.parse_args()
     
     print("=" * 70)
-    print("KRWL HOF - Screenshot Generator")
+    print("KRWL> - Screenshot Generator")
     print("=" * 70)
     print(f"\n📍 URL: {args.url}")
     print(f"📁 Output: {args.output_dir}")

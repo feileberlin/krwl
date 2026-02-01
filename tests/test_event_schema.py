@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KRWL HOF Event Schema Testing Module
+KRWL> Event Schema Testing Module
 
 Tests event examples against JSON event schema and filter functionality for stringency.
 Provides help on how to recover full functionality when schema violations are detected.
@@ -24,7 +24,7 @@ from typing import List, Dict, Any, Tuple
 # Event JSON Schema Definition
 EVENT_SCHEMA = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "title": "KRWL HOF Event",
+    "title": "KRWL> Event",
     "description": "Schema for community event data",
     "type": "object",
     "required": ["id", "title", "location", "start_time", "source", "status"],
@@ -805,7 +805,7 @@ Example of a valid event:
     def run_all_tests(self):
         """Run all schema and filter tests"""
         print("=" * 60)
-        print("KRWL HOF Event Schema & Filter Stringency Tests")
+        print("KRWL> Event Schema & Filter Stringency Tests")
         print("=" * 60)
         
         self.test_schema_definition()
@@ -847,7 +847,7 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(
-        description="Test KRWL HOF event data against JSON schema and validate filter stringency"
+        description="Test KRWL> event data against JSON schema and validate filter stringency"
     )
     parser.add_argument(
         "--verbose", "-v",

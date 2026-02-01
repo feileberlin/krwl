@@ -1,6 +1,6 @@
 # Tools Directory
 
-Standalone Python utility tools for KRWL HOF project.
+Standalone Python utility tools for KRWL> project.
 
 ## Contents
 

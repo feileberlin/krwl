@@ -295,7 +295,7 @@ class ValidationTester:
     def run_all_tests(self):
         """Run all validation tests"""
         print("=" * 60)
-        print("  KRWL HOF Validation Tests")
+        print("  KRWL> Validation Tests")
         print("=" * 60)
         
         self.test_location_validation()

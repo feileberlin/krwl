@@ -123,7 +123,7 @@ def main():
     base_path = Path(__file__).parent
     
     print("=" * 70)
-    print("KRWL HOF Cleanup - Obsolete Files")
+    print("KRWL> Cleanup - Obsolete Files")
     print("=" * 70)
     print()
     

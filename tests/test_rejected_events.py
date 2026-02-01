@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KRWL HOF Rejected Events Testing Module
+KRWL> Rejected Events Testing Module
 
 Tests the auto-reject functionality for recurring events:
 - Loading and saving rejected events
@@ -271,7 +271,7 @@ class RejectedEventsTester:
     def run_all_tests(self):
         """Run all tests"""
         print("\n" + "=" * 60)
-        print("KRWL HOF Rejected Events Tests")
+        print("KRWL> Rejected Events Tests")
         print("=" * 60 + "\n")
         
         print("Testing rejected events functionality...")

@@ -1,6 +1,6 @@
 # Tests Directory
 
-This directory contains test scripts for the KRWL HOF project.
+This directory contains test scripts for the KRWL> project.
 
 ## Running Tests (Unified CLI)
 

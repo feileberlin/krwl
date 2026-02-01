@@ -177,7 +177,7 @@ def test_workflow_compatibility():
 
 if __name__ == '__main__':
     print("=" * 70)
-    print("KRWL HOF Scrape Status Test Suite")
+    print("KRWL> Scrape Status Test Suite")
     print("=" * 70)
     
     results = []

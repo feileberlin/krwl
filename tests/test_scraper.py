@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KRWL HOF Scraper Testing Module
+KRWL> Scraper Testing Module
 
 Tests the event scraping functionality:
 - Manual event creation
@@ -603,7 +603,7 @@ class ScraperTester:
     def run_all_tests(self):
         """Run all scraper tests"""
         print("=" * 70)
-        print("KRWL HOF Event Scraper Test Suite")
+        print("KRWL> Event Scraper Test Suite")
         print("=" * 70)
         
         self.test_manual_event_creation()
@@ -625,7 +625,7 @@ def main():
     """Main entry point"""
     import argparse
     
-    parser = argparse.ArgumentParser(description='Test KRWL HOF event scraper')
+    parser = argparse.ArgumentParser(description='Test KRWL> event scraper')
     parser.add_argument('--verbose', action='store_true', help='Enable verbose output')
     parser.add_argument('--repo-root', default='.', help='Repository root directory')
     

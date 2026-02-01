@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KRWL HOF Routing Tests
+KRWL> Routing Tests
 
 Tests the SPA routing logic for region detection and URL handling.
 Validates that:
@@ -504,7 +504,7 @@ class TestRouting:
     def run_all_tests(self, verbose: bool = False) -> bool:
         """Run all routing tests"""
         print("\n" + "=" * 70)
-        print("KRWL HOF Routing Tests")
+        print("KRWL> Routing Tests")
         print("=" * 70)
         
         # Load config

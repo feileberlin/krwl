@@ -174,7 +174,7 @@ All configuration lives in `config.json`:
 ```json
 {{
   "app": {{
-    "name": "{config.get('app', {}).get('name', 'KRWL HOF')}",
+    "name": "{config.get('app', {}).get('name', 'KRWL>')}",
     "description": "{config.get('app', {}).get('description', 'Community events')}"
   }},
   "map": {{

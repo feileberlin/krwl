@@ -217,7 +217,7 @@ def test_frontend_compatibility():
 
 if __name__ == '__main__':
     print("=" * 70)
-    print("KRWL HOF Pending Count in events.json Test Suite")
+    print("KRWL> Pending Count in events.json Test Suite")
     print("=" * 70)
     
     results = []

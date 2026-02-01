@@ -126,7 +126,7 @@ def test_timestamp_only_on_new_events():
 
 if __name__ == '__main__':
     print("=" * 70)
-    print("KRWL HOF Timestamp Update Test")
+    print("KRWL> Timestamp Update Test")
     print("=" * 70)
     
     success = test_timestamp_only_on_new_events()
