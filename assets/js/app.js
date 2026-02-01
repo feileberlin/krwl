@@ -119,7 +119,29 @@ class EventsApp {
         const regionId = segments.length > 0 ? segments[segments.length - 1].toLowerCase() : '';
         
         if (!regionId || regionId === 'index.html') {
-            return; // No region specified, use defaults
+            // Root path should show Antarctica showcase
+            const regions = this.config.regions || {};
+            const antarcticaRegion = regions['antarctica'];
+            
+            if (antarcticaRegion) {
+                // Apply Antarctica region settings to config
+                if (antarcticaRegion.center) {
+                    this.config.map.default_center = {
+                        lat: antarcticaRegion.center.lat,
+                        lon: antarcticaRegion.center.lng || antarcticaRegion.center.lon
+                    };
+                }
+                if (antarcticaRegion.zoom) {
+                    this.config.map.default_zoom = antarcticaRegion.zoom;
+                }
+                
+                // Store active region for reference
+                this.activeRegion = 'antarctica';
+                this.activeRegionConfig = antarcticaRegion;
+                
+                console.log(`[KRWL] Applying Antarctica showcase region (root path)`);
+            }
+            return;
         }
         
         // Restore the original URL in the address bar if we were redirected via 404.html
