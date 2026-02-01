@@ -141,12 +141,12 @@ distance = haversine_distance(11.9167, 50.3167, 11.0767, 49.4521)
 print(f"{distance:.1f} km")  # 113.4 km (Hof to Nürnberg)
 ```
 
-### 🌍 Three-Tier Event System
+### 🌍 Single-Page App with Three Content Types
 
-KRWL uses a clever three-tier approach to handle different regions and provide helpful guidance:
+KRWL is a **Single-Page Application (SPA)** that serves three content types from one HTML page using URL-based routing:
 
-#### 1. 🐧 Antarctica (`/` or `/antarctica`)
-**Purpose:** Project showcase and setup guide  
+#### 1. 🐧 **Showcase** - Antarctica (`/` or `/antarctica`)
+**Purpose:** Project information and setup guide  
 **Location:** South Pole (90°S)  
 **Events:** Showcase events explaining how to fork and set up your own region
 
@@ -157,8 +157,8 @@ When you visit the root URL (`/`), you'll see Antarctica - our project showcase 
 
 Perfect for developers exploring the project or wanting to set up KRWL for their own community!
 
-#### 2. 🌊 Atlantis (`/atlantis` or any unknown region)
-**Purpose:** Humorous 404 "page"  
+#### 2. 🌊 **Error-handling** - Atlantis (`/atlantis` or any unknown region)
+**Purpose:** Humorous 404 handler  
 **Location:** Mid-Atlantic Ridge (31°N 24°W)  
 **Events:** Playful sunken city-themed events with hints to visit `/` or fork the repo
 
@@ -167,8 +167,8 @@ Try visiting an unconfigured region like `/berlin` or `/tokyo` - you'll be taken
 - 🐠 Clever hints about visiting Antarctica (/) or forking the repo
 - 🏛️ A lighthearted way to explain the app structure to curious visitors
 
-#### 3. 🗺️ Real Regions (`/hof`, `/bayreuth`, `/nbg`)
-**Purpose:** Live event calendar  
+#### 3. 🗺️ **Production** - Real Regions (`/hof`, `/bayreuth`, `/nbg`)
+**Purpose:** Live event calendar for actual communities  
 **Location:** Actual city coordinates  
 **Events:** Real scraped events from configured sources
 
@@ -177,25 +177,22 @@ These are your production regions showing real community events. Examples:
 - `/nbg` - Nürnberg events
 - `/bayreuth` - Bayreuth events
 
-**Technical Details:**
+**How It Works (Single-Page App Architecture):**
 
-The three-tier system works as follows:
+One HTML page (`public/index.html`) serves all content, with client-side routing filtering events:
 
 1. **Backend** (`src/modules/site_generator.py`):
-   - Loads ALL three event sources: `events.json`, `events.antarctica.json`, `events.atlantis.json`
-   - Embeds all events in the generated HTML for instant access
+   - Generates ONE static HTML file (570 KB)
+   - Embeds ALL 167 events from three sources: `events.json`, `events.antarctica.json`, `events.atlantis.json`
 
 2. **Frontend** (`assets/js/app.js`):
-   - Detects the URL path (e.g., `/hof`, `/`, `/unknown-region`)
-   - Filters events by `source` field to show appropriate events:
-     - Antarctica (`/` or `/antarctica`): Shows `source: "antarctica"` or `source: "demo"`
-     - Atlantis (unknown regions): Shows `source: "atlantis"`
-     - Real regions: Shows all events EXCEPT antarctica/atlantis
+   - Detects URL path without page reload (e.g., `/hof`, `/`, `/unknown-region`)
+   - Filters events by `source` field client-side:
+     - **Showcase** (`/` or `/antarctica`): Shows `source: "antarctica"` or `source: "demo"`
+     - **Error-handling** (unknown regions): Shows `source: "atlantis"`
+     - **Production** (real regions): Shows all events EXCEPT antarctica/atlantis
 
-3. **Configuration** (`config.json`):
-   - `data.sources` defines the three event files
-   - Backend loads ALL sources regardless of environment
-   - Frontend handles display logic based on URL routing
+3. **No separate pages** - Everything happens in one page with JavaScript routing
 
 **Adding Your Own Region:**
 

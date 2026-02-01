@@ -380,7 +380,11 @@ class EventsApp {
     /**
      * Filter events based on the current region (non-mutating)
      * Returns filtered array without modifying this.events
-     * Shows appropriate events for Antarctica, Atlantis, or real regions
+     * 
+     * Three content types:
+     * - Showcase (Antarctica): Project information
+     * - Error-handling (Atlantis): 404 handler
+     * - Production (Real regions): Live events
      */
     filterEventsByRegion(events) {
         if (!events || events.length === 0) {
@@ -390,7 +394,7 @@ class EventsApp {
         // Get the active region (antarctica, atlantis, or a real region like 'hof')
         const activeRegion = this.activeRegion || 'hof';  // Default to 'hof' if none set
         
-        // For Antarctica (/) - show events with source="demo" or source="antarctica"
+        // Showcase content: Antarctica (/) - show events with source="demo" or source="antarctica"
         if (activeRegion === 'antarctica' || activeRegion === '/') {
             const filtered = events.filter(e => 
                 e.source === 'demo' || e.source === 'antarctica'
@@ -399,14 +403,14 @@ class EventsApp {
             return filtered;
         }
         
-        // For Atlantis (unknown regions) - show events with source="atlantis"
+        // Error-handling content: Atlantis (unknown regions) - show events with source="atlantis"
         if (activeRegion === 'atlantis' || this.isUnknownRegion) {
             const filtered = events.filter(e => e.source === 'atlantis');
             console.log(`[KRWL] Filtering to ${filtered.length} Atlantis 404 events (from ${events.length} total)`);
             return filtered;
         }
         
-        // For real regions - filter out demo/antarctica/atlantis events
+        // Production content: Real regions - filter out demo/antarctica/atlantis events
         // Show only real scraped events
         const filtered = events.filter(e => 
             e.source !== 'demo' && 

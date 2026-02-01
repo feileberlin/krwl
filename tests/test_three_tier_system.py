@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """
-Test the three-tier event system:
-1. Antarctica - Project showcase
-2. Atlantis - 404 page
-3. Real regions - Live events
+Test the SPA content routing system.
 
-This test validates that the event files are properly structured and the
-site generator loads all three event sources correctly.
+KRWL is a single-page application serving three content types:
+1. Showcase (Antarctica) - Project information and setup guide
+2. Error-handling (Atlantis) - Humorous 404 handler
+3. Production (Real regions) - Live event calendars
+
+This test validates that event files are properly structured and the
+site generator loads all three content sources correctly.
 """
 
 import json
@@ -237,7 +239,7 @@ def test_config_has_regions():
 
 
 def test_config_data_section():
-    """Verify config.json data section documents three-tier system"""
+    """Verify config.json data section defines all three content types"""
     base_path = Path(__file__).parent.parent
     config_path = base_path / 'config.json'
     
@@ -248,7 +250,8 @@ def test_config_data_section():
     assert 'data' in config, "Missing data section in config"
     data = config['data']
     
-    # Check that sources are defined for all three tiers
+    # Check that sources are defined for all three content types:
+    # Showcase (real), Error-handling (antarctica), Production (atlantis)
     sources = data.get('sources', {})
     assert 'real' in sources, "Missing real source in config.data.sources"
     assert 'antarctica' in sources, "Missing antarctica source in config.data.sources"
