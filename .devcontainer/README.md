@@ -1,6 +1,6 @@
 # Development Container Configuration Guide
 
-This directory contains the devcontainer configuration that creates a consistent, containerized development environment for the KRWL HOF project.
+This directory contains the devcontainer configuration that creates a consistent, containerized development environment for the KRWL> project.
 
 ## What is a Dev Container?
 
@@ -20,7 +20,7 @@ A development container (devcontainer) is a Docker-based environment that:
 
 **How to configure**:
 ```json
-"name": "KRWL HOF Development Container",
+"name": "KRWL> Development Container",
 "image": "mcr.microsoft.com/devcontainers/python:3.11"
 ```
 - `name`: Friendly name shown in VS Code status bar

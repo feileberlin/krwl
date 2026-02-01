@@ -72,7 +72,7 @@ Examples:
     # Print banner
     print()
     print("=" * 70)
-    print("  KRWL HOF - One-Time Entity System Migration")
+    print("  KRWL> - One-Time Entity System Migration")
     print("=" * 70)
     print()
     

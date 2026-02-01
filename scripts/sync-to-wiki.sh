@@ -16,7 +16,7 @@ set -e
 REPO_URL="https://github.com/feileberlin/krwl.in.wiki.git"
 WIKI_DIR="${1:-/tmp/krwl.in.wiki}"
 
-echo "🔄 Syncing KRWL HOF docs to GitHub Wiki..."
+echo "🔄 Syncing KRWL> docs to GitHub Wiki..."
 echo ""
 
 # Clone or update wiki repository

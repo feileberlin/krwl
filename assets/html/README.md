@@ -536,7 +536,7 @@ git log --oneline config.json
 
 ## Integration with Existing System
 
-This component system is fully integrated with the existing KRWL HOF infrastructure:
+This component system is fully integrated with the existing KRWL> infrastructure:
 
 - **Site Generator**: `src/modules/site_generator.py` loads and assembles components
 - **Linter**: `src/modules/linter.py` validates component HTML, CSS, and accessibility

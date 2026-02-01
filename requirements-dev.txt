@@ -1,4 +1,4 @@
-# KRWL HOF Development Dependencies
+# KRWL> Development Dependencies
 # Install with: pip install -r requirements-dev.txt
 
 # Testing framework

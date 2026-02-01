@@ -1,6 +1,6 @@
 # JavaScript Directory
 
-JavaScript modules for the KRWL HOF application.
+JavaScript modules for the KRWL> application.
 
 ## Architecture
 

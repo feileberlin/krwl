@@ -1,6 +1,6 @@
 # Model Context Protocol (MCP) Configuration
 
-This directory contains the MCP server configuration for the KRWL HOF project.
+This directory contains the MCP server configuration for the KRWL> project.
 
 ## What is MCP?
 

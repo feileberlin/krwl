@@ -1,9 +1,9 @@
 ---
 name: unified_agent
-description: Expert unified agent combining planning, implementation, documentation, and complexity management for KRWL HOF
+description: Expert unified agent combining planning, implementation, documentation, and complexity management for KRWL>
 ---
 
-# Unified Agent for KRWL HOF
+# Unified Agent for KRWL>
 
 > **Master agent**: Combines planning, implementation, documentation, and complexity management expertise
 

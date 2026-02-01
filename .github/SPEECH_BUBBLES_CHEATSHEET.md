@@ -1,6 +1,6 @@
 # 💖 Speech Bubbles Cheat Sheet 💖
 
-> **Quick reference for comic book speech bubble styling in KRWL HOF**  
+> **Quick reference for comic book speech bubble styling in KRWL>**  
 > *EcoBarbie-powered design system* 🌸
 
 ---

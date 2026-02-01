@@ -1,4 +1,4 @@
-# KRWL HOF Monochromatic Color Palette Reference
+# KRWL> Monochromatic Color Palette Reference
 
 **Status:** Read-Only Reference Document  
 **Purpose:** Professional color palette documentation  
@@ -8,7 +8,7 @@
 
 ## Overview
 
-This document serves as a **permanent reference** for the KRWL HOF **truly monochromatic** color palette based on the **ecoBarbie** theme. **ALL colors** are derived from a single base color (#D689B8) through scientifically-calculated tints, shades, and tones - no exceptions.
+This document serves as a **permanent reference** for the KRWL> **truly monochromatic** color palette based on the **ecoBarbie** theme. **ALL colors** are derived from a single base color (#D689B8) through scientifically-calculated tints, shades, and tones - no exceptions.
 
 **Base Color:** ecoBarbie `#D689B8` (RGB: 214, 137, 184)  
 **Color Theory:** HSV: 323.4° hue, 36.0% saturation, 83.9% value

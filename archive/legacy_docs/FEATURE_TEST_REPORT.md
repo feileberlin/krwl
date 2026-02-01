@@ -1,4 +1,4 @@
-# KRWL HOF Feature Functionality Test Report
+# KRWL> Feature Functionality Test Report
 
 **Generated:** 2026-01-25  
 **Test Environment:** GitHub Actions CI  
@@ -393,7 +393,7 @@ Warnings: 255
 
 ## 9. Conclusion
 
-The KRWL HOF project is **93% functional** based on test results:
+The KRWL> project is **93% functional** based on test results:
 
 | Metric | Value | Assessment |
 |--------|-------|------------|

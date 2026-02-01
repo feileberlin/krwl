@@ -1,4 +1,4 @@
-# KRWL HOF - Data Flow & Dependencies
+# KRWL> - Data Flow & Dependencies
 
 ## 🚨 CRITICAL: Events Won't Display Without This
 

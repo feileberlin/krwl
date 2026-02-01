@@ -1,5 +1,5 @@
 {
-  "name": "KRWL HOF Development Container",
+  "name": "KRWL> Development Container",
   "image": "mcr.microsoft.com/devcontainers/python:3.11",
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},

@@ -790,7 +790,7 @@ class EventsApp {
             this.log('Pending events count:', count);
             
             // Update browser title
-            const baseTitle = 'KRWL HOF - Community Events';
+            const baseTitle = 'KRWL> - Community Events';
             if (count > 0) {
                 document.title = '❗ ' + baseTitle;
             } else {

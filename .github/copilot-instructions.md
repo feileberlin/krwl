@@ -4,7 +4,7 @@
 
 ## Project Overview
 
-KRWL HOF is a **mobile-first Progressive Web App (PWA)** for discovering community events with interactive map visualization. The project uses a Python backend for event scraping/management and a vanilla JavaScript frontend with Leaflet.js for mapping.
+KRWL> is a **mobile-first Progressive Web App (PWA)** for discovering community events with interactive map visualization. The project uses a Python backend for event scraping/management and a vanilla JavaScript frontend with Leaflet.js for mapping.
 
 ### Architecture
 - **Backend**: Python 3.x with modular TUI (Text User Interface)

@@ -1,4 +1,4 @@
-# KRWL HOF Documentation
+# KRWL> Documentation
 
 > Reserved directory for future HTML documentation
 
@@ -44,4 +44,4 @@ The project follows **Keep It Simple, Stupid** principles:
 ---
 
 **Status**: Directory reserved for future HTML documentation
-**Maintained By**: KRWL HOF Project
+**Maintained By**: KRWL> Project

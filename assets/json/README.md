@@ -1,6 +1,6 @@
 # JSON Data Directory
 
-JSON data files for the KRWL HOF application.
+JSON data files for the KRWL> application.
 
 ## Structure
 

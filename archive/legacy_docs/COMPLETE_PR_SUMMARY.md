@@ -123,11 +123,11 @@ push:
 #### A) Comprehensive Header (40+ lines)
 ```yaml
 # ═══════════════════════════════════════════════════════════
-# KRWL HOF Community Events - Automated Workflow
+# KRWL> Community Events - Automated Workflow
 # ═══════════════════════════════════════════════════════════
 #
 # PURPOSE:
-# This is the main automation workflow for the KRWL HOF community
+# This is the main automation workflow for the KRWL> community
 # events website. It handles everything from data collection to
 # deployment in a fully automated way.
 #
