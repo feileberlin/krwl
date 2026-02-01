@@ -472,11 +472,11 @@ class MapManager {
     }
     
     /**
-     * Get marker icon HTML using Lucide icons only
-     * Creates a div icon with Lucide icon centered
+     * Get marker icon HTML using individual Lucide icons
+     * Each category shows its distinct icon directly without background shape
      * Uses only icons available in MAP_ICONS_MAP and DASHBOARD_ICONS_MAP
      * @param {string} category - Category name (maps to Lucide icon)
-     * @returns {Object} Leaflet divIcon with Lucide icon
+     * @returns {Object} Leaflet divIcon with category-specific Lucide icon
      */
     getMarkerIconForCategory(category) {
         // Map categories to available Lucide icon names
@@ -509,19 +509,20 @@ class MapManager {
         
         const lucideIcon = iconMap[category] || 'map-pin';
         
-        // Create div icon with Lucide icon
+        // Create div icon with just the Lucide icon (no background shape)
+        // Each category icon is visually distinct
         const html = `
-            <div class="category-marker" data-category="${category}">
-                <i data-lucide="${lucideIcon}" class="marker-icon"></i>
+            <div class="category-icon-marker" data-category="${category}">
+                <i data-lucide="${lucideIcon}" class="category-icon"></i>
             </div>
         `;
         
         return L.divIcon({
-            className: 'category-marker-container',
+            className: 'category-icon-container',
             html: html,
-            iconSize: [48, 48],
-            iconAnchor: [24, 48],
-            popupAnchor: [0, -48]
+            iconSize: [40, 40],
+            iconAnchor: [20, 20],
+            popupAnchor: [0, -20]
         });
     }
     
