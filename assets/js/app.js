@@ -196,6 +196,15 @@ class EventsApp {
         this.activeRegion = 'atlantis';  // Force to atlantis
         this.isUnknownRegion = true;
         
+        // Create minimal region config for Atlantis (prevents using Hof's custom locations)
+        this.activeRegionConfig = {
+            name: 'atlantis',
+            displayName: 'Atlantis (404)',
+            center: ATLANTIS,
+            zoom: 6,
+            customFilters: []  // Empty array - no custom locations for 404 page
+        };
+        
         console.log(`[KRWL] Unknown region "${regionId}" → Redirecting to Atlantis (404)`);
         
         // Frontend will filter and show events with source="atlantis"

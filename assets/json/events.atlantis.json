@@ -14,7 +14,12 @@
       "url": "https://github.com/feileberlin/krwl.in",
       "source": "atlantis",
       "status": "published",
-      "category": "community"
+      "category": "community",
+      "relative_time": {
+        "type": "offset",
+        "minutes": -10,
+        "duration_hours": 24
+      }
     },
     {
       "id": "atlantis_poseidon_palace",
@@ -30,7 +35,12 @@
       "url": "https://github.com/feileberlin/krwl.in",
       "source": "atlantis",
       "status": "published",
-      "category": "culture"
+      "category": "culture",
+      "relative_time": {
+        "type": "offset",
+        "hours": 1,
+        "duration_hours": 2
+      }
     },
     {
       "id": "atlantis_reunion",
@@ -46,7 +56,12 @@
       "url": "https://github.com/feileberlin/krwl.in",
       "source": "atlantis",
       "status": "published",
-      "category": "community"
+      "category": "community",
+      "relative_time": {
+        "type": "offset",
+        "hours": 2,
+        "duration_hours": 3
+      }
     },
     {
       "id": "atlantis_archaeology",
@@ -62,7 +77,12 @@
       "url": "https://github.com/feileberlin/krwl.in",
       "source": "atlantis",
       "status": "published",
-      "category": "education"
+      "category": "education",
+      "relative_time": {
+        "type": "offset",
+        "hours": 3,
+        "duration_hours": 4
+      }
     }
   ],
   "last_updated": "2026-02-01T00:00:00"
