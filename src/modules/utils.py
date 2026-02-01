@@ -185,8 +185,12 @@ def load_config(base_path):
     2. Set to "auto" - uses automatic environment detection (default)
     
     Auto-detection checks os.environ for:
-    - **Development (Local)**: debug=true, data.source="both" (real+demo), watermark="DEV"
-    - **CI/Production**: debug=false, data.source="real", watermark="PRODUCTION"
+    - **Development (Local)**: debug=true, watermark="DEV", demo features enabled
+    - **CI/Production**: debug=false, watermark="PRODUCTION", optimized for performance
+    
+    Note: The three-tier event system (Antarctica, Atlantis, Real events) loads ALL event
+    sources in both development and production. The frontend filters events based on the
+    URL path (/, /atlantis, /real-region).
     
     Args:
         base_path: Root path of the repository
@@ -280,7 +284,7 @@ def load_config(base_path):
         config['performance']['cache_enabled'] = True  # Enable caching
         config['performance']['prefetch_events'] = True  # Preload for speed
     
-    logger.debug(f"Config loaded: debug={config['debug']}, data source={config['data']['source']}")
+    logger.debug(f"Config loaded: debug={config['debug']}, environment={env_name}")
     
     return config
 
