@@ -1268,15 +1268,45 @@ This avoids triggering expensive full rebuilds every hour for weather updates.
 
 ## Dependencies and CDN Fallbacks
 
-**Leaflet.js and other dependencies have automatic CDN fallbacks:**
+**Leaflet.js and other dependencies have automatic CDN fallbacks with version tracking:**
 
 ### Overview
-The site generator can build HTML even when dependencies (Leaflet, fonts, etc.) are not locally available. This is critical for CI environments without internet access.
+The site generator can build HTML even when dependencies (Leaflet, fonts, etc.) are not locally available. This is critical for CI environments without internet access. The system now includes automatic version tracking and update detection.
 
 ### How It Works
-1. **Primary**: Site generator tries to inline local dependencies from `lib/` directory
-2. **Fallback**: If files missing, injects CDN loader code into generated HTML
-3. **Runtime**: Browser loads dependencies from CDN if not inlined
+1. **Primary**: Site generator **always prefers local dependencies** from `lib/` directory if available
+2. **Version Tracking**: Downloads are tracked in `lib/versions.json` with SHA256 checksums
+3. **Fallback**: If files missing, injects CDN loader code into generated HTML
+4. **Runtime**: Browser loads dependencies from CDN if not inlined
+5. **Update Detection**: Can check for and install upstream version updates
+
+### Version Tracking
+All fetched dependencies are tracked in `lib/versions.json`:
+- Package name and version
+- File paths and SHA256 checksums
+- File sizes and last verification timestamps
+- Used to detect both version changes and file content changes
+
+### CLI Commands
+```bash
+# Fetch dependencies (creates/updates lib/ and lib/versions.json)
+python3 src/event_manager.py dependencies fetch
+
+# Check if dependencies are present locally
+python3 src/event_manager.py dependencies check
+
+# Check for upstream version updates
+python3 src/event_manager.py dependencies update-check
+
+# Update dependencies to latest versions
+python3 src/event_manager.py dependencies update
+
+# Force re-fetch all dependencies
+python3 src/event_manager.py dependencies update --force
+
+# Show version information for tracked assets
+python3 src/event_manager.py dependencies info
+```
 
 ### CDN Fallback Example
 When Leaflet is missing locally:
@@ -1297,20 +1327,27 @@ When Leaflet is missing locally:
 
 ### Production Best Practice
 1. Run `python3 src/event_manager.py dependencies fetch` to download dependencies locally
-2. Dependencies are cached in `lib/` directory (gitignored)
+2. Dependencies are cached in `lib/` directory (gitignored except `versions.json`)
 3. Inlined dependencies = faster page load, no external requests
+4. Version tracking ensures reproducible builds
 
 ### CI/Testing
 - Generation continues even if dependencies can't be fetched
 - Warns but doesn't fail: `⚠️ Failed to fetch dependencies - will use CDN fallbacks`
 - This allows testing/previewing without internet access
+- `versions.json` is tracked in git for reproducible builds
 
 ### Key Files
+- **Asset Manager**: `src/modules/asset_manager.py` - Version tracking and checksums
 - **Generator**: `src/modules/site_generator.py`
   - `load_stylesheet_resources()` - CSS fallbacks
   - `load_script_resources()` - JS fallbacks
-  - `ensure_dependencies_present()` - Warns but doesn't fail
+  - `fetch_file_from_url()` - Records version info during fetch
+  - `check_for_updates()` - Detects upstream changes
+  - `update_dependencies()` - Updates to latest versions
 - **Config**: Dependencies defined in `DEPENDENCIES` dict in `site_generator.py`
+- **Version Data**: `lib/versions.json` - Tracked asset versions (git-tracked)
+- **Tests**: `tests/test_asset_manager.py` - Version tracking tests
 
 ## Feature Registry System
 
