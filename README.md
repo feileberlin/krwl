@@ -141,6 +141,79 @@ distance = haversine_distance(11.9167, 50.3167, 11.0767, 49.4521)
 print(f"{distance:.1f} km")  # 113.4 km (Hof to Nürnberg)
 ```
 
+### 🌍 Three-Tier Event System
+
+KRWL uses a clever three-tier approach to handle different regions and provide helpful guidance:
+
+#### 1. 🐧 Antarctica (`/` or `/antarctica`)
+**Purpose:** Project showcase and setup guide  
+**Location:** South Pole (90°S)  
+**Events:** Showcase events explaining how to fork and set up your own region
+
+When you visit the root URL (`/`), you'll see Antarctica - our project showcase page featuring fun demo events that explain:
+- How to fork the repository for your own community
+- How to configure your first region
+- Example events with various features (sunrise filtering, distance filtering, bookmarks, etc.)
+
+Perfect for developers exploring the project or wanting to set up KRWL for their own community!
+
+#### 2. 🌊 Atlantis (`/atlantis` or any unknown region)
+**Purpose:** Humorous 404 "page"  
+**Location:** Mid-Atlantic Ridge (31°N 24°W)  
+**Events:** Playful sunken city-themed events with hints to visit `/` or fork the repo
+
+Try visiting an unconfigured region like `/berlin` or `/tokyo` - you'll be taken to Atlantis! This humorous 404 page features:
+- 🌊 Events about Poseidon's Palace tours and underwater archaeology
+- 🐠 Clever hints about visiting Antarctica (/) or forking the repo
+- 🏛️ A lighthearted way to explain the app structure to curious visitors
+
+#### 3. 🗺️ Real Regions (`/hof`, `/bayreuth`, `/nbg`)
+**Purpose:** Live event calendar  
+**Location:** Actual city coordinates  
+**Events:** Real scraped events from configured sources
+
+These are your production regions showing real community events. Examples:
+- `/hof` - Hof (Saale) events
+- `/nbg` - Nürnberg events
+- `/bayreuth` - Bayreuth events
+
+**Technical Details:**
+
+The three-tier system works as follows:
+
+1. **Backend** (`src/modules/site_generator.py`):
+   - Loads ALL three event sources: `events.json`, `events.antarctica.json`, `events.atlantis.json`
+   - Embeds all events in the generated HTML for instant access
+
+2. **Frontend** (`assets/js/app.js`):
+   - Detects the URL path (e.g., `/hof`, `/`, `/unknown-region`)
+   - Filters events by `source` field to show appropriate events:
+     - Antarctica (`/` or `/antarctica`): Shows `source: "antarctica"` or `source: "demo"`
+     - Atlantis (unknown regions): Shows `source: "atlantis"`
+     - Real regions: Shows all events EXCEPT antarctica/atlantis
+
+3. **Configuration** (`config.json`):
+   - `data.sources` defines the three event files
+   - Backend loads ALL sources regardless of environment
+   - Frontend handles display logic based on URL routing
+
+**Adding Your Own Region:**
+
+1. Fork the repository: `https://github.com/feileberlin/krwl-hof`
+2. Add your region to `config.json`:
+   ```json
+   "regions": {
+     "your-city": {
+       "name": "Your City",
+       "displayName": "Your City Name",
+       "center": {"lat": 48.1351, "lng": 11.5820},
+       "zoom": 13
+     }
+   }
+   ```
+3. Configure scrapers for your region's event sources
+4. Deploy and share with your community!
+
 ## 🚀 Quick Start for Developers
 
 Want to run it locally or contribute?
