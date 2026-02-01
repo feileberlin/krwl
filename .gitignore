@@ -89,6 +89,7 @@ lib/leaflet/
 lib/lucide/
 lib/roboto/
 lib/roboto-mono/
+!lib/versions.json
 public/index.html
 
 # WCAG protocol (auto-generated during build)

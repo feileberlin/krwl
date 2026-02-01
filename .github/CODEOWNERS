@@ -31,6 +31,7 @@ scripts/ @feileberlin
 
 # Critical files - must be reviewed carefully
 .github/copilot-instructions.md @feileberlin
+.github/agents/ @feileberlin
 features.json @feileberlin
 src/event_manager.py @feileberlin
 

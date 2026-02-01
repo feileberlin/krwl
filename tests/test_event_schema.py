@@ -449,13 +449,13 @@ class EventSchemaTester:
         )
     
     def test_events_example_file(self):
-        """Test events.demo.json against schema"""
+        """Test events.antarctica.json against schema"""
         print("\n=== Events Example File Validation ===")
         
-        events, error = self.load_events_file("events.demo.json")
+        events, error = self.load_events_file("events.antarctica.json")
         
         if error:
-            self.assert_test(False, "Load events.demo.json", error)
+            self.assert_test(False, "Load events.antarctica.json", error)
             return
         
         self.assert_test(
@@ -537,7 +537,7 @@ class EventSchemaTester:
         """Test that example events demonstrate all schema features"""
         print("\n=== Example vs Schema Consistency ===")
         
-        events, error = self.load_events_file("events.demo.json")
+        events, error = self.load_events_file("events.antarctica.json")
         
         if error:
             self.add_warning(f"Could not load example events: {error}")
@@ -578,7 +578,7 @@ class EventSchemaTester:
         
         events, error = self.load_events_file("events.json")
         if error or len(events) == 0:
-            events, error = self.load_events_file("events.demo.json")
+            events, error = self.load_events_file("events.antarctica.json")
         
         if error:
             self.add_warning(f"Could not load events for filter testing: {error}")
@@ -631,7 +631,7 @@ class EventSchemaTester:
         
         events, error = self.load_events_file("events.json")
         if error or len(events) == 0:
-            events, error = self.load_events_file("events.demo.json")
+            events, error = self.load_events_file("events.antarctica.json")
         
         if error:
             self.add_warning(f"Could not load events for filter testing: {error}")
@@ -695,7 +695,7 @@ class EventSchemaTester:
         
         events, error = self.load_events_file("events.json")
         if error or len(events) == 0:
-            events, error = self.load_events_file("events.demo.json")
+            events, error = self.load_events_file("events.antarctica.json")
         
         if error:
             self.add_warning(f"Could not load events for filter testing: {error}")

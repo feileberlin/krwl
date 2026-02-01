@@ -322,8 +322,12 @@ COMMANDS:
                               - Example: generate-icons --map marker
     update                    Update events data in existing site (fast)
     update-weather            Update weather data in existing site (fast, no rebuild)
-    dependencies fetch        Fetch third-party dependencies
-    dependencies check        Check if dependencies are present
+    dependencies fetch        Fetch third-party dependencies from CDN
+    dependencies check        Check if dependencies are present locally
+    dependencies update-check Check if dependency updates are available
+    dependencies update       Re-fetch dependencies with changed versions/content
+                              - Use --force or -f to force re-fetch all
+    dependencies info         Show version information for tracked assets
     
     telegram-bot              Start Telegram bot for event submissions and contact form
                               - Allows community members to submit events via /submit
@@ -459,10 +463,19 @@ EXAMPLES:
     python3 event_manager.py update
     
     # Fetch dependencies
-    python3 event_manager.py dependencies fetch
+    python3 src/event_manager.py dependencies fetch
     
     # Check dependencies
-    python3 event_manager.py dependencies check
+    python3 src/event_manager.py dependencies check
+    
+    # Check for dependency updates
+    python3 src/event_manager.py dependencies update-check
+    
+    # Update dependencies
+    python3 src/event_manager.py dependencies update
+    
+    # Show asset version info
+    python3 src/event_manager.py dependencies info
     
     # Scrape events from sources
     python3 event_manager.py scrape
@@ -3019,7 +3032,7 @@ def _execute_dependencies_command(args, base_path):
     """
     if not args.args:
         print("Error: Missing dependencies subcommand")
-        print("Usage: python3 event_manager.py dependencies [fetch|check]")
+        print("Usage: python3 src/event_manager.py dependencies [fetch|check|update-check|update|info]")
         return 1
     
     generator = SiteGenerator(base_path)
@@ -3031,8 +3044,22 @@ def _execute_dependencies_command(args, base_path):
     if subcommand == 'check':
         return 0 if generator.check_all_dependencies() else 1
     
+    if subcommand == 'update-check':
+        updates = generator.check_for_updates()
+        # Return 0 if no updates, 1 if updates available (for scripting)
+        has_updates = any(info['has_update'] for info in updates.values())
+        return 1 if has_updates else 0
+    
+    if subcommand == 'update':
+        force = '--force' in args.args or '-f' in args.args
+        return 0 if generator.update_dependencies(force=force) else 1
+    
+    if subcommand == 'info':
+        generator.show_asset_info()
+        return 0
+    
     print(f"Error: Unknown dependencies subcommand '{subcommand}'")
-    print("Usage: python3 event_manager.py dependencies [fetch|check]")
+    print("Usage: python3 src/event_manager.py dependencies [fetch|check|update-check|update|info]")
     return 1
 
 

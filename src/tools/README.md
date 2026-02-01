@@ -32,7 +32,7 @@ All tools can be run from the project root directory:
 python3 src/tools/generate_design_tokens.py
 
 # Demo events
-python3 src/tools/generate_demo_events.py > assets/json/events.demo.json
+python3 src/tools/generate_demo_events.py > assets/json/events.antarctica.json
 
 # Screenshots
 python3 src/tools/generate_screenshots.py --verbose

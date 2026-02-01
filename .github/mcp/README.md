@@ -21,6 +21,10 @@ The main MCP configuration file that defines:
 The following files are automatically provided as context to AI assistants:
 
 - `.github/copilot-instructions.md` - Project-specific Copilot instructions
+- `.github/agents/` - Custom Copilot agents for specialized tasks
+  - `docs_agent.md` - Documentation expert agent
+  - `planning-agent.md` - Planning agent for structured plans
+  - `implementation-agent.md` - Implementation agent for executing plans
 - `.github/COPILOT_SETUP.md` - Complete guide for setting up Copilot
 - `.github/CODEOWNERS` - Code ownership and review assignments
 - `.github/pull_request_template.md` - PR template with best practices checklist

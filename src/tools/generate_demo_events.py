@@ -26,7 +26,7 @@ Includes timezone-aware test cases to ensure proper international time handling.
 Timezone offset example: {"timezone_offset": 1} generates "2026-01-02T14:07:41+01:00"
 
 USAGE:
-    python3 scripts/generate_demo_events.py > data/events.demo.json
+    python3 scripts/generate_demo_events.py > data/events.antarctica.json
 
 FRONTEND INTEGRATION:
 The frontend's processTemplateEvents() method in assets/js/app.js detects 
@@ -54,7 +54,7 @@ def cleanup_old_files(base_dir="."):
     # List of old files to remove if they exist
     old_files = [
         # Old backup/temporary demo files (but NOT the main demo file)
-        "data/events.demo.json.old",
+        "data/events.antarctica.json.old",
         # Old backup files
         "data/events.backup.json",
         "assets/json/events.json.backup",

@@ -6,7 +6,7 @@ This script analyzes the actual events in the deployment and keeps only
 the marker files that correspond to categories actually in use.
 
 KISS Approach:
-1. Scan events.json and events.demo.json for categories
+1. Scan events.json and events.antarctica.json for categories
 2. Look up which markers those categories use (from config.json)
 3. Delete unused marker files
 4. Keep essential markers (default, geolocation)
@@ -29,7 +29,7 @@ MARKER_DIR = BASE_DIR / 'assets' / 'svg'
 CONFIG_FILE = BASE_DIR / 'config.json'
 EVENT_FILES = [
     BASE_DIR / 'assets' / 'json' / 'events.json',
-    BASE_DIR / 'assets' / 'json' / 'events.demo.json',
+    BASE_DIR / 'assets' / 'json' / 'events.antarctica.json',
     BASE_DIR / 'assets' / 'json' / 'pending_events.json'
 ]
 

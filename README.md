@@ -141,6 +141,84 @@ distance = haversine_distance(11.9167, 50.3167, 11.0767, 49.4521)
 print(f"{distance:.1f} km")  # 113.4 km (Hof to Nürnberg)
 ```
 
+### 🌍 Single-Page App with Three Content Types
+
+KRWL is a **Single-Page Application (SPA)** that serves three content types from one HTML page using URL-based routing:
+
+#### 1. 🐧 **Showcase** - Antarctica (`/` or `/antarctica`)
+**Purpose:** Project information and setup guide  
+**Location:** South Pole (90°S)  
+**Events:** Showcase events explaining how to fork and set up your own region
+
+When you visit the root URL (`/`), you'll see Antarctica - our project showcase page featuring fun demo events that explain:
+- How to fork the repository for your own community
+- How to configure your first region
+- Example events with various features (sunrise filtering, distance filtering, bookmarks, etc.)
+
+Perfect for developers exploring the project or wanting to set up KRWL for their own community!
+
+#### 2. 🌊 **Error-handling** - Atlantis (`/atlantis` or any unknown region)
+**Purpose:** Humorous 404 handler  
+**Location:** Mid-Atlantic Ridge (31°N 24°W)  
+**Events:** Playful sunken city-themed events with hints to visit `/` or fork the repo
+
+Try visiting an unconfigured region like `/berlin` or `/tokyo` - you'll be taken to Atlantis! This humorous 404 page features:
+- 🌊 Events about Poseidon's Palace tours and underwater archaeology
+- 🐠 Clever hints about visiting Antarctica (/) or forking the repo
+- 🏛️ A lighthearted way to explain the app structure to curious visitors
+
+#### 3. 🗺️ **Production** - Multiple Regional Entry Points
+**Purpose:** Live event calendars for actual communities  
+**Entry Points:** Each region has its own URL path  
+**Events:** Real scraped events from configured sources
+
+The SPA serves **multiple independent production regions**, each accessible via its own URL:
+- `/hof` - Hof (Saale) events
+- `/bth` - Bayreuth events  
+- `/nbg` - Nürnberg events
+- `/selb` - Selb events
+- `/rawetz` - Rehau/Schwarzenbach/Wunsiedel events
+
+Each production region:
+- Has its own geographic center and zoom level
+- Shows only real scraped events (excludes Antarctica/Atlantis)
+- Uses the same SPA with different URL routing
+- Can be added by configuring new regions in `config.json`
+
+**How It Works (Single-Page App Architecture):**
+
+One HTML page (`public/index.html`) serves all content, with client-side routing filtering events:
+
+1. **Backend** (`src/modules/site_generator.py`):
+   - Generates ONE static HTML file (570 KB)
+   - Embeds ALL 167 events from three sources: `events.json`, `events.antarctica.json`, `events.atlantis.json`
+
+2. **Frontend** (`assets/js/app.js`):
+   - Detects URL path without page reload (e.g., `/hof`, `/bth`, `/nbg`, `/`, `/unknown-region`)
+   - Filters events by `source` field client-side:
+     - **Showcase** (`/` or `/antarctica`): Shows `source: "antarctica"` or `source: "demo"`
+     - **Error-handling** (unknown regions): Shows `source: "atlantis"`
+     - **Production** (`/hof`, `/bth`, `/nbg`, `/selb`, `/rawetz`): Shows all events EXCEPT antarctica/atlantis
+
+3. **Multiple entry points** - Each production region (`/hof`, `/bth`, etc.) is a separate entry point to the same SPA
+
+**Adding Your Own Region:**
+
+1. Fork the repository: `https://github.com/feileberlin/krwl-hof`
+2. Add your region to `config.json`:
+   ```json
+   "regions": {
+     "your-city": {
+       "name": "Your City",
+       "displayName": "Your City Name",
+       "center": {"lat": 48.1351, "lng": 11.5820},
+       "zoom": 13
+     }
+   }
+   ```
+3. Configure scrapers for your region's event sources
+4. Deploy and share with your community!
+
 ## 🚀 Quick Start for Developers
 
 Want to run it locally or contribute?
@@ -244,6 +322,21 @@ All documentation lives in:
 4. **This README** - One consolidated guide (you're reading it!)
 
 No complex documentation systems. No wiki syncing. No auto-generated multi-file docs. Just code comments, CLI help, and this README.
+
+### 📖 Architecture & Decisions
+
+For deeper understanding of the codebase:
+
+- **[Architecture Overview](docs/architecture.md)** - Module dependency diagrams, data flow, system design
+- **[Architectural Decision Records (ADRs)](docs/adr/README.md)** - Why we made key design choices
+  - [ADR-001: Fallback List When Map Fails](docs/adr/001-fallback-list-when-map-fails.md)
+  - [ADR-002: Vanilla JS Over Frameworks](docs/adr/002-vanilla-js-over-frameworks.md)
+  - [ADR-003: Single Entry Point](docs/adr/003-single-entry-point.md)
+- **[Module Dependencies](DEPENDENCIES.md)** - Visual maps showing "what breaks if I change X"
+- **[Feature Registry](features.json)** - All features with dependencies and test methods
+- **[Copilot Instructions](.github/copilot-instructions.md)** - Guidelines for AI-assisted development
+
+**💡 Pro Tip**: Before making architectural changes, check the ADRs to understand the rationale behind current design decisions.
 
 ## 🛠️ CLI Usage
 

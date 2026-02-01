@@ -85,7 +85,10 @@ def main():
     print("\n4. Documentation Files:")
     doc_files = [
         '.github/copilot-instructions.md',
-        '.github/DEV_ENVIRONMENT.md'
+        '.github/DEV_ENVIRONMENT.md',
+        '.github/agents/docs_agent.md',
+        '.github/agents/planning-agent.md',
+        '.github/agents/implementation-agent.md'
     ]
     for filepath in doc_files:
         if not test_file_exists(filepath):
