@@ -1,4 +1,4 @@
-// KRWL HOF Community Events App - KISS Refactored
+// KRWL> Community Events App - KISS Refactored
 // 
 // This file coordinates modules and handles UI interactions.
 // Core logic delegated to focused modules (each < 500 lines):
@@ -374,7 +374,7 @@ class EventsApp {
             this.log('Pending events count:', count);
             
             // Update browser title
-            const baseTitle = 'KRWL HOF - Community Events';
+            const baseTitle = 'KRWL> - Community Events';
             if (count > 0) {
                 document.title = '❗ ' + baseTitle;
             } else {
