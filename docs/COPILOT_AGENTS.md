@@ -8,7 +8,7 @@ This repository uses a modular custom agent structure that allows different inst
 
 ## Available Agents
 
-### Default Agent (`.github/copilot-instructions.md`)
+### Default Agent (`../.github/copilot-instructions.md`)
 
 The default agent provides comprehensive project-specific context including:
 - Project architecture and technology stack
@@ -19,7 +19,7 @@ The default agent provides comprehensive project-specific context including:
 
 **When to use**: This is always active and provides general context for working with the codebase.
 
-### Planning Agent (`.github/copilot-agents/planning-agent.md`)
+### Planning Agent (`../.github/copilot-agents/planning-agent.md`)
 
 The planning agent specializes in creating structured, actionable plans for development work.
 
@@ -38,7 +38,7 @@ The planning agent specializes in creating structured, actionable plans for deve
 
 **Output location**: Plans are saved to `docs/plans/` with naming convention `YYYYMMDD-<description>.md`
 
-### Implementation Agent (`.github/copilot-agents/implementation-agent.md`)
+### Implementation Agent (`../.github/copilot-agents/implementation-agent.md`)
 
 The implementation agent specializes in executing plans and implementing code systematically.
 
@@ -236,9 +236,9 @@ A: No, they're optional. The default agent provides general guidance. Use custom
 
 ## Additional Resources
 
-- [Planning Agent Details](.github/copilot-agents/planning-agent.md)
-- [Implementation Agent Details](.github/copilot-agents/implementation-agent.md)
-- [Default Agent Instructions](.github/copilot-instructions.md)
+- [Planning Agent Details](../.github/copilot-agents/planning-agent.md)
+- [Implementation Agent Details](../.github/copilot-agents/implementation-agent.md)
+- [Default Agent Instructions](../.github/copilot-instructions.md)
 
 ---
 
