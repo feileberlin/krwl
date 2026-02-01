@@ -1,16 +1,17 @@
-# Merge Strategies for Automated Files
+# Preventing Timestamp Merge Conflicts
 
 > **Problem**: Automated workflows update JSON files with timestamps, causing merge conflicts when multiple updates happen concurrently.  
-> **Solution**: Use Git attributes to define merge strategies that prevent timestamp-only conflicts.
+> **Solution**: Use `git pull --rebase` in workflows + minimal .gitattributes rules for truly regenerable files.
 
 ---
 
 ## 📋 Table of Contents
 
 - [Overview](#overview)
+- [The Real Solution: Workflow Best Practices](#the-real-solution-workflow-best-practices)
 - [Affected Files](#affected-files)
-- [Merge Strategies](#merge-strategies)
-- [How It Works](#how-it-works)
+- [Git Attributes Strategy](#git-attributes-strategy)
+- [Workflow Requirements](#workflow-requirements)
 - [Testing](#testing)
 - [Troubleshooting](#troubleshooting)
 - [German Locale Considerations](#german-locale-considerations)
@@ -46,374 +47,377 @@ This is a **meaningless conflict** - the timestamp difference doesn't matter, bu
 
 ---
 
-## Affected Files
+## The Real Solution: Workflow Best Practices
 
-| File | Updated By | Timestamp Field | Merge Strategy |
-|------|------------|-----------------|----------------|
-| `reviewer_notes.json` | Event scraper | `timestamp` per note | **Union** - Keep all notes |
-| `weather_cache.json` | Weather scraper | `timestamp` in cache | **Union** - Accept both |
-| `pending_events.json` | Event scraper | `last_scraped` | **Union** - Prefer latest |
-| `events.json` | Editorial workflow | `last_updated` | **Union** - Keep all events |
-| `archived_events.json` | Archive script | `last_updated` | **Union** - Keep all events |
-| `rejected_events.json` | Editorial workflow | `last_updated` | **Union** - Keep all events |
-| `organizers.json` | Entity extraction | `updated_at` | **Union** - Keep all entities |
-| `locations.json` | Location verification | `last_modified` | **Union** - Keep all locations |
+**The primary solution is NOT merge strategies** - it's ensuring workflows follow these rules:
 
----
-
-## Merge Strategies
-
-### Union Merge
-
-**Strategy**: `merge=union`
-
-**What it does**: When both branches modify the same file, Git combines both versions by concatenating the changes.
-
-**When to use**: Files where having both versions is acceptable and won't break functionality.
-
-**Example**: `reviewer_notes.json`
-
-```json
-// Branch A adds note at 10:00
-{
-  "event_123": [
-    {"note": "Location ambiguous", "timestamp": "2026-02-01T10:00:00Z"}
-  ]
-}
-
-// Branch B adds note at 10:01
-{
-  "event_123": [
-    {"note": "Location ambiguous", "timestamp": "2026-02-01T10:01:00Z"}
-  ]
-}
-
-// After union merge - BOTH notes kept
-{
-  "event_123": [
-    {"note": "Location ambiguous", "timestamp": "2026-02-01T10:00:00Z"},
-    {"note": "Location ambiguous", "timestamp": "2026-02-01T10:01:00Z"}
-  ]
-}
-```
-
-**Why this is safe**:
-- Duplicate notes are harmless (reviewed events are filtered)
-- Application code deduplicates events by ID
-- Timestamps are informational only
-
-### Theirs Strategy (Manual)
-
-**Strategy**: `git merge -X theirs branch-name`
-
-**What it does**: Prefers incoming changes over local changes.
-
-**When to use**: Manual merges where you want the latest data to win.
-
-**Example**: Merging a feature branch that has old scrape data
-
-```bash
-# Feature branch has stale scrape data from 3 days ago
-# Main branch has fresh scrape data from 1 hour ago
-git merge -X theirs origin/main  # Use main's newer data
-```
-
----
-
-## How It Works
-
-### 1. Configuration
-
-The `.gitattributes` file in the repository root defines merge strategies:
-
-```gitattributes
-# Reviewer notes use union merge
-assets/json/reviewer_notes.json merge=union
-
-# Weather cache uses union merge
-assets/json/weather_cache.json merge=union
-
-# Events use union merge
-assets/json/events.json merge=union
-```
-
-### 2. Automatic Application
-
-When Git merges branches, it automatically applies the configured strategy:
-
-```bash
-# Normal merge
-git merge feature-branch
-
-# Git sees reviewer_notes.json changed in both branches
-# Instead of creating a conflict, it applies 'union' strategy
-# Result: Both changes are kept, no manual resolution needed
-```
-
-### 3. Workflow Integration
-
-Automated workflows pull with rebase to avoid merge commits:
+### ✅ Required Workflow Pattern
 
 ```yaml
 - name: Pull latest changes
   run: |
-    git pull --rebase origin main
+    git pull --rebase origin main  # CRITICAL: Use --rebase
+
+- name: Make changes
+  run: |
+    python3 src/event_manager.py scrape
+
+- name: Check for changes
+  id: check
+  run: |
+    git diff --exit-code assets/json/pending_events.json || echo "changes=true" >> $GITHUB_OUTPUT
+
+- name: Commit and push
+  if: steps.check.outputs.changes == 'true'
+  run: |
+    git add assets/json/pending_events.json  # Only specific file
+    git commit -m "🤖 Auto-update [skip ci]"
+    git push
 ```
 
-This ensures linear history and applies merge strategies when needed.
+### Why This Works
+
+1. **`git pull --rebase`** - Applies local changes on top of remote changes, avoiding merge commits
+2. **Check before commit** - Don't create empty commits if nothing changed
+3. **Specific files only** - Don't accidentally commit unrelated changes
+4. **[skip ci]** - Prevents infinite loop of workflow triggers
+
+---
+
+## Affected Files
+
+| File | Updated By | Conflict Risk | Strategy |
+|------|------------|---------------|----------|
+| `reviewer_notes.json` | Event scraper | Low (regenerated) | `.gitattributes: ours` |
+| `weather_cache.json` | Weather scraper | Low (regenerated) | `.gitattributes: ours` |
+| `pending_events.json` | Event scraper | Medium (cumulative) | **Workflow: pull --rebase** |
+| `events.json` | Editorial workflow | Medium (cumulative) | **Workflow: pull --rebase** |
+| `archived_events.json` | Archive script | Low (append-only) | **Workflow: pull --rebase** |
+| `rejected_events.json` | Editorial workflow | Low (rare conflicts) | **Workflow: pull --rebase** |
+| `organizers.json` | Entity extraction | Low (ID-based) | **Workflow: pull --rebase** |
+| `locations.json` | Location verification | Low (ID-based) | **Workflow: pull --rebase** |
+
+---
+
+## Git Attributes Strategy
+
+For **regenerable files** (files that are completely replaced on each run), we use `.gitattributes`:
+
+```gitattributes
+# Files that are completely regenerated (not cumulative)
+assets/json/reviewer_notes.json merge=ours
+assets/json/weather_cache.json merge=ours
+```
+
+### What `merge=ours` Does
+
+- **Keeps the current version** (the one in the branch being merged into)
+- **Ignores incoming changes** from the branch being merged
+- **Prevents conflicts** entirely on these files
+
+### When to Use `merge=ours`
+
+✅ **Use for**: Files that are completely regenerated on each run  
+❌ **DON'T use for**: Files that accumulate data (events, locations, etc.)
+
+### Why Not `merge=union`?
+
+**Union merge breaks JSON!** It concatenates changes line-by-line, creating invalid JSON:
+
+```json
+// Branch A
+{"timestamp": "10:00:00"}
+
+// Branch B
+{"timestamp": "11:00:00"}
+
+// Union merge (INVALID JSON!)
+{"timestamp": "10:00:00"}{"timestamp": "11:00:00"}
+```
+
+---
+
+## Workflow Requirements
+
+### ✅ Do This
+
+```yaml
+# CORRECT: Pull with rebase before pushing
+- name: Update data
+  run: |
+    git pull --rebase origin main
+    python3 src/event_manager.py scrape
+    git add assets/json/pending_events.json
+    git commit -m "Update events" || true
+    git push
+```
+
+### ❌ Don't Do This
+
+```yaml
+# WRONG: No pull before push
+- name: Update data
+  run: |
+    python3 src/event_manager.py scrape
+    git add .
+    git commit -m "Update"
+    git push  # Can create conflicts!
+```
+
+```yaml
+# WRONG: Pull without rebase
+- name: Update data
+  run: |
+    git pull origin main  # Creates merge commits
+    python3 src/event_manager.py scrape
+    git push
+```
+
+### Handling Push Conflicts
+
+If `git push` fails with "non-fast-forward" error:
+
+```yaml
+- name: Push with retry
+  run: |
+    git pull --rebase origin main
+    git push || (git pull --rebase origin main && git push)
+```
 
 ---
 
 ## Testing
 
-### Test Union Merge
+### Test Workflow Conflict Handling
+
+1. **Manually trigger two workflows simultaneously**:
+   ```bash
+   gh workflow run scheduled-scraping.yml
+   gh workflow run scheduled-scraping.yml  # Immediately after
+   ```
+
+2. **Verify both workflows complete successfully**:
+   ```bash
+   gh run list --workflow=scheduled-scraping.yml
+   ```
+
+3. **Check no merge conflicts** in commit history:
+   ```bash
+   git log --oneline --grep="conflict" -10
+   ```
+
+### Test .gitattributes Rules
 
 ```bash
-# 1. Create test branches
-git checkout -b test-branch-a main
-# Update reviewer_notes.json with timestamp A
+# Verify merge strategy is applied
+git check-attr merge assets/json/reviewer_notes.json
+# Expected: assets/json/reviewer_notes.json: merge: ours
+
+git check-attr merge assets/json/weather_cache.json
+# Expected: assets/json/weather_cache.json: merge: ours
+```
+
+### Simulate Concurrent Updates
+
+```bash
+# Create test scenario
+git checkout -b test-workflow-a
+echo '{"test": "A"}' > assets/json/reviewer_notes.json
 git add assets/json/reviewer_notes.json
 git commit -m "Update A"
 
-git checkout -b test-branch-b main
-# Update reviewer_notes.json with timestamp B
+git checkout main
+git checkout -b test-workflow-b
+echo '{"test": "B"}' > assets/json/reviewer_notes.json
 git add assets/json/reviewer_notes.json
 git commit -m "Update B"
 
-# 2. Merge both branches
+# Merge both (should use 'ours' strategy)
 git checkout main
-git merge test-branch-a  # First merge (fast-forward)
-git merge test-branch-b  # Second merge (should use union strategy)
+git merge test-workflow-a
+git merge test-workflow-b  # Should keep version from test-workflow-a
 
-# 3. Verify no conflicts
-git status  # Should show "nothing to commit"
-
-# 4. Validate JSON structure
-python3 -m json.tool assets/json/reviewer_notes.json
-
-# 5. Cleanup
-git branch -D test-branch-a test-branch-b
-```
-
-### Test in CI/CD
-
-Simulate concurrent workflow runs:
-
-```bash
-# Terminal 1: Trigger manual scrape
-gh workflow run scheduled-scraping.yml
-
-# Terminal 2: Trigger weather update (at same time)
-gh workflow run scheduled-scraping.yml
-
-# Both workflows commit to same files
-# Merge strategies prevent conflicts
+# Cleanup
+git branch -D test-workflow-a test-workflow-b
 ```
 
 ---
 
 ## Troubleshooting
 
-### Conflicts Still Happening
+### Still Getting Conflicts?
 
-**Check if .gitattributes is committed:**
+**Check 1: Workflow uses rebase**
+
+```yaml
+# ✅ CORRECT
+git pull --rebase origin main
+
+# ❌ WRONG
+git pull origin main
+```
+
+**Check 2: .gitattributes is committed**
 
 ```bash
 git ls-files .gitattributes
 # Should output: .gitattributes
 ```
 
-**Verify merge strategy is applied:**
+**Check 3: Merge attribute is applied**
 
 ```bash
 git check-attr merge assets/json/reviewer_notes.json
-# Should output: assets/json/reviewer_notes.json: merge: union
+# Should output: merge: ours
 ```
 
-**Re-apply .gitattributes:**
+**Check 4: Workflow commits specific files only**
 
-```bash
-# If .gitattributes was added recently, clear cache
-git rm --cached -r .
-git reset --hard
+```yaml
+# ✅ CORRECT
+git add assets/json/pending_events.json
+
+# ❌ WRONG
+git add .
 ```
+
+### Conflicts on Event Data Files
+
+If you get conflicts on `events.json`, `pending_events.json`, etc.:
+
+**This is expected!** These files accumulate data and shouldn't use auto-merge strategies.
+
+**Resolution**:
+1. Ensure both branches used `git pull --rebase` before pushing
+2. If conflict occurs during manual merge:
+   ```bash
+   # Keep incoming changes (usually newer)
+   git checkout --theirs assets/json/pending_events.json
+   # Or manually merge in editor
+   ```
 
 ### Invalid JSON After Merge
 
-**Cause**: Union merge can create invalid JSON if both branches modify the same object.
-
-**Example**:
-
-```json
-// Branch A
-{"key": "value1"}
-
-// Branch B  
-{"key": "value2"}
-
-// After union merge (INVALID)
-{"key": "value1"}{"key": "value2"}
-```
-
-**Solution**: Run JSON validation after merge:
+If JSON is corrupted after merge:
 
 ```bash
-python3 -m json.tool assets/json/reviewer_notes.json
-# If invalid, manually fix the JSON structure
+# Validate JSON
+python3 -m json.tool assets/json/events.json
+
+# If invalid, restore from backup
+git checkout HEAD~1 assets/json/events.json
 ```
 
-**Prevention**: Ensure JSON files use array-based structure at root level:
-
-```json
-// Good - Array at root
-[
-  {"id": "1", "data": "A"},
-  {"id": "2", "data": "B"}
-]
-
-// Better - Object with arrays
-{
-  "items": [
-    {"id": "1", "data": "A"}
-  ],
-  "metadata": {
-    "last_updated": "2026-02-01T10:00:00Z"
-  }
-}
-```
-
-### Workflow Still Shows Conflicts
-
-**Check workflow uses pull with rebase:**
-
-```yaml
-- name: Pull latest changes
-  run: |
-    git pull --rebase origin main  # ✅ Correct
-    # NOT: git pull origin main    # ❌ Wrong - creates merge commits
-```
-
-**Check workflow commits correct files:**
-
-```yaml
-- name: Commit changes
-  run: |
-    git add assets/json/pending_events.json  # ✅ Specific file
-    # NOT: git add .                         # ❌ Wrong - adds everything
-```
+**Prevention**: Don't use `merge=union` for JSON files!
 
 ---
 
 ## German Locale Considerations
 
-### Git Merge Strategies (Locale-Independent)
+### Git Commands (Locale-Independent)
 
-Git merge strategies work the same regardless of system locale:
+Git merge behavior is locale-independent:
 
 ```bash
 # German locale
 export LANG=de_DE.UTF-8
-git merge feature-branch  # Merge strategies still work
+git pull --rebase  # Works the same
 
 # English locale
 export LANG=en_US.UTF-8
-git merge feature-branch  # Same behavior
+git pull --rebase  # Works the same
 ```
 
 ### Timestamp Formats (ISO 8601)
 
-All timestamps in this project use **ISO 8601 format**, which is locale-independent:
+All timestamps use **ISO 8601 format** (locale-independent):
 
 ```python
-# Python code (locale-independent)
 from datetime import datetime
 timestamp = datetime.now().isoformat()
 # Output: "2026-02-01T10:00:00.123456"
-```
-
-```json
-// JSON data (always ISO 8601)
-{
-  "timestamp": "2026-02-01T10:00:00Z",
-  "last_scraped": "2026-02-01T10:00:00+01:00"
-}
-```
-
-### Git Commit Messages (Can Use German)
-
-Commit messages can use German without affecting merge behavior:
-
-```bash
-# German commit message
-git commit -m "🤖 Ereignisse automatisch gescraped [geplant]"
-
-# English commit message
-git commit -m "🤖 Auto-scraped events [scheduled]"
-
-# Both work with merge strategies
+# Same format regardless of LANG setting
 ```
 
 ### Error Messages
 
-Git error messages may appear in German if `LANG=de_DE.UTF-8`:
+Git error messages may appear in German:
 
 ```bash
 # German
-$ git merge feature
-Automatisches Merging von assets/json/reviewer_notes.json
+$ git push
+Fehler: failed to push some refs
 
 # English
-$ git merge feature
-Auto-merging assets/json/reviewer_notes.json
+$ git push
+error: failed to push some refs
 ```
 
-**Important**: Merge strategies work regardless of error message language.
+Both indicate the same issue - solution is the same regardless of language.
+
+### Commit Messages
+
+Use German or English freely:
+
+```bash
+git commit -m "🤖 Ereignisse automatisch gescraped"
+git commit -m "🤖 Auto-scraped events"
+# Both work identically with merge strategies
+```
 
 ---
 
 ## Best Practices
 
+### For Workflow Authors
+
+1. **Always use `git pull --rebase`** before committing
+2. **Check for changes** before committing (avoid empty commits)
+3. **Commit specific files** only, not entire working directory
+4. **Use [skip ci]** in commit messages when appropriate
+5. **Add retry logic** for push failures
+
+### Example: Complete Workflow Step
+
+```yaml
+- name: Scrape and commit events
+  run: |
+    # Pull latest (with rebase to avoid merge commits)
+    git pull --rebase origin main
+    
+    # Make changes
+    python3 src/event_manager.py scrape
+    
+    # Check if file actually changed
+    if git diff --exit-code assets/json/pending_events.json; then
+      echo "No changes to commit"
+      exit 0
+    fi
+    
+    # Commit specific file
+    git add assets/json/pending_events.json
+    git commit -m "🤖 Auto-scraped events [skip ci]"
+    
+    # Push with retry
+    git push || (git pull --rebase origin main && git push)
+```
+
 ### For Developers
 
-1. **Always pull with rebase** before pushing:
+1. **Don't manually edit auto-generated files** - Use workflows instead
+2. **If you must edit manually**:
    ```bash
-   git pull --rebase origin main
+   git pull --rebase origin main  # Get latest first
+   # Edit file
+   git add specific_file.json
+   git commit -m "Manual update"
    git push
    ```
 
-2. **Validate JSON after manual merges**:
+3. **If push is rejected**:
    ```bash
-   python3 -m json.tool assets/json/events.json
-   ```
-
-3. **Use specific file commits** in workflows:
-   ```bash
-   git add assets/json/pending_events.json  # Good
-   # Avoid: git add .                       # Bad
-   ```
-
-### For Workflow Maintainers
-
-1. **Check for changes before committing**:
-   ```yaml
-   - name: Check for changes
-     id: check
-     run: |
-       git diff --exit-code assets/json/pending_events.json || echo "changes=true" >> $GITHUB_OUTPUT
-   ```
-
-2. **Only commit if changes exist**:
-   ```yaml
-   - name: Commit changes
-     if: steps.check.outputs.changes == 'true'
-     run: |
-       git add assets/json/pending_events.json
-       git commit -m "Auto-update"
-   ```
-
-3. **Use [skip ci] for automated commits**:
-   ```yaml
-   git commit -m "🤖 Auto-scraped events [skip ci]"
+   git pull --rebase origin main
+   git push
    ```
 
 ---
@@ -421,20 +425,19 @@ Auto-merging assets/json/reviewer_notes.json
 ## Related Documentation
 
 - [Git Attributes Documentation](https://git-scm.com/docs/gitattributes)
-- [Merge Strategies](https://git-scm.com/docs/merge-strategies)
+- [Git Rebase](https://git-scm.com/docs/git-rebase)
 - [Project Copilot Instructions](../../.github/copilot-instructions.md)
 - [GitHub Actions Workflows](../../.github/workflows/)
 
 ---
 
-## Questions or Issues?
+## Summary: The Key Insight
 
-If you encounter merge conflicts that shouldn't happen:
+**Merge strategies alone don't solve JSON conflicts.**
 
-1. Check `.gitattributes` is committed and up to date
-2. Verify merge strategy: `git check-attr merge path/to/file`
-3. Validate JSON structure: `python3 -m json.tool file.json`
-4. Check workflow logs for error messages
-5. Open an issue with details: branch names, conflict content, workflow run URL
+The real solution is:
+1. **Primary**: Workflows must use `git pull --rebase` before pushing
+2. **Secondary**: Use `.gitattributes` with `merge=ours` for regenerable files only
+3. **Never**: Use `merge=union` for JSON files (breaks structure)
 
-**Remember**: Merge strategies prevent **timestamp-only** conflicts. If the actual data conflicts (different event details, different location data), you'll still need to resolve manually.
+**For cumulative JSON files** (events, locations, etc.), conflicts are actually useful - they indicate real issues that need review.
