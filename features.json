@@ -17,7 +17,19 @@
         "scraping.interval_minutes"
       ],
       "test_method": "check_files_exist",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [
+        "facebook-flyer-ocr",
+        "editor-workflow",
+        "ai-categorization",
+        "ai-event-extraction"
+      ],
+      "breaks_if_missing": [
+        "No events can be scraped from external sources",
+        "Pending event queue remains empty",
+        "Manual event entry becomes only option"
+      ],
+      "test_command": "python3 src/event_manager.py scrape && python3 tests/test_scraper.py --verbose"
     },
     {
       "id": "facebook-flyer-ocr",
@@ -50,7 +62,13 @@
       "documentation": "README.md section: 📸 Facebook Flyer Scraping with OCR",
       "depends_on": [
         "event-scraping"
-      ]
+      ],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Facebook flyer images cannot be analyzed",
+        "Manual event entry required for Facebook events"
+      ],
+      "test_command": "python3 tests/test_ocr_availability.py --verbose"
     },
     {
       "id": "editor-workflow",
@@ -68,7 +86,16 @@
       "test_method": "check_files_exist",
       "depends_on": [
         "event-scraping"
-      ]
+      ],
+      "used_by": [
+        "static-site-generation"
+      ],
+      "breaks_if_missing": [
+        "Events cannot be reviewed before publishing",
+        "Malicious or invalid events may reach production",
+        "No way to reject spam events"
+      ],
+      "test_command": "python3 src/event_manager.py list-pending && python3 src/event_manager.py list"
     },
     {
       "id": "python-tui",
@@ -87,7 +114,13 @@
         }
       ],
       "test_method": "check_code_patterns",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "No interactive menu for manual event management",
+        "Must use CLI commands only"
+      ],
+      "test_command": "python3 src/event_manager.py"
     },
     {
       "id": "cli-commands",
@@ -111,7 +144,17 @@
         }
       ],
       "test_method": "check_code_patterns",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [
+        "github-environments",
+        "telegram-bot-github-actions"
+      ],
+      "breaks_if_missing": [
+        "Automation and CI/CD workflows break",
+        "Cannot run batch operations",
+        "GitHub Actions workflows fail"
+      ],
+      "test_command": "python3 src/event_manager.py --help"
     },
     {
       "id": "interactive-map",
@@ -136,7 +179,19 @@
         }
       ],
       "test_method": "check_code_patterns",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [
+        "geolocation-filtering",
+        "custom-location",
+        "map-markers",
+        "draggable-speech-bubbles"
+      ],
+      "breaks_if_missing": [
+        "No visual map display of events",
+        "Must use fallback list view",
+        "Geolocation filtering unavailable"
+      ],
+      "test_command": "Open public/index.html and verify map loads with markers"
     },
     {
       "id": "geolocation-filtering",
@@ -165,7 +220,16 @@
       "test_method": "check_code_patterns",
       "depends_on": [
         "interactive-map"
-      ]
+      ],
+      "used_by": [
+        "sunrise-filtering"
+      ],
+      "breaks_if_missing": [
+        "Cannot filter events by proximity to user",
+        "All events shown regardless of distance",
+        "Sunrise filtering may fail (depends on user location)"
+      ],
+      "test_command": "Open public/index.html and test geolocation permission prompt"
     },
     {
       "id": "sunrise-filtering",
@@ -194,7 +258,13 @@
       "test_method": "check_code_patterns",
       "depends_on": [
         "geolocation-filtering"
-      ]
+      ],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Cannot filter events by time until sunrise",
+        "Extended time filters may be less useful"
+      ],
+      "test_command": "python3 src/modules/filter_tester.py --verbose"
     },
     {
       "id": "extended-time-filters",
@@ -218,7 +288,12 @@
         }
       ],
       "test_method": "check_code_patterns",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Extended Time Filter Options"
     },
     {
       "id": "static-site-generation",
@@ -232,7 +307,17 @@
       "test_method": "check_files_exist",
       "depends_on": [
         "editor-workflow"
-      ]
+      ],
+      "used_by": [
+        "preview-deployment",
+        "production-deployment"
+      ],
+      "breaks_if_missing": [
+        "No HTML output to deploy",
+        "Site cannot be published",
+        "All deployment workflows fail"
+      ],
+      "test_command": "python3 src/event_manager.py generate && ls public/index.html"
     },
     {
       "id": "debug-mode",
@@ -264,7 +349,14 @@
         }
       ],
       "test_method": "check_code_patterns",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "No debug UI for developers",
+        "Harder to diagnose issues",
+        "WCAG warnings not visible"
+      ],
+      "test_command": "Set debug=true in config.json, run generate, check dashboard debug section"
     },
     {
       "id": "production-optimization",
@@ -293,7 +385,12 @@
       "test_method": "check_code_patterns",
       "depends_on": [
         "static-site-generation"
-      ]
+      ],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Production Optimization"
     },
     {
       "id": "preview-deployment",
@@ -305,7 +402,12 @@
         ".github/workflows/deploy-preview.yml"
       ],
       "test_method": "check_files_exist",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Preview Deployment"
     },
     {
       "id": "production-deployment",
@@ -317,7 +419,12 @@
         ".github/workflows/deploy-pages.yml"
       ],
       "test_method": "check_files_exist",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Production Deployment"
     },
     {
       "id": "promotion-workflow",
@@ -329,7 +436,12 @@
         ".github/workflows/promote-preview.yml"
       ],
       "test_method": "check_files_exist",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Promotion Workflow"
     },
     {
       "id": "demo-events",
@@ -341,7 +453,16 @@
         "src/tools/generate_demo_events.py"
       ],
       "test_method": "check_files_exist",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [
+        "multi-data-sources"
+      ],
+      "breaks_if_missing": [
+        "No test data for development",
+        "Empty map in development mode",
+        "Harder to test features without real scraped events"
+      ],
+      "test_command": "Set data.source='both' in config.json, run generate, verify demo events appear"
     },
     {
       "id": "multi-data-sources",
@@ -370,7 +491,12 @@
         }
       ],
       "test_method": "check_code_patterns",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Multiple Data Sources"
     },
     {
       "id": "custom-domain-support",
@@ -383,7 +509,12 @@
         ".github/workflows/deploy-pages.yml"
       ],
       "test_method": "check_files_exist",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Custom Domain Support"
     },
     {
       "id": "event-filters",
@@ -408,7 +539,18 @@
         }
       ],
       "test_method": "check_code_patterns",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [
+        "geolocation-filtering",
+        "sunrise-filtering",
+        "extended-time-filters"
+      ],
+      "breaks_if_missing": [
+        "Cannot search or filter events",
+        "All events shown at once",
+        "Poor user experience with many events"
+      ],
+      "test_command": "python3 src/modules/filter_tester.py --verbose"
     },
     {
       "id": "backup-system",
@@ -427,7 +569,14 @@
         }
       ],
       "test_method": "check_code_patterns",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "No event history preserved",
+        "Cannot recover accidentally deleted events",
+        "Data loss risk increases"
+      ],
+      "test_command": "Check backups/events/ directory for timestamped backups"
     },
     {
       "id": "custom-location",
@@ -455,7 +604,14 @@
       "depends_on": [
         "interactive-map",
         "geolocation-filtering"
-      ]
+      ],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Users cannot override geolocation",
+        "Privacy-conscious users stuck with browser location",
+        "Cannot manually set preferred location"
+      ],
+      "test_command": "Open public/index.html, try custom location feature in dashboard"
     },
     {
       "id": "documentation-viewer",
@@ -480,7 +636,12 @@
         }
       ],
       "test_method": "check_code_patterns",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Built-in Documentation Viewer"
     },
     {
       "id": "example-data-loader",
@@ -499,7 +660,12 @@
         }
       ],
       "test_method": "check_code_patterns",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Example Data Loader"
     },
     {
       "id": "data-management",
@@ -518,7 +684,12 @@
         }
       ],
       "test_method": "check_code_patterns",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Data Management Tools"
     },
     {
       "id": "event-cards",
@@ -538,7 +709,17 @@
         }
       ],
       "test_method": "check_code_patterns",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [
+        "interactive-map",
+        "draggable-speech-bubbles"
+      ],
+      "breaks_if_missing": [
+        "Events cannot be displayed in UI",
+        "Fallback list view unavailable",
+        "Critical rendering failure"
+      ],
+      "test_command": "Open public/index.html and verify event cards render"
     },
     {
       "id": "map-markers",
@@ -557,7 +738,16 @@
         }
       ],
       "test_method": "check_code_patterns",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [
+        "draggable-speech-bubbles"
+      ],
+      "breaks_if_missing": [
+        "Events not visible on map",
+        "No clickable event locations",
+        "Map appears empty"
+      ],
+      "test_command": "Open public/index.html and verify markers appear on map"
     },
     {
       "id": "distance-calculation",
@@ -582,7 +772,12 @@
         }
       ],
       "test_method": "check_code_patterns",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Distance Calculation"
     },
     {
       "id": "responsive-design",
@@ -608,7 +803,12 @@
         }
       ],
       "test_method": "check_code_patterns",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Responsive Design"
     },
     {
       "id": "workflow-launcher",
@@ -636,7 +836,12 @@
       "test_method": "run_custom_test",
       "test_file": "tests/test_workflow_inputs.py",
       "test_instructions": "1. Run workflow input tests: python3 tests/test_workflow_inputs.py\n2. View demo: python3 examples/demo_workflow_inputs.py\n3. List workflows: python3 src/event_manager.py workflow list\n4. Check status (requires gh auth): python3 src/event_manager.py workflow status scrape-events\n5. Trigger workflow: python3 src/event_manager.py workflow run scrape-events --branch preview --input force_deploy=true\n6. Verify help text: python3 src/event_manager.py --help | grep workflow",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for GitHub Actions Workflow Launcher"
     },
     {
       "id": "copilot-custom-instructions",
@@ -649,7 +854,12 @@
         ".github/pull_request_template.md"
       ],
       "test_method": "check_files_exist",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for GitHub Copilot Custom Instructions"
     },
     {
       "id": "vscode-workspace-config",
@@ -664,7 +874,12 @@
         ".vscode/launch.json"
       ],
       "test_method": "check_files_exist",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for VS Code Workspace Configuration"
     },
     {
       "id": "devcontainer-config",
@@ -676,7 +891,12 @@
         ".devcontainer/devcontainer.json"
       ],
       "test_method": "check_files_exist",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Development Container Configuration"
     },
     {
       "id": "mcp-server-config",
@@ -689,7 +909,12 @@
         ".github/mcp/README.md"
       ],
       "test_method": "check_files_exist",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Model Context Protocol (MCP) Server Configuration"
     },
     {
       "id": "dev-environment-docs",
@@ -701,7 +926,12 @@
         "README.md"
       ],
       "test_method": "check_files_exist",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Development Environment Documentation"
     },
     {
       "id": "dashboard-menu",
@@ -729,7 +959,18 @@
       "test_method": "automated",
       "test_file": "tests/test_watermark_simplification.py",
       "test_instructions": "Run: python3 tests/test_watermark_simplification.py",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [
+        "debug-mode",
+        "environment-watermark",
+        "custom-location"
+      ],
+      "breaks_if_missing": [
+        "Cannot access app settings",
+        "No debug information visible",
+        "No way to change custom location"
+      ],
+      "test_command": "Open public/index.html and click logo to open dashboard"
     },
     {
       "id": "environment-watermark",
@@ -746,7 +987,12 @@
       "code_patterns": [],
       "test_method": "none",
       "test_instructions": "This feature has been replaced by dashboard-menu. See dashboard-menu for testing.",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Environment Watermark (REPLACED by dashboard-menu)"
     },
     {
       "id": "github-environments",
@@ -773,7 +1019,12 @@
       ],
       "test_method": "manual",
       "test_instructions": "1. Navigate to GitHub repository\n2. Click 'Environments' in sidebar\n3. Verify 'production' and 'preview' environments are listed\n4. Click on environment to see deployment history\n5. Click 'View deployment' button to open deployed site",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for GitHub Environments UI Integration"
     },
     {
       "id": "time-drawer",
@@ -806,7 +1057,12 @@
       ],
       "test_method": "manual",
       "test_instructions": "1. Open the app with 5+ events\n2. Set filter to 'til sunrise'\n3. Verify time drawer appears at bottom\n4. Drag the handle left/right\n5. Verify markers scale dynamically (70%-130%)\n6. Verify largest markers have glow effect\n7. Try with < 5 events - drawer should show threshold message\n8. Change filter to '6h' - drawer should disappear\n9. Test on mobile - touch gestures should work",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Dynamic Time-Based Marker Resizing"
     },
     {
       "id": "keyboard-navigation",
@@ -826,7 +1082,12 @@
       ],
       "test_method": "manual",
       "test_instructions": "1. Open the app and click on an event to view details\n2. Press ESC - detail popup should close\n3. Open an event detail again\n4. Press Right Arrow - should navigate to next event (sorted by time)\n5. Press Left Arrow - should navigate to previous event\n6. Navigate past the last event - should wrap to first event\n7. Press + or = key - map should zoom in\n8. Press - or _ key - map should zoom out\n9. Test that map centers on events during arrow navigation\n10. Open filter dropdown and press ESC - dropdown should close",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Keyboard Navigation"
     },
     {
       "id": "app-ready-signal",
@@ -848,7 +1109,12 @@
       ],
       "test_method": "automated",
       "test_instructions": "1. Start local server: cd static && python3 -m http.server 8000\n2. Run test script: python3 src/tools/generate_screenshots.py --verbose\n3. Verify body[data-app-ready='true'] attribute is set after page load\n4. Verify 'app-ready' custom event is dispatched with event.detail metadata\n5. Check that screenshots are captured with fully loaded map and events\n6. Verify both mobile (640×1136) and desktop (1280×800) screenshots are generated",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for App Ready Signal for Screenshots"
     },
     {
       "id": "html-export-linting",
@@ -875,7 +1141,12 @@
       ],
       "test_method": "automated",
       "test_instructions": "1. Run unit tests: python3 tests/test_linter.py --verbose\n2. Generate site: python3 src/event_manager.py generate\n3. Verify linting output shows validation of:\n   - JavaScript (checks for eval(), console.log, bracket matching)\n   - CSS (checks for bracket matching, !important overuse)\n   - HTML (checks for doctype, lang attribute, required tags)\n   - SVG (checks for script tags, event handlers, security issues)\n   - Translations (checks for completeness, consistency between languages)\n   - Accessibility (checks for WCAG 2.1 Level AA compliance)\n4. Confirm build completes even with lint warnings (non-blocking)\n5. Review lint report for actionable issues",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for HTML Export Linting"
     },
     {
       "id": "markdown-html-builder",
@@ -904,7 +1175,12 @@
       "config_keys": [],
       "test_method": "manual",
       "test_instructions": "1. Install dependencies: pip install markdown>=3.5.0 Pygments>=2.17.0\n2. Build documentation: python3 src/event_manager.py docs build\n3. Verify all .md files converted to .html with:\n   - GitHub dark theme (#0d1117 background, #c9d1d9 text)\n   - Barbie Pink (#FF69B4) headings and accents\n   - Syntax highlighting in code blocks\n   - Navigation bar on every page\n4. Verify file organization in docs/\n5. Verify docs/index.html generated with categorized navigation\n6. Test cleanup script: python3 src/tools/cleanup_old_docs.py --dry-run\n7. Open docs/index.html in browser and verify it works with file:// protocol",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Markdown to HTML Documentation Builder"
     },
     {
       "id": "pydantic-validation",
@@ -927,7 +1203,12 @@
       ],
       "test_method": "automated",
       "test_instructions": "Run: python3 tests/test_validation.py --verbose",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Pydantic Data Validation"
     },
     {
       "id": "error-handling-retry-logic",
@@ -953,7 +1234,12 @@
       ],
       "test_method": "integration",
       "test_instructions": "1. Run scraper with one invalid source: python3 src/event_manager.py scrape\n2. Verify scraper continues despite source failure\n3. Check logs for retry attempts and error details\n4. Verify _write_scrape_status includes error summary",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Robust Error Handling and Retry Logic"
     },
     {
       "id": "structured-logging",
@@ -982,7 +1268,12 @@
       ],
       "test_method": "manual",
       "test_instructions": "1. Run CLI with debug: python3 src/event_manager.py scrape --debug\n2. Verify DEBUG level logs appear\n3. Run TUI: python3 src/event_manager.py\n4. Verify logs written to logs/event_manager.log\n5. Check log rotation works (max 5MB per file)",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Structured Logging System"
     },
     {
       "id": "configuration-validation",
@@ -1002,7 +1293,12 @@
       ],
       "test_method": "manual",
       "test_instructions": "1. Temporarily break config.json (invalid lat/lon, missing field)\n2. Run: python3 src/event_manager.py list\n3. Verify helpful ConfigurationError with field name\n4. Restore config.json",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Configuration Validation"
     },
     {
       "id": "styled-html-docs",
@@ -1022,7 +1318,12 @@
       ],
       "test_method": "check_files_exist",
       "cli_command": "python3 src/event_manager.py docs html-docs",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Styled HTML Documentation"
     },
     {
       "id": "unified-workflow-wrapper",
@@ -1059,7 +1360,12 @@
       "test_method": "manual",
       "test_instructions": "[DEPRECATED - This feature is no longer implemented]\n\nThe unified workflow was replaced by split workflows:\n- scheduled-scraping.yml (event/weather scraping)\n- deploy.yml (deployment)\n- editorial-workflow.yml (editorial review)\n- monthly-archive.yml (archiving)\n- maintenance.yml (manual maintenance)\n\nTo validate, check each workflow exists:\npython3 -c \"import os; print(all(os.path.exists(f'.github/workflows/{w}') for w in ['scheduled-scraping.yml', 'deploy.yml', 'editorial-workflow.yml', 'monthly-archive.yml', 'maintenance.yml']))\"",
       "cli_command": "python3 src/event_manager.py scraper-info",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Unified Workflow Wrapper (Adaptive)"
     },
     {
       "id": "event-archiving",
@@ -1103,7 +1409,14 @@
       "test_file": "tests/test_archive_events.py",
       "test_instructions": "1. Run archiving tests: python3 tests/test_archive_events.py\n2. Test dry-run: python3 src/event_manager.py archive-monthly --dry-run\n3. View configuration: python3 src/event_manager.py archive-info\n4. Test with different retention: Edit config.json → archiving.retention.active_window_days\n5. Verify archives created: Check assets/json/events/archived/ directory\n6. Test GitHub Actions: Trigger \"📦 Monthly Event Archiving\" workflow (monthly-archive.yml)",
       "cli_command": "python3 src/event_manager.py archive-monthly --dry-run",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Old events accumulate in active list",
+        "Site performance degrades over time",
+        "Event history not organized by month"
+      ],
+      "test_command": "python3 src/event_manager.py archive-monthly --dry-run"
     },
     {
       "id": "responsive-viewport-system",
@@ -1134,7 +1447,12 @@
       ],
       "test_method": "manual",
       "test_instructions": "1. Open app in browser\n2. Verify no hardcoded 100vh/100vw in layers: grep -r '100vh\\|100vw' assets/css/*.css\n3. Test mobile: Open DevTools → Mobile view → Toggle device toolbar\n4. Test orientation: Rotate device/emulator from portrait to landscape\n5. Test address bar: Scroll on mobile to hide/show address bar\n6. Verify CSS variables: Open DevTools → Elements → :root → Check --app-width and --app-height\n7. Test resize: Resize browser window and verify all layers scale together\n8. Test keyboard: On mobile, focus input field to show keyboard, verify layers adjust\n9. Architecture analysis: Read docs/LAYER_ARCHITECTURE_ANALYSIS.md for design rationale",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Responsive Viewport System for Multi-Layer Architecture"
     },
     {
       "id": "weather-dresscode",
@@ -1194,7 +1512,14 @@
       ],
       "test_method": "check_code_patterns",
       "test_instructions": "1. Run weather calculator: python3 src/event_manager.py scrape-weather\n2. Verify cache created: assets/json/weather_cache.json with 12-hour cache\n3. Check dresscode is 3 words max (e.g., 'warm jacket needed', 'light rain jacket')\n4. Test fallback: When API fails, displays 'remind the weather'\n5. Test retry logic: python3 tests/test_weather_scraper_resilience.py --verbose\n6. Test cache fallback: python3 src/event_manager.py scrape-weather (uses cache within 12 hours)\n7. Test strict mode: python3 src/event_manager.py scrape-weather --strict\n8. Generate site: python3 src/event_manager.py generate\n9. Verify APP_CONFIG.weather.data is embedded in public/index.html\n10. Open site and verify dresscode appears in filter bar sentence\n11. Test GitHub Actions: Trigger scheduled-scraping.yml workflow",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "No weather information displayed",
+        "Users cannot see what to wear",
+        "Filter bar less informative"
+      ],
+      "test_command": "python3 src/event_manager.py scrape-weather && python3 src/event_manager.py update-weather"
     },
     {
       "id": "draggable-speech-bubbles",
@@ -1206,7 +1531,14 @@
       "code_patterns": [],
       "test_method": "manual",
       "test_instructions": "Feature removed - using Leaflet default popups instead",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Speech bubbles fixed in position",
+        "May overlap with other UI elements",
+        "Users cannot reposition event details"
+      ],
+      "test_command": "Open public/index.html, click marker, try dragging speech bubble"
     },
     {
       "id": "ai-categorization",
@@ -1235,7 +1567,12 @@
       ],
       "test_method": "check_code_patterns",
       "test_instructions": "1. Run AI categorization tests: python3 tests/test_ai_categorization.py\n2. Test keyword fallback (no Ollama): All 7 test events should categorize correctly\n3. Optional AI test (requires Ollama):\n   a. Install Ollama: https://ollama.ai/\n   b. Run: ollama pull llama3.2\n   c. Start Ollama service\n   d. Enable in config.json: ai.categorization.enabled = true\n   e. Run scraper: python3 src/event_manager.py scrape\n   f. Verify events get categorized (check logs for 'AI categorized')\n4. Test status: python3 -c 'from modules.ai_categorizer import *; from modules.utils import *; c = AICategorizer(load_config(Path(\".\")), Path(\".\")); print(c.get_status())'\n5. Verify fallback works if Ollama unavailable",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for AI-Powered Event Categorization"
     },
     {
       "id": "ai-event-extraction",
@@ -1272,7 +1609,12 @@
       ],
       "test_method": "check_code_patterns",
       "test_instructions": "1. Run AI extraction tests: python3 tests/test_ai_event_extraction.py\n2. Optional: run smart scraper tests: python3 tests/test_smart_scraper.py\n3. With Ollama running, scrape a Facebook source and confirm AI-enriched fields populate",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Local AI Event Extraction"
     },
     {
       "id": "location-resolver",
@@ -1291,7 +1633,12 @@
         "resolve-locations EVENT_ID"
       ],
       "test_instructions": "1. Run: python3 src/event_manager.py resolve-locations --dry-run\n2. Check output for resolution summary\n3. Verify pending events with generic locations are identified",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Location Resolution"
     },
     {
       "id": "telegram-bot",
@@ -1320,7 +1667,16 @@
       "test_method": "manual",
       "test_instructions": "1. Get bot token from @BotFather on Telegram\n2. Set TELEGRAM_BOT_TOKEN env var\n3. Run: python3 src/modules/telegram_bot_simple.py\n4. Send /start to your bot\n5. Test photo upload for flyer OCR (uses shared smart_scraper OCR)\n6. Test contact messages\n7. For PIN publishing: set up ORGANIZER_PIN_HASH_* secrets\n8. Verify submissions appear in assets/json/pending_events.json",
       "documentation": "docs/TELEGRAM_INTEGRATION.md",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [
+        "telegram-bot-github-actions"
+      ],
+      "breaks_if_missing": [
+        "No Telegram integration",
+        "Cannot receive event submissions via Telegram",
+        "Community engagement reduced"
+      ],
+      "test_command": "python3 src/telegram_bot/bot.py --test"
     },
     {
       "id": "dashboard-contact-form",
@@ -1336,7 +1692,12 @@
       "config_keys": [],
       "test_method": "manual",
       "test_instructions": "1. Open the app in a browser\n2. Click the logo to open the dashboard menu\n3. Scroll to the 'Contact' section\n4. Fill in name, email, and message fields\n5. Verify validation (required fields, email format)\n6. Submit the form\n7. Verify success message appears\n8. Check that form is cleared after submission",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Dashboard Contact Form"
     },
     {
       "id": "dashboard-flyer-upload-form",
@@ -1352,7 +1713,12 @@
       "config_keys": [],
       "test_method": "manual",
       "test_instructions": "1. Open the app in a browser\n2. Click the logo to open the dashboard menu\n3. Scroll to the 'Submit Event Flyer' section\n4. Fill in name and email fields\n5. Select a flyer image (JPG/PNG/PDF, max 10MB)\n6. Optionally add notes about the event\n7. Verify validation (required fields, file size, file type)\n8. Submit the form\n9. Verify success message appears\n10. Check that form is cleared after submission",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Dashboard Flyer Upload Form"
     },
     {
       "id": "telegram-bot-github-actions",
@@ -1382,7 +1748,12 @@
       "test_method": "manual",
       "test_instructions": "[Scripts not yet implemented]\n\nFuture test steps:\n1. Add TELEGRAM_BOT_TOKEN to GitHub repository secrets\n2. Create scripts/telegram_bot.py and scripts/manage_pins.py\n3. Run scripts/telegram_bot.py locally with env vars set\n4. Send a flyer photo to the bot - verify OCR processing workflow runs\n5. Send a contact message - verify GitHub issue is created\n6. For PIN publishing: add ORGANIZER_PIN_HASH_* secrets, test PIN:1234 with JSON event",
       "documentation": "docs/TELEGRAM_INTEGRATION.md",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Telegram Bot GitHub Actions Integration"
     },
     {
       "id": "instagram-scraper",
@@ -1409,7 +1780,12 @@
       "test_file": "tests/test_instagram_scraper.py",
       "test_instructions": "1. Run tests: python3 tests/test_instagram_scraper.py --verbose\n2. Add an Instagram source to config.json with type 'instagram'\n3. Run scraping: python3 src/event_manager.py scrape\n4. Verify Instagram events appear in pending_events.json",
       "documentation": "See instagram.py module docstring for configuration examples",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Instagram Event Scraper"
     },
     {
       "id": "subjective-day-api",
@@ -1430,7 +1806,12 @@
       "test_file": "tests/test_subjective_day.py",
       "test_instructions": "1. Run tests: python3 tests/test_subjective_day.py --verbose\n2. Start API server: python3 src/modules/subjective_day.py --serve\n3. Test endpoint: curl \"http://127.0.0.1:8080/api/subjective-time?lat=50.3167&lon=11.9167\"",
       "documentation": "See subjective_day.py module docstring for usage and historical background",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Subjective Day API (Nürnberger Uhr)"
     },
     {
       "id": "constellation-viewer-api",
@@ -1449,7 +1830,12 @@
       "test_file": null,
       "test_instructions": "1. Run demo: python3 src/modules/constellations.py\n2. Start API server: python3 src/modules/constellations.py --serve --port 8081\n3. Test endpoints: curl http://127.0.0.1:8081/orion | curl http://127.0.0.1:8081/:list",
       "documentation": "See constellations.py module docstring for usage and historical context",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Constellation Viewer API"
     },
     {
       "id": "rss-feeds-til-sunrise",
@@ -1477,7 +1863,12 @@
       "test_file": null,
       "test_instructions": "1. Generate feeds: python3 src/event_manager.py generate-feeds\n2. Check output: ls -lh assets/feeds/\n3. Validate XML: python3 -c 'import xml.etree.ElementTree as ET; ET.parse(\"assets/feeds/hof-til-sunrise.xml\")'\n4. Test in RSS reader: Add https://krwl.in/assets/feeds/hof-til-sunrise.xml to Feedly/NewsBlur\n5. Check HTML discovery: grep 'rss+xml' public/index.html",
       "documentation": "README.md section: 📡 RSS Feeds - Until Sunrise",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for RSS Feeds - Until Sunrise"
     },
     {
       "id": "scraper-setup-drag-drop",
@@ -1505,7 +1896,12 @@
       "documentation": ".github/copilot-instructions.md - Scraper Setup Tool section",
       "depends_on": [
         "event-scraping"
-      ]
+      ],
+      "used_by": [],
+      "breaks_if_missing": [
+        "Impact not yet documented"
+      ],
+      "test_command": "Manual testing required for Drag'n'Drop Scraper Setup Tool"
     },
     {
       "id": "cdn-asset-version-tracking",
@@ -1521,7 +1917,16 @@
       ],
       "config_keys": [],
       "test_method": "python3 tests/test_asset_manager.py",
-      "depends_on": []
+      "depends_on": [],
+      "used_by": [
+        "static-site-generation"
+      ],
+      "breaks_if_missing": [
+        "Cannot detect upstream library updates",
+        "No version verification for downloaded assets",
+        "Potential security vulnerabilities from outdated libs"
+      ],
+      "test_command": "python3 src/event_manager.py dependencies check && python3 src/event_manager.py dependencies info"
     }
   ]
 }
