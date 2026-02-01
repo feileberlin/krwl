@@ -158,45 +158,25 @@ class EventsApp {
     }
     
     /**
-     * Handle unknown/unconfigured regions by showing South Pole with setup instructions
+     * Handle unknown/unconfigured regions by showing Atlantis (humorous 404 page)
      * @param {string} regionId - The unknown region ID from the URL
      */
     applyUnknownRegion(regionId) {
-        // South Pole coordinates for unknown regions
-        const SOUTH_POLE = { lat: -90, lon: 0 };
-        const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
+        // Atlantis coordinates (Mid-Atlantic Ridge) - our humorous 404 page
+        const ATLANTIS = { lat: 31.0, lon: -24.0 };
         
-        // Set map center to South Pole
-        this.config.map.default_center = SOUTH_POLE;
-        this.config.map.default_zoom = 3;
+        // Set map center to Atlantis
+        this.config.map.default_center = ATLANTIS;
+        this.config.map.default_zoom = 6;
         
-        // Store unknown region info - used by injectColonySetupEvent()
-        this.activeRegion = regionId;
+        // Store unknown region info
+        this.activeRegion = 'atlantis';  // Force to atlantis
         this.isUnknownRegion = true;
         
-        // Add a special "colony setup" event that will be injected into the events list
-        // This replaces all normal events to focus attention on the setup instructions
-        this.colonySetupEvent = {
-            id: 'colony_setup_' + regionId,
-            title: `🏴 Start a new colony: "${regionId}"`,
-            description: `This region "${regionId}" is not yet configured. Want to bring KRWL to your area?\n\n` +
-                `🚀 Option 1: Clone the repository\n` +
-                `Fork https://github.com/feileberlin/krwl-hof and add your region to config.json\n\n` +
-                `📧 Option 2: Contact the editors\n` +
-                `Reach out to request "${regionId}" be added as a new region.\n\n` +
-                `🌍 Join the community and help map events in your area!`,
-            location: {
-                name: 'South Pole - Unclaimed Territory',
-                lat: SOUTH_POLE.lat,
-                lon: SOUTH_POLE.lon
-            },
-            start_time: new Date(Date.now() + ONE_YEAR_MS).toISOString(),
-            end_time: null,
-            url: 'https://github.com/feileberlin/krwl-hof',
-            source: 'system',
-            status: 'published',
-            category: 'community'
-        };
+        console.log(`[KRWL] Unknown region "${regionId}" → Redirecting to Atlantis (404)`);
+        
+        // Frontend will filter and show events with source="atlantis"
+        // These events contain hints about visiting / for Antarctica
     }
     
     getDefaultConfig() {
@@ -351,8 +331,7 @@ class EventsApp {
                 this.log(`Loaded ${this.events.length} events from inline data`);
                 this.events = this.utils.processTemplateEvents(this.events, this.eventFilter);
                 
-                // Inject colony setup event for unknown regions
-                this.injectColonySetupEvent();
+                // Note: Region filtering now happens in displayEvents() to avoid mutating the events array
                 return;
             }
             
@@ -389,8 +368,7 @@ class EventsApp {
             
             this.events = this.utils.processTemplateEvents(allEvents, this.eventFilter);
             
-            // Inject colony setup event for unknown regions
-            this.injectColonySetupEvent();
+            // Note: Region filtering now happens in displayEvents() to avoid mutating the events array
             
             this.updateDashboard();
         } catch (error) {
@@ -400,15 +378,47 @@ class EventsApp {
     }
     
     /**
-     * Inject colony setup event for unknown regions
-     * Clears normal events and shows only the setup instruction
+     * Filter events based on the current region (non-mutating)
+     * Returns filtered array without modifying this.events
+     * 
+     * Three content types:
+     * - Showcase (Antarctica): Project information
+     * - Error-handling (Atlantis): 404 handler
+     * - Production (Real regions): Live events
      */
-    injectColonySetupEvent() {
-        if (this.isUnknownRegion && this.colonySetupEvent) {
-            // For unknown regions, replace all events with just the colony setup event
-            this.events = [this.colonySetupEvent];
-            console.log(`[KRWL] Showing colony setup event for unknown region: ${this.activeRegion}`);
+    filterEventsByRegion(events) {
+        if (!events || events.length === 0) {
+            return [];
         }
+        
+        // Get the active region (antarctica, atlantis, or a real region like 'hof')
+        const activeRegion = this.activeRegion || 'hof';  // Default to 'hof' if none set
+        
+        // Showcase content: Antarctica (/) - show events with source="demo" or source="antarctica"
+        if (activeRegion === 'antarctica' || activeRegion === '/') {
+            const filtered = events.filter(e => 
+                e.source === 'demo' || e.source === 'antarctica'
+            );
+            console.log(`[KRWL] Filtering to ${filtered.length} Antarctica showcase events (from ${events.length} total)`);
+            return filtered;
+        }
+        
+        // Error-handling content: Atlantis (unknown regions) - show events with source="atlantis"
+        if (activeRegion === 'atlantis' || this.isUnknownRegion) {
+            const filtered = events.filter(e => e.source === 'atlantis');
+            console.log(`[KRWL] Filtering to ${filtered.length} Atlantis 404 events (from ${events.length} total)`);
+            return filtered;
+        }
+        
+        // Production content: Real regions - filter out demo/antarctica/atlantis events
+        // Show only real scraped events
+        const filtered = events.filter(e => 
+            e.source !== 'demo' && 
+            e.source !== 'antarctica' && 
+            e.source !== 'atlantis'
+        );
+        console.log(`[KRWL] Filtering to ${filtered.length} real events for region: ${activeRegion} (from ${events.length} total)`);
+        return filtered;
     }
     
     async loadWeather() {
@@ -636,9 +646,12 @@ class EventsApp {
     }
     
     displayEvents() {
-        // Use EventFilter module for filtering
+        // First filter by region (non-mutating)
+        const regionFilteredEvents = this.filterEventsByRegion(this.events);
+        
+        // Then apply other filters (distance, time, category)
         const location = this.getReferenceLocation();
-        const filteredEvents = this.eventFilter.filterEvents(this.events, this.filters, location);
+        const filteredEvents = this.eventFilter.filterEvents(regionFilteredEvents, this.filters, location);
         
         this.updateFilterDescription(filteredEvents.length);
         this.updateDashboard();
@@ -895,7 +908,8 @@ class EventsApp {
         
         // Get filtered events sorted by start time
         const location = this.getReferenceLocation();
-        const filteredEvents = this.eventFilter.filterEvents(this.events, this.filters, location);
+        const regionFilteredEvents = this.filterEventsByRegion(this.events);
+        const filteredEvents = this.eventFilter.filterEvents(regionFilteredEvents, this.filters, location);
         filteredEvents.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
         
         if (filteredEvents.length === 0) return;
@@ -916,7 +930,8 @@ class EventsApp {
     showEventDetail(event) {
         // Track current event index for keyboard navigation
         const location = this.getReferenceLocation();
-        const filteredEvents = this.eventFilter.filterEvents(this.events, this.filters, location);
+        const regionFilteredEvents = this.filterEventsByRegion(this.events);
+        const filteredEvents = this.eventFilter.filterEvents(regionFilteredEvents, this.filters, location);
         filteredEvents.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
         this.currentEventIndex = filteredEvents.findIndex(e => 
             (e.id && e.id === event.id) || 

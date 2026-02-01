@@ -662,22 +662,26 @@
     }
   },
   "data": {
-    "_comment_sources_explanation": "Data sources define what each source type loads. The actual source selection (real/both) is hardcoded based on environment.",
+    "_comment_data_sources": "═══════════════════════════════════════════════════════",
+    "_comment_data_explanation": "Three-tier event system:",
+    "_comment_tier1": "1. Real events (events.json) - Live scraped events from configured regions",
+    "_comment_tier2": "2. Antarctica (events.antarctica.json) - Project showcase/setup guide at /",
+    "_comment_tier3": "3. Atlantis (events.atlantis.json) - Humorous 404 page for unknown regions",
+    "_comment_backend": "Backend always loads ALL three sources and embeds in HTML",
+    "_comment_frontend": "Frontend filters by URL path and user location/distance settings",
+    "_comment_sources_separator": "═══════════════════════════════════════════════════════",
     "sources": {
       "real": {
         "url": "events.json",
         "description": "Real scraped events data"
       },
-      "demo": {
-        "url": "events.demo.json",
-        "description": "Demo events with current timestamps for testing"
+      "antarctica": {
+        "url": "events.antarctica.json",
+        "description": "Antarctica showcase events for project setup guide"
       },
-      "both": {
-        "urls": [
-          "events.json",
-          "events.demo.json"
-        ],
-        "description": "Combine real and demo events (useful for testing with live data)"
+      "atlantis": {
+        "url": "events.atlantis.json",
+        "description": "Atlantis 404 events for unknown regions (humorous)"
       }
     }
   },

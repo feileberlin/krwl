@@ -18,7 +18,7 @@ from src.tools.generate_demo_events import (
 )
 
 
-DEMO_FILE = Path(__file__).parent.parent / "assets" / "json" / "events.demo.json"
+DEMO_FILE = Path(__file__).parent.parent / "assets" / "json" / "events.antarctica.json"
 PLACEHOLDER_TITLE = DEMO_PLACEHOLDER_TITLE
 PLACEHOLDER_DESCRIPTION_PHRASES = [
     DEMO_PLACEHOLDER_DESCRIPTION_PHRASE,
@@ -32,7 +32,7 @@ PLACEHOLDER_DESCRIPTION_PHRASES_LOWER = [
 def load_demo_events():
     """Load demo events from the assets directory."""
     if not DEMO_FILE.exists():
-        print("❌ events.demo.json not found")
+        print("❌ events.antarctica.json not found")
         return []
 
     with DEMO_FILE.open("r", encoding="utf-8") as file_handle:
