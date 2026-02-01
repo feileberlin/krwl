@@ -80,7 +80,7 @@ KRWL HOF maintains a **strong mobile-first foundation** with progressive enhance
 ```html
 <noscript>
   <!-- Baseline: Event listings work without JavaScript -->
-  <h1>KRWL HOF Community Events</h1>
+  <h1>KRWL> Events from here til sunrise</h1>
   <article>Event details...</article>
 </noscript>
 ```

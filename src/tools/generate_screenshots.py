@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate PWA screenshots for KRWL HOF Community Events app.
+Generate PWA screenshots for KRWL> Events from here til sunrise app.
 
 FEATURE: Screenshot Generation with App Ready Signal
 PURPOSE: Capture reliable screenshots after the app is fully initialized
@@ -142,7 +142,7 @@ def generate_screenshots(url='http://localhost:8000', output_dir='assets', verbo
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Generate PWA screenshots for KRWL HOF Community Events',
+        description='Generate PWA screenshots for KRWL> Events from here til sunrise',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:

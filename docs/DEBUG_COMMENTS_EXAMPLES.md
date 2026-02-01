@@ -114,7 +114,7 @@ HTML components are wrapped with visual boundary markers:
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KRWL HOF Community Events</title>
+  <title>KRWL> Events from here til sunrise</title>
   <!-- ... more head content ... -->
 </head>
 <!-- ▲ END COMPONENT: assets/html/html-head.html ▲ -->

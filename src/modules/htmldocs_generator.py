@@ -527,7 +527,7 @@ body {{
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title} - KRWL HOF Documentation</title>
-    <meta name="description" content="KRWL HOF Community Events Documentation">
+    <meta name="description" content="KRWL> Events from here til sunrise Documentation">
     <style>
 {css}
     </style>
@@ -593,7 +593,7 @@ body {{
         
         content_html = f"""
         <h1>Documentation</h1>
-        <p>Welcome to the KRWL HOF Community Events documentation. Select a topic to learn more:</p>
+        <p>Welcome to the KRWL> Events from here til sunrise documentation. Select a topic to learn more:</p>
         {''.join(content_items)}
         """
         

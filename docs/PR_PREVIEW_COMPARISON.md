@@ -263,7 +263,7 @@ python3 -m http.server 8000
 
 ## Conclusion
 
-For the **KRWL HOF Community Events** project:
+For the **KRWL> Events from here til sunrise** project:
 
 ✅ **GitHub Actions Artifacts** is the perfect fit because:
 - Aligns with KISS philosophy

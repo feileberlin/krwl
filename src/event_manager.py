@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KRWL HOF Community Events Manager
+KRWL> Events from here til sunrise Manager
 A modular Python TUI for managing community events
 """
 
@@ -277,7 +277,7 @@ class EventManagerTUI:
 def print_help():
     """Print CLI help information"""
     help_text = """
-KRWL HOF Community Events Manager
+KRWL> Events from here til sunrise Manager
 ==================================
 
 A modular Python TUI for managing community events with geolocation
@@ -3067,7 +3067,7 @@ def main():
     """Main entry point"""
     # Use parse_known_args to allow command-specific flags
     parser = argparse.ArgumentParser(
-        description='KRWL HOF Community Events Manager',
+        description='KRWL> Events from here til sunrise Manager',
         add_help=False
     )
     parser.add_argument('command', nargs='?', default=None,
@@ -3094,7 +3094,7 @@ def main():
     
     # Show version
     if args.version:
-        print("KRWL HOF Community Events Manager v1.0.0")
+        print("KRWL> Events from here til sunrise Manager v1.0.0")
         return 0
     
     # Get base path

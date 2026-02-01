@@ -2005,7 +2005,7 @@ window.DASHBOARD_ICONS = {json.dumps(all_ui_icons, ensure_ascii=False)};'''
         """
         # Extract basic info
         primary_config = configs[0] if configs else {}
-        app_name = primary_config.get('app', {}).get('name', 'KRWL HOF Community Events')
+        app_name = primary_config.get('app', {}).get('name', 'KRWL> Events from here til sunrise')
         favicon = self.create_favicon_data_url()
         # Use favicon.svg for both favicon AND logo (consistent branding with background)
         logo_svg = self.inline_svg_file('favicon.svg', as_data_url=False)
@@ -2152,7 +2152,7 @@ window.DEBUG_INFO = {debug_info_json};'''
         
         # Generated comment
         generated_comment = f'''<!--
-  KRWL HOF Community Events - Auto-generated HTML
+  KRWL> Events from here til sunrise - Auto-generated HTML
   
   Generated: {generated_at}
   Generator: src-modules/site_generator.py (component-based)

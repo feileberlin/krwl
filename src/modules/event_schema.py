@@ -579,7 +579,7 @@ class EventSchema:
         doc = []
         doc.append("# Event Data Schema")
         doc.append("")
-        doc.append("Auto-generated schema documentation for KRWL HOF Community Events.")
+        doc.append("Auto-generated schema documentation for KRWL> Events from here til sunrise.")
         doc.append("")
         doc.append(f"**Last Updated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         doc.append("")

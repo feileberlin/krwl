@@ -1,6 +1,6 @@
 # Custom SVG Map Markers
 
-Icon-only category markers in ecoBarbie pink (#D689B8) for the KRWL HOF Community Events map.
+Icon-only category markers in ecoBarbie pink (#D689B8) for the KRWL> Events from here til sunrise map.
 
 ## Design Philosophy
 

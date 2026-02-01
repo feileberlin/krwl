@@ -1,4 +1,4 @@
-# KRWL HOF Community Events Manager
+# KRWL> Events from here til sunrise Manager
 # Python dependencies for the event management system
 
 # Core scraping dependencies

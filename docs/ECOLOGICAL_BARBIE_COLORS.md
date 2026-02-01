@@ -167,7 +167,7 @@ The Ecological Barbie palette can be applied to:
 
 **Concept**: Inspired by feedback requesting "biofood ecological colors without additives"
 
-**Implementation**: KRWL HOF Community Events Project
+**Implementation**: KRWL> Events from here til sunrise Project
 
 **Date**: January 2026
 

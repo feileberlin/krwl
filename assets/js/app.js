@@ -10,7 +10,7 @@
 })();
 
 // ============================================================================
-// KRWL HOF Community Events App - KISS Refactored
+// KRWL> Events from here til sunrise App - KISS Refactored
 // ============================================================================
 // 
 // This file coordinates modules and handles UI interactions.
