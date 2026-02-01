@@ -984,14 +984,15 @@ class SiteGenerator:
         # Load all modules in correct order (dependencies first)
         js_modules = []
         module_files = [
+            'i18n.js',                 # i18n MUST load first (no dependencies)
             'storage.js',              # No dependencies
             'filters.js',              # Depends on: storage
             'map.js',                  # Depends on: storage
             'utils.js',                # Depends on: template-engine (simplified)
             'template-engine.js',      # Template processing (extracted from utils)
             'dropdown.js',             # UI component (no dependencies)
-            'dashboard-ui.js',         # Depends on: utils
-            'filter-description-ui.js', # Filter description formatting (extracted from app)
+            'dashboard-ui.js',         # Depends on: utils, i18n
+            'filter-description-ui.js', # Filter description formatting (extracted from app) - depends on i18n
             'forms.js',                # Contact & flyer upload forms (no dependencies)
             'event-listeners.js',      # Depends on: app, dropdown
             'app.js'                   # Depends on: all modules (KISS compliant!)
@@ -1143,6 +1144,37 @@ class SiteGenerator:
                 logger.warning(f"Failed to load weather cache: {e}")
                 return {}
         return {}
+    
+    def load_translations(self) -> Dict[str, Dict]:
+        """
+        Load all translation files for multilanguage support.
+        
+        Returns:
+            Dict mapping language codes to translation data
+            Example: {'en': {...}, 'de': {...}, 'cs': {...}}
+        """
+        translations = {}
+        translations_dir = self.base_path / 'assets' / 'json' / 'translations'
+        
+        if not translations_dir.exists():
+            logger.warning(f"Translations directory not found: {translations_dir}")
+            return translations
+        
+        # Load each translation file
+        for translation_file in translations_dir.glob('*.json'):
+            lang_code = translation_file.stem  # e.g., 'en', 'de', 'cs'
+            
+            try:
+                with open(translation_file, 'r', encoding='utf-8') as f:
+                    translations[lang_code] = json.load(f)
+                    logger.info(f"Loaded translations for language: {lang_code}")
+            except Exception as e:
+                logger.error(f"Failed to load translation file {translation_file}: {e}")
+        
+        if not translations:
+            logger.warning("No translation files loaded - multilanguage support will be disabled")
+        
+        return translations
     
     def ensure_dependencies_present(self) -> bool:
         """
@@ -2078,6 +2110,9 @@ window.DASHBOARD_ICONS = {json.dumps(all_ui_icons, ensure_ascii=False)};'''
                 'sunday': {'enabled': False}
             }
         
+        # Load translations for multilanguage support
+        translations = self.load_translations()
+        
         # Calculate debug information
         debug_info = self.calculate_debug_info(primary_config, events)
         
@@ -2092,6 +2127,8 @@ window.DASHBOARD_ICONS = {json.dumps(all_ui_icons, ensure_ascii=False)};'''
         marker_icons_json = json.dumps(marker_icons, ensure_ascii=False, indent=2 if self.enable_debug_comments else None)
         dashboard_icons_json = json.dumps(all_ui_icons, ensure_ascii=False, indent=2 if self.enable_debug_comments else None)
         debug_info_json = json.dumps(debug_info, ensure_ascii=False, indent=2 if self.enable_debug_comments else None)
+        translations_json = json.dumps(translations, ensure_ascii=False, indent=2 if self.enable_debug_comments else None)
+        translations_size_kb = len(translations_json.encode('utf-8')) / 1024
         
         # Wrap each data section with debug comments
         if self.enable_debug_comments:
@@ -2115,12 +2152,19 @@ window.DASHBOARD_ICONS = {json.dumps(all_ui_icons, ensure_ascii=False)};'''
                 debug_info_json, 'json', '(generated)',
                 {'description': 'Debug information for dashboard'}
             )
+            translations_json = self.wrap_with_debug_comment(
+                translations_json, 'json', 'assets/json/translations/*.json',
+                {'description': 'Multilanguage translations', 'languages': len(translations)}
+            )
             
             embedded_data = f'''// Data embedded by backend (site_generator.py) - frontend does NOT fetch files
 // config.json is backend-only, frontend uses this minimal runtime config
 
 /* APP_CONFIG: {app_config_size_kb:.2f} KB */
 window.APP_CONFIG = {app_config_json};
+
+/* TRANSLATIONS: {translations_size_kb:.2f} KB ({len(translations)} languages) */
+window.TRANSLATIONS = {translations_json};
 
 /* EVENTS: {len(events)} published events */
 window.__INLINE_EVENTS_DATA__ = {{ "events": {events_json} }};
@@ -2138,6 +2182,7 @@ window.DEBUG_INFO = {debug_info_json};'''
             embedded_data = f'''// Data embedded by backend (site_generator.py) - frontend does NOT fetch files
 // config.json is backend-only, frontend uses this minimal runtime config
 window.APP_CONFIG = {app_config_json};
+window.TRANSLATIONS = {translations_json};
 window.__INLINE_EVENTS_DATA__ = {{ "events": {events_json} }};
 window.MARKER_ICONS = {marker_icons_json};
 window.DASHBOARD_ICONS = {dashboard_icons_json};

@@ -1,0 +1,156 @@
+{
+  "_comment": "Czech translations for KRWL> Events from here til sunrise",
+  "_language": {
+    "code": "cs",
+    "name": "Czech",
+    "native_name": "Čeština"
+  },
+  
+  "filter_bar": {
+    "event_count": {
+      "singular": "událost",
+      "plural": "události"
+    },
+    "time_filters": {
+      "sunrise": "do východu slunce",
+      "sunday_primetime": "do nedělního hlavního vysílacího času",
+      "full_moon": "do úplňku",
+      "6h": "v následujících 6 hodinách",
+      "12h": "v následujících 12 hodinách",
+      "24h": "v následujících 24 hodinách",
+      "48h": "v následujících 48 hodinách",
+      "all": "nadcházející"
+    },
+    "distance_filters": {
+      "2": "do 30 min. pěšky",
+      "3_75": "do 30 min. na kole",
+      "12_5": "do 30 min. veřejnou dopravou",
+      "60": "do 60 min. autem",
+      "within_km": "do {{distance}} km"
+    },
+    "location_filters": {
+      "from_here": "odtud",
+      "from_location": "z {{location}}"
+    },
+    "weather": {
+      "not_without": "ne bez {{dresscode}}"
+    },
+    "aria_labels": {
+      "open_menu": "Otevřít nabídku aplikace",
+      "category_filter": "Filtr kategorií",
+      "time_filter": "Časový filtr",
+      "distance_filter": "Filtr vzdálenosti",
+      "location_filter": "Filtr umístění",
+      "weather_button": "Aktuální počasí - klikněte pro úplnou předpověď",
+      "close_weather": "Zavřít předpověď počasí"
+    }
+  },
+  
+  "dashboard": {
+    "title": "KRWL> Události odtud do východu slunce",
+    "aria_labels": {
+      "close_menu": "Zavřít nabídku",
+      "menu": "Nabídka aplikace a informace"
+    },
+    "sections": {
+      "about": {
+        "title": "O aplikaci",
+        "description_1": "KRWL> Události odtud do východu slunce je mobilní progresivní webová aplikace pro objevování komunitních událostí s interaktivní vizualizací mapy.",
+        "description_2": "Tento projekt vám pomůže najít místní události ve vašem okolí pomocí geolokačních filtrů a agregace dat v reálném čase z více zdrojů."
+      },
+      "custom_locations": {
+        "title": "Vlastní umístění",
+        "description": "Upravte 2 předkonfigurovaná umístění.<br>Změny se ukládají do úložiště prohlížeče.",
+        "empty": "Zatím žádná uložená umístění",
+        "storage_unavailable": "Úložiště není k dispozici",
+        "buttons": {
+          "edit": "Upravit",
+          "reset": "Obnovit",
+          "delete": "Smazat"
+        },
+        "aria_labels": {
+          "edit_location": "Upravit umístění",
+          "reset_location": "Obnovit na hodnoty config.json",
+          "delete_location": "Smazat umístění",
+          "edit_coordinates": "Klikněte pro úpravu souřadnic"
+        }
+      },
+      "debug": {
+        "title": "Ladící panel",
+        "deployment": {
+          "title": "Nasazení",
+          "commit": "Commit:",
+          "author": "Autor:",
+          "date": "Datum:",
+          "message": "Zpráva:",
+          "deployed": "Nasazeno:",
+          "environment": "Prostředí:"
+        },
+        "data_performance": {
+          "title": "Data a výkon",
+          "published_events": "Publikované události:",
+          "pending_events": "Čekající události:",
+          "archived_events": "Archivované události:",
+          "html_size": "Velikost HTML:",
+          "caching": "Ukládání do mezipaměti:",
+          "dom_cache": "DOM mezipaměť:",
+          "elements": "prvky"
+        },
+        "build_size": {
+          "title": "Rozpad velikosti sestavení",
+          "loading": "Načítání informací o velikosti sestavení..."
+        },
+        "warnings": {
+          "title": "Varování"
+        },
+        "wcag": {
+          "title": "Soulad s WCAG AA"
+        }
+      },
+      "contact": {
+        "title": "Kontakt",
+        "description": "Pošlete zprávu správcům. Ozveme se vám e-mailem nebo přes GitHub.",
+        "form": {
+          "name_label": "Vaše jméno",
+          "name_placeholder": "Zadejte své jméno",
+          "email_label": "Váš e-mail",
+          "email_placeholder": "vas@email.cz",
+          "message_label": "Zpráva",
+          "message_placeholder": "Vaše zpráva...",
+          "submit_button": "Odeslat zprávu"
+        }
+      },
+      "language_switcher": {
+        "title": "Jazyk",
+        "description": "Vyberte preferovaný jazyk",
+        "current_language": "Aktuální jazyk: {{language}}"
+      }
+    },
+    "pending_notification": {
+      "text": "{{count}} čekající událost{{plural}} čeká na kontrolu",
+      "link": "Zkontrolovat události"
+    }
+  },
+  
+  "map": {
+    "fallback": {
+      "no_events": "Žádné události neodpovídají vašim aktuálním filtrům.",
+      "event_list_label": "Seznam událostí"
+    },
+    "event_detail": {
+      "no_description": "Popis není k dispozici.",
+      "distance_away": "{{distance}} km daleko",
+      "distance_unknown": "Neznámá"
+    }
+  },
+  
+  "categories": {
+    "all": "všechny",
+    "historical_monuments": "Historické a památky"
+  },
+  
+  "common": {
+    "unknown": "neznámý",
+    "loading": "Načítání..."
+  }
+}

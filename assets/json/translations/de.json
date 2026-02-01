@@ -1,0 +1,156 @@
+{
+  "_comment": "German translations for KRWL> Events from here til sunrise",
+  "_language": {
+    "code": "de",
+    "name": "German",
+    "native_name": "Deutsch"
+  },
+  
+  "filter_bar": {
+    "event_count": {
+      "singular": "Veranstaltung",
+      "plural": "Veranstaltungen"
+    },
+    "time_filters": {
+      "sunrise": "bis Sonnenaufgang",
+      "sunday_primetime": "bis Sonntag zur besten Sendezeit",
+      "full_moon": "bis Vollmond",
+      "6h": "in den nächsten 6 Stunden",
+      "12h": "in den nächsten 12 Stunden",
+      "24h": "in den nächsten 24 Stunden",
+      "48h": "in den nächsten 48 Stunden",
+      "all": "bevorstehend"
+    },
+    "distance_filters": {
+      "2": "innerhalb 30 Min. zu Fuß",
+      "3_75": "innerhalb 30 Min. mit dem Fahrrad",
+      "12_5": "innerhalb 30 Min. mit öffentlichen Verkehrsmitteln",
+      "60": "innerhalb 60 Min. mit dem Auto",
+      "within_km": "innerhalb {{distance}} km"
+    },
+    "location_filters": {
+      "from_here": "von hier",
+      "from_location": "von {{location}}"
+    },
+    "weather": {
+      "not_without": "nicht ohne {{dresscode}}"
+    },
+    "aria_labels": {
+      "open_menu": "Anwendungsmenü öffnen",
+      "category_filter": "Kategoriefilter",
+      "time_filter": "Zeitfilter",
+      "distance_filter": "Entfernungsfilter",
+      "location_filter": "Standortfilter",
+      "weather_button": "Aktuelles Wetter - Klicken für vollständige Vorhersage",
+      "close_weather": "Wettervorhersage schließen"
+    }
+  },
+  
+  "dashboard": {
+    "title": "KRWL> Veranstaltungen von hier bis Sonnenaufgang",
+    "aria_labels": {
+      "close_menu": "Menü schließen",
+      "menu": "Anwendungsmenü und Informationen"
+    },
+    "sections": {
+      "about": {
+        "title": "Über uns",
+        "description_1": "KRWL> Veranstaltungen von hier bis Sonnenaufgang ist eine mobile-first Progressive Web App zur Entdeckung von Community-Veranstaltungen mit interaktiver Kartenvisualisierung.",
+        "description_2": "Dieses Projekt hilft Ihnen, lokale Veranstaltungen in Ihrer Nähe mithilfe von Geolokalisierungsfiltern und Echtzeit-Datenaggregation aus mehreren Quellen zu finden."
+      },
+      "custom_locations": {
+        "title": "Benutzerdefinierte Standorte",
+        "description": "Bearbeiten Sie die 2 vorkonfigurierten Standorte.<br>Änderungen werden im Browser-Speicher gespeichert.",
+        "empty": "Noch keine Standorte gespeichert",
+        "storage_unavailable": "Speicher nicht verfügbar",
+        "buttons": {
+          "edit": "Bearbeiten",
+          "reset": "Zurücksetzen",
+          "delete": "Löschen"
+        },
+        "aria_labels": {
+          "edit_location": "Standort bearbeiten",
+          "reset_location": "Auf config.json-Werte zurücksetzen",
+          "delete_location": "Standort löschen",
+          "edit_coordinates": "Klicken Sie, um Koordinaten zu bearbeiten"
+        }
+      },
+      "debug": {
+        "title": "Debug-Cockpit",
+        "deployment": {
+          "title": "Bereitstellung",
+          "commit": "Commit:",
+          "author": "Autor:",
+          "date": "Datum:",
+          "message": "Nachricht:",
+          "deployed": "Bereitgestellt:",
+          "environment": "Umgebung:"
+        },
+        "data_performance": {
+          "title": "Daten & Leistung",
+          "published_events": "Veröffentlichte Veranstaltungen:",
+          "pending_events": "Ausstehende Veranstaltungen:",
+          "archived_events": "Archivierte Veranstaltungen:",
+          "html_size": "HTML-Größe:",
+          "caching": "Zwischenspeicherung:",
+          "dom_cache": "DOM-Cache:",
+          "elements": "Elemente"
+        },
+        "build_size": {
+          "title": "Build-Größenaufschlüsselung",
+          "loading": "Build-Größeninformationen werden geladen..."
+        },
+        "warnings": {
+          "title": "Warnungen"
+        },
+        "wcag": {
+          "title": "WCAG AA-Konformität"
+        }
+      },
+      "contact": {
+        "title": "Kontakt",
+        "description": "Senden Sie eine Nachricht an die Betreuer. Wir werden uns per E-Mail oder GitHub bei Ihnen melden.",
+        "form": {
+          "name_label": "Ihr Name",
+          "name_placeholder": "Geben Sie Ihren Namen ein",
+          "email_label": "Ihre E-Mail",
+          "email_placeholder": "ihre@email.de",
+          "message_label": "Nachricht",
+          "message_placeholder": "Ihre Nachricht...",
+          "submit_button": "Nachricht senden"
+        }
+      },
+      "language_switcher": {
+        "title": "Sprache",
+        "description": "Wählen Sie Ihre bevorzugte Sprache",
+        "current_language": "Aktuelle Sprache: {{language}}"
+      }
+    },
+    "pending_notification": {
+      "text": "{{count}} ausstehende Veranstaltung{{plural}} wartet auf Überprüfung",
+      "link": "Veranstaltungen überprüfen"
+    }
+  },
+  
+  "map": {
+    "fallback": {
+      "no_events": "Keine Veranstaltungen entsprechen Ihren aktuellen Filtern.",
+      "event_list_label": "Veranstaltungsliste"
+    },
+    "event_detail": {
+      "no_description": "Keine Beschreibung verfügbar.",
+      "distance_away": "{{distance}} km entfernt",
+      "distance_unknown": "Unbekannt"
+    }
+  },
+  
+  "categories": {
+    "all": "alle",
+    "historical_monuments": "Historisches & Denkmäler"
+  },
+  
+  "common": {
+    "unknown": "unbekannt",
+    "loading": "Lädt..."
+  }
+}

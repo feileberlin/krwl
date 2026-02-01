@@ -1,0 +1,108 @@
+# Git Attributes Configuration
+# ═══════════════════════════════════════════════════════════════════════════════
+# MERGE STRATEGIES FOR AUTOMATED FILE UPDATES
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# This file configures Git merge strategies to prevent conflicts on files that
+# are automatically updated by CI/CD workflows (scheduled scraping, weather
+# updates, reviewer notes, etc.).
+#
+# PROBLEM:
+# Multiple automated workflows update JSON files with timestamps. When these
+# workflows run concurrently or from different branches, they create merge
+# conflicts on timestamp fields alone, even when the actual data hasn't changed.
+#
+# SOLUTION:
+# Since JSON is structured data, union merge can create invalid JSON.
+# Instead, we use 'ours' strategy for auto-generated files where the current
+# version (already in main) should win, preventing conflicts entirely.
+#
+# IMPORTANT: Workflows should always `git pull --rebase` before committing
+# to ensure they have the latest version and avoid creating conflicts.
+#
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Reviewer Notes - Prefer Ours (Keep Current Version)
+# ───────────────────────────────────────────────────────────────────────────────
+#
+# File: assets/json/reviewer_notes.json
+# Updated by: Event scraper (auto-flagging ambiguous locations)
+# Conflict cause: Timestamps added by multiple scraping runs
+# Strategy: Use 'ours' to keep the version already in the branch being merged into
+#
+# This is safe because:
+# - Notes are regenerated on each scrape (not cumulative)
+# - Workflow always pulls latest before scraping
+# - Timestamp differences don't affect functionality
+#
+assets/json/reviewer_notes.json merge=ours
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Weather Cache - Prefer Ours (Keep Current Version)
+# ───────────────────────────────────────────────────────────────────────────────
+#
+# File: assets/json/weather_cache.json
+# Updated by: Weather scraper (hourly)
+# Conflict cause: Timestamp field updated on every scrape
+# Strategy: Use 'ours' to keep the most recent weather data
+#
+# Note: This file is in .gitignore but committed with -f flag in workflows.
+# 'ours' strategy ensures no conflicts if accidentally committed from multiple sources.
+# Weather data is regenerated frequently, so keeping current version is fine.
+#
+assets/json/weather_cache.json merge=ours
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Event Data Files - Manual Merge Required
+# ───────────────────────────────────────────────────────────────────────────────
+#
+# These files should NOT use automatic merge strategies because:
+# - Events are unique by ID and must be preserved
+# - Union merge creates invalid JSON
+# - 'ours' merge would lose events from other branch
+#
+# Instead: Workflows must use `git pull --rebase` to get latest before pushing
+#
+# Files: events.json, pending_events.json, archived_events.json, rejected_events.json
+#
+# If conflicts occur, they indicate a real problem that needs manual resolution:
+# - Two branches added different events (both should be kept)
+# - Two branches modified same event differently (review needed)
+#
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# END OF CONFIGURATION
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# IMPORTANT NOTES FOR GERMAN LOCALE:
+# - Git merge strategies are locale-independent
+# - Timestamp formats in JSON are ISO 8601 (no locale issues)
+# - Commit messages can use German without affecting merge behavior
+#
+# WORKFLOW REQUIREMENTS:
+# All workflows that update JSON files MUST:
+#   1. Use `git pull --rebase origin main` before committing
+#   2. Check for changes before committing (avoid empty commits)
+#   3. Only commit specific files that changed
+#   4. Use [skip ci] in commit messages when appropriate
+#
+# Example workflow step:
+#   - name: Pull and commit changes
+#     run: |
+#       git pull --rebase origin main
+#       git add assets/json/specific_file.json
+#       git commit -m "Update [skip ci]" || true
+#       git push
+#
+# TROUBLESHOOTING:
+# If you still get conflicts:
+#   - Ensure workflow uses `git pull --rebase` not just `git pull`
+#   - Check that workflow only commits changed files
+#   - Verify .gitattributes is committed and pushed
+#   - For manual merges, use: git merge -X ours branch-name
+#
+# For more information, see:
+# - Git Attributes Documentation: https://git-scm.com/docs/gitattributes
+# - Merge Strategies: https://git-scm.com/docs/merge-strategies
+# - Project docs: docs/development/merge-strategies.md

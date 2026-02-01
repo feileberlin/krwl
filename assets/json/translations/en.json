@@ -1,0 +1,156 @@
+{
+  "_comment": "English translations for KRWL> Events from here til sunrise",
+  "_language": {
+    "code": "en",
+    "name": "English",
+    "native_name": "English"
+  },
+  
+  "filter_bar": {
+    "event_count": {
+      "singular": "event",
+      "plural": "events"
+    },
+    "time_filters": {
+      "sunrise": "til sunrise",
+      "sunday_primetime": "til Sunday's primetime",
+      "full_moon": "til full moon",
+      "6h": "in the next 6 hours",
+      "12h": "in the next 12 hours",
+      "24h": "in the next 24 hours",
+      "48h": "in the next 48 hours",
+      "all": "upcoming"
+    },
+    "distance_filters": {
+      "2": "within 30 min walk",
+      "3_75": "within 30 min bicycle ride",
+      "12_5": "within 30 min public transport",
+      "60": "within 60 min car sharing",
+      "within_km": "within {{distance}} km"
+    },
+    "location_filters": {
+      "from_here": "from here",
+      "from_location": "from {{location}}"
+    },
+    "weather": {
+      "not_without": "not without a {{dresscode}}"
+    },
+    "aria_labels": {
+      "open_menu": "Open application menu",
+      "category_filter": "Category filter",
+      "time_filter": "Time filter",
+      "distance_filter": "Distance filter",
+      "location_filter": "Location filter",
+      "weather_button": "Current weather - click for full forecast",
+      "close_weather": "Close weather forecast"
+    }
+  },
+  
+  "dashboard": {
+    "title": "KRWL> Events from here til sunrise",
+    "aria_labels": {
+      "close_menu": "Close menu",
+      "menu": "Application menu and information"
+    },
+    "sections": {
+      "about": {
+        "title": "About",
+        "description_1": "KRWL> Events from here til sunrise is a mobile-first Progressive Web App for discovering community events with interactive map visualization.",
+        "description_2": "This project helps you find local events near you using geolocation filtering and real-time data aggregation from multiple sources."
+      },
+      "custom_locations": {
+        "title": "Custom Locations",
+        "description": "Edit the 2 preconfigured locations.<br>Changes are saved to browser storage.",
+        "empty": "No locations saved yet",
+        "storage_unavailable": "Storage not available",
+        "buttons": {
+          "edit": "Edit",
+          "reset": "Reset",
+          "delete": "Delete"
+        },
+        "aria_labels": {
+          "edit_location": "Edit location",
+          "reset_location": "Reset to config.json values",
+          "delete_location": "Delete location",
+          "edit_coordinates": "Click to edit coordinates"
+        }
+      },
+      "debug": {
+        "title": "Debug Cockpit",
+        "deployment": {
+          "title": "Deployment",
+          "commit": "Commit:",
+          "author": "Author:",
+          "date": "Date:",
+          "message": "Message:",
+          "deployed": "Deployed:",
+          "environment": "Environment:"
+        },
+        "data_performance": {
+          "title": "Data & Performance",
+          "published_events": "Published Events:",
+          "pending_events": "Pending Events:",
+          "archived_events": "Archived Events:",
+          "html_size": "HTML Size:",
+          "caching": "Caching:",
+          "dom_cache": "DOM Cache:",
+          "elements": "elements"
+        },
+        "build_size": {
+          "title": "Build Size Breakdown",
+          "loading": "Loading build size information..."
+        },
+        "warnings": {
+          "title": "Warnings"
+        },
+        "wcag": {
+          "title": "WCAG AA Compliance"
+        }
+      },
+      "contact": {
+        "title": "Contact",
+        "description": "Send a message to the maintainers. We'll get back to you via email or GitHub.",
+        "form": {
+          "name_label": "Your Name",
+          "name_placeholder": "Enter your name",
+          "email_label": "Your Email",
+          "email_placeholder": "your@email.com",
+          "message_label": "Message",
+          "message_placeholder": "Your message...",
+          "submit_button": "Send Message"
+        }
+      },
+      "language_switcher": {
+        "title": "Language",
+        "description": "Choose your preferred language",
+        "current_language": "Current language: {{language}}"
+      }
+    },
+    "pending_notification": {
+      "text": "{{count}} pending event{{plural}} awaiting review",
+      "link": "Review Events"
+    }
+  },
+  
+  "map": {
+    "fallback": {
+      "no_events": "No events match your current filters.",
+      "event_list_label": "Event list"
+    },
+    "event_detail": {
+      "no_description": "No description available.",
+      "distance_away": "{{distance}} km away",
+      "distance_unknown": "Unknown"
+    }
+  },
+  
+  "categories": {
+    "all": "all",
+    "historical_monuments": "Historical & Monuments"
+  },
+  
+  "common": {
+    "unknown": "unknown",
+    "loading": "Loading..."
+  }
+}

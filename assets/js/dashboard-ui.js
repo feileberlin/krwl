@@ -10,9 +10,10 @@
  */
 
 class DashboardUI {
-    constructor(config, utils) {
+    constructor(config, utils, i18n = null) {
         this.config = config;
         this.utils = utils;
+        this.i18n = i18n;
     }
     
     /**
@@ -36,6 +37,9 @@ class DashboardUI {
         this.updateCacheStatistics();  // Cache & compression statistics
         this.updateDuplicateWarnings(duplicateStats);
         this.updateCustomLocations();
+        
+        // Language switcher
+        this.updateLanguageSwitcher();
         
         // Lint Warnings section (WCAG AA compliance)
         this.updateLintWarnings(debugInfo);
@@ -834,6 +838,67 @@ class DashboardUI {
         const element = document.getElementById(id);
         if (element) {
             element.textContent = text;
+        }
+    }
+    
+    /**
+     * Update language switcher UI
+     * Renders clickable language buttons with current language highlighted
+     */
+    updateLanguageSwitcher() {
+        const container = document.getElementById('language-switcher-container');
+        if (!container) return;
+        
+        // Check if i18n is available
+        if (!this.i18n) {
+            container.innerHTML = '<div style="color: var(--color-text-tertiary); font-size: 0.9rem;">Language switching not available</div>';
+            return;
+        }
+        
+        const currentLang = this.i18n.getCurrentLanguage();
+        const supportedLangs = this.i18n.getSupportedLanguages();
+        
+        // Build language buttons HTML
+        let html = '';
+        supportedLangs.forEach(lang => {
+            const metadata = this.i18n.getLanguageMetadata(lang);
+            const isActive = lang === currentLang;
+            const activeClass = isActive ? 'language-btn--active' : '';
+            
+            // Escape metadata to prevent XSS (even though translation files are trusted)
+            const escapedName = this.escapeHtml(metadata.name);
+            const escapedNativeName = this.escapeHtml(metadata.native_name);
+            
+            html += `
+                <button class="language-btn ${activeClass}" 
+                        data-language="${this.escapeHtml(lang)}"
+                        aria-label="Switch to ${escapedName}"
+                        ${isActive ? 'aria-current="true"' : ''}>
+                    <div class="language-btn__info">
+                        <span class="language-btn__native">${escapedNativeName}</span>
+                        <span class="language-btn__english">${escapedName}</span>
+                    </div>
+                    <i data-lucide="check" class="language-btn__check" aria-hidden="true"></i>
+                </button>
+            `;
+        });
+        
+        container.innerHTML = html;
+        
+        // Add event listeners to language buttons
+        const languageButtons = container.querySelectorAll('.language-btn');
+        languageButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const selectedLang = btn.dataset.language;
+                if (selectedLang && selectedLang !== currentLang) {
+                    this.i18n.switchLanguage(selectedLang);
+                }
+            });
+        });
+        
+        // Re-initialize Lucide icons for the newly added check icons
+        if (typeof lucide !== 'undefined' && lucide.createIcons) {
+            lucide.createIcons();
         }
     }
 }

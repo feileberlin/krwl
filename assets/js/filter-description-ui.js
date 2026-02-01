@@ -5,29 +5,34 @@
  * Extracted from app.js to reduce complexity.
  * 
  * KISS: Data-driven approach using lookup tables instead of switch statements
+ * Now with i18n support for multilanguage UI
  */
 
 class FilterDescriptionUI {
-    constructor(config) {
+    constructor(config, i18n = null) {
         this.config = config;
+        this.i18n = i18n;
         
         // Lookup tables for filter descriptions (KISS: replace switch statements)
-        this.TIME_DESCRIPTIONS = {
-            'sunrise': 'til sunrise',
-            'sunday-primetime': "til Sunday's primetime",
-            'full-moon': 'til full moon',
-            '6h': 'in the next 6 hours',
-            '12h': 'in the next 12 hours',
-            '24h': 'in the next 24 hours',
-            '48h': 'in the next 48 hours',
-            'all': 'upcoming'
+        // Now using translation keys instead of hardcoded strings
+        this.TIME_FILTER_KEYS = {
+            'sunrise': 'filter_bar.time_filters.sunrise',
+            'sunday-primetime': 'filter_bar.time_filters.sunday_primetime',
+            'full-moon': 'filter_bar.time_filters.full_moon',
+            '6h': 'filter_bar.time_filters.6h',
+            '12h': 'filter_bar.time_filters.12h',
+            '24h': 'filter_bar.time_filters.24h',
+            '48h': 'filter_bar.time_filters.48h',
+            'all': 'filter_bar.time_filters.all'
         };
         
-        this.DISTANCE_DESCRIPTIONS = {
-            2: 'within 30 min walk',
-            3.75: 'within 30 min bicycle ride',
-            12.5: 'within 30 min public transport',
-            60: 'within 60 min car sharing'
+        // Distance values map to translation keys
+        // Note: Using underscore instead of dot to avoid conflicts with dot-notation parsing
+        this.DISTANCE_FILTER_KEYS = {
+            2: 'filter_bar.distance_filters.2',
+            3.75: 'filter_bar.distance_filters.3_75',
+            12.5: 'filter_bar.distance_filters.12_5',
+            60: 'filter_bar.distance_filters.60'
         };
     }
     
@@ -54,22 +59,29 @@ class FilterDescriptionUI {
         const element = document.getElementById('filter-bar-event-count');
         if (!element) return;
         
-        const plural = count !== 1 ? 's' : '';
+        // Get singular/plural form from translations
+        const eventWord = this.i18n 
+            ? (count !== 1 
+                ? this.i18n.t('filter_bar.event_count.plural')
+                : this.i18n.t('filter_bar.event_count.singular'))
+            : (count !== 1 ? 'events' : 'event');  // Fallback
         
         // Convert category to display text
         let categoryText = '';
         if (category !== 'all') {
             // Check if this is a group key (kebab-case with dash)
             if (category.includes('-')) {
-                // Convert group key to display label (e.g., "historical-monuments" -> "Historical & Monuments")
-                categoryText = category
-                    .split('-')
-                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(' ');
+                // Try to get translation first
+                const categoryKey = `categories.${category.replace(/-/g, '_')}`;
+                categoryText = this.i18n 
+                    ? this.i18n.t(categoryKey)
+                    : category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
                 
-                // Special cases for better display
-                if (category === 'historical-monuments') {
-                    categoryText = 'Historical & Monuments';
+                // Special cases for better display (if translation not found)
+                if (categoryText === categoryKey && category === 'historical-monuments') {
+                    categoryText = this.i18n 
+                        ? this.i18n.t('categories.historical_monuments')
+                        : 'Historical & Monuments';
                 }
                 
                 categoryText += ' ';
@@ -79,7 +91,7 @@ class FilterDescriptionUI {
             }
         }
         
-        element.textContent = `${count} ${categoryText}event${plural}`;
+        element.textContent = `${count} ${categoryText}${eventWord}`;
     }
     
     /**
@@ -90,8 +102,11 @@ class FilterDescriptionUI {
         const element = document.getElementById('filter-bar-time-range');
         if (!element) return;
         
-        // Simple descriptions for filter bar button (no extra info)
-        const description = this.TIME_DESCRIPTIONS[timeFilter] || 'upcoming';
+        // Get translated description
+        const translationKey = this.TIME_FILTER_KEYS[timeFilter];
+        const description = this.i18n && translationKey
+            ? this.i18n.t(translationKey)
+            : (translationKey ? timeFilter : 'upcoming');  // Fallback
         
         // Note: Detailed info (dates/times) is shown in dropdown options only
         // See event-listeners.js setupTimeFilter() for dropdown labels
@@ -107,8 +122,16 @@ class FilterDescriptionUI {
         const element = document.getElementById('filter-bar-distance');
         if (!element) return;
         
-        // Use lookup table or fallback to km
-        const description = this.DISTANCE_DESCRIPTIONS[distance] || `within ${distance} km`;
+        // Get translated description or fallback to km
+        const translationKey = this.DISTANCE_FILTER_KEYS[distance];
+        const description = this.i18n && translationKey
+            ? this.i18n.t(translationKey)
+            : (translationKey 
+                ? `within ${distance} km` 
+                : this.i18n 
+                    ? this.i18n.t('filter_bar.distance_filters.within_km', { distance })
+                    : `within ${distance} km`);  // Final fallback
+        
         element.textContent = `${description}`;
     }
     
@@ -139,15 +162,23 @@ class FilterDescriptionUI {
         
         // Custom location - use stored name (KISS: no lookup needed)
         if (filters.locationType === 'custom' && filters.selectedCustomLocationName) {
-            return `from ${filters.selectedCustomLocationName}`;
+            return this.i18n
+                ? this.i18n.t('filter_bar.location_filters.from_location', { 
+                    location: filters.selectedCustomLocationName 
+                  })
+                : `from ${filters.selectedCustomLocationName}`;  // Fallback
         }
         
         // Geolocation - always show "from here" when geolocation is active
         if (filters.locationType === 'geolocation') {
-            return 'from here';
+            return this.i18n 
+                ? this.i18n.t('filter_bar.location_filters.from_here')
+                : 'from here';  // Fallback
         }
         
-        return 'from here';
+        return this.i18n 
+            ? this.i18n.t('filter_bar.location_filters.from_here')
+            : 'from here';  // Fallback
     }
     
     /**
@@ -159,9 +190,17 @@ class FilterDescriptionUI {
         const predefinedLocs = this.config?.map?.predefined_locations || [];
         const selectedLoc = predefinedLocs[locationIndex];
         
-        if (!selectedLoc) return 'from here';
+        if (!selectedLoc) {
+            return this.i18n 
+                ? this.i18n.t('filter_bar.location_filters.from_here')
+                : 'from here';  // Fallback
+        }
         
-        return `from ${selectedLoc.display_name}`;
+        return this.i18n
+            ? this.i18n.t('filter_bar.location_filters.from_location', { 
+                location: selectedLoc.display_name 
+              })
+            : `from ${selectedLoc.display_name}`;  // Fallback
     }
     
     /**
@@ -185,7 +224,12 @@ class FilterDescriptionUI {
         }
         
         // Display dresscode with format: "not without a {dresscode}" (lowercase)
-        element.textContent = `not without a ${weatherData.dresscode.toLowerCase()}`;
+        const dresscode = weatherData.dresscode.toLowerCase();
+        const text = this.i18n
+            ? this.i18n.t('filter_bar.weather.not_without', { dresscode })
+            : `not without a ${dresscode}`;  // Fallback
+        
+        element.textContent = text;
         element.style.display = '';  // Show the element
         
         this.log('Weather description updated:', weatherData.dresscode);
