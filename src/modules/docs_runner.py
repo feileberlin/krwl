@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KRWL HOF Documentation Runner Module
+KRWL> Documentation Runner Module
 
 Centralized documentation management system following KISS principles.
 Handles all documentation generation, validation, and synchronization tasks.
@@ -12,7 +12,7 @@ from pathlib import Path
 
 
 class DocsRunner:
-    """Modular documentation runner for KRWL HOF
+    """Modular documentation runner for KRWL>
     
     Organizes documentation tasks:
     - Generation (README, screenshots, demos)
@@ -79,7 +79,7 @@ class DocsRunner:
     def list_tasks(self):
         """List all available documentation tasks"""
         print("\n" + "=" * 70)
-        print("KRWL HOF Documentation Tasks")
+        print("KRWL> Documentation Tasks")
         print("=" * 70)
         
         total_tasks = 0
@@ -204,7 +204,7 @@ def main():
     """Main entry point for standalone usage"""
     import argparse
     
-    parser = argparse.ArgumentParser(description='KRWL HOF Documentation Runner')
+    parser = argparse.ArgumentParser(description='KRWL> Documentation Runner')
     parser.add_argument('task', nargs='?', default=None,
                        help='Documentation task or category to run')
     parser.add_argument('args', nargs='*',

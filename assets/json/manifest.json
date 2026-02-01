@@ -1,6 +1,6 @@
 {
   "name": "KRWL> Events from here til sunrise",
-  "short_name": "KRWL HOF",
+  "short_name": "KRWL>",
   "description": "Community events viewer with geolocation filtering",
   "start_url": "/",
   "display": "standalone",

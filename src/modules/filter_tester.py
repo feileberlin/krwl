@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KRWL HOF Filter Testing Module
+KRWL> Filter Testing Module
 
 Tests the various filtering mechanisms used in the event display:
 - Time filtering (sunrise, sunday, full moon, hours)
@@ -298,7 +298,7 @@ class FilterTester:
     def run_all_tests(self):
         """Run all test suites"""
         print("=" * 60)
-        print("KRWL HOF Filter Testing")
+        print("KRWL> Filter Testing")
         print("=" * 60)
         
         self.test_distance_calculation()
@@ -329,7 +329,7 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(
-        description="Test KRWL HOF event filtering logic"
+        description="Test KRWL> event filtering logic"
     )
     parser.add_argument(
         "--verbose", "-v",

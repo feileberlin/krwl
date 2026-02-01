@@ -526,7 +526,7 @@ body {{
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{title} - KRWL HOF Documentation</title>
+    <title>{title} - KRWL> Documentation</title>
     <meta name="description" content="KRWL> Events from here til sunrise Documentation">
     <style>
 {css}

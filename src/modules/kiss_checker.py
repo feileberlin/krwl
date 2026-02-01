@@ -1,5 +1,5 @@
 """
-KRWL HOF KISS Compliance Checker Module
+KRWL> KISS Compliance Checker Module
 
 This module provides the KISSChecker class for measuring code complexity
 and ensuring adherence to KISS (Keep It Simple, Stupid) principles.
@@ -346,7 +346,7 @@ class KISSChecker:
         summary = self.results['summary']
         
         print("\n" + "=" * 60)
-        print("KRWL HOF KISS Compliance Report")
+        print("KRWL> KISS Compliance Report")
         print("=" * 60)
         
         score = summary['score']
@@ -417,7 +417,7 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(
-        description="Check KRWL HOF codebase for KISS compliance"
+        description="Check KRWL> codebase for KISS compliance"
     )
     parser.add_argument(
         "--verbose", "-v",

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Lucide Icons Generator for KRWL HOF
+Lucide Icons Generator for KRWL>
 ====================================
 
 Automatically generates src/modules/lucide_markers.py by scanning the codebase
@@ -202,7 +202,7 @@ def generate_lucide_markers_module(icons: Set[str], output_path: Path,
     # Generate Python module content
     regenerated_info = ', '.join(sorted(maps_to_regenerate))
     module_content = f'''"""
-Lucide Icons for KRWL HOF
+Lucide Icons for KRWL>
 =========================
 
 This module provides three icon maps organized by usage:

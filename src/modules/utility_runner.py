@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KRWL HOF Utility Runner Module
+KRWL> Utility Runner Module
 
 Centralized utility execution system following KISS principles.
 Provides a clean interface to run project utilities without cluttering main CLI.
@@ -12,7 +12,7 @@ from pathlib import Path
 
 
 class UtilityRunner:
-    """Modular utility runner for KRWL HOF
+    """Modular utility runner for KRWL>
     
     Organizes utilities into categories and provides simple execution:
     - Code quality checks (KISS, feature verification)
@@ -59,7 +59,7 @@ class UtilityRunner:
     def list_utilities(self):
         """List all available utilities by category"""
         print("\n" + "=" * 70)
-        print("KRWL HOF Utilities")
+        print("KRWL> Utilities")
         print("=" * 70)
         
         total_utils = 0
@@ -200,7 +200,7 @@ def main():
     """Main entry point for standalone usage"""
     import argparse
     
-    parser = argparse.ArgumentParser(description='KRWL HOF Utility Runner')
+    parser = argparse.ArgumentParser(description='KRWL> Utility Runner')
     parser.add_argument('utility', nargs='?', default=None,
                        help='Utility name to run')
     parser.add_argument('args', nargs='*',

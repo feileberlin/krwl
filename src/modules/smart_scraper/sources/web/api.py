@@ -27,7 +27,7 @@ class APISource(BaseSource):
         if self.available:
             self.session = requests.Session()
             self.session.headers.update({
-                'User-Agent': 'KRWL HOF Event Scraper/1.0',
+                'User-Agent': 'KRWL> Event Scraper/1.0',
                 'Accept': 'application/json'
             })
     

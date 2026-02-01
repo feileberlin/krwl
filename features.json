@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "KRWL HOF Feature Registry - Documents all implemented features, their dependencies, and how to test them",
+  "description": "KRWL> Feature Registry - Documents all implemented features, their dependencies, and how to test them",
   "version": "1.0.0",
   "features": [
     {

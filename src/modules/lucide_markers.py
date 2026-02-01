@@ -1,5 +1,5 @@
 """
-Lucide Icons for KRWL HOF
+Lucide Icons for KRWL>
 =========================
 
 This module provides three icon maps organized by usage:

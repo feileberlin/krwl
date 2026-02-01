@@ -1,4 +1,4 @@
-"""KRWL HOF Event Manager Modules"""
+"""KRWL> Event Manager Modules"""
 
 from .utils import (
     load_config,

@@ -15,7 +15,7 @@ KISS simplifications (what this module *does not* handle on purpose):
   without advanced timezone, locale, or calendar edge-case handling.
 
 This keeps the implementation small and predictable while being "good enough" for the
-KRWL HOF event history use case.
+KRWL> event history use case.
 """
 
 import json

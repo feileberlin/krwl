@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KRWL HOF Configuration Editor Module
+KRWL> Configuration Editor Module
 
 This module provides interactive and CLI-based editing of configuration files.
 Supports config.json editing with automatic environment detection.
@@ -284,7 +284,7 @@ def run_tui(editor):
     
     def print_header():
         print("=" * 70)
-        print(f"  KRWL HOF Configuration Editor - {editor.config_path.name}")
+        print(f"  KRWL> Configuration Editor - {editor.config_path.name}")
         print("=" * 70)
         print()
     
@@ -547,7 +547,7 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(
-        description="KRWL HOF Configuration Editor"
+        description="KRWL> Configuration Editor"
     )
     parser.add_argument(
         "--config", "-c",

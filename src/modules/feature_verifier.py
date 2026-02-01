@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KRWL HOF Feature Verification Module
+KRWL> Feature Verification Module
 
 This module verifies that all documented features in features.json are still
 present in the codebase. Designed for use in CI/CD and local development.
@@ -302,7 +302,7 @@ def run_tui(verifier):
     
     def print_header():
         print("=" * 70)
-        print("  KRWL HOF Feature Verifier - Interactive Mode")
+        print("  KRWL> Feature Verifier - Interactive Mode")
         print("=" * 70)
         print()
     
@@ -477,7 +477,7 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(
-        description="Verify KRWL HOF features are present in codebase"
+        description="Verify KRWL> features are present in codebase"
     )
     parser.add_argument(
         "--verbose", "-v",

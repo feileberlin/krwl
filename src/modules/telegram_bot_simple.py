@@ -112,7 +112,7 @@ class SimpleTelegramBot:
         """Handle /start command."""
         user = update.effective_user
         welcome_msg = (
-            "🎉 Welcome to KRWL HOF Events Bot!\n\n"
+            "🎉 Welcome to KRWL> Events Bot!\n\n"
             "📸 Send a flyer image/PDF - I'll process it with OCR\n"
             "📝 Send a message - I'll forward it as a contact form\n"
             "🔐 Trusted organizers: Start message with PIN:1234 to publish directly\n\n"

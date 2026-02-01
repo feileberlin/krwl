@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KRWL HOF Test Runner Module
+KRWL> Test Runner Module
 
 Centralized test execution system that integrates with the main application CLI.
 Provides category-based test organization and flexible execution options.
@@ -13,7 +13,7 @@ from typing import List, Dict
 
 
 class TestRunner:
-    """Modular test runner for KRWL HOF
+    """Modular test runner for KRWL>
     
     Organizes tests into categories and provides flexible execution options:
     - Run all tests
@@ -95,7 +95,7 @@ class TestRunner:
     def list_tests(self):
         """List all available test categories and tests"""
         print("\n" + "=" * 70)
-        print("KRWL HOF Test Suite")
+        print("KRWL> Test Suite")
         print("=" * 70)
         
         total_tests = 0
@@ -195,7 +195,7 @@ class TestRunner:
             True if all tests passed, False otherwise
         """
         print("\n" + "=" * 70)
-        print("KRWL HOF Test Suite - Running All Tests")
+        print("KRWL> Test Suite - Running All Tests")
         print("=" * 70)
         
         all_results = []
@@ -352,7 +352,7 @@ def main():
     """Main entry point for standalone testing"""
     import argparse
     
-    parser = argparse.ArgumentParser(description='KRWL HOF Test Runner')
+    parser = argparse.ArgumentParser(description='KRWL> Test Runner')
     parser.add_argument('category', nargs='?', default=None,
                        help='Test category or test name to run')
     parser.add_argument('--list', action='store_true',

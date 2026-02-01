@@ -1348,7 +1348,7 @@
       "_comment_rate": "Max submissions per user per hour"
     },
     "messages": {
-      "welcome": "🎉 Welcome to KRWL HOF Events Bot!\n\nUse /help to see available commands.",
+      "welcome": "🎉 Welcome to KRWL> Events Bot!\n\nUse /help to see available commands.",
       "help": "📋 Available Commands:\n\n/submit - Submit a new event\n/upload - Upload event flyer (image with OCR)\n/contact - Contact the admins\n/status - Check bot status\n/cancel - Cancel current operation",
       "_comment_messages": "Customize bot messages here. Supports emoji and markdown."
     }
