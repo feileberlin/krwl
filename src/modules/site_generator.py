@@ -2152,7 +2152,7 @@ window.DASHBOARD_ICONS = {json.dumps(all_ui_icons, ensure_ascii=False)};'''
                 debug_info_json, 'json', '(generated)',
                 {'description': 'Debug information for dashboard'}
             )
-            translations_wrapped = self.wrap_with_debug_comment(
+            translations_json = self.wrap_with_debug_comment(
                 translations_json, 'json', 'assets/json/translations/*.json',
                 {'description': 'Multilanguage translations', 'languages': len(translations)}
             )

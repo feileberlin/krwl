@@ -865,14 +865,18 @@ class DashboardUI {
             const isActive = lang === currentLang;
             const activeClass = isActive ? 'language-btn--active' : '';
             
+            // Escape metadata to prevent XSS (even though translation files are trusted)
+            const escapedName = this.escapeHtml(metadata.name);
+            const escapedNativeName = this.escapeHtml(metadata.native_name);
+            
             html += `
                 <button class="language-btn ${activeClass}" 
-                        data-language="${lang}"
-                        aria-label="Switch to ${metadata.name}"
+                        data-language="${this.escapeHtml(lang)}"
+                        aria-label="Switch to ${escapedName}"
                         ${isActive ? 'aria-current="true"' : ''}>
                     <div class="language-btn__info">
-                        <span class="language-btn__native">${metadata.native_name}</span>
-                        <span class="language-btn__english">${metadata.name}</span>
+                        <span class="language-btn__native">${escapedNativeName}</span>
+                        <span class="language-btn__english">${escapedName}</span>
                     </div>
                     <i data-lucide="check" class="language-btn__check" aria-hidden="true"></i>
                 </button>

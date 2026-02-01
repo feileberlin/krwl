@@ -194,6 +194,11 @@
   outline-offset: 2px;
 }
 
+.language-btn:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
 .language-btn--active {
   background: var(--color-primary);
   border-color: var(--color-primary);
@@ -202,8 +207,8 @@
 }
 
 .language-btn--active:hover {
-  background: var(--color-primary-hover, #E8A5C8);
-  border-color: var(--color-primary-hover, #E8A5C8);
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
 }
 
 .language-btn__info {

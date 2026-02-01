@@ -23,8 +23,8 @@
     },
     "distance_filters": {
       "2": "innerhalb 30 Min. zu Fuß",
-      "3.75": "innerhalb 30 Min. mit dem Fahrrad",
-      "12.5": "innerhalb 30 Min. mit öffentlichen Verkehrsmitteln",
+      "3_75": "innerhalb 30 Min. mit dem Fahrrad",
+      "12_5": "innerhalb 30 Min. mit öffentlichen Verkehrsmitteln",
       "60": "innerhalb 60 Min. mit dem Auto",
       "within_km": "innerhalb {{distance}} km"
     },

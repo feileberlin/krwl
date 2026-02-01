@@ -23,8 +23,8 @@
     },
     "distance_filters": {
       "2": "within 30 min walk",
-      "3.75": "within 30 min bicycle ride",
-      "12.5": "within 30 min public transport",
+      "3_75": "within 30 min bicycle ride",
+      "12_5": "within 30 min public transport",
       "60": "within 60 min car sharing",
       "within_km": "within {{distance}} km"
     },

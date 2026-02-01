@@ -144,11 +144,11 @@ class EventsApp {
             
             if (supportedLangs.includes(segment)) {
                 // It's a language: /en
-                langSegment = segment;
+                // Language will be detected by i18n module
                 regionSegment = null;  // Use default region
             } else {
                 // It's a region: /hof
-                langSegment = null;  // Use default/stored language
+                // Language will be detected by i18n module from localStorage/browser
                 regionSegment = segment;
             }
         } else {
@@ -158,7 +158,7 @@ class EventsApp {
             const lastSegment = segments[segments.length - 1].toLowerCase();
             
             if (supportedLangs.includes(firstSegment)) {
-                langSegment = firstSegment;
+                // First segment is a language
                 regionSegment = lastSegment !== firstSegment ? lastSegment : null;
             } else {
                 // First segment not a language, treat last as region

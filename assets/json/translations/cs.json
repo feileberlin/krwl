@@ -23,8 +23,8 @@
     },
     "distance_filters": {
       "2": "do 30 min. pěšky",
-      "3.75": "do 30 min. na kole",
-      "12.5": "do 30 min. veřejnou dopravou",
+      "3_75": "do 30 min. na kole",
+      "12_5": "do 30 min. veřejnou dopravou",
       "60": "do 60 min. autem",
       "within_km": "do {{distance}} km"
     },

@@ -27,10 +27,11 @@ class FilterDescriptionUI {
         };
         
         // Distance values map to translation keys
+        // Note: Using underscore instead of dot to avoid conflicts with dot-notation parsing
         this.DISTANCE_FILTER_KEYS = {
             2: 'filter_bar.distance_filters.2',
-            3.75: 'filter_bar.distance_filters.3.75',
-            12.5: 'filter_bar.distance_filters.12.5',
+            3.75: 'filter_bar.distance_filters.3_75',
+            12.5: 'filter_bar.distance_filters.12_5',
             60: 'filter_bar.distance_filters.60'
         };
     }
