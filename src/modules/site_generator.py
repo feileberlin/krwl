@@ -405,7 +405,7 @@ class SiteGenerator:
                 print("✅ All dependencies present")
             else:
                 print("❌ Missing dependencies")
-                print("   Run: python3 src/main.py dependencies fetch")
+                print("   Run: python3 src/event_manager.py dependencies fetch")
             print("=" * 60)
         
         return all_present
@@ -2621,7 +2621,7 @@ window.DEBUG_INFO = {debug_info_json};'''
         html_file = self.static_path / 'index.html'
         if not html_file.exists():
             print("\n❌ Error: index.html not found")
-            print("   Run: python3 src/main.py generate")
+            print("   Run: python3 src/event_manager.py generate")
             return False
         
         print("\nLoading configuration...")

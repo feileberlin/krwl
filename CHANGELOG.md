@@ -176,20 +176,20 @@ See [SMART_SCRAPER_SUMMARY.md](SMART_SCRAPER_SUMMARY.md) for complete details.
 **Old workflow** (Template-based):
 ```bash
 vim src-modules/generator.py  # Edit templates
-python3 src/main.py generate
+python3 src/event_manager.py generate
 ```
 
 **New workflow** (Direct editing):
 ```bash
 vim static/css/style.css  # Edit CSS directly
 vim static/js/app.js      # Edit JS directly
-python3 src/main.py generate  # Generate HTML
+python3 src/event_manager.py generate  # Generate HTML
 ```
 
 ### For Users
 No changes needed! All three management interfaces work the same:
-- **CLI**: `python3 src/main.py list`, `python3 src/main.py publish event_001`
-- **TUI**: `python3 src/main.py` (interactive menu)
+- **CLI**: `python3 src/event_manager.py list`, `python3 src/event_manager.py publish event_001`
+- **TUI**: `python3 src/event_manager.py` (interactive menu)
 - **GitHub UI**: Actions → Review Events → Run workflow
 
 ### Backwards Compatibility

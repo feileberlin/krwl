@@ -332,7 +332,9 @@ For deeper understanding of the codebase:
   - [ADR-001: Fallback List When Map Fails](docs/adr/001-fallback-list-when-map-fails.md)
   - [ADR-002: Vanilla JS Over Frameworks](docs/adr/002-vanilla-js-over-frameworks.md)
   - [ADR-003: Single Entry Point](docs/adr/003-single-entry-point.md)
-- **[Module Dependencies](DEPENDENCIES.md)** - Visual maps showing "what breaks if I change X"
+- **[Module Dependencies](docs/DEPENDENCIES.md)** - Visual maps showing "what breaks if I change X"
+- **[Color Palette](docs/COLOR_PALETTE.md)** - EcoBarbie monochromatic design system
+- **[Data Flow](docs/DATA_FLOW.md)** - How event data moves through the system
 - **[Feature Registry](features.json)** - All features with dependencies and test methods
 - **[Copilot Instructions](.github/copilot-instructions.md)** - Guidelines for AI-assisted development
 

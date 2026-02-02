@@ -1374,7 +1374,7 @@ When adding features:
 
 ### Visual Dependency Maps
 
-See `DEPENDENCIES.md` for complete visual dependency maps showing:
+See `docs/DEPENDENCIES.md` for complete visual dependency maps showing:
 - Frontend module layers (utilities → domain → UI → app)
 - Backend module layers (config → models → logic → generation → CLI)
 - Module relationships and data flow
@@ -1430,7 +1430,7 @@ $ python3 src/modules/dependency_checker.py --check-feature interactive-map
 ### Before Making Changes
 
 **ALWAYS check dependencies:**
-1. Check `DEPENDENCIES.md` for visual map
+1. Check `docs/DEPENDENCIES.md` for visual map
 2. Run impact analysis: `python3 src/modules/dependency_checker.py --check-feature FEATURE_ID`
 3. Identify affected modules
 4. Plan minimal surgical changes
