@@ -345,7 +345,7 @@ After making code changes:
 - **docs/architecture.md** - Visual dependency maps and system design (NEW!)
 - **docs/adr/** - Architectural Decision Records explaining WHY (NEW!)
 - **docs/BACKUP_CLEANUP_NOTES.md** - Backup file migration notes (NEW!)
-- **DEPENDENCIES.md** - Detailed module relationships
+- **docs/DEPENDENCIES.md** - Detailed module relationships
 - **.github/copilot-instructions.md** - Project conventions and architecture
 - **.github/agents/planning-agent.md** - For creating implementation plans
 - **.github/agents/implementation-agent.md** - For executing changes
