@@ -2705,7 +2705,51 @@
       "source": "https://www.vhshoferland.de/p/last-minute-kurse/albanien-zurueck-in-europa/das-land-der-skipetaren-von-1976-bis-heute-646-C-30BS103101",
       "url": "https://www.vhshoferland.de/p/last-minute-kurse/albanien-zurueck-in-europa/das-land-der-skipetaren-von-1976-bis-heute-646-C-30BS103101",
       "tags": []
+    },
+    {
+      "id": "vhs_a64c026ffb50",
+      "title": "KI trifft PowerPoint: K\u00fcnstliche Intelligenz f\u00fcr Pr\u00e4sentationen",
+      "teaser": "Pr\u00e4sentationen m\u00fcssen nicht mehr m\u00fchsam Folie f\u00fcr Folie erstellt werden. K\u00fcnstliche Intelligenz revolutioniert die Art, wie Pr\u00e4sentationen gestaltet werden.",
+      "description": "Pr\u00e4sentationen m\u00fcssen nicht mehr m\u00fchsam Folie f\u00fcr Folie erstellt werden. K\u00fcnstliche Intelligenz revolutioniert die Art, wie Pr\u00e4sentationen gestaltet werden. In diesem Workshop wird gezeigt, wie Gamma KI und PowerPoint kombiniert werden, um ansprechende, professionelle und gut strukturierte Pr\u00e4sentationen effizient zu erstellen.",
+      "location": {
+        "name": "Online",
+        "address": null,
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": true,
+        "needs_review": false,
+        "resolution_method": null
+      },
+      "start_time": "2026-02-19T15:00:00",
+      "end_time": null,
+      "category": "education",
+      "status": "pending",
+      "source": "https://www.vhshoferland.de/p/last-minute-kurse/ki-trifft-powerpoint-kuenstliche-intelligenz-fuer-praesentationen-646-C-29AH311044",
+      "url": "https://www.vhshoferland.de/p/last-minute-kurse/ki-trifft-powerpoint-kuenstliche-intelligenz-fuer-praesentationen-646-C-29AH311044",
+      "tags": []
+    },
+    {
+      "id": "vhs_24d64b9c6cfa",
+      "title": "KI-Bilder: Kreativ mit K\u00fcnstlicher Intelligenz",
+      "teaser": "Mit K\u00fcnstlicher Intelligenz lassen sich beeindruckende Bilder von fotorealistischen Portr\u00e4ts bis hin zu abstrakten Kunstwerken erstellen.",
+      "description": "Mit K\u00fcnstlicher Intelligenz lassen sich beeindruckende Bilder von fotorealistischen Portr\u00e4ts bis hin zu abstrakten Kunstwerken erstellen. Doch welche Tools eignen sich daf\u00fcr, wie formuliert man die richtigen Prompts und was muss beim Copyright beachtet werden? Dieser praxisnahe Workshop stellt verschiedene KI-Tools zur Bildgenerierung vor, zeigt M\u00f6glichkeiten und Grenzen auf und vermittelt effektives Prompting. Zudem werden rechtliche Aspekte beim Einsatz von KI-generierten Bildern beleuchtet.",
+      "location": {
+        "name": "Online",
+        "address": null,
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": true,
+        "needs_review": false,
+        "resolution_method": null
+      },
+      "start_time": "2026-02-19T16:00:00",
+      "end_time": null,
+      "category": "education",
+      "status": "pending",
+      "source": "https://www.vhshoferland.de/p/last-minute-kurse/ki-bilder-kreativ-mit-kuenstlicher-intelligenz-646-C-29AH311073",
+      "url": "https://www.vhshoferland.de/p/last-minute-kurse/ki-bilder-kreativ-mit-kuenstlicher-intelligenz-646-C-29AH311073",
+      "tags": []
     }
   ],
-  "last_scraped": "2026-02-10T03:57:47.392723"
+  "last_scraped": "2026-02-11T03:56:49.286160"
 }
