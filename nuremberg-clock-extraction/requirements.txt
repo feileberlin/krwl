@@ -1,0 +1,6 @@
+# Nuremberg Clock - Python Dependencies
+# No external dependencies required!
+# Uses only Python standard library.
+
+# For development/testing only:
+# pytest>=7.0.0  # Optional: for running tests with pytest instead of unittest
