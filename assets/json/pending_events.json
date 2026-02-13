@@ -2925,7 +2925,117 @@
       "source": "https://www.vhshoferland.de/p/last-minute-kurse/die-beobachtungsinstrumente-der-sternwarte-und-ihre-verwendung-646-C-30AH108609",
       "url": "https://www.vhshoferland.de/p/last-minute-kurse/die-beobachtungsinstrumente-der-sternwarte-und-ihre-verwendung-646-C-30AH108609",
       "tags": []
+    },
+    {
+      "id": "vhs_f2aad316054a",
+      "title": "AzubiPower: MS-Office-Paket Modul 1",
+      "teaser": "Der zunehmende Wettbewerb und die Komplexit\u00e4t der Aufgaben erfordern eine immer bessere berufliche Qualifikation.",
+      "description": "Der zunehmende Wettbewerb und die Komplexit\u00e4t der Aufgaben erfordern eine immer bessere berufliche Qualifikation. Wer mehr kann und mehr leisten will, verbessert durch den Erwerb von Zusatzqualifikationen seine Berufschancen. Von besonderer Bedeutung sind qualifizierte PC-Kenntnisse. Um in der Berufswelt dauerhaft Fu\u00df fassen zu k\u00f6nnen, braucht man gute Anwendungskenntnisse in MS-Office-Produkten. In diesem Seminar f\u00fcr Auszubildende werden die wichtigsten grundlegenden Funktionen in den g\u00e4ngigen ",
+      "location": {
+        "name": "Ludwigstra\u00dfe 7",
+        "address": "95028 Hof",
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": false,
+        "needs_review": false,
+        "resolution_method": null
+      },
+      "start_time": "2026-02-23T08:30:00",
+      "end_time": null,
+      "category": "education",
+      "status": "pending",
+      "source": "https://www.vhshoferland.de/p/last-minute-kurse/azubipower-ms-office-paket-modul-1-646-C-30AF310009",
+      "url": "https://www.vhshoferland.de/p/last-minute-kurse/azubipower-ms-office-paket-modul-1-646-C-30AF310009",
+      "tags": []
+    },
+    {
+      "id": "vhs_3c85dc2606b1",
+      "title": "Malen wie Bob Ross\u00ae - Gr\u00fcnes Polarlicht (neu)",
+      "teaser": "Sie wollten schon immer gern malen, glaubten aber, Ihnen fehlt das Talent? Dann sind Sie hier genau richtig, denn es sind keine Vorkenntnisse erforderlich.",
+      "description": "Sie wollten schon immer gern malen, glaubten aber, Ihnen fehlt das Talent? Dann sind Sie hier genau richtig, denn es sind keine Vorkenntnisse erforderlich. Sie erlernen Schritt f\u00fcr Schritt den Umgang mit Materialien sowie Grundlagen der Nass-in-Nass-Technik.",
+      "location": {
+        "name": "B\u00fcrgerhaus",
+        "address": "Bahnhofstra\u00dfe 2, 95145 Oberkotzau",
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": false,
+        "needs_review": false,
+        "resolution_method": null
+      },
+      "start_time": "2026-02-23T14:00:00",
+      "end_time": null,
+      "category": "education",
+      "status": "pending",
+      "source": "https://www.vhshoferland.de/p/last-minute-kurse/malen-wie-bob-ross-gruenes-polarlicht-neu-646-C-29OB604107",
+      "url": "https://www.vhshoferland.de/p/last-minute-kurse/malen-wie-bob-ross-gruenes-polarlicht-neu-646-C-29OB604107",
+      "tags": []
+    },
+    {
+      "id": "vhs_7d3112e98888",
+      "title": "R\u00fcckhalt - Ganzheitliche R\u00fcckenschuleKurs 1",
+      "teaser": "Haltungsschulung mit Korrektur, sinnvolle \u00dcbungen f\u00fcr die Wirbels\u00e4ule, Heimprogramm, Fehlhaltungen und deren Korrektur, Beratung f\u00fcr den Alltag und das Berufsleben, Kl\u00e4rung von Fragen; Teilnehmer mit",
+      "description": "Haltungsschulung mit Korrektur, sinnvolle \u00dcbungen f\u00fcr die Wirbels\u00e4ule, Heimprogramm, Fehlhaltungen und deren Korrektur, Beratung f\u00fcr den Alltag und das Berufsleben, Kl\u00e4rung von Fragen; Teilnehmer mit akuten Beschwerden werden gebeten vorher einen Arzt aufzusuchen, da der Kurs keine Therapie ersetzen soll und kann.",
+      "location": {
+        "name": "Dorfgemeinschaftshaus Neuhaus",
+        "address": "Selbitz",
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": false,
+        "needs_review": false,
+        "resolution_method": null
+      },
+      "start_time": "2026-02-23T16:45:00",
+      "end_time": null,
+      "category": "education",
+      "status": "pending",
+      "source": "https://www.vhshoferland.de/p/last-minute-kurse/rueckhalt-ganzheitliche-rueckenschule/kurs-1-646-C-30SE502201",
+      "url": "https://www.vhshoferland.de/p/last-minute-kurse/rueckhalt-ganzheitliche-rueckenschule/kurs-1-646-C-30SE502201",
+      "tags": []
+    },
+    {
+      "id": "vhs_ff02ac154ac9",
+      "title": "R\u00fccken fitKurs 1",
+      "teaser": "Dehn\u00fcbungen, Stabilisation des R\u00fcckens, Kr\u00e4ftigung der Muskeln sowie Ausdauer und Fitness aufbauen. Dadurch k\u00f6nnen Verspannungen und Verk\u00fcrzungen des unteren R\u00fcckens vorgebeugt werden.",
+      "description": "Dehn\u00fcbungen, Stabilisation des R\u00fcckens, Kr\u00e4ftigung der Muskeln sowie Ausdauer und Fitness aufbauen. Dadurch k\u00f6nnen Verspannungen und Verk\u00fcrzungen des unteren R\u00fcckens vorgebeugt werden.",
+      "location": {
+        "name": "Philipp-Wolfrum-Haus",
+        "address": "Marktplatz 17, 95131 Schwarzenbach a.Wald",
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": false,
+        "needs_review": false,
+        "resolution_method": null
+      },
+      "start_time": "2026-02-23T17:15:00",
+      "end_time": null,
+      "category": "education",
+      "status": "pending",
+      "source": "https://www.vhshoferland.de/p/last-minute-kurse/ruecken-fit/kurs-1-646-C-30SW502221",
+      "url": "https://www.vhshoferland.de/p/last-minute-kurse/ruecken-fit/kurs-1-646-C-30SW502221",
+      "tags": []
+    },
+    {
+      "id": "vhs_6c310f397766",
+      "title": "Qigong f\u00fcr Anf\u00e4nger",
+      "teaser": "Qigong ist eine Methode der traditionell chinesischen Medizin. Die \u00dcbungen verbinden K\u00f6rperbewegungen, Atmung und innere Aufmerksamkeit.",
+      "description": "Qigong ist eine Methode der traditionell chinesischen Medizin. Die \u00dcbungen verbinden K\u00f6rperbewegungen, Atmung und innere Aufmerksamkeit. Dadurch besteht die M\u00f6glichkeit mit freien Bewegungen Lebensenergie und Lebensfreude zu st\u00e4rken. Dies erleichtert es, emotionalen Ballast abzuwerfen und Gesundheit, Kraft und Lebensfreude selbst in die Hand zu nehmen. Die \u00dcbungen sind leicht erlernbar und f\u00fcr jeden geeignet.",
+      "location": {
+        "name": "Ehem. Methodistenkapelle",
+        "address": "M\u00fchlstr. 22, 95236 Stammbach",
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": false,
+        "needs_review": false,
+        "resolution_method": null
+      },
+      "start_time": "2026-02-23T17:30:00",
+      "end_time": null,
+      "category": "education",
+      "status": "pending",
+      "source": "https://www.vhshoferland.de/p/last-minute-kurse/qigong-fuer-anfaenger-646-C-30ST501401",
+      "url": "https://www.vhshoferland.de/p/last-minute-kurse/qigong-fuer-anfaenger-646-C-30ST501401",
+      "tags": []
     }
   ],
-  "last_scraped": "2026-02-12T03:53:19.997243"
+  "last_scraped": "2026-02-13T03:50:05.608544"
 }
