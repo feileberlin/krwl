@@ -3035,7 +3035,73 @@
       "source": "https://www.vhshoferland.de/p/last-minute-kurse/qigong-fuer-anfaenger-646-C-30ST501401",
       "url": "https://www.vhshoferland.de/p/last-minute-kurse/qigong-fuer-anfaenger-646-C-30ST501401",
       "tags": []
+    },
+    {
+      "id": "vhs_bacb25b87ab6",
+      "title": "R\u00fcckhalt - Ganzheitliche R\u00fcckenschuleKurs 2",
+      "teaser": "Haltungsschulung mit Korrektur, sinnvolle \u00dcbungen f\u00fcr die Wirbels\u00e4ule, Heimprogramm, Fehlhaltungen und deren Korrektur, Beratung f\u00fcr den Alltag und das Berufsleben, Kl\u00e4rung von Fragen; Teilnehmer mit",
+      "description": "Haltungsschulung mit Korrektur, sinnvolle \u00dcbungen f\u00fcr die Wirbels\u00e4ule, Heimprogramm, Fehlhaltungen und deren Korrektur, Beratung f\u00fcr den Alltag und das Berufsleben, Kl\u00e4rung von Fragen; Teilnehmer mit akuten Beschwerden werden gebeten vorher einen Arzt aufzusuchen, da der Kurs keine Therapie ersetzen soll und kann.",
+      "location": {
+        "name": "Dorfgemeinschaftshaus Neuhaus",
+        "address": "Selbitz",
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": false,
+        "needs_review": false,
+        "resolution_method": null
+      },
+      "start_time": "2026-02-23T18:00:00",
+      "end_time": null,
+      "category": "education",
+      "status": "pending",
+      "source": "https://www.vhshoferland.de/p/last-minute-kurse/rueckhalt-ganzheitliche-rueckenschule/kurs-2-646-C-30SE502202",
+      "url": "https://www.vhshoferland.de/p/last-minute-kurse/rueckhalt-ganzheitliche-rueckenschule/kurs-2-646-C-30SE502202",
+      "tags": []
+    },
+    {
+      "id": "vhs_caff225746ac",
+      "title": "Bodytraining",
+      "teaser": "Fit und gesund mit Stretching, Problemzonentraining und Pilateselementen.",
+      "description": "Fit und gesund mit Stretching, Problemzonentraining und Pilateselementen. Unser Kurs zeigt Ihnen, wie es gemacht wird!",
+      "location": {
+        "name": "G\u00f6strahalle K\u00f6ditz",
+        "address": null,
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": true,
+        "needs_review": false,
+        "resolution_method": null
+      },
+      "start_time": "2026-02-23T18:15:00",
+      "end_time": null,
+      "category": "education",
+      "status": "pending",
+      "source": "https://www.vhshoferland.de/p/last-minute-kurse/bodytraining-646-C-30KD502301",
+      "url": "https://www.vhshoferland.de/p/last-minute-kurse/bodytraining-646-C-30KD502301",
+      "tags": []
+    },
+    {
+      "id": "vhs_9f978469b506",
+      "title": "IndiacaKurs 1 f\u00fcr Kinder von 10 - 14 Jahren",
+      "teaser": "Indiaca ist ein Flugballspiel, bei dem ein federball\u00e4hnliches Flugobjekt mit der flachen Hand \u00fcber ein Netz geschlagen wird. Die Aufstellung und die Regeln sind \u00e4hnlich wie beim Volleyballspiel.",
+      "description": "Indiaca ist ein Flugballspiel, bei dem ein federball\u00e4hnliches Flugobjekt mit der flachen Hand \u00fcber ein Netz geschlagen wird. Die Aufstellung und die Regeln sind \u00e4hnlich wie beim Volleyballspiel. Es ist ein Mannschaftssport und z\u00e4hlt zu den R\u00fcckschlagspielen, weil die Indiaca nach drei Ber\u00fchrungen das gegnerische Feld m\u00f6glichst so raffiniert erreichen muss, dass der gegnerischen Mannschaft ein R\u00fcckspiel nicht gelingt. Indiaca ist ein auf einen Leistungsvergleich ausgerichtetes Mannschaftsspiel mi",
+      "location": {
+        "name": "Sporthalle",
+        "address": "Gymnasium Naila, Finkenweg 15",
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": false,
+        "needs_review": false,
+        "resolution_method": null
+      },
+      "start_time": "2026-02-23T18:30:00",
+      "end_time": null,
+      "category": "education",
+      "status": "pending",
+      "source": "https://www.vhshoferland.de/p/last-minute-kurse/indiaca/kurs-1-fuer-kinder-von-10-14-jahren-646-C-30NA502601",
+      "url": "https://www.vhshoferland.de/p/last-minute-kurse/indiaca/kurs-1-fuer-kinder-von-10-14-jahren-646-C-30NA502601",
+      "tags": []
     }
   ],
-  "last_scraped": "2026-02-13T03:50:05.608544"
+  "last_scraped": "2026-02-14T03:46:08.656588"
 }
