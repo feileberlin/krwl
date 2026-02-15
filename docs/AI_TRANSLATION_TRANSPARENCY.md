@@ -2,7 +2,14 @@
 
 ## Overview
 
-This document describes the system for transparently disclosing AI-generated translations to users. When events are automatically translated from the source language (usually German) to other supported languages (English, Czech), users must be informed about the translation source.
+This document describes the system for transparently disclosing AI-generated translations to users. When event descriptions are automatically translated from the source language (usually German) to other supported languages (English, Czech), users must be informed about the translation source.
+
+**TRANSLATION SCOPE:**
+- ✅ **Event descriptions** - Full explanatory text (TRANSLATED)
+- ❌ **Event titles** - Proper nouns, brand names (NOT translated)
+- ❌ **Location names** - Venue names, place names (NOT translated)
+
+**Rationale:** Event names and venue names are often proper nouns or culturally specific identifiers that should remain in the original language for authenticity and clarity.
 
 ## Ethical Principles
 
@@ -47,22 +54,6 @@ This document describes the system for transparently disclosing AI-generated tra
   "translations": {
     "source_language": "de",
     "fields": {
-      "title": {
-        "en": {
-          "text": "Concert in the Park",
-          "method": "ai",
-          "service": "duckduckgo",
-          "generated_at": "2026-02-15T18:30:00Z",
-          "verified": false
-        },
-        "cs": {
-          "text": "Koncert v parku",
-          "method": "ai",
-          "service": "deepl",
-          "generated_at": "2026-02-15T18:30:00Z",
-          "verified": false
-        }
-      },
       "description": {
         "en": {
           "text": "A wonderful music experience...",
@@ -78,27 +69,13 @@ This document describes the system for transparently disclosing AI-generated tra
           "generated_at": "2026-02-15T18:30:00Z",
           "verified": false
         }
-      },
-      "location_name": {
-        "en": {
-          "text": "City Park",
-          "method": "ai",
-          "service": "duckduckgo",
-          "generated_at": "2026-02-15T18:30:00Z",
-          "verified": false
-        },
-        "cs": {
-          "text": "Městský park",
-          "method": "ai",
-          "service": "deepl",
-          "generated_at": "2026-02-15T18:30:00Z",
-          "verified": false
-        }
       }
     }
   }
 }
 ```
+
+**Note:** Only `description` field is translated. Title and location name remain in original language.
 
 #### Translation Metadata Fields
 
@@ -521,18 +498,20 @@ def scrape_all(self):
 
 ```
 ┌──────────────────────────────────┐
-│ Concert in the Park †            │
+│ Konzert im Park                  │
 │                                  │
 │ A wonderful music experience in  │
 │ the city center. Join us! †      │
 │                                  │
-│ 📍 City Park †                   │
+│ 📍 Stadtpark                     │
 │ 🕐 Feb 20, 8:00 PM               │
 │                                  │
 │ ℹ️ AI-translated from German.    │
 │    View original                 │
 └──────────────────────────────────┘
 ```
+
+**Note:** Title and location remain in original German. Only description shows † indicator.
 
 ### Example 2: Dashboard Language Switcher
 

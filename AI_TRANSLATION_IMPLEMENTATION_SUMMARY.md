@@ -4,6 +4,13 @@
 
 Successfully implemented a complete AI translation system with full transparency disclosure for the KRWL> Events platform, following ethical AI best practices and EU AI Act compliance requirements.
 
+**TRANSLATION SCOPE (Updated Feb 15, 2026):**
+- ✅ **Event descriptions** - Full explanatory text (TRANSLATED)
+- ❌ **Event titles** - Proper nouns, brand names (NOT translated)
+- ❌ **Location names** - Venue names, place names (NOT translated)
+
+**Rationale:** Event names and venue names are often proper nouns or culturally specific identifiers that should remain in the original language for authenticity and clarity.
+
 ## Implementation Phases
 
 ### Phase 1: Backend Translation Engine ✅ COMPLETE
@@ -23,11 +30,13 @@ Successfully implemented a complete AI translation system with full transparency
   - `verified` - Human verification status (false by default)
 - Translation statistics (translated/skipped/failed)
 - CLI commands: `translate`, `translate --pending`, `translate --force`
+- **Translation scope:** Descriptions only (NOT titles or location names)
 
 **Testing:**
 - Translated 150 real events successfully
 - All translations stored in proper schema
 - No data loss or corruption
+- Cleaned up old title/location translations (kept only descriptions)
 
 ### Phase 2: UI Transparency Indicators ✅ COMPLETE
 **Commit:** 1150620
@@ -47,7 +56,9 @@ Successfully implemented a complete AI translation system with full transparency
 
 **User Experience:**
 ```
-Event Title: [EN] Concert in the Park †
+Event Title: Konzert im Park                    ← Original (no †)
+Location: Stadtpark                              ← Original (no †)
+Description: [EN] A wonderful music experience... ← Translated (with †)
 
 Hover tooltip:
   AI Translation
@@ -312,3 +323,10 @@ Successfully implemented a complete, ethical, and accessible AI translation syst
 **Developer:** GitHub Copilot AI Agent  
 **Status:** Phases 1 & 2 Complete, Phase 3 Ready  
 **Next Action:** Integrate DuckDuckGo AI or DeepL API
+
+**Update (Feb 15, 2026 - Scope Change):**
+- Modified translation scope to exclude titles and location names
+- Only event descriptions are now translated
+- Event names and venue names remain in original language
+- Rationale: Proper nouns should preserve cultural authenticity
+- 150 events cleaned (removed title/location translations, kept descriptions)
