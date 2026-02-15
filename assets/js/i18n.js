@@ -199,6 +199,162 @@ class I18n {
     }
     
     /**
+     * Get translated event field with transparency metadata
+     * Used for displaying event content in the current language
+     * 
+     * @param {Object} event - Event object with translations
+     * @param {string} field - Field name (title, description, location_name)
+     * @param {string} lang - Target language code (default: current language)
+     * @returns {Object} { text, isTranslated, metadata, fallback }
+     */
+    getTranslatedField(event, field, lang = null) {
+        const targetLang = lang || this.currentLang;
+        
+        // If no translations object, return original
+        if (!event.translations) {
+            return {
+                text: this._getOriginalFieldValue(event, field),
+                isTranslated: false,
+                metadata: null,
+                fallback: false
+            };
+        }
+        
+        const sourceLang = event.translations.source_language || this.defaultLang;
+        
+        // If current language matches source language, return original
+        if (targetLang === sourceLang) {
+            return {
+                text: this._getOriginalFieldValue(event, field),
+                isTranslated: false,
+                metadata: null,
+                fallback: false
+            };
+        }
+        
+        // Check if translation exists
+        const translation = event.translations.fields?.[field]?.[targetLang];
+        if (translation && translation.text) {
+            return {
+                text: translation.text,
+                isTranslated: true,
+                metadata: translation,
+                fallback: false
+            };
+        }
+        
+        // Fallback to original language
+        return {
+            text: this._getOriginalFieldValue(event, field),
+            isTranslated: false,
+            metadata: null,
+            fallback: true
+        };
+    }
+    
+    /**
+     * Get original field value from event
+     * @private
+     */
+    _getOriginalFieldValue(event, field) {
+        if (field === 'location_name') {
+            return event.location?.name || '';
+        }
+        return event[field] || '';
+    }
+    
+    /**
+     * Create AI translation indicator HTML
+     * Returns footnote symbol (†) with ARIA label and tooltip
+     * 
+     * @param {Object} metadata - Translation metadata
+     * @returns {string} HTML for footnote indicator or empty string
+     */
+    createTranslationIndicator(metadata) {
+        if (!metadata || metadata.method !== 'ai') {
+            return '';
+        }
+        
+        const service = metadata.service || 'AI';
+        const date = metadata.generated_at ? new Date(metadata.generated_at).toLocaleDateString() : 'Unknown';
+        const verified = metadata.verified ? 'Verified' : 'Not verified';
+        const sourceLang = this._getLanguageName(metadata.source_language || 'unknown');
+        
+        const tooltip = `AI Translation\nFrom: ${sourceLang}\nService: ${service}\nDate: ${date}\nStatus: ${verified}`;
+        
+        return `<sup class="ai-translation-indicator" 
+                     role="img"
+                     aria-label="AI-translated from ${sourceLang}"
+                     title="${tooltip}">†</sup>`;
+    }
+    
+    /**
+     * Get human-readable language name
+     * @private
+     */
+    _getLanguageName(code) {
+        const names = {
+            'de': 'German',
+            'en': 'English',
+            'cs': 'Czech'
+        };
+        return names[code] || code.toUpperCase();
+    }
+    
+    /**
+     * Create translation disclosure footer
+     * Shows "AI-translated" notice with "View Original" button
+     * 
+     * @param {Object} event - Event with translations
+     * @returns {string} HTML for translation footer or empty string
+     */
+    createTranslationFooter(event) {
+        if (!event.translations || !event.translations.source_language) {
+            return '';
+        }
+        
+        const sourceLang = event.translations.source_language;
+        const currentLang = this.currentLang;
+        
+        // Don't show footer if viewing original language
+        if (sourceLang === currentLang) {
+            return '';
+        }
+        
+        // Check if current view has any translations
+        const hasTranslations = event.translations.fields && 
+            Object.values(event.translations.fields).some(field => 
+                field[currentLang] && field[currentLang].method === 'ai'
+            );
+        
+        if (!hasTranslations) {
+            return '';
+        }
+        
+        const langNames = {
+            'de': 'German',
+            'en': 'English',
+            'cs': 'Czech'
+        };
+        const sourceLangName = langNames[sourceLang] || sourceLang.toUpperCase();
+        
+        return `
+            <div class="translation-footer">
+                <i data-lucide="info" aria-hidden="true"></i>
+                <span class="translation-notice">
+                    AI-translated from ${sourceLangName}. 
+                    <button class="view-original-btn" 
+                            data-event-id="${event.id}"
+                            data-source-lang="${sourceLang}"
+                            onclick="window.app.i18n.switchLanguage('${sourceLang}')">
+                        View original
+                    </button>
+                </span>
+            </div>
+        `.trim();
+    }
+    
+    /**
      * Get language metadata (name, native name)
      * @param {string} lang - Language code
      * @returns {Object} Language metadata

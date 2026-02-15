@@ -591,6 +591,7 @@ class MapManager {
     /**
      * Create popup content HTML with smart time display
      * Shows clock for "til sunrise", calendar for other filters
+     * NOW WITH: AI translation transparency indicators
      * @param {Object} event - Event data
      * @returns {string} HTML content for popup
      */
@@ -619,9 +620,29 @@ class MapManager {
         const isBookmarked = this.storage.isBookmarked(event.id);
         const bookmarkClass = isBookmarked ? 'bookmarked' : '';
         
+        // Get translated title with transparency indicator
+        const i18n = app && app.i18n;
+        let displayTitle = event.title || 'Event';
+        let titleIndicator = '';
+        
+        if (i18n) {
+            const titleData = i18n.getTranslatedField(event, 'title');
+            displayTitle = titleData.text;
+            titleIndicator = i18n.createTranslationIndicator(titleData.metadata);
+        }
+        
         // Truncate title
-        const title = event.title || 'Event';
-        const displayTitle = title.length > 50 ? title.substring(0, 47) + '…' : title;
+        displayTitle = displayTitle.length > 50 ? displayTitle.substring(0, 47) + '…' : displayTitle;
+        
+        // Get translated location with transparency indicator
+        let locationName = event.location?.name || 'Unknown';
+        let locationIndicator = '';
+        
+        if (i18n) {
+            const locationData = i18n.getTranslatedField(event, 'location_name');
+            locationName = locationData.text;
+            locationIndicator = i18n.createTranslationIndicator(locationData.metadata);
+        }
         
         // Distance display
         const distanceHtml = event.distance !== undefined 
@@ -630,6 +651,9 @@ class MapManager {
                  <span>${event.distance.toFixed(1)} km</span>
                </div>`
             : '';
+        
+        // Translation footer (if translated content)
+        const translationFooter = i18n ? i18n.createTranslationFooter(event) : '';
         
         // Build popup HTML based on time filter
         if (isSunriseFilter) {
@@ -641,15 +665,16 @@ class MapManager {
                             <span class="time-large">${this.escapeHtml(timeStr)}</span>
                         </div>
                     </div>
-                    <h3 class="popup-title">${this.escapeHtml(displayTitle)}</h3>
+                    <h3 class="popup-title">${this.escapeHtml(displayTitle)}${titleIndicator}</h3>
                     <div class="popup-location">
                         <i data-lucide="map-pin" class="popup-icon"></i>
-                        <span>${this.escapeHtml(event.location?.name || 'Unknown')}</span>
+                        <span>${this.escapeHtml(locationName)}${locationIndicator}</span>
                     </div>
                     ${distanceHtml}
                     <button class="popup-bookmark ${bookmarkClass}" data-event-id="${event.id}" title="Bookmark this event">
                         <i data-lucide="heart" class="bookmark-icon"></i>
                     </button>
+                    ${translationFooter}
                 </div>
             `.trim();
         } else {
@@ -661,15 +686,16 @@ class MapManager {
                             <span class="date-large">${this.escapeHtml(dayStr)}</span>
                         </div>
                     </div>
-                    <h3 class="popup-title">${this.escapeHtml(displayTitle)}</h3>
+                    <h3 class="popup-title">${this.escapeHtml(displayTitle)}${titleIndicator}</h3>
                     <div class="popup-location">
                         <i data-lucide="map-pin" class="popup-icon"></i>
-                        <span>${this.escapeHtml(event.location?.name || 'Unknown')}</span>
+                        <span>${this.escapeHtml(locationName)}${locationIndicator}</span>
                     </div>
                     ${distanceHtml}
                     <button class="popup-bookmark ${bookmarkClass}" data-event-id="${event.id}" title="Bookmark this event">
                         <i data-lucide="heart" class="bookmark-icon"></i>
                     </button>
+                    ${translationFooter}
                 </div>
             `.trim();
         }
