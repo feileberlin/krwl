@@ -368,6 +368,28 @@ strong, b {
     letter-spacing: 0.5px;
 }
 
+.location-flyer-type {
+    font-size: 0.625rem;
+    font-weight: 400;
+    color: var(--color-shade-50, #6b445c);
+    opacity: 0.8;
+    text-transform: capitalize;
+    letter-spacing: 0.3px;
+}
+
+/* Location type specific styling - border colors */
+.location-flyer[data-location-type="geolocation"] {
+    border-color: var(--color-success, #4CAF50);
+}
+
+.location-flyer[data-location-type="predefined"] {
+    border-color: var(--color-info, #2196F3);
+}
+
+.location-flyer[data-location-type="custom"] {
+    border-color: var(--color-tint-50, #eac0da);
+}
+
 /* Map fallback when Leaflet fails to load */
 .map-fallback {
     position: absolute;

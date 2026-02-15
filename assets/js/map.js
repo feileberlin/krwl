@@ -323,8 +323,21 @@ class MapManager {
         const displayLabel = label || 'My Location';
         const escapedLabel = this.escapeHtml(displayLabel);
         
+        // Detect location type from label for better marker identification
+        let locationType = 'custom';
+        let locationTypeLabel = 'Custom Location';
+        
+        if (label && (label.includes('You are here') || label.includes('My Location'))) {
+            locationType = 'geolocation';
+            locationTypeLabel = 'Your Location';
+        } else if (label && (label.includes('Hauptbahnhof') || label.includes('Sonnenplatz') || 
+                             label.includes('Rathaus') || label.includes('Marktplatz'))) {
+            locationType = 'predefined';
+            locationTypeLabel = 'Reference Point';
+        }
+        
         return `
-            <div class="location-flyer" role="img" aria-label="${escapedLabel}">
+            <div class="location-flyer" role="img" aria-label="${escapedLabel}" data-location-type="${locationType}">
                 <div class="location-flyer-icon" aria-hidden="true">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="2" x2="5" y1="12" y2="12"></line>
@@ -336,6 +349,7 @@ class MapManager {
                 </div>
                 <div class="location-flyer-content">
                     <span class="location-flyer-label">${escapedLabel}</span>
+                    <span class="location-flyer-type">${locationTypeLabel}</span>
                 </div>
             </div>
         `.trim();
@@ -569,12 +583,40 @@ class MapManager {
             'calendar': 'map-pin'       // default
         };
         
+        // Human-readable category labels for accessibility
+        const categoryLabels = {
+            'music': 'Music Event',
+            'drama': 'Theater',
+            'palette': 'Arts',
+            'film': 'Cinema',
+            'camera': 'Photography',
+            'utensils': 'Food',
+            'coffee': 'Café',
+            'wine': 'Bar',
+            'dumbbell': 'Sports',
+            'trophy': 'Competition',
+            'footprints': 'Walking',
+            'graduation-cap': 'Workshop',
+            'presentation': 'Talk',
+            'book-open': 'Reading',
+            'users': 'Meetup',
+            'party-popper': 'Party',
+            'shopping-bag': 'Market',
+            'trees': 'Outdoor',
+            'bike': 'Cycling',
+            'laptop': 'Tech',
+            'gamepad-2': 'Gaming',
+            'baby': 'Family',
+            'calendar': 'Event'
+        };
+        
         const lucideIcon = iconMap[category] || 'map-pin';
+        const categoryLabel = categoryLabels[category] || 'Event';
         
         // Create div icon with just the Lucide icon (no background shape)
-        // Each category icon is visually distinct
+        // Each category icon is visually distinct with accessible label
         const html = `
-            <div class="category-icon-marker" data-category="${category}">
+            <div class="category-icon-marker" data-category="${category}" aria-label="${categoryLabel}">
                 <i data-lucide="${lucideIcon}" class="category-icon"></i>
             </div>
         `;

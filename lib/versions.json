@@ -1,7 +1,7 @@
 {
   "metadata": {
     "created": "2026-02-01T11:59:07.067854",
-    "last_updated": "2026-02-15T19:37:49.124992"
+    "last_updated": "2026-02-15T20:06:12.984616"
   },
   "assets": {
     "leaflet": {
@@ -10,27 +10,27 @@
         "leaflet/leaflet.css": {
           "checksum": "a7837102824184820dfa198d1ebcd109ff6d0ff9a2672a074b9a1b4d147d04c6",
           "size_bytes": 14806,
-          "last_verified": "2026-02-15T19:37:48.757581"
+          "last_verified": "2026-02-15T20:06:11.919716"
         },
         "leaflet/leaflet.js": {
           "checksum": "db49d009c841f5ca34a888c96511ae936fd9f5533e90d8b2c4d57596f4e5641a",
           "size_bytes": 147552,
-          "last_verified": "2026-02-15T19:37:48.808799"
+          "last_verified": "2026-02-15T20:06:12.023089"
         },
         "leaflet/images/marker-icon.png": {
           "checksum": "574c3a5cca85f4114085b6841596d62f00d7c892c7b03f28cbfa301deb1dc437",
           "size_bytes": 1466,
-          "last_verified": "2026-02-15T19:37:48.858483"
+          "last_verified": "2026-02-15T20:06:12.094759"
         },
         "leaflet/images/marker-icon-2x.png": {
           "checksum": "00179c4c1ee830d3a108412ae0d294f55776cfeb085c60129a39aa6fc4ae2528",
           "size_bytes": 2464,
-          "last_verified": "2026-02-15T19:37:48.911035"
+          "last_verified": "2026-02-15T20:06:12.169613"
         },
         "leaflet/images/marker-shadow.png": {
           "checksum": "264f5c640339f042dd729062cfc04c17f8ea0f29882b538e3848ed8f10edb4da",
           "size_bytes": 618,
-          "last_verified": "2026-02-15T19:37:48.945891"
+          "last_verified": "2026-02-15T20:06:12.253373"
         }
       }
     },
@@ -40,17 +40,17 @@
         "roboto/roboto-regular-latin.woff2": {
           "checksum": "796de064b8d80eba7ccacb8ba67d77fdbcdf4b385c844645d452c24537b3108f",
           "size_bytes": 11028,
-          "last_verified": "2026-02-15T19:37:49.050148"
+          "last_verified": "2026-02-15T20:06:12.751603"
         },
         "roboto/roboto-medium-latin.woff2": {
           "checksum": "bce2f309470952b7affa62ff4d91b454334c68cefa541429b502904d20696875",
           "size_bytes": 11072,
-          "last_verified": "2026-02-15T19:37:49.073815"
+          "last_verified": "2026-02-15T20:06:12.841725"
         },
         "roboto/roboto-bold-latin.woff2": {
           "checksum": "0f53e8b0a717ca4ce313eec62b90d41db62c2f4946259a65c93bf8e84c5b0c44",
           "size_bytes": 11040,
-          "last_verified": "2026-02-15T19:37:49.100369"
+          "last_verified": "2026-02-15T20:06:12.917830"
         }
       }
     },
@@ -60,7 +60,7 @@
         "roboto/roboto-mono-regular-latin.woff2": {
           "checksum": "32c8a74ac0816253d69a7cc68a60986d91c77c80fb17101058527bffa45a13ba",
           "size_bytes": 12764,
-          "last_verified": "2026-02-15T19:37:49.124986"
+          "last_verified": "2026-02-15T20:06:12.984612"
         }
       }
     },

@@ -146,6 +146,57 @@
     filter: drop-shadow(0 2px 6px rgba(214, 137, 184, 0.5));
 }
 
+/* Optional: Category-specific marker colors for enhanced visual identification */
+/* These can be customized via design system or disabled by commenting out */
+.category-icon-marker[data-category="music"] .category-icon,
+.category-icon-marker[data-category="drama"] .category-icon,
+.category-icon-marker[data-category="party-popper"] .category-icon {
+    color: var(--color-music, var(--color-primary));
+}
+
+.category-icon-marker[data-category="palette"] .category-icon,
+.category-icon-marker[data-category="film"] .category-icon,
+.category-icon-marker[data-category="camera"] .category-icon {
+    color: var(--color-arts, var(--color-primary));
+}
+
+.category-icon-marker[data-category="utensils"] .category-icon,
+.category-icon-marker[data-category="coffee"] .category-icon,
+.category-icon-marker[data-category="wine"] .category-icon {
+    color: var(--color-food, var(--color-primary));
+}
+
+.category-icon-marker[data-category="dumbbell"] .category-icon,
+.category-icon-marker[data-category="trophy"] .category-icon,
+.category-icon-marker[data-category="footprints"] .category-icon,
+.category-icon-marker[data-category="bike"] .category-icon {
+    color: var(--color-sports, var(--color-primary));
+}
+
+.category-icon-marker[data-category="graduation-cap"] .category-icon,
+.category-icon-marker[data-category="presentation"] .category-icon,
+.category-icon-marker[data-category="book-open"] .category-icon {
+    color: var(--color-education, var(--color-primary));
+}
+
+.category-icon-marker[data-category="users"] .category-icon,
+.category-icon-marker[data-category="shopping-bag"] .category-icon {
+    color: var(--color-community, var(--color-primary));
+}
+
+.category-icon-marker[data-category="trees"] .category-icon {
+    color: var(--color-nature, var(--color-primary));
+}
+
+.category-icon-marker[data-category="laptop"] .category-icon,
+.category-icon-marker[data-category="gamepad-2"] .category-icon {
+    color: var(--color-tech, var(--color-primary));
+}
+
+.category-icon-marker[data-category="baby"] .category-icon {
+    color: var(--color-family, var(--color-primary));
+}
+
 /* Legacy support for old class names */
 .category-marker-container {
     background: transparent !important;
