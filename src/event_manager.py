@@ -20,6 +20,7 @@ from modules.editor import EventEditor
 from modules.site_generator import SiteGenerator
 from modules.archive_events import EventArchiver, print_config_info
 from modules.batch_operations import expand_wildcards, process_in_batches, find_events_by_ids, determine_batch_size
+from modules.event_translator import EventTranslator
 from modules.utils import (
     load_config, load_events, save_events, 
     load_pending_events, save_pending_events, 
@@ -322,6 +323,12 @@ COMMANDS:
                               - Example: generate-icons --map marker
     update                    Update events data in existing site (fast)
     update-weather            Update weather data in existing site (fast, no rebuild)
+    translate                 Translate events using AI with transparency metadata
+                              - Adds AI translations for title, description, location
+                              - Includes transparency metadata (service, method, timestamp)
+                              - Use --pending to translate pending events
+                              - Use --force to re-translate existing translations
+                              - See docs/AI_TRANSLATION_TRANSPARENCY.md for details
     dependencies fetch        Fetch third-party dependencies from CDN
     dependencies check        Check if dependencies are present locally
     dependencies update-check Check if dependency updates are available
@@ -1681,6 +1688,136 @@ def cli_bulk_reject_events(base_path, event_ids_str):
     return 0
 
 
+def cli_translate_events(base_path, config, args):
+    """
+    CLI: Translate events using AI with transparency metadata.
+    
+    Translates event content (title, description, location name) to all
+    supported languages using AI services. Adds transparency metadata as
+    specified in docs/AI_TRANSLATION_TRANSPARENCY.md.
+    
+    Usage:
+        python3 src/event_manager.py translate              # Translate published events
+        python3 src/event_manager.py translate --pending    # Translate pending events
+        python3 src/event_manager.py translate --force      # Force re-translation
+        python3 src/event_manager.py translate --help       # Show help
+    """
+    # Parse arguments
+    translate_pending = '--pending' in args
+    force = '--force' in args
+    show_help = '--help' in args
+    
+    if show_help:
+        print("\nAI Event Translation with Transparency")
+        print("=" * 60)
+        print("\nTranslates event content to all supported languages with")
+        print("full transparency metadata (service, method, timestamp).")
+        print("\nUsage:")
+        print("  python3 src/event_manager.py translate [options]")
+        print("\nOptions:")
+        print("  --pending   Translate pending events (default: published)")
+        print("  --force     Force re-translation even if translations exist")
+        print("  --help      Show this help message")
+        print("\nExamples:")
+        print("  python3 src/event_manager.py translate")
+        print("  python3 src/event_manager.py translate --pending")
+        print("  python3 src/event_manager.py translate --force")
+        print("\nTranslation metadata added:")
+        print("  - Source language (e.g., 'de')")
+        print("  - Translation method ('ai')")
+        print("  - Service used (e.g., 'duckduckgo')")
+        print("  - Generation timestamp")
+        print("  - Verification status (false by default)")
+        print("\nSee docs/AI_TRANSLATION_TRANSPARENCY.md for details.")
+        return 0
+    
+    # Determine which file to translate
+    if translate_pending:
+        input_file = base_path / 'assets' / 'json' / 'pending_events.json'
+        output_file = input_file
+        print("Translating pending events...")
+    else:
+        input_file = base_path / 'assets' / 'json' / 'events.json'
+        output_file = input_file
+        print("Translating published events...")
+    
+    if not input_file.exists():
+        print(f"✗ File not found: {input_file}")
+        return 1
+    
+    # Load events
+    try:
+        with open(input_file, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        events = data.get('events', [])
+        print(f"Loaded {len(events)} events from {input_file.name}")
+    except Exception as e:
+        print(f"✗ Failed to load events: {e}")
+        return 1
+    
+    if not events:
+        print("No events to translate.")
+        return 0
+    
+    # Initialize translator
+    translator = EventTranslator(config, base_path)
+    
+    # Get supported languages
+    supported_langs = config.get('supportedLanguages', ['de', 'en', 'cs'])
+    default_lang = config.get('defaultLanguage', 'de')
+    target_langs = [lang for lang in supported_langs if lang != default_lang]
+    
+    print(f"\nTranslation settings:")
+    print(f"  Source language: {default_lang}")
+    print(f"  Target languages: {', '.join(target_langs)}")
+    print(f"  Force re-translation: {force}")
+    print(f"  Service: Placeholder (DuckDuckGo AI integration pending)")
+    print()
+    
+    # Translate events
+    print("Translating events...")
+    translated_events = translator.translate_events_batch(events, target_languages=target_langs, force=force)
+    
+    # Get stats
+    stats = translator.get_stats()
+    
+    # Save translated events
+    try:
+        data['events'] = translated_events
+        with open(output_file, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+        print(f"\n✓ Saved translated events to {output_file.name}")
+    except Exception as e:
+        print(f"\n✗ Failed to save events: {e}")
+        return 1
+    
+    # Print summary
+    print("\n" + "=" * 60)
+    print("Translation Summary")
+    print("=" * 60)
+    print(f"  Translated fields: {stats['translated']}")
+    print(f"  Skipped (already translated): {stats['skipped']}")
+    print(f"  Failed: {stats['failed']}")
+    print()
+    
+    if stats['translated'] > 0:
+        print("✓ Translation complete!")
+        print()
+        print("Next steps:")
+        print("  1. Review translated events in UI (transparency indicators will show)")
+        print("  2. Regenerate site: python3 src/event_manager.py generate")
+        print("  3. View footnote (†) indicators on translated content")
+        print()
+        print("⚠️  Note: Currently using placeholder translations.")
+        print("   Implement DuckDuckGo AI integration for production.")
+    else:
+        print("ℹ️  No new translations were added.")
+        if stats['skipped'] > 0:
+            print("   Use --force to re-translate existing translations.")
+    
+    return 0
+
+
 def cli_generate(base_path, config):
     """
     CLI: Generate static site with inlined HTML.
@@ -2535,6 +2672,9 @@ def _execute_command(args, base_path, config):
     if command == 'update-weather':
         generator = SiteGenerator(base_path)
         return 0 if generator.update_weather_data() else 1
+    
+    if command == 'translate':
+        return cli_translate_events(base_path, config, args.args or [])
     
     if command == 'generate-icons':
         """Generate Lucide icons map from codebase usage."""
