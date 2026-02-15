@@ -5,6 +5,11 @@ Event Translation Module
 Automatically translates event content using free AI services (DuckDuckGo AI).
 Adds transparency metadata to track translation source and method.
 
+TRANSLATION SCOPE:
+- ✅ Descriptions: Full explanatory text (translated)
+- ❌ Event titles: Proper nouns, brand names (NOT translated)
+- ❌ Location names: Venue names, place names (NOT translated)
+
 This module implements the AI translation system with full transparency as
 specified in docs/AI_TRANSLATION_TRANSPARENCY.md.
 """
@@ -53,13 +58,16 @@ class EventTranslator:
         """
         Translate event content to target languages
         
+        NOTE: Translates ONLY descriptions, NOT titles or location names.
+        Event names and venue names are proper nouns that should remain in original language.
+        
         Args:
             event: Event dictionary with title, description, location.name
             target_languages: List of language codes to translate to (default: all supported except source)
             force: Force re-translation even if translations exist
             
         Returns:
-            Event dict with added/updated translations field
+            Event dict with added/updated translations field (description only)
         """
         if target_languages is None:
             # Translate to all supported languages except source
@@ -77,10 +85,11 @@ class EventTranslator:
             }
         
         # Fields to translate
+        # NOTE: We translate ONLY descriptions, NOT titles or location names
+        # Rationale: Event names and venue names are proper nouns/brand names
+        # that should remain in the original language
         fields_to_translate = [
-            ('title', event.get('title')),
-            ('description', event.get('description')),
-            ('location_name', event.get('location', {}).get('name') if isinstance(event.get('location'), dict) else None)
+            ('description', event.get('description'))
         ]
         
         for field_name, source_text in fields_to_translate:

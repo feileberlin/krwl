@@ -323,8 +323,9 @@ COMMANDS:
                               - Example: generate-icons --map marker
     update                    Update events data in existing site (fast)
     update-weather            Update weather data in existing site (fast, no rebuild)
-    translate                 Translate events using AI with transparency metadata
-                              - Adds AI translations for title, description, location
+    translate                 Translate event descriptions using AI with transparency
+                              - Translates ONLY descriptions (not titles or location names)
+                              - Event names and venue names remain in original language
                               - Includes transparency metadata (service, method, timestamp)
                               - Use --pending to translate pending events
                               - Use --force to re-translate existing translations
@@ -1692,9 +1693,9 @@ def cli_translate_events(base_path, config, args):
     """
     CLI: Translate events using AI with transparency metadata.
     
-    Translates event content (title, description, location name) to all
-    supported languages using AI services. Adds transparency metadata as
-    specified in docs/AI_TRANSLATION_TRANSPARENCY.md.
+    Translates event DESCRIPTIONS ONLY (not titles or location names).
+    Event names and venue names are proper nouns that remain in original language.
+    Adds transparency metadata as specified in docs/AI_TRANSLATION_TRANSPARENCY.md.
     
     Usage:
         python3 src/event_manager.py translate              # Translate published events
@@ -1710,8 +1711,9 @@ def cli_translate_events(base_path, config, args):
     if show_help:
         print("\nAI Event Translation with Transparency")
         print("=" * 60)
-        print("\nTranslates event content to all supported languages with")
-        print("full transparency metadata (service, method, timestamp).")
+        print("\nTranslates event DESCRIPTIONS to all supported languages.")
+        print("Event names and location names remain in original language.")
+        print("Full transparency metadata included (service, method, timestamp).")
         print("\nUsage:")
         print("  python3 src/event_manager.py translate [options]")
         print("\nOptions:")
@@ -1722,6 +1724,10 @@ def cli_translate_events(base_path, config, args):
         print("  python3 src/event_manager.py translate")
         print("  python3 src/event_manager.py translate --pending")
         print("  python3 src/event_manager.py translate --force")
+        print("\nTranslation scope:")
+        print("  ✅ Descriptions: Full explanatory text (TRANSLATED)")
+        print("  ❌ Event titles: Proper nouns, brand names (NOT translated)")
+        print("  ❌ Location names: Venue names, place names (NOT translated)")
         print("\nTranslation metadata added:")
         print("  - Source language (e.g., 'de')")
         print("  - Translation method ('ai')")
