@@ -454,7 +454,255 @@ Before submitting PR:
 - [ ] Auto-generated files are committed if changed
 - [ ] KISS principles followed
 - [ ] Code review requested if significant changes
+- [ ] **No clutter files created** (see Repository Cleanliness section below)
 
+## 🧹 Repository Cleanliness - CRITICAL
+
+**Problem**: Backup files, summary files, and temporary files accumulate over time, creating clutter that confuses contributors and makes the codebase harder to navigate.
+
+**Solution**: Follow strict file placement and naming rules. Git is your version control - use it instead of creating backup files.
+
+### 🚫 NEVER Create These Files
+
+**Absolutely prohibited** - these patterns are gitignored and should NEVER be created:
+
+```
+❌ *-old.js, *-old.py, *-old.md          # Use git history instead
+❌ *-original.js, *-backup.py            # Use git branches instead  
+❌ *-before-refactor.js                  # Use git commits instead
+❌ *.backup, *.bak, *.tmp                # Use /tmp directory for temp files
+❌ *_OLD.*, *_BACKUP.*                   # Use git tags if needed
+❌ file-v1.js, file-v2.js                # Use git commits with messages
+```
+
+**Why?** Git provides complete version history. Backup files:
+- ✗ Create confusion about which file is current
+- ✗ Clutter search results (`grep`, IDE search)
+- ✗ Get out of sync with actual code
+- ✗ Waste repository space
+- ✗ Confuse new contributors
+
+### ✅ DO: Use Git for Version Control
+
+**Instead of creating backup files:**
+
+```bash
+# ❌ BAD: Creating backup files
+cp app.js app-old.js
+nano app.js  # Make risky changes
+
+# ✅ GOOD: Use git branching
+git checkout -b experiment/risky-change
+nano app.js  # Make changes safely
+git commit -m "Experimental change"
+# If it works: merge. If not: `git checkout main` and delete branch
+```
+
+**For major refactors:**
+```bash
+# ❌ BAD: Copy files
+cp scraper.py scraper-before-refactor.py
+
+# ✅ GOOD: Use git commits
+git commit -m "Pre-refactor snapshot"
+# Make changes
+git commit -m "Refactor: Complete rewrite of scraper logic"
+```
+
+### 📝 Documentation & Summary Files
+
+**NEVER create summary/notes files in root directory** - they belong in specific locations:
+
+#### ❌ WRONG Locations (Prohibited)
+```
+❌ /IMPLEMENTATION_SUMMARY.md           # Root directory clutter
+❌ /AI_TRANSLATION_NOTES.md             # Root directory clutter  
+❌ /MULTILANGUAGE_SUMMARY.md            # Root directory clutter
+❌ /PR_NOTES.md                         # Root directory clutter
+❌ /FEATURE_IMPLEMENTATION.md           # Root directory clutter
+```
+
+#### ✅ CORRECT Locations (Required)
+
+| File Type | Correct Location | Purpose |
+|-----------|-----------------|---------|
+| **Implementation notes** | `docs/notes/` | Completed work documentation |
+| **Implementation plans** | `docs/plans/` | Future work planning |
+| **Architecture decisions** | `docs/adr/` | ADR (Architecture Decision Records) |
+| **Feature documentation** | `docs/` | Permanent feature docs (e.g., MULTILANGUAGE_INDEX.md) |
+| **Temporary notes** | `/tmp/` or in-memory | Work-in-progress scratchpad |
+| **Project changelog** | `/CHANGELOG.md` | User-facing changes (root OK) |
+| **Migration guides** | `docs/` | Upgrade/migration documentation |
+
+**Examples:**
+
+```bash
+# ✅ CORRECT: Implementation note after completing feature
+echo "# Translation Implementation" > docs/notes/2026-02-15-translation.md
+
+# ✅ CORRECT: Planning document before starting work  
+echo "# Search Feature Plan" > docs/plans/search-feature-plan.md
+
+# ✅ CORRECT: Architectural decision
+cp docs/adr/template.md docs/adr/004-translation-approach.md
+
+# ✅ CORRECT: Temporary brainstorming
+echo "Ideas..." > /tmp/brainstorm.txt
+
+# ❌ WRONG: Root directory summary
+echo "# Done!" > /IMPLEMENTATION_SUMMARY.md  # NEVER DO THIS
+```
+
+### 🗂️ Proper File Organization
+
+**Follow this structure strictly:**
+
+```
+krwl.in/
+├── docs/
+│   ├── notes/                    # ✅ Implementation notes (completed work)
+│   ├── plans/                    # ✅ Implementation plans (future work)
+│   ├── adr/                      # ✅ Architecture Decision Records
+│   ├── screenshots/              # ✅ Visual documentation
+│   ├── *.md                      # ✅ Permanent documentation
+│   └── BACKUP_CLEANUP_NOTES.md   # ✅ Meta-documentation
+│
+├── archive/                      # ✅ Historical files (rarely touched)
+│   ├── js_backups/               # Old code snapshots (reference only)
+│   ├── json_backups/             # Old data snapshots
+│   ├── legacy_docs/              # Outdated docs
+│   └── legacy_images/            # Unused images
+│
+├── /tmp/                         # ✅ Your temporary workspace
+│   └── *.txt, *.md, *.tmp        # Work-in-progress files (never committed)
+│
+├── *.md                          # ✅ Root-level docs (only essential ones)
+│   ├── README.md                 # Project overview (auto-generated)
+│   ├── CHANGELOG.md              # User-facing changes
+│   └── (Keep minimal!)
+│
+└── ❌ NO OTHER .md FILES IN ROOT  # Everything else goes in docs/
+```
+
+### 🔍 Pre-Commit File Check
+
+**Before committing, verify you haven't created clutter:**
+
+```bash
+# Check for backup files (should return nothing)
+find . -path ./archive -prune -o \
+  \( -name "*-old.*" -o -name "*-original.*" -o -name "*.backup" \) \
+  -type f -print
+
+# Check for summary files in root (should only show README.md, CHANGELOG.md)
+ls -1 *.md 2>/dev/null | grep -v "^README.md$" | grep -v "^CHANGELOG.md$"
+
+# Check for temp files accidentally committed
+find . -name "*.tmp" -o -name "*.bak" -o -name "*~"
+```
+
+**If any files appear, move or delete them before committing.**
+
+### 🛠️ Temporary Files - Use /tmp
+
+**For work-in-progress files (scratch notes, debug output, experiments):**
+
+```bash
+# ✅ CORRECT: Use /tmp directory
+mkdir -p /tmp/krwl-work
+echo "Debug output" > /tmp/krwl-work/debug.txt
+python3 script.py > /tmp/krwl-work/output.log
+
+# ✅ CORRECT: In-memory work (preferred for planning)
+# Just think through the problem, no need to create files
+
+# ❌ WRONG: Creating temp files in repo
+echo "Debug" > debug.txt              # Gets accidentally committed
+echo "Notes" > temp-notes.md          # Creates clutter
+```
+
+### 📋 Documentation Workflow
+
+**Correct workflow for creating documentation:**
+
+1. **During Implementation**: Work in-memory or use `/tmp/` for notes
+2. **After Completion**: Create proper docs in `docs/notes/` with date prefix
+3. **For Major Decisions**: Create ADR in `docs/adr/`
+4. **For Planning**: Create plan in `docs/plans/` before implementation
+5. **For User-Facing**: Update permanent docs in `docs/`
+
+**Example workflow:**
+
+```bash
+# Phase 1: Planning (before implementation)
+vim docs/plans/2026-02-15-add-search-feature.md
+
+# Phase 2: Implementation (work in progress)
+# Use /tmp for scratch notes
+echo "TODO: Fix bug in search.js" > /tmp/todos.txt
+
+# Phase 3: Completion (after implementation)
+vim docs/notes/2026-02-16-search-feature-completed.md
+
+# Phase 4: Architectural Decision (if major)
+cp docs/adr/template.md docs/adr/005-search-algorithm-choice.md
+vim docs/adr/005-search-algorithm-choice.md
+```
+
+### 🚨 Enforcement
+
+**The `.gitignore` file blocks backup patterns** - if you try to commit:
+
+```bash
+git add my-file-old.js
+# Git will refuse: file matches .gitignore pattern
+```
+
+**If you absolutely need to keep something temporarily:**
+- Put it in `/archive/` with clear documentation in `archive/README.md`
+- Explain why it's kept and when it can be deleted
+- Consider using `git stash` instead for temporary saves
+
+### 🎯 Quick Decision Tree: "Where does this file go?"
+
+```
+Is this file...
+  
+  ├─ A backup/old version?
+  │   └─ ❌ DON'T CREATE - Use git history
+  │
+  ├─ Implementation notes after completing work?
+  │   └─ ✅ docs/notes/YYYY-MM-DD-description.md
+  │
+  ├─ Implementation plan before starting work?
+  │   └─ ✅ docs/plans/feature-name-plan.md
+  │
+  ├─ Architectural decision?
+  │   └─ ✅ docs/adr/NNN-decision-title.md
+  │
+  ├─ Permanent feature documentation?
+  │   └─ ✅ docs/FEATURE_NAME.md
+  │
+  ├─ Temporary/work-in-progress notes?
+  │   └─ ✅ /tmp/notes.txt (never commit)
+  │
+  ├─ User-facing changelog?
+  │   └─ ✅ /CHANGELOG.md (root is OK)
+  │
+  └─ Something else?
+      └─ ⚠️  Ask: "Does this belong in root?" (Probably NO)
+```
+
+### 📚 Related Documentation
+
+- **Cleanup history**: `docs/BACKUP_CLEANUP_NOTES.md` - Previous cleanup details
+- **Archive contents**: `archive/README.md` - What's in the archive and why
+- **ADR system**: `docs/adr/README.md` - How to document decisions
+- **Git workflow**: See "Git Workflow" section below
+
+---
+
+**Remember**: A clean repository is a maintainable repository. When in doubt, DON'T create the file - use git instead.
 
 ## Critical: Auto-Generated Files 🚫
 

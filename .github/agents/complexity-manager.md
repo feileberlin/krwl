@@ -338,6 +338,55 @@ After making code changes:
 - Skip tests because "it's a small fix"
 - Leave features.json out of sync with code
 - Ignore warnings from features.json validation
+- **Create backup files or root-level summary files** (see Repository Cleanliness below)
+
+## Repository Cleanliness - NEW! ✅
+
+**Problem Solved:** Prevents repository clutter from accumulating by enforcing file placement rules.
+
+### Quick Rules
+
+**NEVER create these files:**
+- ❌ Backup files: `*-old.*`, `*-backup.*`, `*.bak`
+- ❌ Root summaries: `/IMPLEMENTATION_SUMMARY.md`, `/AI_NOTES.md`
+- ❌ Temp files in repo: `*.tmp`, `debug.txt`
+
+**ALWAYS use proper locations:**
+- ✅ Implementation notes → `docs/notes/YYYY-MM-DD-description.md`
+- ✅ Implementation plans → `docs/plans/feature-name-plan.md`
+- ✅ Temporary work → `/tmp/` directory (never commit)
+- ✅ Version control → Use git branches/commits (not backup files)
+
+### Enforcement Tools - NEW!
+
+**Check cleanliness before committing:**
+```bash
+# Run cleanliness checker
+python3 scripts/check_repository_cleanliness.py
+
+# Or use pre-commit helper
+bash scripts/pre-commit-check.sh
+```
+
+**Exit codes:**
+- `0` - Clean repository ✅
+- `1` - Warnings (allowed but discouraged) ⚠️
+- `2` - Errors (must fix) ❌
+
+### Why This Matters
+
+- **Search efficiency**: `grep` returns relevant results, not clutter
+- **Contributor clarity**: New team members aren't confused by multiple versions
+- **Git best practices**: Version control is source of truth, not file suffixes
+- **Maintainability**: Clean structure = easier navigation
+
+### See Also
+
+- **.github/copilot-instructions.md** → "Repository Cleanliness" section (comprehensive guide)
+- **docs/notes/README.md** - Implementation notes guidelines
+- **docs/plans/README.md** - Implementation plan guidelines
+- **scripts/check_repository_cleanliness.py** - Automated validation
+- **scripts/pre-commit-check.sh** - Pre-commit hook helper
 
 ## Related Files
 

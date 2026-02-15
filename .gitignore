@@ -76,6 +76,7 @@ kiss_report.txt
 publish/
 
 # Old documentation (README.md is auto-generated)
+# All summary/notes/implementation docs MUST go in docs/notes/ or docs/
 README.txt
 README.NEW.md
 IMPLEMENTATION_SUMMARY.md
@@ -83,6 +84,19 @@ PR_SUMMARY.md
 KISS_IMPLEMENTATION.md
 static/css/style.css.backup
 static/logo.svg
+
+# Summary and implementation files (belong in docs/notes/ or docs/plans/)
+# These patterns prevent clutter in root directory
+*_SUMMARY.md
+*_IMPLEMENTATION.md
+*_NOTES.md
+*SUMMARY*.md
+*IMPLEMENTATION*.md
+*NOTES*.md
+AI_*.md
+FEATURE_*.md
+!CHANGELOG.md
+!README.md
 
 # Build artifacts - dependencies are fetched at build time
 lib/leaflet/

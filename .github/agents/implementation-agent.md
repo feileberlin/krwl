@@ -216,6 +216,60 @@ Before marking a phase complete, verify:
 - [ ] Phase summary is added to notes
 - [ ] Changes are committed to version control
 
+## Repository Cleanliness - CRITICAL ⚠️
+
+**As an implementation agent, you MUST follow these rules to keep the repository clean.**
+
+### ❌ NEVER Create These Files
+
+```
+❌ backup-file.js.old              # Use git history
+❌ module-original.py              # Use git branches
+❌ config.json.backup              # Use git commits
+❌ /IMPLEMENTATION_SUMMARY.md      # Use docs/notes/
+❌ /AI_NOTES.md                    # Use docs/notes/
+❌ /debug.txt                      # Use /tmp/
+```
+
+### ✅ ALWAYS Use Proper Locations
+
+| File Type | Correct Location | Example |
+|-----------|-----------------|---------|
+| **Implementation notes** | `docs/notes/` | `docs/notes/2026-02-15-feature-name.md` |
+| **Temporary debug files** | `/tmp/` | `/tmp/debug-output.txt` |
+| **Version snapshots** | Git commits | `git commit -m "Snapshot before refactor"` |
+
+### Workflow for Temporary Work
+
+```bash
+# ✅ CORRECT: Use /tmp for scratch work
+mkdir -p /tmp/krwl-work
+echo "Debug info" > /tmp/krwl-work/notes.txt
+
+# ✅ CORRECT: Use git for version control
+git commit -m "Phase 1 complete"
+# Make risky changes
+git commit -m "Experimental approach"
+
+# ❌ WRONG: Creating backup files
+cp app.js app-old.js  # DON'T DO THIS!
+```
+
+### Pre-Commit Check
+
+**Before completing your work, run:**
+```bash
+python3 scripts/check_repository_cleanliness.py
+```
+
+**This ensures you haven't accidentally created clutter files.**
+
+### See Also
+
+- **.github/copilot-instructions.md** → "Repository Cleanliness" section (full guide)
+- **docs/notes/README.md** - Implementation notes guidelines
+- **scripts/check_repository_cleanliness.py** - Automated validation
+
 ---
 
 **Note**: This agent implements plans but does not create them. Use the `planning-agent` for creating structured plans first.

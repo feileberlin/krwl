@@ -13,6 +13,7 @@ name: 🧪 CI Tests & Linting
 # 2. ✅ Runs unit tests (if they exist)
 # 3. 📝 Validates JSON configuration files
 # 4. 🔒 Checks for security issues
+# 5. 🧹 Validates repository cleanliness (no backup files, proper file placement)
 #
 # TRIGGERS:
 # - Pull requests (opened, synchronize, reopened)
@@ -172,3 +173,36 @@ jobs:
           echo "## 💋 KISS Principle Check" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "✅ KISS compliance check complete" >> $GITHUB_STEP_SUMMARY
+
+  cleanliness-check:
+    name: 🧹 Repository Cleanliness Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Python environment
+        uses: ./.github/actions/setup-python-env
+      
+      - name: Run cleanliness checker
+        run: |
+          echo "🧹 Checking repository cleanliness..."
+          if python3 scripts/check_repository_cleanliness.py --strict; then
+            echo "## 🧹 Repository Cleanliness" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "✅ No backup files, clutter, or misplaced files detected" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "**What was checked:**" >> "$GITHUB_STEP_SUMMARY"
+            echo "- No backup files (\`*-old.*\`, \`*.backup\`, etc.)" >> "$GITHUB_STEP_SUMMARY"
+            echo "- No summary files in root directory" >> "$GITHUB_STEP_SUMMARY"
+            echo "- No temporary files in repository" >> "$GITHUB_STEP_SUMMARY"
+            echo "- All markdown files properly placed" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "## 🧹 Repository Cleanliness" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "❌ Repository cleanliness check failed" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "See step logs for details about files that violated cleanliness rules." >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
