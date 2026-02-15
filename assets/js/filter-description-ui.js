@@ -224,7 +224,13 @@ class FilterDescriptionUI {
         }
         
         // Display dresscode with format: "not without a {dresscode}" (lowercase)
-        const dresscode = weatherData.dresscode.toLowerCase();
+        const dresscodeRaw = weatherData.dresscode.toLowerCase();
+        
+        // Translate dresscode value using i18n.t('dresscodes.KEY')
+        const dresscode = this.i18n
+            ? (this.i18n.t(`dresscodes.${dresscodeRaw}`) || dresscodeRaw)
+            : dresscodeRaw;
+        
         const text = this.i18n
             ? this.i18n.t('filter_bar.weather.not_without', { dresscode })
             : `not without a ${dresscode}`;  // Fallback

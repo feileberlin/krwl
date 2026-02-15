@@ -535,7 +535,13 @@ class EventsApp {
         const weatherChip = this.utils.getCachedElement('#filter-bar-weather');
         if (!weatherChip) return;
         
-        const formatted = `with ${dresscode}.`;
+        // Translate dresscode value using i18n
+        const dresscodeKey = dresscode.toLowerCase();
+        const translatedDresscode = this.i18n
+            ? (this.i18n.t(`dresscodes.${dresscodeKey}`) || dresscode)
+            : dresscode;
+        
+        const formatted = `with ${translatedDresscode}.`;
         weatherChip.textContent = formatted;
         
         if (temperature) {

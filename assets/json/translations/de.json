@@ -152,5 +152,32 @@
   "common": {
     "unknown": "unbekannt",
     "loading": "Lädt..."
+  },
+  
+  "dresscodes": {
+    "light jacket": "leichte Jacke",
+    "light jacket recommended": "leichte Jacke empfohlen",
+    "coat recommended": "Mantel empfohlen",
+    "heavy coat": "dicker Mantel",
+    "heavy coat recommended": "dicker Mantel empfohlen",
+    "winter coat": "Wintermantel",
+    "winter coat recommended": "Wintermantel empfohlen",
+    "sweater": "Pullover",
+    "sweater recommended": "Pullover empfohlen",
+    "long sleeves": "lange Ärmel",
+    "long sleeves recommended": "lange Ärmel empfohlen",
+    "short sleeves": "kurze Ärmel",
+    "t-shirt weather": "T-Shirt-Wetter",
+    "dress warmly": "warm anziehen",
+    "dress in layers": "Schichten anziehen",
+    "light clothing": "leichte Kleidung",
+    "warm clothing": "warme Kleidung",
+    "waterproof jacket": "wasserdichte Jacke",
+    "raincoat recommended": "Regenmantel empfohlen",
+    "umbrella recommended": "Regenschirm empfohlen",
+    "light layers": "leichte Schichten",
+    "medium layers": "mittlere Schichten",
+    "heavy layers": "dicke Schichten",
+    "heavy winter coat": "dicker Wintermantel"
   }
 }

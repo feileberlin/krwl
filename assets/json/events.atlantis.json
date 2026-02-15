@@ -19,6 +19,47 @@
         "type": "offset",
         "minutes": -10,
         "duration_hours": 24
+      },
+      "translations": {
+        "source_language": "en",
+        "fields": {
+          "title": {
+            "de": {
+              "text": "🌊 Hoppla! Diese Region ist unter den Wellen versunken",
+              "method": "manual",
+              "verified": true
+            },
+            "cs": {
+              "text": "🌊 Jejda! Tento region se potopil pod vlnami",
+              "method": "manual",
+              "verified": true
+            }
+          },
+          "description": {
+            "de": {
+              "text": "Die Seite, die Sie suchen, ist um 9600 v. Chr. mit Atlantis untergegangen. Laut Platon war es ein wirklich schöner Ort... vor dem ganzen Untergang.\n\n🏗️ Möchten Sie eine NEUE Zivilisation starten? Besuchen Sie / um den Südpol zu beanspruchen und Ihre eigene Event-Plattform einzurichten!\n\n🗺️ Oder forken Sie https://github.com/feileberlin/krwl.in um Events für IHRE Region zu erstellen.",
+              "method": "manual",
+              "verified": true
+            },
+            "cs": {
+              "text": "Stránka, kterou hledáte, se potopila s Atlantidou kolem roku 9600 př. n. l. Podle Platóna to bylo opravdu hezké místo... před celým tím potopením.\n\n🏗️ Chcete založit NOVOU civilizaci? Navštivte / pro získání jižního pólu a vytvoření vlastní platformy událostí!\n\n🗺️ Nebo forkněte https://github.com/feileberlin/krwl.in pro vytvoření událostí pro VÁŠ region.",
+              "method": "manual",
+              "verified": true
+            }
+          },
+          "location.name": {
+            "de": {
+              "text": "Mittelatlantischer Rücken (Atlantis, wahrscheinlich)",
+              "method": "manual",
+              "verified": true
+            },
+            "cs": {
+              "text": "Středoatlantský hřbet (Atlantida, pravděpodobně)",
+              "method": "manual",
+              "verified": true
+            }
+          }
+        }
       }
     },
     {
@@ -40,6 +81,47 @@
         "type": "offset",
         "hours": 1,
         "duration_hours": 2
+      },
+      "translations": {
+        "source_language": "en",
+        "fields": {
+          "title": {
+            "de": {
+              "text": "🔱 Poseidons Palast-Tour - ABGESAGT",
+              "method": "manual",
+              "verified": true
+            },
+            "cs": {
+              "text": "🔱 Prohlídka Poseidonova paláce - ZRUŠENO",
+              "method": "manual",
+              "verified": true
+            }
+          },
+          "description": {
+            "de": {
+              "text": "Leider ist dieser Veranstaltungsort derzeit unter Wasser. Zuletzt gesehen: 9600 v. Chr.\n\nSuchen Sie nach Veranstaltungen an Land? Versuchen Sie / für die Antarktis, oder forken Sie das Repo, um Ihre eigene Region hinzuzufügen!",
+              "method": "manual",
+              "verified": true
+            },
+            "cs": {
+              "text": "Bohužel je toto místo v současnosti pod vodou. Naposledy viděno: 9600 př. n. l.\n\nHledáte události na suché zemi? Zkuste navštívit / pro Antarktidu, nebo forkněte repo pro přidání vlastního regionu!",
+              "method": "manual",
+              "verified": true
+            }
+          },
+          "location.name": {
+            "de": {
+              "text": "Unterwasser-Palast-Ruinen",
+              "method": "manual",
+              "verified": true
+            },
+            "cs": {
+              "text": "Ruiny podvodního paláce",
+              "method": "manual",
+              "verified": true
+            }
+          }
+        }
       }
     },
     {
@@ -61,6 +143,47 @@
         "type": "offset",
         "hours": 2,
         "duration_hours": 3
+      },
+      "translations": {
+        "source_language": "en",
+        "fields": {
+          "title": {
+            "de": {
+              "text": "🐠 Jährliches Atlantis-Treffen - Ort noch offen",
+              "method": "manual",
+              "verified": true
+            },
+            "cs": {
+              "text": "🐠 Výroční sraz Atlantidy - Místo bude upřesněno",
+              "method": "manual",
+              "verified": true
+            }
+          },
+          "description": {
+            "de": {
+              "text": "Wir versuchen seit Jahrtausenden, dies zu organisieren, aber niemand kann sich erinnern, wo wir die Insel geparkt haben.\n\n💡 Profi-Tipp: Beginnen Sie neu bei / (Antarktis), wo das Land garantiert an Ort und Stelle bleibt... meistens.",
+              "method": "manual",
+              "verified": true
+            },
+            "cs": {
+              "text": "Snažíme se to organizovat celá tisíciletí, ale nikdo si nemůže vzpomenout, kde jsme zaparkovali ostrov.\n\n💡 Tip: Začněte znovu na / (Antarktida), kde je zaručeno, že země zůstane na místě... většinou.",
+              "method": "manual",
+              "verified": true
+            }
+          },
+          "location.name": {
+            "de": {
+              "text": "Irgendwo im Atlantik",
+              "method": "manual",
+              "verified": true
+            },
+            "cs": {
+              "text": "Někde v Atlantiku",
+              "method": "manual",
+              "verified": true
+            }
+          }
+        }
       }
     },
     {

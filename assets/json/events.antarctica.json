@@ -2,10 +2,10 @@
   "events": [
     {
       "id": "demo_happening_now",
-      "title": "[DEMO] \ud83d\udc27 Emperor Penguin Parade \u2014 Live now",
+      "title": "[DEMO] 🐧 Emperor Penguin Parade — Live now",
       "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Live now",
       "location": {
-        "name": "\ud83d\udc27 Penguin HQ Main Tent",
+        "name": "🐧 Penguin HQ Main Tent",
         "lat": -89.999,
         "lon": 45.0
       },
@@ -19,14 +19,55 @@
         "type": "offset",
         "minutes": -30,
         "duration_hours": 2
+      },
+      "translations": {
+        "source_language": "en",
+        "fields": {
+          "title": {
+            "de": {
+              "text": "[DEMO] 🐧 Kaiserpinguin-Parade — Jetzt live",
+              "method": "manual",
+              "verified": true
+            },
+            "cs": {
+              "text": "[DEMO] 🐧 Přehlídka tučňáků císařských — Živě",
+              "method": "manual",
+              "verified": true
+            }
+          },
+          "description": {
+            "de": {
+              "text": "Demo-Veranstaltung am Südpol. Forken Sie https://github.com/feileberlin/krwl.in um Ihre eigene Community-Events-Plattform zu erstellen! Ursprüngliche Zeit: Jetzt live",
+              "method": "manual",
+              "verified": true
+            },
+            "cs": {
+              "text": "Demo událost na jižním pólu. Forkněte https://github.com/feileberlin/krwl.in pro vytvoření vlastní platformy komunitních událostí! Původní čas: Živě",
+              "method": "manual",
+              "verified": true
+            }
+          },
+          "location.name": {
+            "de": {
+              "text": "🐧 Pinguin-Hauptquartier Hauptzelt",
+              "method": "manual",
+              "verified": true
+            },
+            "cs": {
+              "text": "🐧 Hlavní stan velitelství tučňáků",
+              "method": "manual",
+              "verified": true
+            }
+          }
+        }
       }
     },
     {
       "id": "demo_started_5min_ago",
-      "title": "[DEMO] \ud83c\udf0c Aurora Australis Viewing \u2014 Just started",
+      "title": "[DEMO] 🌌 Aurora Australis Viewing — Just started",
       "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Just started",
       "location": {
-        "name": "\ud83d\udc27 Baby Penguin Nursery",
+        "name": "🐧 Baby Penguin Nursery",
         "lat": -89.9992,
         "lon": 45.01
       },
@@ -40,14 +81,55 @@
         "type": "offset",
         "minutes": -5,
         "duration_hours": 2
+      },
+      "translations": {
+        "source_language": "en",
+        "fields": {
+          "title": {
+            "de": {
+              "text": "[DEMO] 🌌 Aurora Australis Beobachtung — Gerade gestartet",
+              "method": "manual",
+              "verified": true
+            },
+            "cs": {
+              "text": "[DEMO] 🌌 Pozorování polární záře Australis — Právě začalo",
+              "method": "manual",
+              "verified": true
+            }
+          },
+          "description": {
+            "de": {
+              "text": "Demo-Veranstaltung am Südpol. Forken Sie https://github.com/feileberlin/krwl.in um Ihre eigene Community-Events-Plattform zu erstellen! Ursprüngliche Zeit: Gerade gestartet",
+              "method": "manual",
+              "verified": true
+            },
+            "cs": {
+              "text": "Demo událost na jižním pólu. Forkněte https://github.com/feileberlin/krwl.in pro vytvoření vlastní platformy komunitních událostí! Původní čas: Právě začalo",
+              "method": "manual",
+              "verified": true
+            }
+          },
+          "location.name": {
+            "de": {
+              "text": "🐧 Baby-Pinguin-Kinderstube",
+              "method": "manual",
+              "verified": true
+            },
+            "cs": {
+              "text": "🐧 Jesle mláďat tučňáků",
+              "method": "manual",
+              "verified": true
+            }
+          }
+        }
       }
     },
     {
       "id": "demo_starting_5min",
-      "title": "[DEMO] \ud83e\uddca Antarctic Ice Sculpture Contest \u2014 Starts in 5 min",
+      "title": "[DEMO] 🧊 Antarctic Ice Sculpture Contest — Starts in 5 min",
       "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Starts in 5 min",
       "location": {
-        "name": "\ud83d\udc27 Penguin Feeding Station",
+        "name": "🐧 Penguin Feeding Station",
         "lat": -89.9988,
         "lon": 44.99
       },
@@ -61,14 +143,55 @@
         "type": "offset",
         "minutes": 5,
         "duration_hours": 2
+      },
+      "translations": {
+        "source_language": "en",
+        "fields": {
+          "title": {
+            "de": {
+              "text": "[DEMO] 🧊 Antarktischer Eisskulpturenwettbewerb — Beginnt in 5 Min.",
+              "method": "manual",
+              "verified": true
+            },
+            "cs": {
+              "text": "[DEMO] 🧊 Antarktická soutěž v ledových sochách — Začíná za 5 min",
+              "method": "manual",
+              "verified": true
+            }
+          },
+          "description": {
+            "de": {
+              "text": "Demo-Veranstaltung am Südpol. Forken Sie https://github.com/feileberlin/krwl.in um Ihre eigene Community-Events-Plattform zu erstellen! Ursprüngliche Zeit: Beginnt in 5 Min.",
+              "method": "manual",
+              "verified": true
+            },
+            "cs": {
+              "text": "Demo událost na jižním pólu. Forkněte https://github.com/feileberlin/krwl.in pro vytvoření vlastní platformy komunitních událostí! Původní čas: Začíná za 5 min",
+              "method": "manual",
+              "verified": true
+            }
+          },
+          "location.name": {
+            "de": {
+              "text": "🐧 Pinguin-Fütterungsstation",
+              "method": "manual",
+              "verified": true
+            },
+            "cs": {
+              "text": "🐧 Stanice krmení tučňáků",
+              "method": "manual",
+              "verified": true
+            }
+          }
+        }
       }
     },
     {
       "id": "demo_starting_15min",
-      "title": "[DEMO] \ud83c\udfca Polar Plunge Challenge \u2014 Starts in 15 min",
+      "title": "[DEMO] 🏊 Polar Plunge Challenge — Starts in 15 min",
       "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Starts in 15 min",
       "location": {
-        "name": "\ud83e\uddca Ice Cube Bar Entrance",
+        "name": "🧊 Ice Cube Bar Entrance",
         "lat": -89.998,
         "lon": -90.0
       },
@@ -86,10 +209,10 @@
     },
     {
       "id": "demo_starting_30min",
-      "title": "[DEMO] \ud83d\udd2c Climate Science Lecture \u2014 Starts in 30 min",
+      "title": "[DEMO] 🔬 Climate Science Lecture — Starts in 30 min",
       "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Starts in 30 min",
       "location": {
-        "name": "\ud83e\uddca Frozen Cocktail Lounge",
+        "name": "🧊 Frozen Cocktail Lounge",
         "lat": -89.9982,
         "lon": -89.99
       },
@@ -107,10 +230,10 @@
     },
     {
       "id": "demo_in_1hour",
-      "title": "[DEMO] \ud83e\uddd8 Midnight Sun Yoga \u2014 Starts in 1 hour",
+      "title": "[DEMO] 🧘 Midnight Sun Yoga — Starts in 1 hour",
       "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Starts in 1 hour",
       "location": {
-        "name": "\u2744\ufe0f Frosty's Igloo Caf\u00e9",
+        "name": "❄️ Frosty's Igloo Café",
         "lat": -89.995,
         "lon": 0.0
       },
@@ -128,10 +251,10 @@
     },
     {
       "id": "demo_in_2hours",
-      "title": "[DEMO] \ud83c\udf0d Colony Builders Meetup \u2014 Starts in 2 hours",
+      "title": "[DEMO] 🌍 Colony Builders Meetup — Starts in 2 hours",
       "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Starts in 2 hours",
       "location": {
-        "name": "\ud83c\udf21\ufe0f Minus 60 Lounge",
+        "name": "🌡️ Minus 60 Lounge",
         "lat": -89.993,
         "lon": 0.0
       },
@@ -149,10 +272,10 @@
     },
     {
       "id": "demo_this_evening",
-      "title": "[DEMO] \ud83d\udc15 Husky Sledding Adventure \u2014 This evening",
+      "title": "[DEMO] 🐕 Husky Sledding Adventure — This evening",
       "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: This evening",
       "location": {
-        "name": "\ud83d\udc15 Husky Hangout",
+        "name": "🐕 Husky Hangout",
         "lat": -89.991,
         "lon": 0.0
       },
@@ -170,10 +293,10 @@
     },
     {
       "id": "demo_just_ended",
-      "title": "[DEMO] \ud83c\udfe0 Igloo Building Workshop \u2014 Just ended",
+      "title": "[DEMO] 🏠 Igloo Building Workshop — Just ended",
       "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Just ended",
       "location": {
-        "name": "\ufffd\ufffd Polar Ski Lodge",
+        "name": "�� Polar Ski Lodge",
         "lat": -89.95,
         "lon": 0.0
       },
@@ -192,10 +315,10 @@
     },
     {
       "id": "demo_very_soon",
-      "title": "[DEMO] \u2615 Hot Cocoa Social \u2014 Very soon",
+      "title": "[DEMO] ☕ Hot Cocoa Social — Very soon",
       "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Very soon",
       "location": {
-        "name": "\ud83c\udfd4\ufe0f Snowmobile Station",
+        "name": "🏔️ Snowmobile Station",
         "lat": -89.9,
         "lon": 0.0
       },
@@ -213,10 +336,10 @@
     },
     {
       "id": "demo_utc_plus1",
-      "title": "[DEMO] \ud83c\udfbf Antarctic Skiing (UTC+1) \u2014 UTC+1 local time (TZ: +1.0)",
+      "title": "[DEMO] 🎿 Antarctic Skiing (UTC+1) — UTC+1 local time (TZ: +1.0)",
       "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: UTC+1 local time (TZ: +1.0)",
       "location": {
-        "name": "\ud83d\udd2c Science Shack",
+        "name": "🔬 Science Shack",
         "lat": -89.8,
         "lon": 0.0
       },
@@ -235,10 +358,10 @@
     },
     {
       "id": "demo_utc_plus2",
-      "title": "[DEMO] \ud83c\udfa3 Ice Fishing Expedition (UTC+2) \u2014 UTC+2 local time (TZ: +2.0)",
+      "title": "[DEMO] 🎣 Ice Fishing Expedition (UTC+2) — UTC+2 local time (TZ: +2.0)",
       "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: UTC+2 local time (TZ: +2.0)",
       "location": {
-        "name": "\u2615 Hot Cocoa Corner",
+        "name": "☕ Hot Cocoa Corner",
         "lat": -89.7,
         "lon": 0.0
       },
@@ -257,10 +380,10 @@
     },
     {
       "id": "demo_utc_minus5",
-      "title": "[DEMO] \ud83d\udcfb Polar Radio Broadcast (UTC-5) \u2014 UTC-5 local time (TZ: -5.0)",
+      "title": "[DEMO] 📻 Polar Radio Broadcast (UTC-5) — UTC-5 local time (TZ: -5.0)",
       "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: UTC-5 local time (TZ: -5.0)",
       "location": {
-        "name": "\ud83c\udf0c Aurora Observatory",
+        "name": "🌌 Aurora Observatory",
         "lat": -89.55,
         "lon": 0.0
       },
@@ -279,10 +402,10 @@
     },
     {
       "id": "demo_utc_plus9",
-      "title": "[DEMO] \ud83c\udf05 Polar Sunrise Watch (UTC+9) \u2014 UTC+9 local time (TZ: +9.0)",
+      "title": "[DEMO] 🌅 Polar Sunrise Watch (UTC+9) — UTC+9 local time (TZ: +9.0)",
       "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: UTC+9 local time (TZ: +9.0)",
       "location": {
-        "name": "\ud83c\udfe0 Cozy Base Camp",
+        "name": "🏠 Cozy Base Camp",
         "lat": -89.0,
         "lon": 0.0
       },
@@ -301,10 +424,10 @@
     },
     {
       "id": "demo_utc_plus530",
-      "title": "[DEMO] \ud83e\udded Expedition Planning (UTC+5:30) \u2014 UTC+5:30 local time (TZ: +5.5)",
+      "title": "[DEMO] 🧭 Expedition Planning (UTC+5:30) — UTC+5:30 local time (TZ: +5.5)",
       "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: UTC+5:30 local time (TZ: +5.5)",
       "location": {
-        "name": "\ud83c\udfaa Polar Party Tent",
+        "name": "🎪 Polar Party Tent",
         "lat": -88.0,
         "lon": 0.0
       },
@@ -323,10 +446,10 @@
     },
     {
       "id": "demo_before_sunrise_5min",
-      "title": "[DEMO] \ud83c\udf19 Night Sky Observation \u2014 Ends before sunrise",
+      "title": "[DEMO] 🌙 Night Sky Observation — Ends before sunrise",
       "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Ends before sunrise",
       "location": {
-        "name": "\ud83c\udfa3 Ice Fishing Hole",
+        "name": "🎣 Ice Fishing Hole",
         "lat": -86.0,
         "lon": 0.0
       },
@@ -344,10 +467,10 @@
     },
     {
       "id": "demo_at_sunrise",
-      "title": "[DEMO] \u2600\ufe0f Sunrise Ceremony \u2014 Ends at sunrise",
+      "title": "[DEMO] ☀️ Sunrise Ceremony — Ends at sunrise",
       "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Ends at sunrise",
       "location": {
-        "name": "\ud83d\udcf8 Photo Point",
+        "name": "📸 Photo Point",
         "lat": -84.0,
         "lon": 0.0
       },
@@ -365,10 +488,10 @@
     },
     {
       "id": "demo_after_sunrise_5min",
-      "title": "[DEMO] \ud83c\udf73 Polar Breakfast Club \u2014 Ends after sunrise",
+      "title": "[DEMO] 🍳 Polar Breakfast Club — Ends after sunrise",
       "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Ends after sunrise",
       "location": {
-        "name": "\ud83e\udded Compass Confusion Corner",
+        "name": "🧭 Compass Confusion Corner",
         "lat": -82.0,
         "lon": 0.0
       },
@@ -386,10 +509,10 @@
     },
     {
       "id": "demo_crossing_sunrise",
-      "title": "[DEMO] \u26fa Overnight Camping \u2014 Crosses sunrise",
+      "title": "[DEMO] ⛺ Overnight Camping — Crosses sunrise",
       "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Crosses sunrise",
       "location": {
-        "name": "\ud83c\udfad Penguin Theater",
+        "name": "🎭 Penguin Theater",
         "lat": -80.0,
         "lon": 0.0
       },
@@ -407,10 +530,10 @@
     },
     {
       "id": "demo_starting_before_sunrise",
-      "title": "[DEMO] \ud83c\udfc3 Dawn Patrol \u2014 Starts before sunrise",
+      "title": "[DEMO] 🏃 Dawn Patrol — Starts before sunrise",
       "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Starts before sunrise",
       "location": {
-        "name": "\ud83d\udef7 Sledding Hill",
+        "name": "🛷 Sledding Hill",
         "lat": -78.0,
         "lon": 0.0
       },
@@ -428,10 +551,10 @@
     },
     {
       "id": "demo_starting_after_sunrise",
-      "title": "[DEMO] \ud83d\udcf7 Wildlife Photography \u2014 Starts after sunrise",
+      "title": "[DEMO] 📷 Wildlife Photography — Starts after sunrise",
       "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: Starts after sunrise",
       "location": {
-        "name": "\ud83c\udfd5\ufe0f Expedition Tent",
+        "name": "🏕️ Expedition Tent",
         "lat": -72.0,
         "lon": 0.0
       },
@@ -449,10 +572,10 @@
     },
     {
       "id": "demo_all_night",
-      "title": "[DEMO] \ud83c\udf89 24-Hour Polar Party \u2014 All night",
+      "title": "[DEMO] 🎉 24-Hour Polar Party — All night",
       "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: All night",
       "location": {
-        "name": "\ud83c\udf05 Midnight Sun Deck",
+        "name": "🌅 Midnight Sun Deck",
         "lat": -70.0,
         "lon": 0.0
       },
@@ -470,10 +593,10 @@
     },
     {
       "id": "demo_far_away",
-      "title": "[DEMO] \ud83d\ude81 McMurdo Station Tour \u2014 250 km away",
+      "title": "[DEMO] 🚁 McMurdo Station Tour — 250 km away",
       "description": "Demo event at the South Pole. Fork https://github.com/feileberlin/krwl.in to create your own community events platform! Original timing: 250 km away",
       "location": {
-        "name": "\ud83c\udf00 McMurdo Station (Far)",
+        "name": "🌀 McMurdo Station (Far)",
         "lat": -77.85,
         "lon": 166.67
       },

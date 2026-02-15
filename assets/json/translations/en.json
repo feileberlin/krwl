@@ -152,5 +152,32 @@
   "common": {
     "unknown": "unknown",
     "loading": "Loading..."
+  },
+  
+  "dresscodes": {
+    "light jacket": "light jacket",
+    "light jacket recommended": "light jacket recommended",
+    "coat recommended": "coat recommended",
+    "heavy coat": "heavy coat",
+    "heavy coat recommended": "heavy coat recommended",
+    "winter coat": "winter coat",
+    "winter coat recommended": "winter coat recommended",
+    "sweater": "sweater",
+    "sweater recommended": "sweater recommended",
+    "long sleeves": "long sleeves",
+    "long sleeves recommended": "long sleeves recommended",
+    "short sleeves": "short sleeves",
+    "t-shirt weather": "t-shirt weather",
+    "dress warmly": "dress warmly",
+    "dress in layers": "dress in layers",
+    "light clothing": "light clothing",
+    "warm clothing": "warm clothing",
+    "waterproof jacket": "waterproof jacket",
+    "raincoat recommended": "raincoat recommended",
+    "umbrella recommended": "umbrella recommended",
+    "light layers": "light layers",
+    "medium layers": "medium layers",
+    "heavy layers": "heavy layers",
+    "heavy winter coat": "heavy winter coat"
   }
 }

@@ -152,5 +152,32 @@
   "common": {
     "unknown": "neznámý",
     "loading": "Načítání..."
+  },
+  
+  "dresscodes": {
+    "light jacket": "lehká bunda",
+    "light jacket recommended": "lehká bunda doporučena",
+    "coat recommended": "kabát doporučen",
+    "heavy coat": "teplý kabát",
+    "heavy coat recommended": "teplý kabát doporučen",
+    "winter coat": "zimní kabát",
+    "winter coat recommended": "zimní kabát doporučen",
+    "sweater": "svetr",
+    "sweater recommended": "svetr doporučen",
+    "long sleeves": "dlouhé rukávy",
+    "long sleeves recommended": "dlouhé rukávy doporučeny",
+    "short sleeves": "krátké rukávy",
+    "t-shirt weather": "počasí na triko",
+    "dress warmly": "obléci se teple",
+    "dress in layers": "obléci se ve vrstvách",
+    "light clothing": "lehké oblečení",
+    "warm clothing": "teplé oblečení",
+    "waterproof jacket": "nepromokavá bunda",
+    "raincoat recommended": "pláštěnka doporučena",
+    "umbrella recommended": "deštník doporučen",
+    "light layers": "lehké vrstvy",
+    "medium layers": "střední vrstvy",
+    "heavy layers": "teplé vrstvy",
+    "heavy winter coat": "teplý zimní kabát"
   }
 }
