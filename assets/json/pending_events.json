@@ -3497,7 +3497,249 @@
       "source": "https://www.vhshoferland.de/p/last-minute-kurse/lust-auf-yoga-probier-es-aus/workshop-646-C-30AH501123",
       "url": "https://www.vhshoferland.de/p/last-minute-kurse/lust-auf-yoga-probier-es-aus/workshop-646-C-30AH501123",
       "tags": []
+    },
+    {
+      "id": "vhs_a35b91b1175c",
+      "title": "Kommunikationstraining f\u00fcr ZuwanderinnenWorkshop",
+      "teaser": "Sie m\u00f6chten die deutsche Sprache m\u00fcndlich \u00fcben aber Sie haben keine Gelegenheit zu sprechen? Dann ist dieser Kurs genau der richtige f\u00fcr Sie! In einer kleinen Gruppe und unter Frauen trainieren Sie ih...",
+      "description": "Sie m\u00f6chten die deutsche Sprache m\u00fcndlich \u00fcben aber Sie haben keine Gelegenheit zu sprechen? Dann ist dieser Kurs genau der richtige f\u00fcr Sie! In einer kleinen Gruppe und unter Frauen trainieren Sie ihre m\u00fcndliche Kommunikation. Der Inhalt des Gespr\u00e4ches wird so gew\u00e4hlt, dass es Ihnen Spa\u00df macht. Sie ben\u00f6tigen nur Deutsch-Grundkenntnisse.",
+      "location": {
+        "name": "Selbitz",
+        "address": "Hofer Stra\u00dfe 3a",
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": false,
+        "needs_review": false,
+        "resolution_method": null
+      },
+      "start_time": "2026-02-23T10:00:00",
+      "end_time": null,
+      "category": "education",
+      "status": "pending",
+      "source": "https://www.vhshoferland.de/p/last-minute-kurse/kommunikationstraining-fuer-zuwanderinnen/workshop-646-C-30AA905058",
+      "url": "https://www.vhshoferland.de/p/last-minute-kurse/kommunikationstraining-fuer-zuwanderinnen/workshop-646-C-30AA905058",
+      "tags": []
+    },
+    {
+      "id": "vhs_7549f4981a47",
+      "title": "Freiheitshalle Hof entdecken: Die Ausstellung der Hofer K\u00fcnstlerin Siggi Schmidt  \"Hof - Meine Stadt\"",
+      "teaser": "Gemeinsam besuchen wir die Freiheitshalle Hof und die Ausstellung \u201eHof \u2013 Meine Stadt\u201c der Hofer K\u00fcnstlerin Siggi Schmidt, die auch das begleitende Buch \u201eHof \u2013 Meine Stadt: Eine Liebeserkl\u00e4rung\u201c verfas...",
+      "description": "Gemeinsam besuchen wir die Freiheitshalle Hof und die Ausstellung \u201eHof \u2013 Meine Stadt\u201c der Hofer K\u00fcnstlerin Siggi Schmidt, die auch das begleitende Buch \u201eHof \u2013 Meine Stadt: Eine Liebeserkl\u00e4rung\u201c verfasst hat.\n\nDie F\u00fchrung durch die Ausstellung und die Freiheitshalle  werden der Kulturamtsleiter der Stadt Hof, Herr Fabian Riemen, sowie die K\u00fcnstlerin Siggi Schmidt pers\u00f6nlich durchf\u00fchren.",
+      "location": {
+        "name": "VHS Hofer Land",
+        "address": null,
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": true,
+        "needs_review": false,
+        "resolution_method": null
+      },
+      "start_time": "2026-02-25T10:00:00",
+      "end_time": null,
+      "category": "education",
+      "status": "pending",
+      "source": "https://www.vhshoferland.de/p/last-minute-kurse/freiheitshalle-hof-entdecken-die-ausstellung-der-hofer-kuenstlerin-siggi-schmidt-hof-meine-stadt-646-C-30AA929107",
+      "url": "https://www.vhshoferland.de/p/last-minute-kurse/freiheitshalle-hof-entdecken-die-ausstellung-der-hofer-kuenstlerin-siggi-schmidt-hof-meine-stadt-646-C-30AA929107",
+      "tags": []
+    },
+    {
+      "id": "vhs_724116b89afd",
+      "title": "SprechcoachingWorkshop",
+      "teaser": "Zugewanderte entwickeln ihre Lesef\u00e4higkeiten: F\u00fcr besseres Textverst\u00e4ndnis und eine klare Aussprache. Austausch und Konversation \u00fcber die gelesenen Texte geh\u00f6rt nat\u00fcrlich auch dazu.",
+      "description": "Zugewanderte entwickeln ihre Lesef\u00e4higkeiten: F\u00fcr besseres Textverst\u00e4ndnis und eine klare Aussprache. Austausch und Konversation \u00fcber die gelesenen Texte geh\u00f6rt nat\u00fcrlich auch dazu. N\u00e4here Informationen: Jule Konrad, 09281 714549, j.konrad@vhshoferland.de",
+      "location": {
+        "name": "Ludwigstra\u00dfe 7",
+        "address": "95028 Hof",
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": false,
+        "needs_review": false,
+        "resolution_method": null
+      },
+      "start_time": "2026-02-25T12:30:00",
+      "end_time": null,
+      "category": "education",
+      "status": "pending",
+      "source": "https://www.vhshoferland.de/p/last-minute-kurse/sprechcoaching/workshop-646-C-30AA905057",
+      "url": "https://www.vhshoferland.de/p/last-minute-kurse/sprechcoaching/workshop-646-C-30AA905057",
+      "tags": []
+    },
+    {
+      "id": "vhs_7bc19927a6c0",
+      "title": "\"zusammen digital\" - Beratungstheke mit Impulsvortrag: \"Navigations-Apps: \"Komoot\", \"Google Maps\" und \"Apple Karten\"\"",
+      "teaser": "Immer den richtigen Weg finden: zu Fu\u00df, mit dem Fahrrad oder Auto. Folgende Apps helfen Ihnen dabei:\nKomoot: Ist ideal f\u00fcr Spazierg\u00e4nge und Naturtouren und beinhaltet z. B.",
+      "description": "Immer den richtigen Weg finden: zu Fu\u00df, mit dem Fahrrad oder Auto. Folgende Apps helfen Ihnen dabei:\nKomoot: Ist ideal f\u00fcr Spazierg\u00e4nge und Naturtouren und beinhaltet z. B. Sprachnavigation, H\u00f6henprofile und Offline-Karten.\nGoogle Maps und Apple Karten: Sind hilfreich bei der Routenf\u00fchrung, Parkplatzsuche oder auch bei Standortfreigabe.",
+      "location": {
+        "name": "Ludwigstra\u00dfe 7",
+        "address": "95028 Hof",
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": false,
+        "needs_review": false,
+        "resolution_method": null
+      },
+      "start_time": "2026-02-25T14:00:00",
+      "end_time": null,
+      "category": "education",
+      "status": "pending",
+      "source": "https://www.vhshoferland.de/p/last-minute-kurse/zusammen-digital-beratungstheke-mit-impulsvortrag-navigations-apps-komoot-google-maps-und-apple-karten-646-C-29AA904232",
+      "url": "https://www.vhshoferland.de/p/last-minute-kurse/zusammen-digital-beratungstheke-mit-impulsvortrag-navigations-apps-komoot-google-maps-und-apple-karten-646-C-29AA904232",
+      "tags": []
+    },
+    {
+      "id": "vhs_c63abb9ceb6b",
+      "title": "VHS Stammtisch KIAustausch, Verstehen, L\u00f6sungen",
+      "teaser": "VHS Stammtisch KIAustausch, Verstehen, L\u00f6sungen am 25.02.",
+      "description": "VHS Stammtisch KIAustausch, Verstehen, L\u00f6sungen am 25.02.2026 15:45",
+      "location": {
+        "name": "Ludwigstra\u00dfe 7",
+        "address": "95028 Hof",
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": false,
+        "needs_review": false,
+        "resolution_method": null
+      },
+      "start_time": "2026-02-25T15:45:00",
+      "end_time": null,
+      "category": "education",
+      "status": "pending",
+      "source": "https://www.vhshoferland.de/p/last-minute-kurse/vhs-stammtisch-ki/austausch-verstehen-loesungen-646-C-29AA904235",
+      "url": "https://www.vhshoferland.de/p/last-minute-kurse/vhs-stammtisch-ki/austausch-verstehen-loesungen-646-C-29AA904235",
+      "tags": []
+    },
+    {
+      "id": "vhs_e8917a352501",
+      "title": "After Work-Session zur Kommunalwahl 2026Online",
+      "teaser": "Am 8. M\u00e4rz 2026 ist es wieder soweit: Bayern w\u00e4hlt.",
+      "description": "Am 8. M\u00e4rz 2026 ist es wieder soweit: Bayern w\u00e4hlt. Im Rahmen einer Online-Session informiert die Bayerische Landeszentrale f\u00fcr politische Bildungsarbeit \u00fcber die Kommunalwahl 2026 und steht f\u00fcr Fragen zur Verf\u00fcgung.",
+      "location": {
+        "name": "Online",
+        "address": null,
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": true,
+        "needs_review": false,
+        "resolution_method": null
+      },
+      "start_time": "2026-02-25T17:00:00",
+      "end_time": null,
+      "category": "education",
+      "status": "pending",
+      "source": "https://www.vhshoferland.de/p/last-minute-kurse/after-work-session-zur-kommunalwahl-2026/online-646-C-30AH103422",
+      "url": "https://www.vhshoferland.de/p/last-minute-kurse/after-work-session-zur-kommunalwahl-2026/online-646-C-30AH103422",
+      "tags": []
+    },
+    {
+      "id": "vhs_b07ff2eb9382",
+      "title": "Englisch - Niveaustufe A1 - VIII. Semester f\u00fcr Fortgeschrittene",
+      "teaser": "Der Kurs vermittelt auf unterhaltsame Art und Weise das weiterf\u00fchrende Grundvokabular und die wesentlichen, fortf\u00fchrenden grammatikalischen Strukturen, um sich im Alltag, auf Reisen oder im Urlaub auf...",
+      "description": "Der Kurs vermittelt auf unterhaltsame Art und Weise das weiterf\u00fchrende Grundvokabular und die wesentlichen, fortf\u00fchrenden grammatikalischen Strukturen, um sich im Alltag, auf Reisen oder im Urlaub auf Englisch verst\u00e4ndigen zu k\u00f6nnen.",
+      "location": {
+        "name": "Rehau",
+        "address": "Realschule, Pilgramsreuther Str. 34 (Zimmer 1.02)",
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": false,
+        "needs_review": false,
+        "resolution_method": null
+      },
+      "start_time": "2026-02-25T18:30:00",
+      "end_time": null,
+      "category": "education",
+      "status": "pending",
+      "source": "https://www.vhshoferland.de/p/last-minute-kurse/englisch-niveaustufe-a1-viii-semester-fuer-fortgeschrittene-646-C-30RE400618",
+      "url": "https://www.vhshoferland.de/p/last-minute-kurse/englisch-niveaustufe-a1-viii-semester-fuer-fortgeschrittene-646-C-30RE400618",
+      "tags": []
+    },
+    {
+      "id": "vhs_08081605ce27",
+      "title": "Arbeitsgemeinschaft Foto Volkshochschule Hofer Land",
+      "teaser": "Haben Sie Freude am Fotografieren? M\u00f6chten Sie ihr Hobby mit Gleichgesinnten teilen und vertiefen? Wir treffen uns w\u00f6chentlich um Foto\u00fcbungen durchzuf\u00fchren, Ausstellungen zu organisieren oder fototech...",
+      "description": "Haben Sie Freude am Fotografieren? M\u00f6chten Sie ihr Hobby mit Gleichgesinnten teilen und vertiefen? Wir treffen uns w\u00f6chentlich um Foto\u00fcbungen durchzuf\u00fchren, Ausstellungen zu organisieren oder fototechnische Fragen zu er\u00f6rtern. Wir versuchen, gemeinsam zu experimentieren und Aufgaben zu l\u00f6sen, die vorzugsweise in einem Team bew\u00e4ltigt werden k\u00f6nnen. Eine kritische Besprechung der Ergebnisse und Bearbeitung der Fotos geh\u00f6ren zu den Inhalten unserer Treffen.\nAls langj\u00e4hriger Kooperationspartner der ",
+      "location": {
+        "name": "Fabrikzeile 21 (Hoftex Group)",
+        "address": "95028 Hof",
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": false,
+        "needs_review": false,
+        "resolution_method": null
+      },
+      "start_time": "2026-02-25T19:00:00",
+      "end_time": null,
+      "category": "education",
+      "status": "pending",
+      "source": "https://www.vhshoferland.de/p/last-minute-kurse/arbeitsgemeinschaft-foto-volkshochschule-hofer-land-646-C-30AH316010",
+      "url": "https://www.vhshoferland.de/p/last-minute-kurse/arbeitsgemeinschaft-foto-volkshochschule-hofer-land-646-C-30AH316010",
+      "tags": []
+    },
+    {
+      "id": "vhs_785a76e2da16",
+      "title": "Von \u201ePick-Up-Artists\u201c bis \u201ePerfect Wife\u201cWarum das Netz Geschlechterstereotype verst\u00e4rkt",
+      "teaser": "Pick-Up-Artists, alpha males und Tradwifes \u2013 die derzeitigen Trends auf sozialen Medien vermitteln idealisierte Vorstellungen von echter Maskulinit\u00e4t und f\u00fcrsorglicher Weiblickeit, hinter denen mehr a...",
+      "description": "Pick-Up-Artists, alpha males und Tradwifes \u2013 die derzeitigen Trends auf sozialen Medien vermitteln idealisierte Vorstellungen von echter Maskulinit\u00e4t und f\u00fcrsorglicher Weiblickeit, hinter denen mehr als nur Selbstoptimierung steckt. Viele der Influencer auf TikTok, YouTube und Instagram vermitteln mit den scheinbar unpolitischen Einblicken in ihren Alltag traditionelle Geschlechtervorstellungen sowie patriarchale und frauenfeindliche Weltbilder, die durch ihre enorme Reichweite eine Rolle r\u00fcckw\u00e4",
+      "location": {
+        "name": "Online",
+        "address": null,
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": true,
+        "needs_review": false,
+        "resolution_method": null
+      },
+      "start_time": "2026-02-25T19:00:00",
+      "end_time": null,
+      "category": "education",
+      "status": "pending",
+      "source": "https://www.vhshoferland.de/p/last-minute-kurse/von-pick-up-artists-bis-perfect-wife/warum-das-netz-geschlechterstereotype-verstaerkt-646-C-30AH103411",
+      "url": "https://www.vhshoferland.de/p/last-minute-kurse/von-pick-up-artists-bis-perfect-wife/warum-das-netz-geschlechterstereotype-verstaerkt-646-C-30AH103411",
+      "tags": []
+    },
+    {
+      "id": "vhs_d777e219b4d8",
+      "title": "Fr\u00fchst\u00fcck mit Programmvorstellung",
+      "teaser": "Beim gemeinsamen Fr\u00fchst\u00fcck informieren wir Sie \u00fcber die Kurse der Seniorenakademie, Projekt \u201eWEGE miteinander\u201c und Gesundheits- und Bewegungsangebote.",
+      "description": "Beim gemeinsamen Fr\u00fchst\u00fcck informieren wir Sie \u00fcber die Kurse der Seniorenakademie, Projekt \u201eWEGE miteinander\u201c und Gesundheits- und Bewegungsangebote. Au\u00dferdem erhalten Sie eine Einf\u00fchrung im Umgang mit der VHS-Internetseite. Sie erfahren, wie Sie den richtigen Kurs finden, f\u00fcr sich ausw\u00e4hlen und online buchen.",
+      "location": {
+        "name": "Ludwigstra\u00dfe 7",
+        "address": "95028 Hof",
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": false,
+        "needs_review": false,
+        "resolution_method": null
+      },
+      "start_time": "2026-02-26T09:00:00",
+      "end_time": null,
+      "category": "education",
+      "status": "pending",
+      "source": "https://www.vhshoferland.de/p/last-minute-kurse/fruehstueck-mit-programmvorstellung-646-C-30AH360011",
+      "url": "https://www.vhshoferland.de/p/last-minute-kurse/fruehstueck-mit-programmvorstellung-646-C-30AH360011",
+      "tags": []
+    },
+    {
+      "id": "vhs_b3c722008673",
+      "title": "VZ Bayern: Ihre Heizkostenabrechnung verstehen und pr\u00fcfen!",
+      "teaser": "Die Kosten f\u00fcr die Heizung steigen. Im Vortrag erfahren Sie, wie Sie die Heizkostenabrechnung besser verstehen k\u00f6nnten.",
+      "description": "Die Kosten f\u00fcr die Heizung steigen. Im Vortrag erfahren Sie, wie Sie die Heizkostenabrechnung besser verstehen k\u00f6nnten. Der Vortrag f\u00fchrt schrittweise durch die Abrechnungen, so dass man selbst eine erste \u00dcberpr\u00fcfung vornehmen kann. \nZielgruppe: Mieter:innen und Eigent\u00fcmer:innen",
+      "location": {
+        "name": "Online",
+        "address": null,
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": true,
+        "needs_review": false,
+        "resolution_method": null
+      },
+      "start_time": "2026-02-26T19:00:00",
+      "end_time": null,
+      "category": "education",
+      "status": "pending",
+      "source": "https://www.vhshoferland.de/p/last-minute-kurse/vz-bayern-ihre-heizkostenabrechnung-verstehen-und-pruefen-646-C-30AH107112",
+      "url": "https://www.vhshoferland.de/p/last-minute-kurse/vz-bayern-ihre-heizkostenabrechnung-verstehen-und-pruefen-646-C-30AH107112",
+      "tags": []
     }
   ],
-  "last_scraped": "2026-02-19T15:15:50.518837"
+  "last_scraped": "2026-02-20T03:48:07.817957"
 }
