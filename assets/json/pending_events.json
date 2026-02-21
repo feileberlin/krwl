@@ -3739,7 +3739,29 @@
       "source": "https://www.vhshoferland.de/p/last-minute-kurse/vz-bayern-ihre-heizkostenabrechnung-verstehen-und-pruefen-646-C-30AH107112",
       "url": "https://www.vhshoferland.de/p/last-minute-kurse/vz-bayern-ihre-heizkostenabrechnung-verstehen-und-pruefen-646-C-30AH107112",
       "tags": []
+    },
+    {
+      "id": "vhs_f35502909ec8",
+      "title": "bodyART\u00ae by Robert Steinbacher",
+      "teaser": "bodyART\u00ae Training by Robert Steinbacher ist ein ganzheitliches und funktionelles Bewusstseins- und K\u00f6rpertraining.",
+      "description": "bodyART\u00ae Training by Robert Steinbacher ist ein ganzheitliches und funktionelles Bewusstseins- und K\u00f6rpertraining. Es kombiniert in besonderer Weise das Training von Kraft, Flexibilit\u00e4t, Herz, Kreislauf und Atmung. Es basiert auf den Prinzipien von Yin und Yang und den f\u00fcnf Elementen der Traditionellen Chinesischen Medizin. Im bodyART\u00ae  Training werden aktive und passive Bewegungen sowie Elemente der Spannung und Entspannung flie\u00dfend miteinander verkn\u00fcpft. Jeder Teilnehmende sp\u00fcrt auf nat\u00fcrliche",
+      "location": {
+        "name": "Ludwigstra\u00dfe 7",
+        "address": "95028 Hof",
+        "lat": 50.3167,
+        "lon": 11.9167,
+        "address_hidden": false,
+        "needs_review": false,
+        "resolution_method": null
+      },
+      "start_time": "2026-02-27T15:00:00",
+      "end_time": null,
+      "category": "education",
+      "status": "pending",
+      "source": "https://www.vhshoferland.de/p/last-minute-kurse/bodyart-by-robert-steinbacher-646-C-30AH502307",
+      "url": "https://www.vhshoferland.de/p/last-minute-kurse/bodyart-by-robert-steinbacher-646-C-30AH502307",
+      "tags": []
     }
   ],
-  "last_scraped": "2026-02-20T03:48:07.817957"
+  "last_scraped": "2026-02-21T03:44:55.144048"
 }
